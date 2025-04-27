@@ -217,25 +217,37 @@
         currentCandle = null;
         candleSeries.setData([]);
         ws = new WebSocket('wss://stream.binance.com:9443/ws/suiusdt@trade');
-        ws.onmessage = (event) => {
-          const trade = JSON.parse(event.data);
-          const tradeTime = Math.floor(trade.T / 1000);
-          const bucketTime = tradeTime - (tradeTime % intervalDuration);
-          const price = parseFloat(trade.p);
-          lastPriceValue = price;
-  
-          if (!currentCandle || currentCandle.time !== bucketTime) {
-            if (currentCandle) {
-              candleSeries.update(currentCandle);
-              candleHistory.push(currentCandle);
-            }
-            currentCandle = { time: bucketTime, open: price, high: price, low: price, close: price };
-          } else {
-            currentCandle.high = Math.max(currentCandle.high, price);
-            currentCandle.low = Math.min(currentCandle.low, price);
-            currentCandle.close = price;
-          }
-        };
+        let updatePending = false; // ★ これも一緒に！
+
+ws.onmessage = (event) => {
+  const trade = JSON.parse(event.data);
+  const tradeTime = Math.floor(trade.T / 1000);
+  const bucketTime = tradeTime - (tradeTime % intervalDuration);
+  const price = parseFloat(trade.p);
+  lastPriceValue = price;
+
+  if (!currentCandle || currentCandle.time !== bucketTime) {
+    if (currentCandle) {
+      candleSeries.update(currentCandle);
+      candleHistory.push(currentCandle);
+    }
+    currentCandle = { time: bucketTime, open: price, high: price, low: price, close: price };
+  } else {
+    currentCandle.high = Math.max(currentCandle.high, price);
+    currentCandle.low = Math.min(currentCandle.low, price);
+    currentCandle.close = price;
+  }
+
+  // 軽量化のための描画制御
+  if (!updatePending) {
+    updatePending = true;
+    requestAnimationFrame(() => {
+      candleSeries.update(currentCandle);
+      updatePending = false;
+    });
+  }
+};
+
         setTimeout(() => {
           chart.timeScale().fitContent(); // 視点調整
         }, 500);
