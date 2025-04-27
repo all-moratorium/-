@@ -1,651 +1,295 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>ボウリングスコア計算サイト</title>
-    <style>
-        /* 背景のスタイル */
-        body {
-            background: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #f0f0f0;
-        }
-
-        /* コンテナのスタイル */
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
-
-        /* タイトルのスタイル */
-        h1 {
-            text-align: center;
-            color: #00ccff;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 0 0 10px rgba(0, 204, 255, 0.7);
-        }
-
-        /* フレームセクションのスタイル */
-        .frame-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-            margin-bottom: 40px;
-        }
-
-        .active {
-            display: block;
-        }
-
-        /* フレームのタイトル */
-        .frame-title {
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            color: #00ccff;
-            text-shadow: 0 0 5px rgba(0, 204, 255, 0.7);
-        }
-
-        /* プレイヤー入力のスタイル */
-        .player-input {
-            margin-bottom: 20px;
-        }
-
-        .player-input h2 {
-            text-align: center;
-            color: #00ccff;
-            margin-bottom: 10px;
-            text-shadow: 0 0 5px rgba(0, 204, 255, 0.7);
-        }
-
-        .player-input input {
-            width: 60px;
-            padding: 10px;
-            margin: 5px;
-            border: 2px solid #00ccff;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1em;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #f0f0f0;
-            transition: box-shadow 0.3s, border-color 0.3s;
-        }
-
-        .player-input input:focus {
-            border-color: #0099cc;
-            box-shadow: 0 0 10px rgba(0, 153, 204, 0.7);
-            outline: none;
-        }
-
-        /* ボタンのスタイルとアニメーション */
-        .animated-button {
-            display: block;
-            width: 160px;
-            margin: 20px auto;
-            padding: 12px;
-            background-color: #00ccff;
-            color: #000;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .animated-button:hover {
-            transform: scale(1.05);
-            background-color: #0099cc;
-            box-shadow: 0 0 15px rgba(0, 153, 204, 0.7);
-        }
-
-        .animated-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        .animated-button:active::after {
-            opacity: 1;
-            transition: opacity 0s;
-        }
-
-        /* スコアボードのスタイル */
-        .scoreboard {
-            margin-top: 40px;
-        }
-
-        .scoreboard h2 {
-            color: #00ccff;
-            margin-bottom: 10px;
-            text-shadow: 0 0 5px rgba(0, 204, 255, 0.7);
-        }
-
-        .player-score {
-            margin-bottom: 30px;
-        }
-
-        /* スコアシートのスタイル */
-        .score-sheet {
-            display: flex;
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        .frame {
-            flex: 0 0 auto;
-            width: 80px;
-            margin-right: 5px;
-            border: 1px solid #00ccff;
-            padding: 5px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .frame:last-child {
-            margin-right: 0;
-        }
-
-        .frame-number {
-            text-align: center;
-            font-weight: bold;
-            color: #00ccff;
-        }
-
-        .rolls {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 5px;
-        }
-
-        .score {
-            text-align: center;
-            margin-top: 5px;
-            font-weight: bold;
-            color: #00ccff;
-        }
-
-        /* フェードインアニメーション */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* レスポンシブデザイン */
-        @media (max-width: 768px) {
-            .player-input input {
-                width: 50px;
-                padding: 8px;
-                margin: 3px;
-            }
-
-            .animated-button {
-                width: 130px;
-                padding: 10px;
-            }
-
-            .frame-title {
-                font-size: 1.5em;
-            }
-
-            .frame, .frame-number, .rolls, .score {
-                font-size: 0.8em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>SUI/USDT チャート 完全版</title>
+  <style>
+    /* あなたのCSSはそのままでOK */
+    body { margin: 0; background: #1e1e1e; color: white; font-family: sans-serif; }
+    #tvchart { width: 100vw; height: 100vh; }
+    #chart-title { position: absolute; top: 10px; left: 10px; z-index: 10; font-size: 16px; font-weight: bold; color: #d1d4dc; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px; }
+    #controls-container { position: absolute; top: 10px; left: 120px; z-index: 10; display: flex; gap: 10px; align-items: center; }
+    .dropdown, .highlow-btn-container { position: relative; display: inline-block; }
+    .dropbtn, .highlow-btn { background: #3a3a3a; color: #d1d4dc; padding: 6px 12px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer; }
+    .dropdown-content, .highlow-options { display: none; position: absolute; background-color: #2b2b2b; min-width: 100px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); border-radius: 4px; overflow: hidden; }
+    .dropdown-content button, .highlow-options button { background: none; color: #d1d4dc; padding: 8px 12px; width: 100%; border: none; text-align: left; cursor: pointer; font-size: 14px; }
+    .dropdown-content button:hover, .highlow-options button:hover { background-color: #555; }
+    .dropdown.show .dropdown-content, .highlow-btn-container.show .highlow-options { display: block; }
+    #highlow-display { background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 4px; font-size: 14px; line-height: 1.5; }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+    #current-price { position: absolute; top: 20px; right: 200px; z-index: 10; font-size: 36px; font-weight: bold; color: #ffffff; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 6px; font-family: 'Orbitron', sans-serif; text-align: center; }
+    #price-change { margin-top: 6px; font-size: 14px; }
+    .positive { color: #00ff00; }
+    .negative { color: #ff4444; }
+    #currency-toggle { position: absolute; top: 120px; right: 200px; z-index: 10; }
+    #currency-btn { background: #3a3a3a; color: #d1d4dc; padding: 6px 12px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ボウリングスコア計算サイト</h1>
 
-        <!-- フレーム1からフレーム10までのセクション -->
-        <!-- 各フレームは順番に表示され、次へ進むボタンで次のフレームに移動します -->
-        <!-- 最後のフレームでは計算ボタンが表示されます -->
-
-        <!-- フレームごとの入力セクションを生成 -->
-        <div id="frame-sections">
-            <!-- JavaScriptでフレームセクションを生成します -->
-        </div>
-
-        <!-- スコアボード表示 -->
-        <div class="scoreboard" id="scoreboard">
-            <h2>スコアボード</h2>
-            <!-- プレイヤーごとのスコア表示エリア -->
-            <div class="player-score" id="player1-score">
-                <h3>プレイヤー1</h3>
-                <div class="score-sheet" id="player1-score-sheet">
-                    <!-- フレームごとのスコアがここに表示されます -->
-                </div>
-            </div>
-            <div class="player-score" id="player2-score">
-                <h3>プレイヤー2</h3>
-                <div class="score-sheet" id="player2-score-sheet">
-                    <!-- フレームごとのスコアがここに表示されます -->
-                </div>
-            </div>
-        </div>
+  <div id="chart-title">SUI / USDT</div>
+  <div id="controls-container">
+    <!-- 時間・高低ボタンなど省略なし -->
+    <div class="dropdown" id="timeframe-dropdown">
+      <button class="dropbtn" id="selected-interval">1秒</button>
+      <div class="dropdown-content">
+        <button data-interval="1s">1秒</button>
+        <button data-interval="5s">5秒</button>
+        <button data-interval="1m">1分</button>
+        <button data-interval="5m">5分</button>
+        <button data-interval="15m">15分</button>
+        <button data-interval="1h">1時間</button>
+        <button data-interval="1d">日足</button>
+      </div>
     </div>
 
-    <script>
-        // プレイヤーごとのロールを保持するオブジェクト
-        const players = {
-            'player1': {
-                rolls: [],
-                frameScores: []
-            },
-            'player2': {
-                rolls: [],
-                frameScores: []
-            }
-        };
+    <div class="highlow-btn-container" id="highlow-dropdown">
+      <button class="highlow-btn" id="highlow-interval">高/安: 1分</button>
+      <div class="highlow-options">
+        <button data-period="60">1分</button>
+        <button data-period="300">5分</button>
+        <button data-period="900">15分</button>
+        <button data-period="3600">1時間</button>
+        <button data-period="86400">1日</button>
+      </div>
+    </div>
 
-        const totalFrames = 10;
+    <div id="highlow-display">
+      最高値: -<br>
+      最安値: -<br>
+    </div>
+  </div>
 
-        // フレームセクションを生成する関数
-        function generateFrameSections() {
-            const frameSections = document.getElementById('frame-sections');
+  <div id="current-price">
+    <div id="price-value">-</div>
+    <div id="price-change">
+      24h: <span id="change-24h">-</span> | 7d: <span id="change-7d">-</span> | 30d: <span id="change-30d">-</span>
+    </div>
+  </div>
 
-            for (let frame = 1; frame <= totalFrames; frame++) {
-                const frameSection = document.createElement('div');
-                frameSection.className = 'frame-section';
-                if (frame === 1) frameSection.classList.add('active');
-                frameSection.id = `frame-${frame}`;
+  <div id="currency-toggle">
+    <button id="currency-btn">USD</button>
+  </div>
 
-                const frameTitle = document.createElement('div');
-                frameTitle.className = 'frame-title';
-                frameTitle.textContent = `フレーム ${frame}`;
-                frameSection.appendChild(frameTitle);
+  <div id="tvchart"></div>
 
-                // プレイヤーごとの入力フィールドを生成
-                for (let playerId in players) {
-                    const playerInput = document.createElement('div');
-                    playerInput.className = 'player-input';
+  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+  <script>
+    // === すべてのJSコードをここにまとめて入れる（前回送った完全版） ===
+    // === 省略せず、全機能（グローバル変数、fetchData, changeInterval, fetchUsdJpyRateなど） ===
+    // === 動作しない場合、部分的なコードの省略が原因なので、まとめた完全コードが必要です ===
+  </script>
 
-                    const playerTitle = document.createElement('h2');
-                    playerTitle.textContent = playerId === 'player1' ? 'プレイヤー1' : 'プレイヤー2';
-                    playerInput.appendChild(playerTitle);
-
-                    const roll1 = document.createElement('input');
-                    roll1.type = 'text';
-                    roll1.maxLength = 1;
-                    roll1.id = `${playerId}-frame${frame}-roll1`;
-                    roll1.placeholder = '1投目';
-                    playerInput.appendChild(roll1);
-
-                    const roll2 = document.createElement('input');
-                    roll2.type = 'text';
-                    roll2.maxLength = 1;
-                    roll2.id = `${playerId}-frame${frame}-roll2`;
-                    roll2.placeholder = '2投目';
-                    playerInput.appendChild(roll2);
-
-                    // フレーム10の場合は3投目も追加
-                    if (frame === 10) {
-                        const roll3 = document.createElement('input');
-                        roll3.type = 'text';
-                        roll3.maxLength = 1;
-                        roll3.id = `${playerId}-frame${frame}-roll3`;
-                        roll3.placeholder = '3投目';
-                        playerInput.appendChild(roll3);
-                    }
-
-                    frameSection.appendChild(playerInput);
-                }
-
-                // ボタンを追加
-                const button = document.createElement('button');
-                button.className = 'animated-button';
-                if (frame === 10) {
-                    button.textContent = '計算する';
-                    button.onclick = () => finalizeGame();
-                } else {
-                    button.textContent = '次へ';
-                    button.onclick = () => nextFrame(frame);
-                }
-                frameSection.appendChild(button);
-
-                frameSections.appendChild(frameSection);
-            }
-        }
-
-        // 初期化
-        generateFrameSections();
-
-        /**
-         * フレームを次に進める関数
-         * @param {number} currentFrame - 現在のフレーム番号
-         */
-        function nextFrame(currentFrame) {
-            // 入力が正しいかチェック
-            if (!validateInputs(currentFrame)) {
-                alert('正しい入力をしてください。\nストライクは「s」、スペアは「/」、ガーターは「g」を使用してください。\n数字は1～9です。');
-                return;
-            }
-
-            // ロールを保存
-            saveRolls(currentFrame);
-
-            // スコアを計算して表示
-            displayScores(currentFrame);
-
-            // 現在のフレームを非表示にして、次のフレームを表示
-            document.getElementById(`frame-${currentFrame}`).classList.remove('active');
-            document.getElementById(`frame-${currentFrame + 1}`).classList.add('active');
-        }
-
-        /**
-         * ゲーム終了時の計算関数
-         */
-        function finalizeGame() {
-            // 入力が正しいかチェック
-            if (!validateInputs(10)) {
-                alert('正しい入力をしてください。\nストライクは「s」、スペアは「/」、ガーターは「g」を使用してください。\n数字は1～9です。');
-                return;
-            }
-
-            // ロールを保存
-            saveRolls(10);
-
-            // スコアを計算して表示
-            displayScores(10);
-
-            // 結果を表示
-            document.getElementById('scoreboard').scrollIntoView({ behavior: 'smooth' });
-
-            // フレームセクションを非表示にする
-            const frameSections = document.querySelectorAll('.frame-section');
-            frameSections.forEach(section => section.classList.remove('active'));
-        }
-
-        /**
-         * 入力のバリデーションを行う関数
-         * @param {number} frame - フレーム番号
-         * @returns {boolean} - 入力が有効かどうか
-         */
-        function validateInputs(frame) {
-            for (let playerId in players) {
-                const roll1 = document.getElementById(`${playerId}-frame${frame}-roll1`).value.toLowerCase();
-                const roll2 = document.getElementById(`${playerId}-frame${frame}-roll2`).value.toLowerCase();
-                let roll3 = '';
-                if (frame === 10) {
-                    roll3 = document.getElementById(`${playerId}-frame${frame}-roll3`).value.toLowerCase();
-                }
-
-                // 1投目のバリデーション
-                if (!isValidRoll(roll1)) return false;
-
-                // ストライクの場合
-                if (roll1 === 's') {
-                    // フレーム10では2投目の入力を許可
-                    if (frame < 10 && roll2 !== '') return false;
-                } else {
-                    // 2投目のバリデーション
-                    if (!isValidRoll(roll2)) return false;
-
-                    // 合計が10を超えていないか確認（スペアの場合を除く）
-                    if (roll2 !== '/' && getRollScore(roll1) + getRollScore(roll2) > 10) return false;
-                }
-
-                // フレーム10の3投目のバリデーション
-                if (frame === 10) {
-                    if ((isStrikeOrSpare(roll1) || isStrikeOrSpare(roll2)) && !isValidRoll(roll3)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        /**
-         * ストライクまたはスペアかどうかを判定する関数
-         */
-        function isStrikeOrSpare(roll) {
-            return roll === 's' || roll === '/';
-        }
-
-        /**
-         * ロールが有効かどうかをチェックする関数
-         * @param {string} roll - ロールの入力値
-         * @returns {boolean} - 有効なロールかどうか
-         */
-        function isValidRoll(roll) {
-            return /^([1-9]|s|\/|g)$/.test(roll);
-        }
-
-        /**
-         * ロールのスコアを取得する関数
-         * @param {string} roll - ロールの入力値
-         * @returns {number} - スコア
-         */
-        function getRollScore(roll, prevRoll = 0) {
-            if (roll === 's') return 10;
-            if (roll === '/') return 10 - prevRoll;
-            if (roll === 'g') return 0;
-            let score = parseInt(roll);
-            return isNaN(score) ? 0 : score;
-        }
-
-        /**
-         * ロールを保存する関数
-         * @param {number} frame - フレーム番号
-         */
-        function saveRolls(frame) {
-            for (let playerId in players) {
-                const roll1 = document.getElementById(`${playerId}-frame${frame}-roll1`).value.toLowerCase();
-                const roll2 = document.getElementById(`${playerId}-frame${frame}-roll2`).value.toLowerCase();
-                let roll3 = '';
-
-                if (frame === 10) {
-                    roll3 = document.getElementById(`${playerId}-frame${frame}-roll3`).value.toLowerCase();
-                }
-
-                players[playerId].rolls.push(roll1);
-
-                // フレーム1〜9でストライクなら2投目は無視
-                if (frame < 10 && roll1 === 's') {
-                    // 何もしない
-                } else {
-                    players[playerId].rolls.push(roll2);
-                }
-
-                if (frame === 10) {
-                    if (isStrikeOrSpare(roll1) || isStrikeOrSpare(roll2)) {
-                        players[playerId].rolls.push(roll3);
-                    }
-                }
-            }
-        }
-
-        /**
-         * スコアを計算して表示する関数
-         * @param {number} currentFrame - 現在のフレーム番号
-         */
-        function displayScores(currentFrame) {
-            for (let playerId in players) {
-                const scoreData = calculateScore(players[playerId].rolls);
-                players[playerId].frameScores = scoreData.frameScores;
-                displayPlayerScore(playerId, scoreData, currentFrame);
-            }
-        }
-
-        /**
-         * プレイヤーのスコアデータを表示する関数
-         * @param {string} playerId - プレイヤーID
-         * @param {object} scoreData - スコアデータ
-         * @param {number} currentFrame - 現在のフレーム番号
-         */
-        function displayPlayerScore(playerId, scoreData, currentFrame) {
-            const scoreSheet = document.getElementById(`${playerId}-score-sheet`);
-            scoreSheet.innerHTML = ''; // 一度クリア
-
-            let rollIndex = 0;
-
-            for (let frame = 0; frame < totalFrames; frame++) {
-                const frameDiv = document.createElement('div');
-                frameDiv.className = 'frame';
-
-                const frameNumber = document.createElement('div');
-                frameNumber.className = 'frame-number';
-                frameNumber.textContent = frame + 1;
-                frameDiv.appendChild(frameNumber);
-
-                const rollsDiv = document.createElement('div');
-                rollsDiv.className = 'rolls';
-
-                let roll1 = players[playerId].rolls[rollIndex] || '';
-                let roll2 = players[playerId].rolls[rollIndex + 1] || '';
-                let roll3 = '';
-
-                // 表示用に変換
-                roll1 = formatRollDisplay(roll1);
-                roll2 = formatRollDisplay(roll2);
-
-                // フレーム10の場合
-                if (frame === 9) {
-                    roll3 = players[playerId].rolls[rollIndex + 2] || '';
-                    roll3 = formatRollDisplay(roll3);
-
-                    rollsDiv.innerHTML = `
-                        <div>${roll1}</div>
-                        <div>${roll2}</div>
-                        <div>${roll3}</div>
-                    `;
-                    rollIndex += 3;
-                } else {
-                    rollsDiv.innerHTML = `
-                        <div>${roll1}</div>
-                        <div>${roll2}</div>
-                    `;
-                    if (roll1 === 'X') {
-                        rollIndex += 1;
-                    } else {
-                        rollIndex += 2;
-                    }
-                }
-
-                frameDiv.appendChild(rollsDiv);
-
-                const scoreDiv = document.createElement('div');
-                scoreDiv.className = 'score';
-                scoreDiv.textContent = scoreData.cumulativeScores[frame] !== undefined ? scoreData.cumulativeScores[frame] : '';
-                frameDiv.appendChild(scoreDiv);
-
-                scoreSheet.appendChild(frameDiv);
-            }
-
-            // 平均スコア、予想スコア、残りピン数の計算と表示
-            const averageScore = (scoreData.totalScore / currentFrame).toFixed(2);
-            const predictedScore = (averageScore * totalFrames).toFixed(2);
-            const remainingFrames = totalFrames - currentFrame;
-            const scoreWithStrikes = scoreData.totalScore + remainingFrames * 30;
-            const scoreWithSpares = scoreData.totalScore + remainingFrames * 20;
-            const remainingPins = 200 - scoreData.totalScore;
-
-            // スコアボードに追加情報を表示
-            const additionalInfo = document.createElement('div');
-            additionalInfo.innerHTML = `
-                <p>合計スコア: ${scoreData.totalScore}</p>
-                <p>平均スコア: ${averageScore}</p>
-                <p>予想スコア（平均維持）: ${predictedScore}</p>
-                <p>予想スコア（全ストライク）: ${scoreWithStrikes}</p>
-                <p>予想スコア（全スペア）: ${scoreWithSpares}</p>
-                <p>残りピン数（200点まで）: ${remainingPins < 0 ? 0 : remainingPins}</p>
-            `;
-            scoreSheet.appendChild(additionalInfo);
-        }
-
-        /**
-         * ロールの表示を整形する関数
-         */
-        function formatRollDisplay(roll) {
-            if (roll === 's') return 'X';
-            if (roll === '/') return '/';
-            if (roll === 'g') return 'G';
-            return roll;
-        }
-
-        /**
-         * スコアを計算する関数
-         * @param {Array} rolls - ロールの配列
-         * @returns {object} - 合計スコアと各フレームのスコア
-         */
-        function calculateScore(rolls) {
-            let totalScore = 0;
-            let frameScores = [];
-            let cumulativeScores = [];
-            let rollIndex = 0;
-
-            for (let frame = 0; frame < totalFrames; frame++) {
-                if (frame < 9) {
-                    if (rolls[rollIndex] === 's') { // ストライク
-                        let frameScore = 10 + getRollValue(rolls, rollIndex + 1) + getRollValue(rolls, rollIndex + 2);
-                        totalScore += frameScore;
-                        frameScores.push(frameScore);
-                        cumulativeScores.push(totalScore);
-                        rollIndex += 1;
-                    } else if (rolls[rollIndex + 1] === '/') { // スペア
-                        let frameScore = 10 + getRollValue(rolls, rollIndex + 2);
-                        totalScore += frameScore;
-                        frameScores.push(frameScore);
-                        cumulativeScores.push(totalScore);
-                        rollIndex += 2;
-                    } else { // 通常のスコア
-                        let frameScore = getRollValue(rolls, rollIndex) + getRollValue(rolls, rollIndex + 1);
-                        totalScore += frameScore;
-                        frameScores.push(frameScore);
-                        cumulativeScores.push(totalScore);
-                        rollIndex += 2;
-                    }
-                } else {
-                    // 10フレーム目の処理
-                    let frameScore = getRollValue(rolls, rollIndex) + getRollValue(rolls, rollIndex + 1);
-                    if (isStrikeOrSpare(rolls[rollIndex]) || isStrikeOrSpare(rolls[rollIndex + 1])) {
-                        frameScore += getRollValue(rolls, rollIndex + 2);
-                    }
-                    totalScore += frameScore;
-                    frameScores.push(frameScore);
-                    cumulativeScores.push(totalScore);
-                    rollIndex += 3;
-                }
-            }
-
-            return {
-                totalScore: totalScore,
-                frameScores: frameScores,
-                cumulativeScores: cumulativeScores
-            };
-        }
-
-        /**
-         * ロールのスコアを取得する関数（配列インデックス版）
-         */
-        function getRollValue(rolls, index) {
-            const roll = rolls[index];
-            if (roll === 's') return 10;
-            if (roll === '/') return 10 - getRollValue(rolls, index - 1);
-            if (roll === 'g') return 0;
-            let score = parseInt(roll);
-            return isNaN(score) ? 0 : score;
-        }
-    </script>
 </body>
 </html>
-
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const chart = LightweightCharts.createChart(document.getElementById('tvchart'), {
+      layout: { background: { color: '#1e1e1e' }, textColor: '#d1d4dc' },
+      grid: { vertLines: { color: '#444', visible: true }, horzLines: { color: '#444', visible: true } },
+      priceScale: { borderColor: '#485c7b' },
+      timeScale: { borderColor: '#485c7b', timeVisible: true, secondsVisible: true, rightOffset: 10 },
+    });
+  
+    const candleSeries = chart.addCandlestickSeries({
+      upColor: '#26a69a', downColor: '#ef5350',
+      borderDownColor: '#ef5350', borderUpColor: '#26a69a',
+      wickDownColor: '#ef5350', wickUpColor: '#26a69a',
+    });
+  
+    let ws = null, currentCandle = null, intervalDuration = 1;
+    let candleHistory = [];
+    let lastPriceValue = 0;
+    let highlowPeriod = 60;
+  
+    let currentCurrency = 'USD';
+    let usdJpyRate = 150;
+  
+    const priceValueDisplay = document.getElementById('price-value');
+    const change24h = document.getElementById('change-24h');
+    const change7d = document.getElementById('change-7d');
+    const change30d = document.getElementById('change-30d');
+    const highlowDisplay = document.getElementById('highlow-display');
+    const selectedIntervalBtn = document.getElementById('selected-interval');
+    const dropdown = document.getElementById('timeframe-dropdown');
+    const highlowBtn = document.getElementById('highlow-interval');
+    const highlowDropdown = document.getElementById('highlow-dropdown');
+  
+    function formatPrice(price) {
+      return parseFloat(price).toPrecision(8).replace(/\.?0+$/, '');
+    }
+  
+    function updateCurrentPriceDisplay(price) {
+      lastPriceValue = price;
+      let displayPrice = price;
+      let unit = 'USD';
+      if (currentCurrency === 'JPY') {
+        displayPrice = price * usdJpyRate;
+        unit = 'JPY';
+      }
+      priceValueDisplay.textContent = `${formatPrice(displayPrice)} ${unit}`;
+    }
+  
+    async function fetchUsdJpyRate() {
+      try {
+        const response = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=JPY');
+        const data = await response.json();
+        usdJpyRate = data.rates.JPY;
+      } catch (e) {
+        console.error('為替レート取得失敗:', e);
+      }
+    }
+  
+    document.getElementById('currency-btn').addEventListener('click', () => {
+      currentCurrency = (currentCurrency === 'USD') ? 'JPY' : 'USD';
+      document.getElementById('currency-btn').textContent = currentCurrency;
+      updateCurrentPriceDisplay(lastPriceValue);
+      updateHighLow();
+      fetchAllHistoricalPrices();
+    });
+  
+    fetchUsdJpyRate();
+    setInterval(fetchUsdJpyRate, 60 * 1000);
+    function updateHighLow() {
+      const now = Math.floor(Date.now() / 1000);
+      const periodStart = now - highlowPeriod;
+      const periodCandles = candleHistory.filter(c => c.time >= periodStart);
+      if (periodCandles.length === 0) return;
+      const highs = periodCandles.map(c => c.high);
+      const lows = periodCandles.map(c => c.low);
+      let high = Math.max(...highs);
+      let low = Math.min(...lows);
+      let lastPrice = candleHistory[candleHistory.length - 1].close;
+      if (currentCurrency === 'JPY') {
+        high *= usdJpyRate;
+        low *= usdJpyRate;
+        lastPrice *= usdJpyRate;
+      }
+      const highDiff = (((lastPrice - high) / high) * 100).toFixed(2);
+      const lowDiff = (((lastPrice - low) / low) * 100).toFixed(2);
+      const unit = currentCurrency;
+      highlowDisplay.innerHTML = `最高値: ${formatPrice(high)} ${unit} (${highDiff}%)<br>最安値: ${formatPrice(low)} ${unit} (${lowDiff}%)`;
+    }
+  
+    function calcChange(current, past) {
+      if (!past) return '-';
+      let currentPrice = current;
+      let pastPrice = past;
+      if (currentCurrency === 'JPY') {
+        currentPrice = current * usdJpyRate;
+        pastPrice = past * usdJpyRate;
+      }
+      const diff = ((currentPrice - pastPrice) / pastPrice * 100).toFixed(2);
+      const className = diff >= 0 ? 'positive' : 'negative';
+      return `<span class="${className}">${diff}%</span>`;
+    }
+  
+    async function getHistoricalPrice(symbol, interval, timestamp) {
+      const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&startTime=${timestamp}&limit=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      return parseFloat(data[0][4]); // close price
+    }
+  
+    async function fetchAllHistoricalPrices() {
+      const now = Date.now();
+      const price24hAgo = await getHistoricalPrice('SUIUSDT', '1h', now - 24 * 60 * 60 * 1000);
+      const price7dAgo = await getHistoricalPrice('SUIUSDT', '1d', now - 7 * 24 * 60 * 60 * 1000);
+      const price30dAgo = await getHistoricalPrice('SUIUSDT', '1d', now - 30 * 24 * 60 * 60 * 1000);
+  
+      change24h.innerHTML = calcChange(lastPriceValue, price24hAgo);
+      change7d.innerHTML = calcChange(lastPriceValue, price7dAgo);
+      change30d.innerHTML = calcChange(lastPriceValue, price30dAgo);
+    }
+  
+    setInterval(() => {
+      updateCurrentPriceDisplay(lastPriceValue);
+      updateHighLow();
+      fetchAllHistoricalPrices();
+    }, 1000); // 1秒ごとに更新
+  
+    function changeInterval(interval) {
+      if (ws) { ws.close(); ws = null; }
+      candleHistory = [];
+  
+      if (interval === '1s' || interval === '5s') {
+        intervalDuration = (interval === '1s') ? 1 : 5;
+        currentCandle = null;
+        candleSeries.setData([]);
+        ws = new WebSocket('wss://stream.binance.com:9443/ws/suiusdt@trade');
+        ws.onmessage = (event) => {
+          const trade = JSON.parse(event.data);
+          const tradeTime = Math.floor(trade.T / 1000);
+          const bucketTime = tradeTime - (tradeTime % intervalDuration);
+          const price = parseFloat(trade.p);
+          lastPriceValue = price;
+  
+          if (!currentCandle || currentCandle.time !== bucketTime) {
+            if (currentCandle) {
+              candleSeries.update(currentCandle);
+              candleHistory.push(currentCandle);
+            }
+            currentCandle = { time: bucketTime, open: price, high: price, low: price, close: price };
+          } else {
+            currentCandle.high = Math.max(currentCandle.high, price);
+            currentCandle.low = Math.min(currentCandle.low, price);
+            currentCandle.close = price;
+          }
+        };
+        setTimeout(() => {
+          chart.timeScale().fitContent(); // 視点調整
+        }, 500);
+      } else {
+        fetchData(interval);
+      }
+    }
+  
+    async function fetchData(interval) {
+      const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=SUIUSDT&interval=${interval}&limit=1000`);
+      const data = await response.json();
+      const formattedData = data.map(d => ({
+        time: d[0] / 1000,
+        open: parseFloat(d[1]),
+        high: parseFloat(d[2]),
+        low: parseFloat(d[3]),
+        close: parseFloat(d[4])
+      }));
+      candleSeries.setData(formattedData);
+      candleHistory = formattedData;
+      lastPriceValue = formattedData[formattedData.length - 1].close;
+      chart.timeScale().fitContent();
+    }
+    // 時間変更ドロップダウンのイベント
+    selectedIntervalBtn.addEventListener('click', () => dropdown.classList.toggle('show'));
+    highlowBtn.addEventListener('click', () => highlowDropdown.classList.toggle('show'));
+  
+    window.addEventListener('click', function(e) {
+      if (!dropdown.contains(e.target)) dropdown.classList.remove('show');
+      if (!highlowDropdown.contains(e.target)) highlowDropdown.classList.remove('show');
+    });
+  
+    document.querySelectorAll('.dropdown-content button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const interval = btn.getAttribute('data-interval');
+        selectedIntervalBtn.textContent = btn.textContent;
+        dropdown.classList.remove('show');
+        changeInterval(interval);
+      });
+    });
+  
+    document.querySelectorAll('.highlow-options button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        highlowPeriod = parseInt(btn.getAttribute('data-period'));
+        highlowBtn.textContent = `高/安: ${btn.textContent}`;
+        highlowDropdown.classList.remove('show');
+        updateHighLow();
+      });
+    });
+  
+    // 初期状態で1秒足を表示
+    changeInterval('1s');
+  });
+  </script>
+  </body>
+  </html>
+  
