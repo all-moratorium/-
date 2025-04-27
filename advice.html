@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>アドバイスくれるやつ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    #advice {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>💡 今日のアドバイス</h1>
+  <button onclick="getAdvice()">アドバイスをもらう</button>
+  <div id="advice">ここに表示されるよ</div>
+
+  <script>
+    function getAdvice() {
+      fetch('https://api.adviceslip.com/advice')
+        .then(res => res.json())
+        .then(data => {
+          const advice = data.slip.advice;
+          document.getElementById('advice').textContent = advice;
+        })
+        .catch(err => {
+          document.getElementById('advice').textContent = 'エラーが発生しました😢';
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
