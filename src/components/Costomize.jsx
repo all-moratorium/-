@@ -34,6 +34,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [selectedTubes, setSelectedTubes] = useState(new Set());
     const [highlightedTube, setHighlightedTube] = useState(null);
     const [isCanvasSelectionMode, setIsCanvasSelectionMode] = useState(false);
+    const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(false);
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -47,6 +48,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
+
+    // 背景色変更のデバウンス用ref
+    const backgroundColorTimeoutRef = useRef(null);
+
+    // 背景色変更のデバウンス処理
+    const handleBackgroundColorChange = useCallback((color) => {
+        // 既存のタイマーをクリア
+        if (backgroundColorTimeoutRef.current) {
+            clearTimeout(backgroundColorTimeoutRef.current);
+        }
+        
+        // 200ms後に実際の更新を実行
+        backgroundColorTimeoutRef.current = setTimeout(() => {
+            if (neonPower) {
+                setBackgroundColor(color);
+            } else {
+                setBackgroundColorOff(color);
+            }
+        }, 200);
+    }, [neonPower]);
 
     // 現在の状態を保存する関数
     const saveCurrentState = useCallback(() => {
@@ -79,6 +100,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         '#0080ff', '#ffff00', '#ff0040', '#40ff00',
         '#00ffff', '#ff00ff', '#ffffff', '#ff4080'
     ];
+
+    // Catmull-Rom補間関数
+    const getCatmullRomPt = (p0, p1, p2, p3, t) => {
+        const t2 = t * t;
+        const t3 = t2 * t;
+        const c0 = p1;
+        const c1 = 0.5 * (p2 - p0);
+        const c2 = 0.5 * (2 * p0 - 5 * p1 + 4 * p2 - p3);
+        const c3 = 0.5 * (-p0 + 3 * p1 - 3 * p2 + p3);
+
+        return c0 + c1 * t + c2 * t2 + c3 * t3;
+    };
 
     // パスの長さを計算する関数
     const calculatePathLength = (pathObj) => {
@@ -518,7 +551,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // パスのヒット判定を行う関数
     const getPathAtPosition = useCallback((x, y) => {
-        const hitRadius = 10; // ヒット判定の半径
+        const hitRadius = 15; // ヒット判定の半径を拡大
+        let closestPath = null;
+        let closestDistance = Infinity;
         
         for (let pathIndex = 0; pathIndex < neonPaths.length; pathIndex++) {
             const pathObj = neonPaths[pathIndex];
@@ -529,6 +564,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const pathPoints = pathObj.points;
             if (pathPoints.length < 2) continue;
             
+            let minDistanceForPath = Infinity;
+            
             // パス上の各セグメントに対してヒット判定
             for (let i = 0; i < pathPoints.length - 1; i++) {
                 const p1 = pathPoints[i];
@@ -536,13 +573,44 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 
                 // 線分との距離を計算
                 const distance = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
+                minDistanceForPath = Math.min(minDistanceForPath, distance);
+                
                 if (distance <= hitRadius) {
-                    return pathIndex;
+                    // 最も近いパスを選択
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestPath = pathIndex;
+                    }
+                }
+            }
+            
+            // スプライン補間されたパスの場合、より細かくチェック
+            if (pathObj.type === 'spline' && minDistanceForPath > hitRadius) {
+                // スプライン曲線の補間点もチェック
+                for (let i = 0; i < pathPoints.length - 1; i++) {
+                    const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                    const p1 = pathPoints[i];
+                    const p2 = pathPoints[i + 1];
+                    const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+
+                    // スプライン補間された点をチェック
+                    for (let t = 0; t <= canvasSettings.segmentsPerCurve; t += 5) { // 5刻みで高速化
+                        const step = t / canvasSettings.segmentsPerCurve;
+                        const splineX = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                        const splineY = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                        
+                        const pointDistance = Math.sqrt((x - splineX) ** 2 + (y - splineY) ** 2);
+                        if (pointDistance <= hitRadius && pointDistance < closestDistance) {
+                            closestDistance = pointDistance;
+                            closestPath = pathIndex;
+                        }
+                    }
                 }
             }
         }
-        return null;
-    }, [neonPaths]);
+        
+        return closestPath;
+    }, [neonPaths, canvasSettings.segmentsPerCurve]);
 
     // 点と線分の距離を計算する関数
     const distanceToLineSegment = (px, py, x1, y1, x2, y2) => {
@@ -571,6 +639,44 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
         }, 100);
     }, []);
+
+    // サイドバーの一番上にスクロールする関数
+    const scrollToTop = useCallback(() => {
+        const sidebar = document.querySelector('.customize-sidebar');
+        if (sidebar) {
+            sidebar.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }, []);
+
+    // 色設定の一番下（最後のチューブ）にスクロールする関数
+    const scrollToLastTube = useCallback(() => {
+        // 最後のチューブのインデックスを取得
+        const tubeIndices = neonPaths
+            .map((pathObj, index) => pathObj && pathObj.mode === 'stroke' ? index : null)
+            .filter(index => index !== null);
+        
+        if (tubeIndices.length > 0) {
+            // 長さ順にソートして最後のチューブ（最短のチューブ）を取得
+            const sortedTubes = tubeIndices
+                .map(index => ({ index, length: calculatePathLength(neonPaths[index]) }))
+                .sort((a, b) => b.length - a.length);
+            
+            const lastTubeIndex = sortedTubes[sortedTubes.length - 1].index;
+            
+            setTimeout(() => {
+                const lastTubeElement = document.querySelector(`[data-tube-index="${lastTubeIndex}"]`);
+                if (lastTubeElement) {
+                    lastTubeElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            }, 100);
+        }
+    }, [neonPaths, calculatePathLength]);
 
     const handleWheel = useCallback((e) => {
         e.preventDefault();
@@ -982,64 +1088,35 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 <span style={{ color: '#d1d5db', fontSize: '12px', fontWeight: 'bold' }}>
                                     背景色
                                 </span>
-                                <div 
-                                    style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        backgroundColor: neonPower ? backgroundColor : backgroundColorOff,
-                                        border: '2px solid #ccc',
-                                        borderRadius: '6px',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                    }}
-                                />
-                                <input
-                                    type="color"
-                                    value={neonPower ? backgroundColor : backgroundColorOff}
-                                    onChange={(e) => {
-                                        if (neonPower) {
-                                            setBackgroundColor(e.target.value);
-                                        } else {
-                                            setBackgroundColorOff(e.target.value);
-                                        }
-                                    }}
-                                    style={{
-                                        width: '24px',
-                                        height: '24px',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        opacity: 0,
-                                        position: 'absolute',
-                                        pointerEvents: 'none'
-                                    }}
-                                />
-                                <button
-                                    onClick={() => {
-                                        const input = document.createElement('input');
-                                        input.type = 'color';
-                                        input.value = neonPower ? backgroundColor : backgroundColorOff;
-                                        input.onchange = (e) => {
-                                            if (neonPower) {
-                                                setBackgroundColor(e.target.value);
-                                            } else {
-                                                setBackgroundColorOff(e.target.value);
-                                            }
-                                        };
-                                        input.click();
-                                    }}
-                                    style={{
-                                        padding: '4px 8px',
-                                        backgroundColor: '#3b82f6',
-                                        color: 'white',
-                                        border: '1px solid #2563eb',
-                                        borderRadius: '4px',
-                                        fontSize: '10px',
-                                        cursor: 'pointer',
-                                        fontWeight: 'bold'
-                                    }}
-                                >
-                                    変更
-                                </button>
+                                <div style={{ position: 'relative' }}>
+                                    <div 
+                                        style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            backgroundColor: neonPower ? backgroundColor : backgroundColorOff,
+                                            border: '2px solid #ccc',
+                                            borderRadius: '6px',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                            cursor: 'pointer'
+                                        }}
+                                    />
+                                    <input
+                                        type="color"
+                                        value={neonPower ? backgroundColor : backgroundColorOff}
+                                        onChange={(e) => handleBackgroundColorChange(e.target.value)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            width: '32px',
+                                            height: '32px',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            cursor: 'pointer',
+                                            opacity: 0
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <p style={{ 
@@ -1063,11 +1140,126 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </button>
                     </div>
 
+                    {/* 一括カラー設定 */}
+                    <div className="customize-setting-group">
+                        <h3 className="customize-setting-title">一括カラー設定</h3>
+                        {!isCanvasSelectionMode ? (
+                            <button
+                                onClick={() => {
+                                    setSelectedTubes(new Set());
+                                    setIsCanvasSelectionMode(true);
+                                }}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    backgroundColor: '#7c3aed',
+                                    color: 'white',
+                                    border: '1px solid #8b5cf6',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                キャンバスからチューブを選択
+                            </button>
+                        ) : (
+                            <div>
+                                <div style={{ marginBottom: '12px', color: '#fbbf24', fontSize: '14px', textAlign: 'center' }}>
+                                    キャンバス上のチューブをクリックして選択 ({selectedTubes.size}個選択中)
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button
+                                        onClick={() => {
+                                            if (selectedTubes.size > 0) {
+                                                setShowBulkColorModal(true);
+                                            }
+                                        }}
+                                        disabled={selectedTubes.size === 0}
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px',
+                                            backgroundColor: selectedTubes.size > 0 ? '#10b981' : '#6b7280',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            cursor: selectedTubes.size > 0 ? 'pointer' : 'not-allowed'
+                                        }}
+                                    >
+                                        色変更
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsCanvasSelectionMode(false);
+                                            setSelectedTubes(new Set());
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px',
+                                            backgroundColor: '#6b7280',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        キャンセル
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     {/* ネオンチューブ設定 */}
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
                         <div className="customize-setting-group">
-                            <h3 className="customize-setting-title">ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)</h3>
-                            {neonPaths
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                                <h3 className="customize-setting-title" style={{ margin: 0 }}>
+                                    ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)
+                                </h3>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    {/* 最後のチューブへスクロールボタン */}
+                                    <button
+                                        onClick={scrollToLastTube}
+                                        style={{
+                                            padding: '4px 8px',
+                                            backgroundColor: '#10b981',
+                                            color: 'white',
+                                            border: '1px solid #059669',
+                                            borderRadius: '4px',
+                                            fontSize: '10px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold'
+                                        }}
+                                        title="最後のチューブへ"
+                                    >
+                                        ↓ 最後へ
+                                    </button>
+                                    {/* 最小化/展開ボタン */}
+                                    <button
+                                        onClick={() => setIsTubeSettingsMinimized(!isTubeSettingsMinimized)}
+                                        style={{
+                                            padding: '4px 8px',
+                                            backgroundColor: '#6b7280',
+                                            color: 'white',
+                                            border: '1px solid #4b5563',
+                                            borderRadius: '4px',
+                                            fontSize: '10px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold'
+                                        }}
+                                        title={isTubeSettingsMinimized ? '展開' : '最小化'}
+                                    >
+                                        {isTubeSettingsMinimized ? '▼' : '▲'}
+                                    </button>
+                                </div>
+                            </div>
+                            {!isTubeSettingsMinimized && neonPaths
                                 .map((pathObj, index) => ({ pathObj, originalIndex: index }))
                                 .filter(({ pathObj }) => pathObj && pathObj.mode === 'stroke')
                                 .sort((a, b) => calculatePathLength(b.pathObj) - calculatePathLength(a.pathObj))
@@ -1191,6 +1383,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         </div>
                                     </div>
                                 ))}
+                            {isTubeSettingsMinimized && (
+                                <div style={{ 
+                                    padding: '12px', 
+                                    textAlign: 'center', 
+                                    color: '#9ca3af', 
+                                    fontSize: '14px',
+                                    fontStyle: 'italic'
+                                }}>
+                                    ネオンチューブ設定が最小化されています
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -1276,6 +1479,43 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         >
                             🎯 ビューリセット
                         </button>
+
+                        {/* すべてリセットボタン */}
+                        <button
+                            onClick={() => {
+                                setSelectedColor('#ff0080');
+                                setThickness(20);
+                                setBlinkEffect(false);
+                                setAnimationSpeed(1);
+                                setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
+                                setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                                setGridColor('#646464'); // RGB(100,100,100)
+                                setGridColorOff('#000000'); // RGB(0,0,0)
+                                setShowGrid(true);
+                                setGridOpacity(0.3); // 30%
+                                setGridSize(160);
+                                setNeonPower(true); // 電源もONにリセット
+                                
+                                // パス別設定もリセット
+                                const resetColors = {};
+                                const resetThickness = {};
+                                neonPaths.forEach((pathObj, index) => {
+                                    if (pathObj.mode === 'stroke') {
+                                        resetColors[index] = '#ffff00';
+                                        resetThickness[index] = 20;
+                                    } else {
+                                        resetColors[index] = '#000000';
+                                        resetThickness[index] = 3;
+                                    }
+                                });
+                                setPathColors(resetColors);
+                                setPathThickness(resetThickness);
+                            }}
+                            className="customize-reset-button"
+                            style={{ marginBottom: '12px' }}
+                        >
+                            🔄 すべてリセット
+                        </button>
                         
                         <p style={{ 
                             color: '#9ca3af', 
@@ -1288,32 +1528,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </p>
                     </div>
                     <div className="customize-setting-group">
-                        <h3 className="customize-setting-title">背景・表示設定</h3>
+                        <h3 className="customize-setting-title">表示設定</h3>
                         
-                        {/* 背景色設定（点灯時） */}
-                        <div className="customize-slider-container">
-                            <label className="customize-setting-label">背景色（点灯時）</label>
-                            <input
-                                type="color"
-                                value={backgroundColor}
-                                onChange={(e) => setBackgroundColor(e.target.value)}
-                                className="customize-path-color-input"
-                            />
-                            <span className="customize-path-color-value">{backgroundColor}</span>
-                        </div>
-
-                        {/* 背景色設定（消灯時） */}
-                        <div className="customize-slider-container">
-                            <label className="customize-setting-label">背景色（消灯時）</label>
-                            <input
-                                type="color"
-                                value={backgroundColorOff}
-                                onChange={(e) => setBackgroundColorOff(e.target.value)}
-                                className="customize-path-color-input"
-                            />
-                            <span className="customize-path-color-value">{backgroundColorOff}</span>
-                        </div>
-
                         {/* グリッド表示切り替え */}
                         <div className="customize-slider-container">
                             <label className="customize-setting-label">グリッド表示</label>
@@ -1330,135 +1546,27 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 {showGrid ? 'ON' : 'OFF'}
                             </button>
                         </div>
-
-                        {/* グリッド設定 */}
-                        {showGrid && (
-                            <>
-                                <div className="customize-slider-container">
-                                    <label className="customize-setting-label">グリッドサイズ: {gridSize}px（{gridSize/25}cm間隔）</label>
-                                    <input
-                                        type="range"
-                                        min="25"
-                                        max="200"
-                                        step="25"
-                                        value={gridSize}
-                                        onChange={(e) => setGridSize(Number(e.target.value))}
-                                        className="customize-setting-slider"
-                                    />
-                                </div>
-
-                                <div className="customize-slider-container">
-                                    <label className="customize-setting-label">グリッドの色（点灯時）</label>
-                                    <input
-                                        type="color"
-                                        value={gridColor}
-                                        onChange={(e) => setGridColor(e.target.value)}
-                                        className="customize-path-color-input"
-                                    />
-                                    <span className="customize-path-color-value">{gridColor}</span>
-                                </div>
-
-                                <div className="customize-slider-container">
-                                    <label className="customize-setting-label">グリッドの色（消灯時）</label>
-                                    <input
-                                        type="color"
-                                        value={gridColorOff}
-                                        onChange={(e) => setGridColorOff(e.target.value)}
-                                        className="customize-path-color-input"
-                                    />
-                                    <span className="customize-path-color-value">{gridColorOff}</span>
-                                </div>
-
-                                <div className="customize-slider-container">
-                                    <label className="customize-setting-label">グリッド透明度: {Math.round(gridOpacity * 100)}%</label>
-                                    <input
-                                        type="range"
-                                        min="0.1"
-                                        max="1"
-                                        step="0.1"
-                                        value={gridOpacity}
-                                        onChange={(e) => setGridOpacity(Number(e.target.value))}
-                                        className="customize-setting-slider"
-                                    />
-                                </div>
-                            </>
-                        )}
                     </div>
 
-
-                    <div className="customize-setting-group">
-                        <h3 className="customize-setting-title">一括カラー設定</h3>
-                        {!isCanvasSelectionMode ? (
-                            <button
-                                onClick={() => {
-                                    setSelectedTubes(new Set());
-                                    setIsCanvasSelectionMode(true);
-                                }}
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    backgroundColor: '#7c3aed',
-                                    color: 'white',
-                                    border: '1px solid #8b5cf6',
-                                    borderRadius: '6px',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s'
-                                }}
-                            >
-                                キャンバスからチューブを選択
-                            </button>
-                        ) : (
-                            <div>
-                                <div style={{ marginBottom: '12px', color: '#fbbf24', fontSize: '14px', textAlign: 'center' }}>
-                                    キャンバス上のチューブをクリックして選択 ({selectedTubes.size}個選択中)
-                                </div>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <button
-                                        onClick={() => {
-                                            if (selectedTubes.size > 0) {
-                                                setShowBulkColorModal(true);
-                                            }
-                                        }}
-                                        disabled={selectedTubes.size === 0}
-                                        style={{
-                                            flex: 1,
-                                            padding: '8px',
-                                            backgroundColor: selectedTubes.size > 0 ? '#10b981' : '#6b7280',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                            cursor: selectedTubes.size > 0 ? 'pointer' : 'not-allowed'
-                                        }}
-                                    >
-                                        色変更
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setIsCanvasSelectionMode(false);
-                                            setSelectedTubes(new Set());
-                                        }}
-                                        style={{
-                                            flex: 1,
-                                            padding: '8px',
-                                            backgroundColor: '#6b7280',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        キャンセル
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    {/* 一番上へスクロールボタン */}
+                    <button
+                        onClick={scrollToTop}
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                            border: '1px solid #2563eb',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            transition: 'all 0.2s'
+                        }}
+                        title="サイドバーの一番上へスクロール"
+                    >
+                        ↑ 一番上へ戻る
+                    </button>
 
                     {/* SVGダウンロード */}
                     <button
@@ -1469,41 +1577,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         💾 ネオンサインSVGダウンロード
                     </button>
 
-                    {/* リセットボタン */}
-                    <button
-                        onClick={() => {
-                            setSelectedColor('#ff0080');
-                            setThickness(20);
-                            setBlinkEffect(false);
-                            setAnimationSpeed(1);
-                            setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
-                            setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
-                            setGridColor('#646464'); // RGB(100,100,100)
-                            setGridColorOff('#000000'); // RGB(0,0,0)
-                            setShowGrid(true);
-                            setGridOpacity(0.3); // 30%
-                            setGridSize(160);
-                            setNeonPower(true); // 電源もONにリセット
-                            
-                            // パス別設定もリセット
-                            const resetColors = {};
-                            const resetThickness = {};
-                            neonPaths.forEach((pathObj, index) => {
-                                if (pathObj.mode === 'stroke') {
-                                    resetColors[index] = '#ffff00';
-                                    resetThickness[index] = 20;
-                                } else {
-                                    resetColors[index] = '#000000';
-                                    resetThickness[index] = 3;
-                                }
-                            });
-                            setPathColors(resetColors);
-                            setPathThickness(resetThickness);
-                        }}
-                        className="customize-reset-button"
-                    >
-                        🔄 すべてリセット
-                    </button>
                 </div>
             )}
 
