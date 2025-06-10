@@ -610,6 +610,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
         ctx.restore();
 
+        // スケール表示（1マス = 4cm）
+        if (showGrid) {
+            ctx.save();
+            
+            // 画面の横の真ん中（50%）、上側に表示
+            const textX = canvas.width / 2;
+            const textY = 16;
+            
+            // 背景の半透明ボックス（中央揃えのため少し左にずらす）
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = neonPower ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.8)';
+            ctx.fillRect(textX - 40, textY - 4, 80, 24);
+            ctx.globalAlpha = 1;
+            
+            // テキストを描画（中央揃え）
+            ctx.fillStyle = neonPower ? '#ffffff' : '#333333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('1マス = 4cm', textX, textY);
+            ctx.restore();
+        }
+
         // パスと制御点の描画
         ctx.save();
         ctx.translate(canvasSettings.offsetX, canvasSettings.offsetY);
@@ -657,7 +680,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             ctx.fill();
             
             ctx.strokeStyle = borderColor;
-            ctx.lineWidth = borderWidth / canvasSettings.scale;
+            ctx.lineWidth = borderWidth;
             ctx.stroke();
         });
 
@@ -686,7 +709,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 pathPoints, 
                 pathType, 
                 strokeColor, 
-                strokeWidth / canvasSettings.scale,
+                strokeWidth,
                 glowIntensity,
                 currentBrightness
             );
@@ -805,84 +828,145 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </button>
                     </div>
 
-                    {/* パス別カラー・太さ設定 */}
-                    {neonPaths.length > 0 && (
+                    {/* ネオンチューブ設定 */}
+                    {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
                         <div className="customize-setting-group">
-                            <h3 className="customize-setting-title">パス別設定 ({neonPaths.length}個のパス)</h3>
-                            {neonPaths.map((pathObj, index) => (
-                                <div key={index} className="customize-path-color-section">
-                                    <label className="customize-setting-label">
-                                        パス {index + 1} ({pathObj.mode === 'stroke' ? 'ネオンチューブ' : '土台'})
-                                    </label>
-                                    
-                                    {/* カラー設定 */}
-                                    <div className="customize-path-color-controls">
-                                        <input
-                                            type="color"
-                                            value={pathColors[index] || (pathObj.mode === 'stroke' ? neonColors.strokeLine : neonColors.fillBorder)}
-                                            onChange={(e) => handlePathColorChange(index, e.target.value)}
-                                            className="customize-path-color-input"
-                                        />
-                                        <span className="customize-path-color-value">
-                                            {pathColors[index] || (pathObj.mode === 'stroke' ? neonColors.strokeLine : neonColors.fillBorder)}
-                                        </span>
-                                    </div>
-                                    
-                                    {/* 太さ設定 */}
-                                    <div className="customize-slider-container">
-                                        <label className="customize-setting-label">太さ: {pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)}px</label>
-                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                                            <button
-                                                onClick={() => handlePathThicknessChange(index, 15)}
-                                                className={`customize-color-preset ${(pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? '#10b981' : '#6b7280',
-                                                    color: 'white',
-                                                    border: '1px solid',
-                                                    borderColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? '#10b981' : '#6b7280',
-                                                    borderRadius: '4px',
-                                                    padding: '4px 8px',
-                                                    fontSize: '12px',
-                                                    cursor: 'pointer',
-                                                    width: '60px',
-                                                    height: 'auto'
-                                                }}
-                                            >
-                                                6mm
-                                            </button>
-                                            <button
-                                                onClick={() => handlePathThicknessChange(index, 20)}
-                                                className={`customize-color-preset ${(pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? '#10b981' : '#6b7280',
-                                                    color: 'white',
-                                                    border: '1px solid',
-                                                    borderColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? '#10b981' : '#6b7280',
-                                                    borderRadius: '4px',
-                                                    padding: '4px 8px',
-                                                    fontSize: '12px',
-                                                    cursor: 'pointer',
-                                                    width: '60px',
-                                                    height: 'auto'
-                                                }}
-                                            >
-                                                8mm
-                                            </button>
+                            <h3 className="customize-setting-title">ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)</h3>
+                            {neonPaths.map((pathObj, index) => {
+                                if (!pathObj || pathObj.mode !== 'stroke') return null;
+                                return (
+                                    <div key={index} className="customize-path-color-section">
+                                        <label className="customize-setting-label">
+                                            チューブ {neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length}
+                                        </label>
+                                        
+                                        {/* 太さ設定 */}
+                                        <div className="customize-slider-container">
+                                            <label className="customize-setting-label">太さ: {pathThickness[index] || neonLineWidths.strokeLine}px</label>
+                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                                <button
+                                                    onClick={() => handlePathThicknessChange(index, 15)}
+                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
+                                                    style={{ 
+                                                        backgroundColor: (pathThickness[index] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
+                                                        color: 'white',
+                                                        border: '1px solid',
+                                                        borderColor: (pathThickness[index] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
+                                                        borderRadius: '4px',
+                                                        padding: '4px 8px',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        width: '60px',
+                                                        height: 'auto'
+                                                    }}
+                                                >
+                                                    6mm
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePathThicknessChange(index, 20)}
+                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
+                                                    style={{ 
+                                                        backgroundColor: (pathThickness[index] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
+                                                        color: 'white',
+                                                        border: '1px solid',
+                                                        borderColor: (pathThickness[index] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
+                                                        borderRadius: '4px',
+                                                        padding: '4px 8px',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        width: '60px',
+                                                        height: 'auto'
+                                                    }}
+                                                >
+                                                    8mm
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="customize-path-preset-colors">
+                                            {neonPresetColors.map((color) => (
+                                                <button
+                                                    key={color}
+                                                    className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
+                                                    style={{ backgroundColor: color }}
+                                                    onClick={() => handlePathColorChange(index, color)}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
-                                    
-                                    <div className="customize-path-preset-colors">
-                                        {neonPresetColors.map((color) => (
-                                            <button
-                                                key={color}
-                                                className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
-                                                style={{ backgroundColor: color }}
-                                                onClick={() => handlePathColorChange(index, color)}
-                                            />
-                                        ))}
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* 土台設定 */}
+                    {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length > 0 && (
+                        <div className="customize-setting-group">
+                            <h3 className="customize-setting-title">土台設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length}個)</h3>
+                            {neonPaths.map((pathObj, index) => {
+                                if (!pathObj || pathObj.mode !== 'fill') return null;
+                                return (
+                                    <div key={index} className="customize-path-color-section">
+                                        <label className="customize-setting-label">
+                                            土台 {neonPaths.filter((p, i) => p && p.mode === 'fill' && i <= index).length}
+                                        </label>
+                                        
+                                        {/* 太さ設定 */}
+                                        <div className="customize-slider-container">
+                                            <label className="customize-setting-label">境界線の太さ: {pathThickness[index] || neonLineWidths.fillBorder}px</label>
+                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                                <button
+                                                    onClick={() => handlePathThicknessChange(index, 15)}
+                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.fillBorder) === 15 ? 'active' : ''}`}
+                                                    style={{ 
+                                                        backgroundColor: (pathThickness[index] || neonLineWidths.fillBorder) === 15 ? '#10b981' : '#6b7280',
+                                                        color: 'white',
+                                                        border: '1px solid',
+                                                        borderColor: (pathThickness[index] || neonLineWidths.fillBorder) === 15 ? '#10b981' : '#6b7280',
+                                                        borderRadius: '4px',
+                                                        padding: '4px 8px',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        width: '60px',
+                                                        height: 'auto'
+                                                    }}
+                                                >
+                                                    6mm
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePathThicknessChange(index, 20)}
+                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.fillBorder) === 20 ? 'active' : ''}`}
+                                                    style={{ 
+                                                        backgroundColor: (pathThickness[index] || neonLineWidths.fillBorder) === 20 ? '#10b981' : '#6b7280',
+                                                        color: 'white',
+                                                        border: '1px solid',
+                                                        borderColor: (pathThickness[index] || neonLineWidths.fillBorder) === 20 ? '#10b981' : '#6b7280',
+                                                        borderRadius: '4px',
+                                                        padding: '4px 8px',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        width: '60px',
+                                                        height: 'auto'
+                                                    }}
+                                                >
+                                                    8mm
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="customize-path-preset-colors">
+                                            {neonPresetColors.map((color) => (
+                                                <button
+                                                    key={color}
+                                                    className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
+                                                    style={{ backgroundColor: color }}
+                                                    onClick={() => handlePathColorChange(index, color)}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
 
