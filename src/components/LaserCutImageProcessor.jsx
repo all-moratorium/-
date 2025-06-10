@@ -523,6 +523,22 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     };
   }, []);
 
+  // 3Dプレビューページへの遷移イベントリスナー
+  useEffect(() => {
+    const handleShow3DPreview = (event) => {
+      if (event.detail) {
+        // 3Dプレビュー用のデータを保存
+        setCustomizeSvgData(event.detail);
+      }
+      setCurrentPage('3dPreview');
+    };
+
+    window.addEventListener('show3DPreview', handleShow3DPreview);
+    return () => {
+      window.removeEventListener('show3DPreview', handleShow3DPreview);
+    };
+  }, []);
+
   // コンポーネントのアンマウント時にリソースを解放
   useEffect(() => {
     return () => {
@@ -3192,17 +3208,6 @@ case '3dPreview':
                         <span className="nav-text">色・仕様のカスタマイズ</span>
                         <div className="tooltip">色・仕様のカスタマイズ</div>
                     </button>
-                    <button className={currentPage === 'layerPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('layerPreview')}>
-                        <div className="nav-icon">
-                        <svg viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="10" rx="1" strokeWidth="2"/>
-                        <rect x="5" y="7" width="14" height="8" rx="1" strokeWidth="2" opacity="0.6"/>
-                        <rect x="7" y="3" width="10" height="6" rx="1" strokeWidth="2" opacity="0.3"/>
-                        </svg>
-                        </div>
-                        <span className="nav-text">レイヤープレビュー</span>
-                        <div className="tooltip">レイヤープレビュー</div>
-                    </button>
                     <button className={currentPage === '3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('3dPreview')}>
                         <div className="nav-icon">
                         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
@@ -3213,6 +3218,17 @@ case '3dPreview':
                         </div>
                         <span className="nav-text">3Dプレビュー</span>
                         <div className="tooltip">3Dプレビュー</div>
+                    </button>
+                    <button className={currentPage === 'layerPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('layerPreview')}>
+                        <div className="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="10" rx="1" strokeWidth="2"/>
+                        <rect x="5" y="7" width="14" height="8" rx="1" strokeWidth="2" opacity="0.6"/>
+                        <rect x="7" y="3" width="10" height="6" rx="1" strokeWidth="2" opacity="0.3"/>
+                        </svg>
+                        </div>
+                        <span className="nav-text">レイヤープレビュー</span>
+                        <div className="tooltip">レイヤープレビュー</div>
                     </button>
                     <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('info')}>
                         <div className="nav-icon">
