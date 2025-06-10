@@ -9,19 +9,19 @@ const CUSTOMIZE_DATA_KEY = 'neon-customize-data';
 const Costomize = ({ svgData, initialState, onStateChange }) => {
     // 初期状態の設定（propsから受け取るか、デフォルト値を使用）
     const [selectedColor, setSelectedColor] = useState(initialState?.selectedColor || '#ff0080');
-    const [brightness, setBrightness] = useState(initialState?.brightness || 100);
+    const brightness = 100; // 固定値
     const [thickness, setThickness] = useState(initialState?.thickness || 20);
-    const [glowIntensity, setGlowIntensity] = useState(initialState?.glowIntensity || 50);
+    const glowIntensity = 50; // 固定値
     const [blinkEffect, setBlinkEffect] = useState(initialState?.blinkEffect || false);
     const [animationSpeed, setAnimationSpeed] = useState(initialState?.animationSpeed || 1);
     const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : true);
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
-    const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#000000');
-    const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#f5f5f5');
-    const [gridColor, setGridColor] = useState(initialState?.gridColor || '#333333');
-    const [gridColorOff, setGridColorOff] = useState(initialState?.gridColorOff || '#cccccc');
+    const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#0d0d0d'); // RGB(13,13,13)
+    const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#e6e6e6'); // RGB(230,230,230)
+    const [gridColor, setGridColor] = useState(initialState?.gridColor || '#646464'); // RGB(100,100,100)
+    const [gridColorOff, setGridColorOff] = useState(initialState?.gridColorOff || '#000000'); // RGB(0,0,0)
     const [showGrid, setShowGrid] = useState(initialState?.showGrid !== undefined ? initialState.showGrid : true);
-    const [gridOpacity, setGridOpacity] = useState(initialState?.gridOpacity || 0.3);
+    const [gridOpacity, setGridOpacity] = useState(initialState?.gridOpacity || 0.3); // 30%
     const [gridSize, setGridSize] = useState(initialState?.gridSize || 100); // ネオン下絵と同じ4cm = 100px (20px=8mm基準)
     const [canvasWidth, setCanvasWidth] = useState(800);
     const [canvasHeight, setCanvasHeight] = useState(600);
@@ -71,7 +71,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, brightness, thickness, glowIntensity, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, onStateChange]);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, onStateChange]);
 
     const neonPresetColors = [
         '#ff0080', '#00ff80', '#8000ff', '#ff8000',
@@ -176,7 +176,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     };
 
     // ネオンチューブ効果の描画
-    const drawNeonTube = (ctx, pathPoints, pathType, color, thickness, glowIntensity, brightness) => {
+    const drawNeonTube = (ctx, pathPoints, pathType, color, thickness, glowIntensity, brightness, isHighlighted = false) => {
+        // ハイライト表示（外側境界のみ - 元の描画の前に描画）
+        if (isHighlighted) {
+            ctx.save();
+            ctx.strokeStyle = '#fbbf24'; // 明るい黄色
+            ctx.lineWidth = thickness + 8; // 外側に太い境界
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.globalAlpha = 0.7;
+            drawPath(ctx, pathPoints, pathType);
+            ctx.restore();
+        }
+
         if (!neonPower) {
             // LEDネオンOFF時：マットな質感で描画
             ctx.save();
@@ -348,7 +360,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         if (neonPaths.length > 0) {
             saveCustomizeData();
         }
-    }, [pathColors, pathThickness, backgroundColor, gridColor, showGrid, gridOpacity, selectedColor, brightness, thickness, glowIntensity, blinkEffect, animationSpeed, neonPaths.length]);
+    }, [pathColors, pathThickness, backgroundColor, gridColor, showGrid, gridOpacity, selectedColor, thickness, blinkEffect, animationSpeed, neonPaths.length]);
 
     // 状態変更時に親コンポーネントに通知（初期化時は除く）
     const isInitializedRef = useRef(false);
@@ -358,7 +370,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         } else {
             isInitializedRef.current = true;
         }
-    }, [selectedColor, brightness, thickness, glowIntensity, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness]);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness]);
 
     const handleDownloadSVG = () => {
         if (!svgData || neonPaths.length === 0) {
@@ -732,6 +744,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 brightness * applyBlinkEffect(1, animationSpeed) : 
                 brightness;
             
+            // ハイライト状態をチェック（コンテナがハイライトされている時のみ）
+            const isHighlighted = highlightedTube === pathIndex;
+            
             // ネオンチューブ効果で描画
             drawNeonTube(
                 ctx, 
@@ -740,7 +755,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 strokeColor, 
                 strokeWidth,
                 glowIntensity,
-                currentBrightness
+                currentBrightness,
+                isHighlighted
             );
         });
 
@@ -772,7 +788,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, brightness, glowIntensity, blinkEffect, animationSpeed, neonPower, isDataLoaded]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube]);
 
     return (
         <div className="customize-app-container">
@@ -937,7 +953,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     <div 
                                         key={originalIndex} 
                                         className="customize-path-color-section"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            // ボタンやコントロール要素をクリックした場合は処理しない
+                                            if (e.target.tagName === 'BUTTON' || 
+                                                e.target.tagName === 'INPUT' || 
+                                                e.target.closest('button') || 
+                                                e.target.closest('input')) {
+                                                return;
+                                            }
+                                            
                                             if (highlightedTube === originalIndex) {
                                                 setHighlightedTube(null); // 既にハイライトされている場合は解除
                                             } else {
@@ -972,7 +996,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 />
                                                 {/* 色設定ボタン */}
                                                 <button
-                                                    onClick={() => {
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // イベントバブリングを防ぐ
                                                         setSelectedPathIndex(originalIndex);
                                                         setShowColorModal(true);
                                                     }}
@@ -997,7 +1022,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             <label className="customize-setting-label">太さ: {pathThickness[originalIndex] || neonLineWidths.strokeLine}px</label>
                                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                                 <button
-                                                    onClick={() => handlePathThicknessChange(originalIndex, 15)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // イベントバブリングを防ぐ
+                                                        handlePathThicknessChange(originalIndex, 15);
+                                                    }}
                                                     className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
                                                     style={{ 
                                                         backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
@@ -1015,7 +1043,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                     6mm
                                                 </button>
                                                 <button
-                                                    onClick={() => handlePathThicknessChange(originalIndex, 20)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // イベントバブリングを防ぐ
+                                                        handlePathThicknessChange(originalIndex, 20);
+                                                    }}
                                                     className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
                                                     style={{ 
                                                         backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
@@ -1230,68 +1261,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         )}
                     </div>
 
-                    <div className="customize-setting-group">
-                        <h3 className="customize-setting-title">ネオン効果設定</h3>
-                        
-                        {/* 明るさ */}
-                        <div className="customize-slider-container">
-                            <label className="customize-setting-label">明るさ: {brightness}%</label>
-                            <input
-                                type="range"
-                                min="20"
-                                max="200"
-                                value={brightness}
-                                onChange={(e) => setBrightness(e.target.value)}
-                                className="customize-setting-slider"
-                                disabled={!neonPower}
-                                style={{ opacity: neonPower ? 1 : 0.5 }}
-                            />
-                        </div>
-
-                        {/* グロー強度 */}
-                        <div className="customize-slider-container">
-                            <label className="customize-setting-label">グロー強度: {glowIntensity}px</label>
-                            <input
-                                type="range"
-                                min="10"
-                                max="100"
-                                value={glowIntensity}
-                                onChange={(e) => setGlowIntensity(e.target.value)}
-                                className="customize-setting-slider"
-                                disabled={!neonPower}
-                                style={{ opacity: neonPower ? 1 : 0.5 }}
-                            />
-                        </div>
-
-                        {/* 点滅エフェクト */}
-                        <div className="customize-animation-controls">
-                            <label className="customize-checkbox-container">
-                                <input
-                                    type="checkbox"
-                                    checked={blinkEffect && neonPower}
-                                    onChange={(e) => setBlinkEffect(e.target.checked)}
-                                    className="customize-setting-checkbox"
-                                    disabled={!neonPower}
-                                />
-                                <span className="customize-checkmark" style={{ opacity: neonPower ? 1 : 0.5 }}></span>
-                                点滅エフェクト {!neonPower && '(電源OFF時は無効)'}
-                            </label>
-                            {blinkEffect && neonPower && (
-                                <div className="customize-slider-container">
-                                    <label className="customize-setting-label">点滅速度: {animationSpeed}x</label>
-                                    <input
-                                        type="range"
-                                        min="0.5"
-                                        max="3"
-                                        step="0.1"
-                                        value={animationSpeed}
-                                        onChange={(e) => setAnimationSpeed(e.target.value)}
-                                        className="customize-setting-slider"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
 
                     <div className="customize-setting-group">
                         <h3 className="customize-setting-title">一括カラー設定</h3>
@@ -1330,17 +1299,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     <button
                         onClick={() => {
                             setSelectedColor('#ff0080');
-                            setBrightness(100);
                             setThickness(20);
-                            setGlowIntensity(50);
                             setBlinkEffect(false);
                             setAnimationSpeed(1);
-                            setBackgroundColor('#000000');
-                            setBackgroundColorOff('#f5f5f5');
-                            setGridColor('#333333');
-                            setGridColorOff('#cccccc');
+                            setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
+                            setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                            setGridColor('#646464'); // RGB(100,100,100)
+                            setGridColorOff('#000000'); // RGB(0,0,0)
                             setShowGrid(true);
-                            setGridOpacity(0.3);
+                            setGridOpacity(0.3); // 30%
                             setGridSize(160);
                             setNeonPower(true); // 電源もONにリセット
                             
