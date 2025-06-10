@@ -180,12 +180,24 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const drawNeonTube = (ctx, pathPoints, pathType, color, thickness, glowIntensity, brightness, isHighlighted = false) => {
         // ハイライト表示（外側境界のみ - 元の描画の前に描画）
         if (isHighlighted) {
+            // 2重のハイライト効果でより目立たせる
             ctx.save();
-            ctx.strokeStyle = '#fbbf24'; // 明るい黄色
-            ctx.lineWidth = thickness + 8; // 外側に太い境界
+            // 外側の白いハイライト
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = thickness + 12;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            ctx.globalAlpha = 0.7;
+            ctx.globalAlpha = 0.8;
+            drawPath(ctx, pathPoints, pathType);
+            ctx.restore();
+            
+            ctx.save();
+            // 内側のオレンジハイライト
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = thickness + 8;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.globalAlpha = 0.9;
             drawPath(ctx, pathPoints, pathType);
             ctx.restore();
         }
@@ -546,6 +558,20 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         return Math.sqrt((px - projection.x) ** 2 + (py - projection.y) ** 2);
     };
 
+    // チューブ設定コンテナまでスクロールする関数
+    const scrollToTubeContainer = useCallback((pathIndex) => {
+        // 少し遅延を入れてDOM更新を待つ
+        setTimeout(() => {
+            const containerElement = document.querySelector(`[data-tube-index="${pathIndex}"]`);
+            if (containerElement) {
+                containerElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }, 100);
+    }, []);
+
     const handleWheel = useCallback((e) => {
         e.preventDefault();
         const scaleAmount = 0.1;
@@ -605,6 +631,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         setHighlightedTube(null);
                     } else {
                         setHighlightedTube(hitPathIndex);
+                        // 対応する設定コンテナにスクロール
+                        scrollToTubeContainer(hitPathIndex);
                     }
                 }
             } else {
@@ -1047,6 +1075,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     <div 
                                         key={originalIndex} 
                                         className="customize-path-color-section"
+                                        data-tube-index={originalIndex}
                                         onClick={(e) => {
                                             // ボタンやコントロール要素をクリックした場合は処理しない
                                             if (e.target.tagName === 'BUTTON' || 
@@ -1064,9 +1093,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         }}
                                         style={{
                                             cursor: 'pointer',
-                                            border: highlightedTube === originalIndex ? '2px solid #fbbf24' : '1px solid rgba(255, 255, 255, 0.1)',
-                                            backgroundColor: highlightedTube === originalIndex ? 'rgba(251, 191, 36, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                                            transition: 'all 0.2s ease'
+                                            border: highlightedTube === originalIndex ? '3px solid #ff6b35' : '1px solid rgba(255, 255, 255, 0.1)',
+                                            backgroundColor: highlightedTube === originalIndex ? 'rgba(255, 107, 53, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                            transition: 'all 0.2s ease',
+                                            boxShadow: highlightedTube === originalIndex ? '0 0 15px rgba(255, 107, 53, 0.3)' : 'none'
                                         }}
                                     >
                                         <label className="customize-setting-label">
