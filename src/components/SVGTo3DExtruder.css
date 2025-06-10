@@ -1,0 +1,639 @@
+/* SVGTo3DExtruder.css - カラーピッカー対応版 */
+
+.extruder-sidebar {
+  width: 270px;
+  background-color:#0a0a0a;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  box-shadow: 1px 0 10px rgba(241, 241, 241, 0);
+  z-index: 10;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: 0;
+  height: 98%;
+  transition: all 0.3s ease;
+}
+
+.extruder-viewport {
+  background-color:rgb(26, 184, 223);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.extruder-section {
+  margin-bottom: 20px;
+  border-bottom: 1px solidrgb(0, 0, 0);
+  padding-bottom: 16px;
+}
+
+.extruder-section:last-child {
+  border-bottom: none;
+}
+
+
+/* New container for absolutely positioning the group of sliders */
+.sliders-absolute-container {
+  width: 85%; /* 「商品情報へ進む」ボタンのコンテナに合わせる */
+  position: absolute;
+  bottom: 20%; /* 「商品情報へ進む」ボタン(bottom: 9%) の上に配置。必要に応じて調整 */
+  left: 50%;
+  transform: translateX(-50%);
+  /* background-color: rgba(0, 255, 0, 0.1); /* デバッグ用に一時的な背景色 */
+}
+
+.extruder-label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color:rgb(255, 255, 255);
+}
+
+.extruder-slider {
+  width: 100%;
+  height: 8px;
+  background-color:rgb(46, 46, 46);
+  outline: none;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.extruder-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background:#FFFF00;
+  cursor: pointer;
+  border: none;
+}
+
+.extruder-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background:#FFFF00;
+  cursor: pointer;
+  border: none;
+}
+
+.extruder-error-message {
+  margin-top: 16px;
+  background-color:rgb(221, 30, 30);
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.extruder-loading-message {
+  margin-top: 16px;
+  background-color: #2563eb;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.extruder-loading-message::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: extruder-spin 1s ease-in-out infinite;
+}
+
+@keyframes extruder-spin {
+  to { transform: rotate(360deg); }
+}
+
+.extruder-success-message {
+  position:fixed;
+  width:130px;
+  top:29px;
+  left:50%;
+  transform:translateX(-50%);
+  color: #4ade80;
+  font-size: 12px;
+  padding: 8px;
+  background-color: rgba(74, 222, 128, 0.1);
+  border-radius: 4px;
+}
+
+/* アプリ全体のスタイル */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:rgb(0, 0, 0);
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Styles for Model Dimensions Display */
+.dimensions-display-container {
+  width:100%;
+  border-radius: 12px;
+  margin-bottom: 150px;
+}
+
+.dimension-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.9em;
+  border-bottom: 1px solid #4a4a4a;
+  margin-top:30px;
+  width: 100%;
+}
+
+.dimension-label {
+  color:rgb(255, 255, 255);
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.dimension-value {
+  color:rgb(255, 255, 255);
+  font-weight: bold;
+  margin-right: 20%;
+}
+
+/* General styling for control item groups if not already present or to refine */
+.control-item-group {
+  background-color:#0a0a0a;
+  padding: 10px;
+  margin-bottom: 85%;
+  margin-top: 80px;
+  height:300px;
+}
+
+.control-item-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color:rgb(255, 247, 247); /* Accent color for titles */
+  margin-bottom: 30px;
+  margin-top: 6px;
+  padding-bottom: 5px;
+}
+
+/* Adjustments for existing controls if needed */
+.control-item label {
+  display: block;
+  margin-bottom: 5px;
+  color:rgb(255, 255, 255);
+  font-size: 0.85em;
+}
+
+.slider-control {
+  width: 100%;
+}
+
+/* Ensure sidebar has some padding if not already set */
+.sidebar-container {
+  /* ... existing styles ... */
+  padding: 15px; /* Add or adjust padding */
+}
+
+.controls-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    color:rgb(235, 235, 235);
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #555;
+}
+
+/* Styles for Proceed to Product Info Button */
+.proceed-button-container {
+  width:80%;
+  position:absolute;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  text-align: center; /* Center the button */
+}
+
+.proceed-button {
+  background-color: #FFFF00; /* .process-button に合わせる */
+  color: #000; /* .process-button に合わせる */
+  border: none;
+  padding: 12px 24px; /* サイズ維持 */
+  font-size: 1em; /* サイズ維持 */
+  font-weight: bold;
+  border-radius: 5px; /* .process-button に合わせる */
+  cursor: pointer;
+  transition: all 0.3s ease; /* .process-button に合わせる */
+  width: 100%; /* サイズ維持 */
+  box-sizing: border-box; /* 維持 */
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* .process-button に合わせる */
+}
+
+.proceed-button:hover {
+  background-color: #00ffff; /* .process-button ホバーに合わせる */
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.75); /* .process-button ホバーに合わせる */
+}
+
+.proceed-button:active {
+  background-color: #00d0e0; /* 少し暗めのシアン、.process-button には active がないので、近い効果を維持 */
+}
+
+.proceed-button:disabled {
+  background-color: #555;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.dimension-item-caption {
+  color:rgb(255, 255, 255);
+  padding-top: 30px;
+  font-size: 16px;
+}
+
+.dimension-item-warning {
+  color:rgb(255, 255, 255);
+  padding-top: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 折りたたまれたサイドバー */
+.extruder-sidebar.collapsed {
+  background-color:transparent;
+  padding: 0px;
+  overflow: hidden;
+}
+
+/* サイドバー内のコンテンツを折りたたみ時に非表示にする */
+.extruder-sidebar.collapsed .dimensions-display-container,
+.extruder-sidebar.collapsed .extruder-section,
+.extruder-sidebar.collapsed .proceed-button,
+.extruder-sidebar.collapsed .extruder-success-message,
+.extruder-sidebar.collapsed .info-button3{
+  display: none;
+}
+
+/* トグルボタン */
+.sidebar-toggle-button {
+  position: absolute;
+  right: 23px;
+  top: 46px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background-color: #0a0a0a;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle-button:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* SVG Extruder Modal Styles */
+/* CSS - 3Dプレビューガイドモーダル (modal-overlay-svg-extruder, modal-content-svg-extruder用) */
+.modal-overlay-svg-extruder {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2147483647 !important;
+  animation: fadeIn 0.3s ease-out;
+  isolation: isolate;
+}
+
+.modal-content-svg-extruder {
+  background: linear-gradient(145deg, #0a0a0a, #141414);
+  border: 1px solid #222;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+  margin: 0;
+  padding: 40px;
+  width: 820px;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-content-svg-extruder-inner {
+  height: 100%;
+  max-height: calc(90vh - 80px);
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-right: -8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-content-svg-extruder h2 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.modal-content-svg-extruder .notice-section {
+  margin-bottom: 28px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border-left: 4px solid #00ff80;
+  position: relative;
+}
+
+.modal-content-svg-extruder .notice-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.modal-content-svg-extruder .section-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-content-svg-extruder .section-icon {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: black;
+  font-weight: bold;
+}
+
+.modal-content-svg-extruder p {
+  color: #c0c0c0;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  text-align: justify;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.modal-confirm-button-svg-extruder {
+  color: #000;
+  border: none;
+  background: linear-gradient(135deg, #00ffff, #00cccc);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 120px;
+  height: 45px;
+  border-radius: 10px;
+  display: block;
+  margin: 30px auto 0;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-confirm-button-svg-extruder:hover {
+  background: linear-gradient(135deg, #33ffff, #00dddd);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+}
+
+/* スクロールバーのカスタマイズ */
+.modal-content-svg-extruder-inner::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content-svg-extruder-inner::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.modal-content-svg-extruder-inner::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+  border: 1px solid #222;
+}
+
+.modal-content-svg-extruder-inner::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* Firefox用 */
+.modal-content-svg-extruder-inner {
+  scrollbar-width: thin;
+  scrollbar-color: #333 #1a1a1a;
+}
+
+@media (max-width: 640px) {
+  .modal-content-svg-extruder {
+    width: 95%;
+    padding: 24px;
+    max-height: 85vh;
+  }
+  
+  .modal-content-svg-extruder h2 {
+    font-size: 20px;
+  }
+  
+  .modal-content-svg-extruder .section-title {
+    font-size: 16px;
+  }
+  
+  .modal-content-svg-extruder p {
+    font-size: 14px;
+  }
+  
+  .modal-confirm-button-svg-extruder {
+    width: 100px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* Info button for the modal trigger */
+.info-button3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  background: white;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  /* 波紋電光アニメーション */
+  position: relative;
+  animation: lightning-flash 1.5s infinite;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+.bottom-explanation{
+  position:absolute;
+  left:50%;
+  font-size:15px;
+  bottom:52px;  
+  transform: translateX(-50%);
+  width:220px;
+}
+
+.info-button3:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.info-button3::before {
+  content: 'i';
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Times New Roman', serif;
+  color: #333;
+  animation: lightning-flicker 1.5s infinite;
+}
+
+.info-button3::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-wave 1.5s infinite;
+}
+
+/* エフェクト停止用 */
+.info-button3.stopped {
+  animation: none;
+}
+
+.info-button3.stopped::before {
+  animation: none;
+  text-shadow: 0 0 5px rgba(255,255,255,0.5);
+  color: #333;
+}
+
+.info-button3.stopped::after {
+  animation: none;
+  opacity: 0;
+}
+
+/* アニメーション定義 */
+@keyframes lightning-flash {
+  0%, 90%, 100% { 
+      box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+      border-color: #ffffff; 
+  }
+  5%, 10% { 
+      box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+      border-color: #ffffff; 
+      background: #ffffff; 
+  }
+}
+
+@keyframes lightning-flicker {
+  0%, 90%, 100% { 
+      text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+      color: #333; 
+  }
+  5%, 10% { 
+      text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+      color: #ffffff; 
+  }
+}
+
+@keyframes ripple-wave {
+  0% { 
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+      border-color: rgba(255,255,255,0.7);
+  }
+  10% { 
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.8;
+      border-color: rgba(255,255,255,0.7);
+  }
+  100% { 
+      transform: translate(-50%, -50%) scale(2.5);
+      opacity: 0;
+      border-color: rgba(255,255,255,0);
+  }
+}
+
+/* スマートフォン向けのスタイル */
+@media (max-width: 767px) {
+  /* ここにスマートフォン向けのスタイルを記述します */
+}
+
+/* タブレット向けのスタイル */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* ここにタブレット向けのスタイルを記述します */
+}

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(git checkout:*)",
+      "Bash(rm:*)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n \"<NeonDrawingApp\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -B 20 \"case ''neonDrawing''\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -B 50 \"case ''neonDrawing''\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n \"showCustomize\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n \"addEventListener\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -A 5 -B 2 \"useEffect\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
+      "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -A 3 -B 3 \"customizeSvgData\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)"
+    ],
+    "deny": []
+  }
+}

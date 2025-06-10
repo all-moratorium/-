@@ -1,0 +1,658 @@
+/* アプリケーション全体のコンテナ */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000;
+    overflow: hidden;
+    position: relative;
+}
+
+/* キャンバスエリア */
+.canvas-area {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.main-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+
+/* モード別のカーソル */
+.main-canvas.cursor-draw {
+    cursor: crosshair;
+}
+
+.main-canvas.cursor-modify {
+    cursor: grab;
+}
+
+.main-canvas.cursor-modify:active {
+    cursor: grabbing;
+}
+
+.main-canvas.cursor-delete {
+    cursor: not-allowed;
+}
+
+.main-canvas.cursor-pan {
+    cursor: move;
+}
+
+/* ネオン下絵専用サイドバー */
+.neon-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 380px;
+    height: 100vh;
+    background-color: #1f2937;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-left: 1px solid #374151;
+    z-index: 10;
+    overflow-y: auto;
+}
+
+.neon-sidebar-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fbbf24;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.neon-sidebar-hide-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.neon-sidebar-hide-button {
+    padding: 4px 12px;
+    font-size: 14px;
+    background-color: #7c3aed;
+    color: white;
+    border-radius: 9999px;
+    border: 1px solid #8b5cf6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.neon-sidebar-hide-button:hover {
+    background-color: #8b5cf6;
+    transform: scale(1.05);
+}
+
+/* 描画モード */
+.draw-mode-title {
+    display: flex;
+    justify-content: center;
+    color: #d1d5db;
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.draw-mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.draw-mode-button {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.draw-mode-button:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}
+
+/* 基本ボタンスタイル */
+.button-disabled {
+    background-color: #374151;
+    color: #6b7280;
+    border-color: #4b5563;
+    cursor: not-allowed;
+}
+
+.button-active {
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.button-blue {
+    background-color: #2563eb;
+    border-color: #3b82f6;
+}
+
+.button-green {
+    background-color: #16a34a;
+    border-color: #22c55e;
+}
+
+.button-yellow {
+    background-color: #eab308;
+    color: #1f2937;
+    border-color: #fbbf24;
+}
+
+.button-red {
+    background-color: #dc2626;
+    border-color: #ef4444;
+}
+
+.button-teal {
+    background-color: #0d9488;
+    border-color: #14b8a6;
+}
+
+.button-purple {
+    background-color: #7c3aed;
+    border-color: #8b5cf6;
+}
+
+.button-secondary {
+    background-color: #374151;
+    color: #d1d5db;
+    border-color: #4b5563;
+}
+
+.button-secondary:hover {
+    background-color: #4b5563;
+}
+
+/* 新しいパス */
+.new-path-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #eab308;
+    color: #1f2937;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #fbbf24;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.new-path-button:hover {
+    background-color: #fbbf24;
+    transform: scale(1.05);
+}
+
+/* Undo/Redo コントロール */
+.undo-redo-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.undo-redo-button {
+    flex: 1;
+    padding: 12px;
+    background-color: #4b5563;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #6b7280;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.undo-redo-button:hover:not(.button-disabled) {
+    background-color: #6b7280;
+    transform: scale(1.05);
+}
+
+.reset-view-button {
+    padding: 12px 16px;
+    background-color: #ea580c;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #f97316;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.reset-view-button:hover {
+    background-color: #f97316;
+    transform: scale(1.05);
+}
+
+/* ガイドボタン */
+.guide-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.guide-button {
+    width: 64px;
+    height: 64px;
+    background-color: #ea580c;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    border: 1px solid #f97316;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transform: scale(1);
+}
+
+.guide-button:hover {
+    background-color: #f97316;
+    transform: scale(1.1);
+}
+
+/* 編集モードボタン */
+.edit-mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+.edit-mode-button {
+    padding: 12px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    font-size: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.edit-mode-button:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}
+
+/* グリッド・背景画像ボタン */
+.grid-bg-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.grid-bg-button {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.grid-bg-button:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}
+
+/* 設定ボタン */
+.settings-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #374151;
+    color: #d1d5db;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.settings-button:hover {
+    background-color: #4b5563;
+    transform: scale(1.05);
+}
+
+/* 色・太さ設定ボタン */
+.color-settings-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #7c3aed;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #8b5cf6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.color-settings-button:hover {
+    background-color: #8b5cf6;
+    transform: scale(1.05);
+}
+
+/* SVGダウンロードボタン */
+.download-button {
+    width: 100%;
+    padding: 16px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 6px;
+    border: 1px solid #3b82f6;
+    margin-top: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.download-button:hover {
+    background-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+/* クリアボタン */
+.clear-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #dc2626;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #ef4444;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.clear-button:hover {
+    background-color: #ef4444;
+    transform: scale(1.05);
+}
+
+/* ネオン下絵サイドバー表示ボタン */
+.show-neon-sidebar-button {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    padding: 8px 16px;
+    background-color: #7c3aed;
+    color: white;
+    border-radius: 9999px;
+    border: 1px solid #8b5cf6;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.show-neon-sidebar-button:hover {
+    background-color: #8b5cf6;
+    transform: scale(1.1);
+}
+
+/* モーダル */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: transparent;
+    display: flex;
+    z-index: 50;
+}
+
+.modal-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-right {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.modal-content {
+    background-color: #1f2937;
+    padding: 24px;
+    border: 1px solid #4b5563;
+}
+
+.modal-content-center {
+    border-radius: 12px;
+    max-width: 448px;
+    width: 100%;
+    margin: 0 16px;
+}
+
+.modal-content-right {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    max-width: 448px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-left: 1px solid #4b5563;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fbbf24;
+}
+
+.modal-close-btn {
+    color: #9ca3af;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: white;
+}
+
+.modal-content-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modal-setting-item:first-child {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-label {
+    color: #d1d5db;
+    font-weight: 500;
+}
+
+.toggle-button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toggle-active {
+    background-color: #0d9488;
+    color: white;
+}
+
+.toggle-inactive {
+    background-color: #4b5563;
+    color: #d1d5db;
+}
+
+.range-input {
+    width: 100%;
+    height: 8px;
+    background-color: #374151;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.range-input::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    cursor: pointer;
+}
+
+.range-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    cursor: pointer;
+    border: none;
+}
+
+.file-input {
+    width: 100%;
+    padding: 8px;
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    color: #d1d5db;
+    cursor: pointer;
+}
+
+.file-input::file-selector-button {
+    margin-right: 16px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    cursor: pointer;
+}
+
+.file-input::file-selector-button:hover {
+    background-color: #bfdbfe;
+}
+
+.clear-image-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #dc2626;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.clear-image-button:hover {
+    background-color: #ef4444;
+    transform: scale(1.05);
+}
+
+.setting-description {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+.color-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    cursor: pointer;
+}
+
+.reset-colors-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.reset-colors-button:hover {
+    background-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+.drawing-type-description {
+    color: #d1d5db;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.drawing-type-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.drawing-type-button {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.drawing-type-button:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}

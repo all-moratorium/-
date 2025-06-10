@@ -1,0 +1,222 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    cursor: grab;
+}
+
+body:active {
+    cursor: grabbing;
+}
+
+#container {
+    position: relative !important; /* fixedからrelativeに変更 */
+    /* top: 0 !important; */  /* 不要になるため削除またはコメントアウト */
+    /* left: 0 !important; */ /* 不要になるため削除またはコメントアウト */
+    width: 100% !important;    /* 親要素の幅の90%にする */
+    height: 100% !important;   /* 親要素の高さに合わせる (または現在の40vhを維持も可) */
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: auto;
+    /* 親要素の影響を完全に無視 */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-sizing: border-box !important;
+}
+
+.navigation {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    padding-bottom: 4px;
+}
+
+.navigation:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.nav-left {
+    left: 30px;
+    padding-right: 1px;
+}
+
+.nav-right {
+    right: 30px;
+    padding-left: 1px;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    z-index: 1000;
+}
+
+/* ホバー時の「クリックで詳細」メッセージ */
+.click-prompt {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 99;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    top: 2%;
+}
+
+.click-prompt.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 右側の画像ツールチップ */
+.hover-tooltip-right {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    left: 64%;
+    top: 50%;
+    transform: translateY(-50%) translateX(20px) scale(0.8);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+}
+
+.hover-tooltip-right.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0) scale(1);
+    pointer-events: auto;
+    
+}
+
+/* 左側のテキストツールチップ */
+.hover-tooltip-left {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 20px 25px;
+    color: white;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    right: 64%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-20px) scale(0.8);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    max-width: 40vw;
+    pointer-events: none;
+}
+
+.hover-tooltip-left.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0) scale(1);
+    pointer-events: auto;
+}
+
+.tooltip-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.tooltip-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 50%);
+}
+
+.tooltip-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    background: linear-gradient(45deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: left;
+}
+
+.tooltip-description {
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* 作品別のカラーテーマ */
+.tooltip-image.hummingbird {
+    background: linear-gradient(135deg, #4a9eff 0%, #00d2ff 100%);
+}
+
+.tooltip-image.steampunk {
+    background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+}
+
+.tooltip-image.scorpion {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e6e6e6 100%);
+}
+
+.tooltip-image.cottage {
+    background: linear-gradient(135deg, #8b4513 0%, #daa520 100%);
+}
+
+.tooltip-image.dragon {
+    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+}

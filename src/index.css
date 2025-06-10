@@ -1,13 +1,23 @@
 body {
-  margin: 0;
+  margin: 0; /* これを変えると：ページの周りの余白が変わります */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    sans-serif; /* これを変えると：ページ全体の文字の形（フォント）が変わります */
+  -webkit-font-smoothing: antialiased; /* これを変えると：Safari（サファリ）ブラウザでの文字の表示がなめらかになったりギザギザになったりします */
+  -moz-osx-font-smoothing: grayscale; /* これを変えると：Firefox（ファイアフォックス）ブラウザでの文字の表示がなめらかになったりギザギザになったりします */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    monospace; /* これを変えると：プログラムのコードを表示するときの文字の形（フォント）が変わります */
+}
+
+/* スマートフォン向けのスタイル */
+@media (max-width: 767px) {
+  /* ここにスマートフォン向けのスタイルを記述します */
+}
+
+/* タブレット向けのスタイル */
+@media (min-width: 768px) and (max-width: 1750px) {
+  /* ここにタブレット向けのスタイルを記述します */
 }

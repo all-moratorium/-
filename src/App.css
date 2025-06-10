@@ -1,38 +1,48 @@
 .App {
-  text-align: center;
+  text-align: center; /* これを変えると：Appコンポーネント内のテキストの位置が変わります */
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 40vmin; /* これを変えると：Appロゴの高さが変わります（画面の高さの40%） */
+  pointer-events: none; /* これを変えると：Appロゴがマウスイベントを受け付けるかどうかが変わります */
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 20s linear; /* これを変えると：ユーザーがアニメーションを減らす設定をしていない場合のAppロゴの回転アニメーションの速さや動き方が変わります */
   }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #282c34; /* これを変えると：Appヘッダーの背景色が変わります */
+  min-height: 100vh; /* これを変えると：Appヘッダーの最小高さが変わります（画面の高さの100%） */
+  display: flex; /* これを変えると：Appヘッダー内の要素の並び方が変わります */
+  flex-direction: column; /* これを変えると：Appヘッダー内の要素が縦に並ぶか横に並ぶかが変わります */
+  align-items: center; /* これを変えると：Appヘッダー内の要素の横方向の位置が変わります */
+  justify-content: center; /* これを変えると：Appヘッダー内の要素の縦方向の位置が変わります */
+  font-size: calc(10px + 2vmin); /* これを変えると：Appヘッダー内の文字の大きさが変わります（10pxに画面の高さの2%を足した値） */
+  color: white; /* これを変えると：Appヘッダー内の文字色が変わります */
 }
 
 .App-link {
-  color: #61dafb;
+  color: #61dafb; /* これを変えると：App内のリンクの色が変わります */
 }
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg); /* これを変えると：Appロゴの回転アニメーションの開始角度が変わります */
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg); /* これを変えると：Appロゴの回転アニメーションの終了角度が変わります */
   }
+}
+
+/* スマートフォン向けのスタイル */
+@media (max-width: 767px) {
+  /* ここにスマートフォン向けのスタイルを記述します */
+}
+
+/* タブレット向けのスタイル */
+@media (min-width: 768px) and (max-width: 1750px) {
+  /* ここにタブレット向けのスタイルを記述します */
 }
