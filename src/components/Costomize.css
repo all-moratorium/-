@@ -442,3 +442,493 @@ html, body {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
+
+/* ===== ネオンチューブ設定専用クラス ===== */
+
+/* チューブタイトル */
+.tube-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #f7f7f7;
+}
+
+/* 色設定エリア */
+.color-setting-section {
+    margin-bottom: 16px;
+    margin-top:20px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.color-setting-label {
+    font-size: 15px;
+    color:rgb(255, 255, 255);
+    margin-bottom: 0;
+    flex-shrink: 0;
+    min-width: 60px;
+    margin-left:25px;
+}
+
+.color-setting-controls {
+    display: flex;
+    gap: 8px;
+    padding-left:40px;
+    flex: 1;
+}
+
+.color-preview {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    margin-top:1px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.color-select-button {
+    background-color: #3b82f6;
+    color: white;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    padding: 8px 1px;
+    margin-left:12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    width:70px;
+    transition: all 0.2s ease;
+}
+
+.color-select-button:hover {
+    background-color: #2563eb;
+}
+
+/* 太さ設定エリア */
+.thickness-setting-section {
+    margin-top: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.thickness-setting-label {
+    font-size: 15px;
+    color:rgb(255, 255, 255);
+    margin-bottom: 0;
+    flex-shrink: 0;
+    min-width: 60px;
+    margin-left:25px;
+}
+
+.thickness-button-group {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    margin-left:35px;
+}
+
+.thickness-button {
+    background-color: #374151;
+    color: white;
+    border: 1px solid #6b7280;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    width: 60px;
+    height: 32px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.thickness-button.active {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* ネオンON/OFFスイッチ */
+.neon-power-section {
+    border-bottom: 2px solid #fbbf24;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.neon-power-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.neon-power-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.neon-status-text {
+    font-weight: bold;
+}
+
+.neon-status-text.on {
+    color: #10b981;
+}
+
+.neon-status-text.off {
+    color: #6b7280;
+}
+
+.neon-power-switch {
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.neon-power-switch.on {
+    background-color: #10b981;
+    border-color: #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.neon-power-switch.off {
+    background-color: #374151;
+    border-color: #6b7280;
+}
+
+.neon-switch-handle {
+    position: absolute;
+    top: 3px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: white;
+    transition: left 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.neon-switch-handle.on {
+    left: 43px;
+}
+
+.neon-switch-handle.off {
+    left: 3px;
+}
+
+.neon-background-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.background-label {
+    color: #d1d5db;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.background-color-picker-wrapper {
+    position: relative;
+}
+
+.background-color-preview {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.background-color-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.neon-status-description {
+    color: #9ca3af;
+    font-size: 12px;
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+}
+
+/* 一括設定セクション */
+.bulk-setting-section {
+    margin-bottom: 20px;
+}
+
+.bulk-select-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #7c3aed;
+    color: white;
+    border: 1px solid #8b5cf6;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.bulk-select-button:hover {
+    background-color: #8b5cf6;
+}
+
+.bulk-selection-active {
+    margin-bottom: 12px;
+    color: #fbbf24;
+    font-size: 14px;
+    text-align: center;
+}
+
+.bulk-action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.bulk-action-button {
+    flex: 1;
+    padding: 8px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.bulk-action-button.apply {
+    background-color: #10b981;
+}
+
+.bulk-action-button.apply:disabled {
+    background-color: #6b7280;
+    cursor: not-allowed;
+}
+
+.bulk-action-button.cancel {
+    background-color: #6b7280;
+}
+
+/* ネオンチューブ設定メインセクション */
+.neon-tube-settings {
+    margin-bottom: 20px;
+}
+
+.neon-tube-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.neon-tube-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin: 0;
+}
+
+.neon-tube-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.tube-action-button {
+    padding: 4px 8px;
+    color: white;
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.tube-action-button.scroll-last {
+    background-color: #10b981;
+    border-color: #059669;
+}
+
+.tube-action-button.minimize {
+    background-color: #6b7280;
+    border-color: #4b5563;
+}
+
+.tube-minimized-message {
+    padding: 12px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* 土台設定セクション */
+.base-settings {
+    margin-bottom: 20px;
+}
+
+.base-item {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.base-item-label {
+    font-size: 16px;
+    color: #f7f7f7;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.base-color-label {
+    font-size: 14px;
+    color: #d1d5db;
+    margin-bottom: 8px;
+}
+
+.base-color-options {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.base-color-button {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.base-color-button.transparent {
+    background: linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+.base-color-button.white {
+    background-color: #ffffff;
+}
+
+.base-color-button.black {
+    background-color: #000000;
+}
+
+.base-color-button.active {
+    border-color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* ビュー操作セクション */
+.view-controls {
+    margin-bottom: 20px;
+}
+
+.view-reset-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #dc2626;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #ef4444;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.view-reset-button:hover {
+    background-color: #ef4444;
+    transform: scale(1.05);
+}
+
+.view-instructions {
+    color: #9ca3af;
+    font-size: 12px;
+    margin: 0;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/* 表示設定セクション */
+.display-settings {
+    margin-bottom: 20px;
+}
+
+.grid-toggle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grid-toggle-label {
+    font-size: 14px;
+    color: #d1d5db;
+}
+
+.grid-toggle-button {
+    width: 60px;
+    height: 24px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.grid-toggle-button.on {
+    background-color: #10b981;
+}
+
+.grid-toggle-button.off {
+    background-color: #6b7280;
+}
+
+/* トップスクロールボタン */
+.scroll-top-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3b82f6;
+    color: white;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+}
+
+.scroll-top-button:hover {
+    background-color: #2563eb;
+}

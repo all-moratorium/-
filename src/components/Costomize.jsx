@@ -1033,88 +1033,43 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </h1>
 
                     {/* ネオンON/OFFスイッチと背景色設定 */}
-                    <div className="customize-setting-group" style={{ borderBottom: '2px solid #fbbf24', paddingBottom: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '8px' }}>
+                    <div className="neon-power-section">
+                        <div className="neon-power-controls">
                             {/* 左側：ON/OFFスイッチ */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <span style={{ color: neonPower ? '#10b981' : '#6b7280', fontWeight: 'bold' }}>
+                            <div className="neon-power-status">
+                                <span className={`neon-status-text ${neonPower ? 'on' : 'off'}`}>
                                     {neonPower ? '💡 ON' : '⚫ OFF'}
                                 </span>
                                 <button
                                     onClick={() => setNeonPower(!neonPower)}
-                                    style={{
-                                        width: '80px',
-                                        height: '40px',
-                                        borderRadius: '20px',
-                                        border: '2px solid',
-                                        borderColor: neonPower ? '#10b981' : '#6b7280',
-                                        backgroundColor: neonPower ? '#10b981' : '#374151',
-                                        color: 'white',
-                                        fontWeight: 'bold',
-                                        fontSize: '16px',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s ease',
-                                        position: 'relative',
-                                        boxShadow: neonPower ? '0 0 20px rgba(16, 185, 129, 0.5)' : 'none'
-                                    }}
+                                    className={`neon-power-switch ${neonPower ? 'on' : 'off'}`}
                                 >
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '3px',
-                                        left: neonPower ? '43px' : '3px',
-                                        width: '30px',
-                                        height: '30px',
-                                        borderRadius: '50%',
-                                        backgroundColor: 'white',
-                                        transition: 'left 0.3s ease',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                    }} />
+                                    <div className={`neon-switch-handle ${neonPower ? 'on' : 'off'}`} />
                                 </button>
                             </div>
                             
                             {/* 右側：背景色設定 */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span style={{ color: '#d1d5db', fontSize: '12px', fontWeight: 'bold' }}>
+                            <div className="neon-background-controls">
+                                <span className="background-label">
                                     背景色
                                 </span>
-                                <div style={{ position: 'relative' }}>
+                                <div className="background-color-picker-wrapper">
                                     <div 
+                                        className="background-color-preview"
                                         style={{
-                                            width: '32px',
-                                            height: '32px',
-                                            backgroundColor: neonPower ? backgroundColor : backgroundColorOff,
-                                            border: '2px solid #ccc',
-                                            borderRadius: '6px',
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                                            cursor: 'pointer'
+                                            backgroundColor: neonPower ? backgroundColor : backgroundColorOff
                                         }}
                                     />
                                     <input
                                         type="color"
                                         value={neonPower ? backgroundColor : backgroundColorOff}
                                         onChange={(e) => handleBackgroundColorChange(e.target.value)}
-                                        style={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            width: '32px',
-                                            height: '32px',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            cursor: 'pointer',
-                                            opacity: 0
-                                        }}
+                                        className="background-color-input"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <p style={{ 
-                            color: '#9ca3af', 
-                            fontSize: '12px', 
-                            textAlign: 'center', 
-                            margin: 0,
-                            fontStyle: 'italic'
-                        }}>
+                        <p className="neon-status-description">
                             {neonPower ? 'LEDネオンが点灯しています' : 'LEDネオンが消灯しています'}
                         </p>
                     </div>
@@ -1130,7 +1085,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </div>
 
                     {/* 一括設定 */}
-                    <div className="customize-setting-group">
+                    <div className="bulk-setting-section">
                         <h3 className="customize-setting-title">一括設定</h3>
                         {!isCanvasSelectionMode ? (
                             <button
@@ -1138,27 +1093,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     setSelectedTubes(new Set());
                                     setIsCanvasSelectionMode(true);
                                 }}
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    backgroundColor: '#7c3aed',
-                                    color: 'white',
-                                    border: '1px solid #8b5cf6',
-                                    borderRadius: '6px',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s'
-                                }}
+                                className="bulk-select-button"
                             >
                                 キャンバスからチューブを選択
                             </button>
                         ) : (
                             <div>
-                                <div style={{ marginBottom: '12px', color: '#fbbf24', fontSize: '14px', textAlign: 'center' }}>
+                                <div className="bulk-selection-active">
                                     キャンバス上のチューブをクリックして選択 ({selectedTubes.size}個選択中)
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                                <div className="bulk-action-buttons">
                                     <button
                                         onClick={() => {
                                             if (selectedTubes.size > 0) {
@@ -1166,17 +1110,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             }
                                         }}
                                         disabled={selectedTubes.size === 0}
-                                        style={{
-                                            flex: 1,
-                                            padding: '8px',
-                                            backgroundColor: selectedTubes.size > 0 ? '#10b981' : '#6b7280',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                            cursor: selectedTubes.size > 0 ? 'pointer' : 'not-allowed'
-                                        }}
+                                        className={`bulk-action-button apply ${selectedTubes.size === 0 ? 'disabled' : ''}`}
                                     >
                                         設定変更
                                     </button>
@@ -1185,17 +1119,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             setIsCanvasSelectionMode(false);
                                             setSelectedTubes(new Set());
                                         }}
-                                        style={{
-                                            flex: 1,
-                                            padding: '8px',
-                                            backgroundColor: '#6b7280',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer'
-                                        }}
+                                        className="bulk-action-button cancel"
                                     >
                                         キャンセル
                                     </button>
@@ -1206,25 +1130,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                     {/* ネオンチューブ設定 */}
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
-                        <div className="customize-setting-group">
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                                <h3 className="customize-setting-title" style={{ margin: 0 }}>
+                        <div className="neon-tube-settings">
+                            <div className="neon-tube-header">
+                                <h3 className="neon-tube-title">
                                     ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)
                                 </h3>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                                <div className="neon-tube-actions">
                                     {/* 最後のチューブへスクロールボタン */}
                                     <button
                                         onClick={scrollToLastTube}
-                                        style={{
-                                            padding: '4px 8px',
-                                            backgroundColor: '#10b981',
-                                            color: 'white',
-                                            border: '1px solid #059669',
-                                            borderRadius: '4px',
-                                            fontSize: '10px',
-                                            cursor: 'pointer',
-                                            fontWeight: 'bold'
-                                        }}
+                                        className="tube-action-button scroll-last"
                                         title="最後のチューブへ"
                                     >
                                         ↓ 最後へ
@@ -1232,16 +1147,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     {/* 最小化/展開ボタン */}
                                     <button
                                         onClick={() => setIsTubeSettingsMinimized(!isTubeSettingsMinimized)}
-                                        style={{
-                                            padding: '4px 8px',
-                                            backgroundColor: '#6b7280',
-                                            color: 'white',
-                                            border: '1px solid #4b5563',
-                                            borderRadius: '4px',
-                                            fontSize: '10px',
-                                            cursor: 'pointer',
-                                            fontWeight: 'bold'
-                                        }}
+                                        className="tube-action-button minimize"
                                         title={isTubeSettingsMinimized ? '展開' : '最小化'}
                                     >
                                         {isTubeSettingsMinimized ? '▼' : '▲'}
@@ -1280,23 +1186,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             boxShadow: highlightedTube === originalIndex ? '0 0 15px rgba(255, 107, 53, 0.3)' : 'none'
                                         }}
                                     >
-                                        <label className="customize-setting-label">
+                                        <label className="tube-title">
                                             チューブ {sortedIndex + 1} (長さ: {Math.round(calculatePathLength(pathObj) / 25 * 10) / 10}cm)
                                         </label>
                                         
                                         {/* 色設定 */}
-                                        <div className="customize-slider-container">
-                                            <label className="customize-setting-label">色の設定</label>
-                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                        <div className="color-setting-section">
+                                            <label className="color-setting-label">色の設定</label>
+                                            <div className="color-setting-controls">
                                                 {/* 現在の色アイコン */}
                                                 <div 
+                                                    className="color-preview"
                                                     style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        backgroundColor: pathColors[originalIndex] || neonColors.strokeLine || '#ffff00',
-                                                        border: '2px solid #ccc',
-                                                        borderRadius: '6px',
-                                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                                        backgroundColor: pathColors[originalIndex] || neonColors.strokeLine || '#ffff00'
                                                     }}
                                                 />
                                                 {/* 色設定ボタン */}
@@ -1306,16 +1208,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                         setSelectedPathIndex(originalIndex);
                                                         setShowColorModal(true);
                                                     }}
-                                                    style={{
-                                                        backgroundColor: '#3b82f6',
-                                                        color: 'white',
-                                                        border: '1px solid #2563eb',
-                                                        borderRadius: '6px',
-                                                        padding: '8px 16px',
-                                                        fontSize: '12px',
-                                                        cursor: 'pointer',
-                                                        fontWeight: 'bold'
-                                                    }}
+                                                    className="color-select-button"
                                                 >
                                                     色を選択
                                                 </button>
@@ -1323,27 +1216,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         </div>
                                         
                                         {/* 太さ設定 */}
-                                        <div className="customize-slider-container" style={{ marginTop: '16px' }}>
-                                            <label className="customize-setting-label">太さ: {pathThickness[originalIndex] || neonLineWidths.strokeLine}px</label>
-                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                        <div className="thickness-setting-section">
+                                            <label className="thickness-setting-label">太さ</label>
+                                            <div className="thickness-button-group">
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation(); // イベントバブリングを防ぐ
                                                         handlePathThicknessChange(originalIndex, 15);
                                                     }}
-                                                    className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
-                                                    style={{ 
-                                                        backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
-                                                        color: 'white',
-                                                        border: '1px solid',
-                                                        borderColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                        fontSize: '12px',
-                                                        cursor: 'pointer',
-                                                        width: '60px',
-                                                        height: 'auto'
-                                                    }}
+                                                    className={`thickness-button ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
                                                 >
                                                     6mm
                                                 </button>
@@ -1352,19 +1233,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                         e.stopPropagation(); // イベントバブリングを防ぐ
                                                         handlePathThicknessChange(originalIndex, 20);
                                                     }}
-                                                    className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
-                                                    style={{ 
-                                                        backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
-                                                        color: 'white',
-                                                        border: '1px solid',
-                                                        borderColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                        fontSize: '12px',
-                                                        cursor: 'pointer',
-                                                        width: '60px',
-                                                        height: 'auto'
-                                                    }}
+                                                    className={`thickness-button ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
                                                 >
                                                     8mm
                                                 </button>
@@ -1373,13 +1242,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     </div>
                                 ))}
                             {isTubeSettingsMinimized && (
-                                <div style={{ 
-                                    padding: '12px', 
-                                    textAlign: 'center', 
-                                    color: '#9ca3af', 
-                                    fontSize: '14px',
-                                    fontStyle: 'italic'
-                                }}>
+                                <div className="tube-minimized-message">
                                     ネオンチューブ設定が最小化されています
                                 </div>
                             )}
@@ -1388,58 +1251,31 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                     {/* 土台設定 */}
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length > 0 && (
-                        <div className="customize-setting-group">
+                        <div className="base-settings">
                             <h3 className="customize-setting-title">土台設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length}個)</h3>
                             {neonPaths.map((pathObj, index) => {
                                 if (!pathObj || pathObj.mode !== 'fill') return null;
                                 return (
-                                    <div key={index} className="customize-path-color-section">
-                                        <label className="customize-setting-label">
+                                    <div key={index} className="base-item">
+                                        <label className="base-item-label">
                                             土台 {neonPaths.filter((p, i) => p && p.mode === 'fill' && i <= index).length}
                                         </label>
                                         
                                         {/* ベースプレートの色設定 */}
-                                        <div className="customize-slider-container">
-                                            <label className="customize-setting-label">ベースプレートの色</label>
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                        <div className="base-color-label">ベースプレートの色</div>
+                                        <div className="base-color-options">
                                             <button
-                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: 'transparent',
-                                                    border: '2px solid #ccc',
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '6px',
-                                                    position: 'relative',
-                                                    background: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-                                                    backgroundSize: '8px 8px',
-                                                    backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px'
-                                                }}
+                                                className={`base-color-button transparent ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
                                                 onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
                                                 title="透明"
                                             />
                                             <button
-                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === '#ffffff' ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: '#ffffff',
-                                                    border: '2px solid #ccc',
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '6px'
-                                                }}
+                                                className={`base-color-button white ${pathColors[`${index}_fill`] === '#ffffff' ? 'active' : ''}`}
                                                 onClick={() => handlePathColorChange(`${index}_fill`, '#ffffff')}
                                                 title="白"
                                             />
                                             <button
-                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: '#000000',
-                                                    border: '2px solid #ccc',
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '6px'
-                                                }}
+                                                className={`base-color-button black ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
                                                 onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
                                                 title="黒"
                                             />
@@ -1450,7 +1286,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </div>
                     )}
 
-                    <div className="customize-setting-group">
+                    <div className="view-controls">
                         <h3 className="customize-setting-title">ビュー操作</h3>
                         
                         {/* ビューリセットボタン */}
@@ -1463,8 +1299,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     offsetY: canvasHeight / 2
                                 }));
                             }}
-                            className="customize-reset-button"
-                            style={{ marginBottom: '12px' }}
+                            className="view-reset-button"
                         >
                             🎯 ビューリセット
                         </button>
@@ -1500,37 +1335,25 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 setPathColors(resetColors);
                                 setPathThickness(resetThickness);
                             }}
-                            className="customize-reset-button"
-                            style={{ marginBottom: '12px' }}
+                            className="view-reset-button"
                         >
                             🔄 すべてリセット
                         </button>
                         
-                        <p style={{ 
-                            color: '#9ca3af', 
-                            fontSize: '12px', 
-                            margin: 0,
-                            fontStyle: 'italic'
-                        }}>
+                        <p className="view-instructions">
                             マウスホイール: ズーム<br/>
                             右クリック+ドラッグ: パン
                         </p>
                     </div>
-                    <div className="customize-setting-group">
+                    <div className="display-settings">
                         <h3 className="customize-setting-title">表示設定</h3>
                         
                         {/* グリッド表示切り替え */}
-                        <div className="customize-slider-container">
-                            <label className="customize-setting-label">グリッド表示</label>
+                        <div className="grid-toggle-container">
+                            <label className="grid-toggle-label">グリッド表示</label>
                             <button
                                 onClick={() => setShowGrid(!showGrid)}
-                                className={`customize-color-preset ${showGrid ? 'active' : ''}`}
-                                style={{ 
-                                    backgroundColor: showGrid ? '#10b981' : '#6b7280',
-                                    width: '60px',
-                                    height: '24px',
-                                    borderRadius: '12px'
-                                }}
+                                className={`grid-toggle-button ${showGrid ? 'on' : 'off'}`}
                             >
                                 {showGrid ? 'ON' : 'OFF'}
                             </button>
@@ -1540,18 +1363,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     {/* 一番上へスクロールボタン */}
                     <button
                         onClick={scrollToTop}
-                        style={{
-                            width: '100%',
-                            padding: '12px',
-                            backgroundColor: '#3b82f6',
-                            color: 'white',
-                            border: '1px solid #2563eb',
-                            borderRadius: '6px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            transition: 'all 0.2s'
-                        }}
+                        className="scroll-top-button"
                         title="サイドバーの一番上へスクロール"
                     >
                         ↑ 一番上へ戻る
