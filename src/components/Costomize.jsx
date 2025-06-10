@@ -28,6 +28,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [svgPaths, setSvgPaths] = useState([]);
     const [pathColors, setPathColors] = useState(initialState?.pathColors || {});
     const [pathThickness, setPathThickness] = useState(initialState?.pathThickness || {});
+    const [showColorModal, setShowColorModal] = useState(false);
+    const [selectedPathIndex, setSelectedPathIndex] = useState(null);
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -173,42 +175,39 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             return;
         }
 
-        // ネオンON時：グロー効果付きで描画
-        // 1. 外側のグロー（最も大きく、最も薄い）
+        // ネオンON時：メリハリのある光で描画
+        // 1. 薄いグロー（シャープに）
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
         ctx.shadowColor = color;
-        ctx.shadowBlur = glowIntensity * 2;
+        ctx.shadowBlur = glowIntensity * 0.4;
         ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.1 * (brightness / 100);
-        ctx.lineWidth = thickness * 3;
+        ctx.globalAlpha = 0.6 * (brightness / 100);
+        ctx.lineWidth = thickness * 1.1;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         
         drawPath(ctx, pathPoints, pathType);
         ctx.restore();
         
-        // 2. 中間のグロー
-        ctx.save();
-        ctx.globalCompositeOperation = 'screen';
-        ctx.shadowColor = color;
-        ctx.shadowBlur = glowIntensity;
-        ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.3 * (brightness / 100);
-        ctx.lineWidth = thickness * 1.5;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        drawPath(ctx, pathPoints, pathType);
-        ctx.restore();
-        
-        // 3. コア（実際のチューブ）- 均一に光る
+        // 2. コア（実際のチューブ）- しっかりとした光
         ctx.save();
         ctx.shadowColor = color;
-        ctx.shadowBlur = glowIntensity * 0.5;
-        ctx.strokeStyle = adjustBrightness(color, brightness);
-        ctx.globalAlpha = 1.0; // 完全不透明で均一
+        ctx.shadowBlur = glowIntensity * 0.3;
+        ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.2, 200));
+        ctx.globalAlpha = 1.0;
         ctx.lineWidth = thickness;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        drawPath(ctx, pathPoints, pathType);
+        ctx.restore();
+        
+        // 3. 内側のハイライト（メリハリを強調）
+        ctx.save();
+        ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.5, 255));
+        ctx.globalAlpha = 0.8;
+        ctx.lineWidth = thickness * 0.6;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         
@@ -649,11 +648,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
             if (pathPoints.length < 2) return;
 
-            const fillColor = pathColors[pathIndex] || neonColors.fillArea;
-            const borderColor = pathColors[pathIndex] || neonColors.fillBorder;
-            const borderWidth = pathThickness[pathIndex] || neonLineWidths.fillBorder;
+            // ベースプレートの色（透明・白・黒のみ）
+            const fillColorValue = pathColors[`${pathIndex}_fill`] || neonColors.fillArea;
+            // 境界線は常に1px黒線
+            const borderColor = '#000000';
+            const borderWidth = 1;
 
-            ctx.fillStyle = fillColor;
+            // 透明の場合は塗りつぶしをスキップ
+            const isTransparent = fillColorValue === 'transparent';
+            
+            if (!isTransparent) {
+                ctx.fillStyle = fillColorValue;
+            }
             ctx.beginPath();
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
 
@@ -677,7 +683,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 }
             }
             ctx.closePath();
-            ctx.fill();
+            
+            // 透明でない場合のみ塗りつぶし
+            if (!isTransparent) {
+                ctx.fill();
+            }
             
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = borderWidth;
@@ -840,8 +850,45 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             チューブ {neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length}
                                         </label>
                                         
-                                        {/* 太さ設定 */}
+                                        {/* 色設定 */}
                                         <div className="customize-slider-container">
+                                            <label className="customize-setting-label">色の設定</label>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                {/* 現在の色アイコン */}
+                                                <div 
+                                                    style={{
+                                                        width: '32px',
+                                                        height: '32px',
+                                                        backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00',
+                                                        border: '2px solid #ccc',
+                                                        borderRadius: '6px',
+                                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                                    }}
+                                                />
+                                                {/* 色設定ボタン */}
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedPathIndex(index);
+                                                        setShowColorModal(true);
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: '#3b82f6',
+                                                        color: 'white',
+                                                        border: '1px solid #2563eb',
+                                                        borderRadius: '6px',
+                                                        padding: '8px 16px',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        fontWeight: 'bold'
+                                                    }}
+                                                >
+                                                    色を選択
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* 太さ設定 */}
+                                        <div className="customize-slider-container" style={{ marginTop: '16px' }}>
                                             <label className="customize-setting-label">太さ: {pathThickness[index] || neonLineWidths.strokeLine}px</label>
                                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                                 <button
@@ -882,17 +929,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 </button>
                                             </div>
                                         </div>
-                                        
-                                        <div className="customize-path-preset-colors">
-                                            {neonPresetColors.map((color) => (
-                                                <button
-                                                    key={color}
-                                                    className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
-                                                    style={{ backgroundColor: color }}
-                                                    onClick={() => handlePathColorChange(index, color)}
-                                                />
-                                            ))}
-                                        </div>
                                     </div>
                                 );
                             })}
@@ -911,58 +947,51 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             土台 {neonPaths.filter((p, i) => p && p.mode === 'fill' && i <= index).length}
                                         </label>
                                         
-                                        {/* 太さ設定 */}
+                                        {/* ベースプレートの色設定 */}
                                         <div className="customize-slider-container">
-                                            <label className="customize-setting-label">境界線の太さ: {pathThickness[index] || neonLineWidths.fillBorder}px</label>
-                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                                                <button
-                                                    onClick={() => handlePathThicknessChange(index, 15)}
-                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.fillBorder) === 15 ? 'active' : ''}`}
-                                                    style={{ 
-                                                        backgroundColor: (pathThickness[index] || neonLineWidths.fillBorder) === 15 ? '#10b981' : '#6b7280',
-                                                        color: 'white',
-                                                        border: '1px solid',
-                                                        borderColor: (pathThickness[index] || neonLineWidths.fillBorder) === 15 ? '#10b981' : '#6b7280',
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                        fontSize: '12px',
-                                                        cursor: 'pointer',
-                                                        width: '60px',
-                                                        height: 'auto'
-                                                    }}
-                                                >
-                                                    6mm
-                                                </button>
-                                                <button
-                                                    onClick={() => handlePathThicknessChange(index, 20)}
-                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.fillBorder) === 20 ? 'active' : ''}`}
-                                                    style={{ 
-                                                        backgroundColor: (pathThickness[index] || neonLineWidths.fillBorder) === 20 ? '#10b981' : '#6b7280',
-                                                        color: 'white',
-                                                        border: '1px solid',
-                                                        borderColor: (pathThickness[index] || neonLineWidths.fillBorder) === 20 ? '#10b981' : '#6b7280',
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                        fontSize: '12px',
-                                                        cursor: 'pointer',
-                                                        width: '60px',
-                                                        height: 'auto'
-                                                    }}
-                                                >
-                                                    8mm
-                                                </button>
-                                            </div>
+                                            <label className="customize-setting-label">ベースプレートの色</label>
                                         </div>
-                                        
-                                        <div className="customize-path-preset-colors">
-                                            {neonPresetColors.map((color) => (
-                                                <button
-                                                    key={color}
-                                                    className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
-                                                    style={{ backgroundColor: color }}
-                                                    onClick={() => handlePathColorChange(index, color)}
-                                                />
-                                            ))}
+                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                            <button
+                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
+                                                style={{ 
+                                                    backgroundColor: 'transparent',
+                                                    border: '2px solid #ccc',
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '6px',
+                                                    position: 'relative',
+                                                    background: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+                                                    backgroundSize: '8px 8px',
+                                                    backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px'
+                                                }}
+                                                onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
+                                                title="透明"
+                                            />
+                                            <button
+                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === '#ffffff' ? 'active' : ''}`}
+                                                style={{ 
+                                                    backgroundColor: '#ffffff',
+                                                    border: '2px solid #ccc',
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '6px'
+                                                }}
+                                                onClick={() => handlePathColorChange(`${index}_fill`, '#ffffff')}
+                                                title="白"
+                                            />
+                                            <button
+                                                className={`customize-path-preset ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
+                                                style={{ 
+                                                    backgroundColor: '#000000',
+                                                    border: '2px solid #ccc',
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '6px'
+                                                }}
+                                                onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
+                                                title="黒"
+                                            />
                                         </div>
                                     </div>
                                 );
@@ -1242,6 +1271,78 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 >
                     💡 ネオン設定を表示
                 </button>
+            )}
+
+            {/* 色選択モーダル */}
+            {showColorModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000
+                }}>
+                    <div style={{
+                        backgroundColor: '#1f2937',
+                        padding: '24px',
+                        borderRadius: '12px',
+                        border: '1px solid #374151',
+                        minWidth: '320px'
+                    }}>
+                        <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
+                            チューブの色を選択
+                        </h3>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(4, 1fr)',
+                            gap: '8px',
+                            marginBottom: '16px'
+                        }}>
+                            {neonPresetColors.map((color) => (
+                                <button
+                                    key={color}
+                                    style={{
+                                        width: '48px',
+                                        height: '48px',
+                                        backgroundColor: color,
+                                        border: pathColors[selectedPathIndex] === color ? '3px solid #ffffff' : '2px solid #6b7280',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease',
+                                        transform: pathColors[selectedPathIndex] === color ? 'scale(1.1)' : 'scale(1)'
+                                    }}
+                                    onClick={() => {
+                                        handlePathColorChange(selectedPathIndex, color);
+                                        setShowColorModal(false);
+                                        setSelectedPathIndex(null);
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            onClick={() => {
+                                setShowColorModal(false);
+                                setSelectedPathIndex(null);
+                            }}
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                backgroundColor: '#6b7280',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );
