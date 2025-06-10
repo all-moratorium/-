@@ -157,10 +157,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     // ネオンチューブ効果の描画
     const drawNeonTube = (ctx, pathPoints, pathType, color, thickness, glowIntensity, brightness) => {
         if (!neonPower) {
-            // LEDネオンOFF時：同じ色、同じ明度、グロー効果のみなし
+            // LEDネオンOFF時：マットな質感で描画
             ctx.save();
-            ctx.strokeStyle = color; // 元の色そのまま
-            ctx.globalAlpha = 1.0;
+            
+            // 色は元のまま、質感だけマットにする
+            ctx.strokeStyle = color; // 元の色をそのまま使用
+            ctx.globalAlpha = 1.0; // 完全に不透明
             ctx.lineWidth = thickness;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -294,6 +296,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合のみ）
             if (svgData.colors && svgData.colors.background !== undefined && (!initialState || !initialState.backgroundColorOff)) {
                 setBackgroundColorOff(svgData.colors.background);
+            }
+            
+            // ネオン下絵のグリッド色を消灯時のグリッド色として設定（initialStateが無い場合のみ）
+            if (svgData.colors && svgData.colors.grid !== undefined && (!initialState || !initialState.gridColorOff)) {
+                setGridColorOff(svgData.colors.grid);
             }
             
             // パス別の初期色設定（initialStateが無い場合のみ設定）
@@ -824,18 +831,48 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     {/* 太さ設定 */}
                                     <div className="customize-slider-container">
                                         <label className="customize-setting-label">太さ: {pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)}px</label>
-                                        <input
-                                            type="range"
-                                            min="1"
-                                            max="50"
-                                            value={pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)}
-                                            onChange={(e) => handlePathThicknessChange(index, Number(e.target.value))}
-                                            className="customize-setting-slider"
-                                        />
+                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                            <button
+                                                onClick={() => handlePathThicknessChange(index, 15)}
+                                                className={`customize-color-preset ${(pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? 'active' : ''}`}
+                                                style={{ 
+                                                    backgroundColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? '#10b981' : '#6b7280',
+                                                    color: 'white',
+                                                    border: '1px solid',
+                                                    borderColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 15 ? '#10b981' : '#6b7280',
+                                                    borderRadius: '4px',
+                                                    padding: '4px 8px',
+                                                    fontSize: '12px',
+                                                    cursor: 'pointer',
+                                                    width: '60px',
+                                                    height: 'auto'
+                                                }}
+                                            >
+                                                6mm
+                                            </button>
+                                            <button
+                                                onClick={() => handlePathThicknessChange(index, 20)}
+                                                className={`customize-color-preset ${(pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? 'active' : ''}`}
+                                                style={{ 
+                                                    backgroundColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? '#10b981' : '#6b7280',
+                                                    color: 'white',
+                                                    border: '1px solid',
+                                                    borderColor: (pathThickness[index] || (pathObj.mode === 'stroke' ? neonLineWidths.strokeLine : neonLineWidths.fillBorder)) === 20 ? '#10b981' : '#6b7280',
+                                                    borderRadius: '4px',
+                                                    padding: '4px 8px',
+                                                    fontSize: '12px',
+                                                    cursor: 'pointer',
+                                                    width: '60px',
+                                                    height: 'auto'
+                                                }}
+                                            >
+                                                8mm
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div className="customize-path-preset-colors">
-                                        {neonPresetColors.slice(0, 6).map((color) => (
+                                        {neonPresetColors.map((color) => (
                                             <button
                                                 key={color}
                                                 className={`customize-path-preset ${pathColors[index] === color ? 'active' : ''}`}
