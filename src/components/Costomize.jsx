@@ -33,6 +33,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [showBulkColorModal, setShowBulkColorModal] = useState(false);
     const [selectedTubes, setSelectedTubes] = useState(new Set());
     const [highlightedTube, setHighlightedTube] = useState(null);
+    const [isCanvasSelectionMode, setIsCanvasSelectionMode] = useState(false);
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -503,6 +504,48 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
 
+    // パスのヒット判定を行う関数
+    const getPathAtPosition = useCallback((x, y) => {
+        const hitRadius = 10; // ヒット判定の半径
+        
+        for (let pathIndex = 0; pathIndex < neonPaths.length; pathIndex++) {
+            const pathObj = neonPaths[pathIndex];
+            if (!pathObj || !Array.isArray(pathObj.points) || pathObj.mode !== 'stroke') {
+                continue;
+            }
+            
+            const pathPoints = pathObj.points;
+            if (pathPoints.length < 2) continue;
+            
+            // パス上の各セグメントに対してヒット判定
+            for (let i = 0; i < pathPoints.length - 1; i++) {
+                const p1 = pathPoints[i];
+                const p2 = pathPoints[i + 1];
+                
+                // 線分との距離を計算
+                const distance = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
+                if (distance <= hitRadius) {
+                    return pathIndex;
+                }
+            }
+        }
+        return null;
+    }, [neonPaths]);
+
+    // 点と線分の距離を計算する関数
+    const distanceToLineSegment = (px, py, x1, y1, x2, y2) => {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        
+        if (length === 0) return Math.sqrt((px - x1) ** 2 + (py - y1) ** 2);
+        
+        const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (length * length)));
+        const projection = { x: x1 + t * dx, y: y1 + t * dy };
+        
+        return Math.sqrt((px - projection.x) ** 2 + (py - projection.y) ** 2);
+    };
+
     const handleWheel = useCallback((e) => {
         e.preventDefault();
         const scaleAmount = 0.1;
@@ -536,8 +579,42 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             setIsPanning(true);
             setLastPanX(e.clientX);
             setLastPanY(e.clientY);
+        } else if (e.button === 0) { // 左クリック
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left - canvasSettings.offsetX) / canvasSettings.scale;
+            const mouseY = (e.clientY - rect.top - canvasSettings.offsetY) / canvasSettings.scale;
+            
+            const hitPathIndex = getPathAtPosition(mouseX, mouseY);
+            
+            if (hitPathIndex !== null) {
+                if (isCanvasSelectionMode) {
+                    // 一括色変更モードの場合
+                    const newSelected = new Set(selectedTubes);
+                    if (newSelected.has(hitPathIndex)) {
+                        newSelected.delete(hitPathIndex);
+                    } else {
+                        newSelected.add(hitPathIndex);
+                    }
+                    setSelectedTubes(newSelected);
+                } else {
+                    // 通常モードの場合：ハイライト切り替え
+                    if (highlightedTube === hitPathIndex) {
+                        setHighlightedTube(null);
+                    } else {
+                        setHighlightedTube(hitPathIndex);
+                    }
+                }
+            } else {
+                // パス以外の場所をクリックした場合
+                if (!isCanvasSelectionMode) {
+                    setHighlightedTube(null);
+                }
+            }
         }
-    }, []);
+    }, [canvasSettings, getPathAtPosition, isCanvasSelectionMode, selectedTubes, highlightedTube]);
 
     const handleMouseMove = useCallback((e) => {
         if (isPanning) { // パン操作中
@@ -744,8 +821,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 brightness * applyBlinkEffect(1, animationSpeed) : 
                 brightness;
             
-            // ハイライト状態をチェック（コンテナがハイライトされている時のみ）
+            // ハイライト状態をチェック
             const isHighlighted = highlightedTube === pathIndex;
+            // 一括選択モードでの選択状態をチェック
+            const isSelected = isCanvasSelectionMode && selectedTubes.has(pathIndex);
+            
+            // 一括選択モードの場合は選択状態を優先表示
+            const shouldHighlight = isSelected || (!isCanvasSelectionMode && isHighlighted);
             
             // ネオンチューブ効果で描画
             drawNeonTube(
@@ -756,8 +838,20 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 strokeWidth,
                 glowIntensity,
                 currentBrightness,
-                isHighlighted
+                shouldHighlight
             );
+            
+            // 一括選択モードでの選択表示（異なる色で表示）
+            if (isSelected) {
+                ctx.save();
+                ctx.strokeStyle = '#00ff00'; // 緑色で選択状態を表示
+                ctx.lineWidth = strokeWidth + 10;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.globalAlpha = 0.6;
+                drawPath(ctx, pathPoints, pathType);
+                ctx.restore();
+            }
         });
 
         ctx.restore();
@@ -788,7 +882,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube, isCanvasSelectionMode, selectedTubes]);
 
     return (
         <div className="customize-app-container">
@@ -1264,26 +1358,76 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                     <div className="customize-setting-group">
                         <h3 className="customize-setting-title">一括カラー設定</h3>
-                        <button
-                            onClick={() => {
-                                setSelectedTubes(new Set());
-                                setShowBulkColorModal(true);
-                            }}
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                backgroundColor: '#7c3aed',
-                                color: 'white',
-                                border: '1px solid #8b5cf6',
-                                borderRadius: '6px',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            チューブを選択して一括色変更
-                        </button>
+                        {!isCanvasSelectionMode ? (
+                            <button
+                                onClick={() => {
+                                    setSelectedTubes(new Set());
+                                    setIsCanvasSelectionMode(true);
+                                }}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    backgroundColor: '#7c3aed',
+                                    color: 'white',
+                                    border: '1px solid #8b5cf6',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                キャンバスからチューブを選択
+                            </button>
+                        ) : (
+                            <div>
+                                <div style={{ marginBottom: '12px', color: '#fbbf24', fontSize: '14px', textAlign: 'center' }}>
+                                    キャンバス上のチューブをクリックして選択 ({selectedTubes.size}個選択中)
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button
+                                        onClick={() => {
+                                            if (selectedTubes.size > 0) {
+                                                setShowBulkColorModal(true);
+                                            }
+                                        }}
+                                        disabled={selectedTubes.size === 0}
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px',
+                                            backgroundColor: selectedTubes.size > 0 ? '#10b981' : '#6b7280',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            cursor: selectedTubes.size > 0 ? 'pointer' : 'not-allowed'
+                                        }}
+                                    >
+                                        色変更
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsCanvasSelectionMode(false);
+                                            setSelectedTubes(new Set());
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px',
+                                            backgroundColor: '#6b7280',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        キャンセル
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* SVGダウンロード */}
@@ -1438,91 +1582,44 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         maxWidth: '500px'
                     }}>
                         <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
-                            チューブを選択して一括色変更
+                            選択したチューブの色を変更
                         </h3>
                         
-                        {/* チューブ選択 */}
+                        {/* 選択されたチューブの表示 */}
                         <div style={{ marginBottom: '16px' }}>
                             <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
-                                変更するチューブを選択 ({selectedTubes.size}個選択中)
+                                選択中のチューブ ({selectedTubes.size}個)
                             </h4>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '12px' }}>
-                                {neonPaths.map((pathObj, index) => {
-                                    if (!pathObj || pathObj.mode !== 'stroke') return null;
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                                {Array.from(selectedTubes).map(index => {
                                     const tubeNumber = neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length;
                                     return (
-                                        <button
+                                        <div
                                             key={index}
-                                            onClick={() => {
-                                                const newSelected = new Set(selectedTubes);
-                                                if (newSelected.has(index)) {
-                                                    newSelected.delete(index);
-                                                } else {
-                                                    newSelected.add(index);
-                                                }
-                                                setSelectedTubes(newSelected);
-                                            }}
                                             style={{
-                                                padding: '8px 12px',
-                                                backgroundColor: selectedTubes.has(index) ? '#10b981' : '#374151',
+                                                padding: '4px 8px',
+                                                backgroundColor: '#374151',
                                                 color: 'white',
-                                                border: selectedTubes.has(index) ? '2px solid #10b981' : '1px solid #6b7280',
-                                                borderRadius: '6px',
+                                                borderRadius: '4px',
                                                 fontSize: '12px',
-                                                cursor: 'pointer',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                gap: '8px'
+                                                gap: '4px'
                                             }}
                                         >
                                             <div 
                                                 style={{
-                                                    width: '16px',
-                                                    height: '16px',
+                                                    width: '12px',
+                                                    height: '12px',
                                                     backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00',
-                                                    borderRadius: '3px',
+                                                    borderRadius: '2px',
                                                     border: '1px solid #ccc'
                                                 }}
                                             />
                                             チューブ {tubeNumber}
-                                        </button>
+                                        </div>
                                     );
                                 })}
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <button
-                                    onClick={() => {
-                                        const allTubeIndices = neonPaths
-                                            .map((pathObj, index) => pathObj && pathObj.mode === 'stroke' ? index : null)
-                                            .filter(index => index !== null);
-                                        setSelectedTubes(new Set(allTubeIndices));
-                                    }}
-                                    style={{
-                                        padding: '4px 8px',
-                                        backgroundColor: '#3b82f6',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        fontSize: '12px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    全選択
-                                </button>
-                                <button
-                                    onClick={() => setSelectedTubes(new Set())}
-                                    style={{
-                                        padding: '4px 8px',
-                                        backgroundColor: '#6b7280',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        fontSize: '12px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    全解除
-                                </button>
                             </div>
                         </div>
                         
@@ -1556,6 +1653,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 });
                                                 setPathColors(prev => ({ ...prev, ...newColors }));
                                                 setShowBulkColorModal(false);
+                                                setIsCanvasSelectionMode(false);
                                                 setSelectedTubes(new Set());
                                             }}
                                         />
@@ -1567,6 +1665,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         <button
                             onClick={() => {
                                 setShowBulkColorModal(false);
+                                setIsCanvasSelectionMode(false);
                                 setSelectedTubes(new Set());
                             }}
                             style={{
