@@ -30,6 +30,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [pathThickness, setPathThickness] = useState(initialState?.pathThickness || {});
     const [showColorModal, setShowColorModal] = useState(false);
     const [selectedPathIndex, setSelectedPathIndex] = useState(null);
+    const [showBulkColorModal, setShowBulkColorModal] = useState(false);
+    const [selectedTubes, setSelectedTubes] = useState(new Set());
+    const [highlightedTube, setHighlightedTube] = useState(null);
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -75,6 +78,22 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         '#0080ff', '#ffff00', '#ff0040', '#40ff00',
         '#00ffff', '#ff00ff', '#ffffff', '#ff4080'
     ];
+
+    // パスの長さを計算する関数
+    const calculatePathLength = (pathObj) => {
+        if (!pathObj || !pathObj.points || pathObj.points.length < 2) return 0;
+        
+        let totalLength = 0;
+        const points = pathObj.points;
+        
+        for (let i = 0; i < points.length - 1; i++) {
+            const dx = points[i + 1].x - points[i].x;
+            const dy = points[i + 1].y - points[i].y;
+            totalLength += Math.sqrt(dx * dx + dy * dy);
+        }
+        
+        return totalLength;
+    };
 
     const handlePresetColorClick = (color) => {
         setSelectedColor(color);
@@ -780,42 +799,110 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         💡 ネオンチューブ カスタマイズ
                     </h1>
 
-                    {/* ネオンON/OFFスイッチ */}
+                    {/* ネオンON/OFFスイッチと背景色設定 */}
                     <div className="customize-setting-group" style={{ borderBottom: '2px solid #fbbf24', paddingBottom: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '8px' }}>
-                            <span style={{ color: neonPower ? '#10b981' : '#6b7280', fontWeight: 'bold' }}>
-                                {neonPower ? '💡 ON' : '⚫ OFF'}
-                            </span>
-                            <button
-                                onClick={() => setNeonPower(!neonPower)}
-                                style={{
-                                    width: '80px',
-                                    height: '40px',
-                                    borderRadius: '20px',
-                                    border: '2px solid',
-                                    borderColor: neonPower ? '#10b981' : '#6b7280',
-                                    backgroundColor: neonPower ? '#10b981' : '#374151',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                    fontSize: '16px',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease',
-                                    position: 'relative',
-                                    boxShadow: neonPower ? '0 0 20px rgba(16, 185, 129, 0.5)' : 'none'
-                                }}
-                            >
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '3px',
-                                    left: neonPower ? '43px' : '3px',
-                                    width: '30px',
-                                    height: '30px',
-                                    borderRadius: '50%',
-                                    backgroundColor: 'white',
-                                    transition: 'left 0.3s ease',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                }} />
-                            </button>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '8px' }}>
+                            {/* 左側：ON/OFFスイッチ */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <span style={{ color: neonPower ? '#10b981' : '#6b7280', fontWeight: 'bold' }}>
+                                    {neonPower ? '💡 ON' : '⚫ OFF'}
+                                </span>
+                                <button
+                                    onClick={() => setNeonPower(!neonPower)}
+                                    style={{
+                                        width: '80px',
+                                        height: '40px',
+                                        borderRadius: '20px',
+                                        border: '2px solid',
+                                        borderColor: neonPower ? '#10b981' : '#6b7280',
+                                        backgroundColor: neonPower ? '#10b981' : '#374151',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '16px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        position: 'relative',
+                                        boxShadow: neonPower ? '0 0 20px rgba(16, 185, 129, 0.5)' : 'none'
+                                    }}
+                                >
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '3px',
+                                        left: neonPower ? '43px' : '3px',
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '50%',
+                                        backgroundColor: 'white',
+                                        transition: 'left 0.3s ease',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                    }} />
+                                </button>
+                            </div>
+                            
+                            {/* 右側：背景色設定 */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ color: '#d1d5db', fontSize: '12px', fontWeight: 'bold' }}>
+                                    背景色
+                                </span>
+                                <div 
+                                    style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        backgroundColor: neonPower ? backgroundColor : backgroundColorOff,
+                                        border: '2px solid #ccc',
+                                        borderRadius: '6px',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                    }}
+                                />
+                                <input
+                                    type="color"
+                                    value={neonPower ? backgroundColor : backgroundColorOff}
+                                    onChange={(e) => {
+                                        if (neonPower) {
+                                            setBackgroundColor(e.target.value);
+                                        } else {
+                                            setBackgroundColorOff(e.target.value);
+                                        }
+                                    }}
+                                    style={{
+                                        width: '24px',
+                                        height: '24px',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        opacity: 0,
+                                        position: 'absolute',
+                                        pointerEvents: 'none'
+                                    }}
+                                />
+                                <button
+                                    onClick={() => {
+                                        const input = document.createElement('input');
+                                        input.type = 'color';
+                                        input.value = neonPower ? backgroundColor : backgroundColorOff;
+                                        input.onchange = (e) => {
+                                            if (neonPower) {
+                                                setBackgroundColor(e.target.value);
+                                            } else {
+                                                setBackgroundColorOff(e.target.value);
+                                            }
+                                        };
+                                        input.click();
+                                    }}
+                                    style={{
+                                        padding: '4px 8px',
+                                        backgroundColor: '#3b82f6',
+                                        color: 'white',
+                                        border: '1px solid #2563eb',
+                                        borderRadius: '4px',
+                                        fontSize: '10px',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold'
+                                    }}
+                                >
+                                    変更
+                                </button>
+                            </div>
                         </div>
                         <p style={{ 
                             color: '#9ca3af', 
@@ -842,12 +929,30 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
                         <div className="customize-setting-group">
                             <h3 className="customize-setting-title">ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)</h3>
-                            {neonPaths.map((pathObj, index) => {
-                                if (!pathObj || pathObj.mode !== 'stroke') return null;
-                                return (
-                                    <div key={index} className="customize-path-color-section">
+                            {neonPaths
+                                .map((pathObj, index) => ({ pathObj, originalIndex: index }))
+                                .filter(({ pathObj }) => pathObj && pathObj.mode === 'stroke')
+                                .sort((a, b) => calculatePathLength(b.pathObj) - calculatePathLength(a.pathObj))
+                                .map(({ pathObj, originalIndex }, sortedIndex) => (
+                                    <div 
+                                        key={originalIndex} 
+                                        className="customize-path-color-section"
+                                        onClick={() => {
+                                            if (highlightedTube === originalIndex) {
+                                                setHighlightedTube(null); // 既にハイライトされている場合は解除
+                                            } else {
+                                                setHighlightedTube(originalIndex); // ハイライト設定
+                                            }
+                                        }}
+                                        style={{
+                                            cursor: 'pointer',
+                                            border: highlightedTube === originalIndex ? '2px solid #fbbf24' : '1px solid rgba(255, 255, 255, 0.1)',
+                                            backgroundColor: highlightedTube === originalIndex ? 'rgba(251, 191, 36, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
                                         <label className="customize-setting-label">
-                                            チューブ {neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length}
+                                            チューブ {sortedIndex + 1} (長さ: {Math.round(calculatePathLength(pathObj) / 25 * 10) / 10}cm)
                                         </label>
                                         
                                         {/* 色設定 */}
@@ -859,7 +964,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                     style={{
                                                         width: '32px',
                                                         height: '32px',
-                                                        backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00',
+                                                        backgroundColor: pathColors[originalIndex] || neonColors.strokeLine || '#ffff00',
                                                         border: '2px solid #ccc',
                                                         borderRadius: '6px',
                                                         boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
@@ -868,7 +973,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 {/* 色設定ボタン */}
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedPathIndex(index);
+                                                        setSelectedPathIndex(originalIndex);
                                                         setShowColorModal(true);
                                                     }}
                                                     style={{
@@ -889,16 +994,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         
                                         {/* 太さ設定 */}
                                         <div className="customize-slider-container" style={{ marginTop: '16px' }}>
-                                            <label className="customize-setting-label">太さ: {pathThickness[index] || neonLineWidths.strokeLine}px</label>
+                                            <label className="customize-setting-label">太さ: {pathThickness[originalIndex] || neonLineWidths.strokeLine}px</label>
                                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                                 <button
-                                                    onClick={() => handlePathThicknessChange(index, 15)}
-                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
+                                                    onClick={() => handlePathThicknessChange(originalIndex, 15)}
+                                                    className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? 'active' : ''}`}
                                                     style={{ 
-                                                        backgroundColor: (pathThickness[index] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
+                                                        backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
                                                         color: 'white',
                                                         border: '1px solid',
-                                                        borderColor: (pathThickness[index] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
+                                                        borderColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 15 ? '#10b981' : '#6b7280',
                                                         borderRadius: '4px',
                                                         padding: '4px 8px',
                                                         fontSize: '12px',
@@ -910,13 +1015,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                     6mm
                                                 </button>
                                                 <button
-                                                    onClick={() => handlePathThicknessChange(index, 20)}
-                                                    className={`customize-color-preset ${(pathThickness[index] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
+                                                    onClick={() => handlePathThicknessChange(originalIndex, 20)}
+                                                    className={`customize-color-preset ${(pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? 'active' : ''}`}
                                                     style={{ 
-                                                        backgroundColor: (pathThickness[index] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
+                                                        backgroundColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
                                                         color: 'white',
                                                         border: '1px solid',
-                                                        borderColor: (pathThickness[index] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
+                                                        borderColor: (pathThickness[originalIndex] || neonLineWidths.strokeLine) === 20 ? '#10b981' : '#6b7280',
                                                         borderRadius: '4px',
                                                         padding: '4px 8px',
                                                         fontSize: '12px',
@@ -930,8 +1035,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             </div>
                                         </div>
                                     </div>
-                                );
-                            })}
+                                ))}
                         </div>
                     )}
 
@@ -1191,27 +1295,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                     <div className="customize-setting-group">
                         <h3 className="customize-setting-title">一括カラー設定</h3>
-                        <div className="customize-color-palette">
-                            {neonPresetColors.map((color) => (
-                                <button
-                                    key={color}
-                                    className={`customize-color-preset ${selectedColor === color ? 'active' : ''}`}
-                                    style={{ backgroundColor: color }}
-                                    onClick={() => {
-                                        setSelectedColor(color);
-                                        // 全ネオンチューブパスに適用
-                                        const newColors = {};
-                                        neonPaths.forEach((pathObj, index) => {
-                                            if (pathObj.mode === 'stroke') {
-                                                newColors[index] = color;
-                                            }
-                                        });
-                                        setPathColors(prev => ({ ...prev, ...newColors }));
-                                    }}
-                                    title={`全ネオンチューブを${color}に変更`}
-                                />
-                            ))}
-                        </div>
+                        <button
+                            onClick={() => {
+                                setSelectedTubes(new Set());
+                                setShowBulkColorModal(true);
+                            }}
+                            style={{
+                                width: '100%',
+                                padding: '12px',
+                                backgroundColor: '#7c3aed',
+                                color: 'white',
+                                border: '1px solid #8b5cf6',
+                                borderRadius: '6px',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                        >
+                            チューブを選択して一括色変更
+                        </button>
                     </div>
 
                     {/* SVGダウンロード */}
@@ -1328,6 +1431,176 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             onClick={() => {
                                 setShowColorModal(false);
                                 setSelectedPathIndex(null);
+                            }}
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                backgroundColor: '#6b7280',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* 一括色変更モーダル */}
+            {showBulkColorModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000
+                }}>
+                    <div style={{
+                        backgroundColor: '#1f2937',
+                        padding: '24px',
+                        borderRadius: '12px',
+                        border: '1px solid #374151',
+                        minWidth: '400px',
+                        maxWidth: '500px'
+                    }}>
+                        <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
+                            チューブを選択して一括色変更
+                        </h3>
+                        
+                        {/* チューブ選択 */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
+                                変更するチューブを選択 ({selectedTubes.size}個選択中)
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '12px' }}>
+                                {neonPaths.map((pathObj, index) => {
+                                    if (!pathObj || pathObj.mode !== 'stroke') return null;
+                                    const tubeNumber = neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length;
+                                    return (
+                                        <button
+                                            key={index}
+                                            onClick={() => {
+                                                const newSelected = new Set(selectedTubes);
+                                                if (newSelected.has(index)) {
+                                                    newSelected.delete(index);
+                                                } else {
+                                                    newSelected.add(index);
+                                                }
+                                                setSelectedTubes(newSelected);
+                                            }}
+                                            style={{
+                                                padding: '8px 12px',
+                                                backgroundColor: selectedTubes.has(index) ? '#10b981' : '#374151',
+                                                color: 'white',
+                                                border: selectedTubes.has(index) ? '2px solid #10b981' : '1px solid #6b7280',
+                                                borderRadius: '6px',
+                                                fontSize: '12px',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}
+                                        >
+                                            <div 
+                                                style={{
+                                                    width: '16px',
+                                                    height: '16px',
+                                                    backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00',
+                                                    borderRadius: '3px',
+                                                    border: '1px solid #ccc'
+                                                }}
+                                            />
+                                            チューブ {tubeNumber}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <button
+                                    onClick={() => {
+                                        const allTubeIndices = neonPaths
+                                            .map((pathObj, index) => pathObj && pathObj.mode === 'stroke' ? index : null)
+                                            .filter(index => index !== null);
+                                        setSelectedTubes(new Set(allTubeIndices));
+                                    }}
+                                    style={{
+                                        padding: '4px 8px',
+                                        backgroundColor: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        fontSize: '12px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    全選択
+                                </button>
+                                <button
+                                    onClick={() => setSelectedTubes(new Set())}
+                                    style={{
+                                        padding: '4px 8px',
+                                        backgroundColor: '#6b7280',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        fontSize: '12px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    全解除
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* 色選択 */}
+                        {selectedTubes.size > 0 && (
+                            <div style={{ marginBottom: '16px' }}>
+                                <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
+                                    適用する色を選択
+                                </h4>
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(4, 1fr)',
+                                    gap: '8px'
+                                }}>
+                                    {neonPresetColors.map((color) => (
+                                        <button
+                                            key={color}
+                                            style={{
+                                                width: '48px',
+                                                height: '48px',
+                                                backgroundColor: color,
+                                                border: '2px solid #6b7280',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onClick={() => {
+                                                const newColors = {};
+                                                selectedTubes.forEach(index => {
+                                                    newColors[index] = color;
+                                                });
+                                                setPathColors(prev => ({ ...prev, ...newColors }));
+                                                setShowBulkColorModal(false);
+                                                setSelectedTubes(new Set());
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        
+                        <button
+                            onClick={() => {
+                                setShowBulkColorModal(false);
+                                setSelectedTubes(new Set());
                             }}
                             style={{
                                 width: '100%',
