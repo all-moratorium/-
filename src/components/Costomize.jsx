@@ -147,17 +147,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         }));
     };
 
-    // Catmull-Rom補間関数（NeonDrawingAppと同じ）
-    const getCatmullRomPt = (p0, p1, p2, p3, t) => {
-        const t2 = t * t;
-        const t3 = t2 * t;
-        const c0 = p1;
-        const c1 = 0.5 * (p2 - p0);
-        const c2 = 0.5 * (2 * p0 - 5 * p1 + 4 * p2 - p3);
-        const c3 = 0.5 * (-p0 + 3 * p1 - 3 * p2 + p3);
-
-        return c0 + c1 * t + c2 * t2 + c3 * t3;
-    };
 
     // 色の明度調整関数
     const adjustBrightness = (hexColor, brightness) => {
@@ -1140,9 +1129,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </button>
                     </div>
 
-                    {/* 一括カラー設定 */}
+                    {/* 一括設定 */}
                     <div className="customize-setting-group">
-                        <h3 className="customize-setting-title">一括カラー設定</h3>
+                        <h3 className="customize-setting-title">一括設定</h3>
                         {!isCanvasSelectionMode ? (
                             <button
                                 onClick={() => {
@@ -1189,7 +1178,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             cursor: selectedTubes.size > 0 ? 'pointer' : 'not-allowed'
                                         }}
                                     >
-                                        色変更
+                                        設定変更
                                     </button>
                                     <button
                                         onClick={() => {
@@ -1568,13 +1557,32 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         ↑ 一番上へ戻る
                     </button>
 
-                    {/* SVGダウンロード */}
+                    {/* 3Dモデル生成 */}
                     <button
-                        onClick={handleDownloadSVG}
+                        onClick={() => {
+                            const totalPoints = neonPaths.reduce((acc, pathObj) => acc + (pathObj?.points?.length || 0), 0);
+                            if (totalPoints < 2) {
+                                alert('3Dモデルを生成するには少なくとも2点が必要です。');
+                                return;
+                            }
+
+                            // 3Dプレビューイベントを発行
+                            window.dispatchEvent(new CustomEvent('show3DPreview', {
+                                detail: {
+                                    paths: neonPaths,
+                                    pathColors: pathColors,
+                                    pathThickness: pathThickness,
+                                    canvasSettings: canvasSettings,
+                                    neonPower: neonPower,
+                                    backgroundColor: backgroundColor,
+                                    backgroundColorOff: backgroundColorOff
+                                }
+                            }));
+                        }}
                         className="customize-download-button"
                         disabled={neonPaths.length === 0}
                     >
-                        💾 ネオンサインSVGダウンロード
+                        🎯 3Dモデル生成
                     </button>
 
                 </div>
@@ -1662,7 +1670,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 </div>
             )}
 
-            {/* 一括色変更モーダル */}
+            {/* 一括設定モーダル */}
             {showBulkColorModal && (
                 <div style={{
                     position: 'fixed',
@@ -1681,11 +1689,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         padding: '24px',
                         borderRadius: '12px',
                         border: '1px solid #374151',
-                        minWidth: '400px',
-                        maxWidth: '500px'
+                        width: '500px',
+                        maxHeight: '80vh',
+                        overflowY: 'auto'
                     }}>
                         <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
-                            選択したチューブの色を変更
+                            選択したチューブの設定を変更
                         </h3>
                         
                         {/* 選択されたチューブの表示 */}
@@ -1693,33 +1702,47 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
                                 選択中のチューブ ({selectedTubes.size}個)
                             </h4>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                            <div style={{ 
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(3, 1fr)',
+                                gap: '6px',
+                                marginBottom: '12px',
+                                maxHeight: '120px',
+                                overflowY: 'auto',
+                                padding: '8px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                borderRadius: '6px'
+                            }}>
                                 {Array.from(selectedTubes).map(index => {
                                     const tubeNumber = neonPaths.filter((p, i) => p && p.mode === 'stroke' && i <= index).length;
                                     return (
                                         <div
                                             key={index}
                                             style={{
-                                                padding: '4px 8px',
+                                                padding: '4px 6px',
                                                 backgroundColor: '#374151',
                                                 color: 'white',
                                                 borderRadius: '4px',
-                                                fontSize: '12px',
+                                                fontSize: '11px',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                gap: '4px'
+                                                gap: '4px',
+                                                minHeight: '24px'
                                             }}
                                         >
                                             <div 
                                                 style={{
-                                                    width: '12px',
-                                                    height: '12px',
+                                                    width: '10px',
+                                                    height: '10px',
                                                     backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00',
                                                     borderRadius: '2px',
-                                                    border: '1px solid #ccc'
+                                                    border: '1px solid #ccc',
+                                                    flexShrink: 0
                                                 }}
                                             />
-                                            チューブ {tubeNumber}
+                                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                チューブ {tubeNumber}
+                                            </span>
                                         </div>
                                     );
                                 })}
@@ -1755,34 +1778,109 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                     newColors[index] = color;
                                                 });
                                                 setPathColors(prev => ({ ...prev, ...newColors }));
-                                                setShowBulkColorModal(false);
-                                                setIsCanvasSelectionMode(false);
-                                                setSelectedTubes(new Set());
                                             }}
                                         />
                                     ))}
                                 </div>
                             </div>
                         )}
-                        
-                        <button
-                            onClick={() => {
-                                setShowBulkColorModal(false);
-                                setIsCanvasSelectionMode(false);
-                                setSelectedTubes(new Set());
-                            }}
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                backgroundColor: '#6b7280',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            キャンセル
-                        </button>
+
+                        {/* 太さ選択 */}
+                        {selectedTubes.size > 0 && (
+                            <div style={{ marginBottom: '16px' }}>
+                                <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
+                                    適用する太さを選択
+                                </h4>
+                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                    <button
+                                        onClick={() => {
+                                            const newThickness = {};
+                                            selectedTubes.forEach(index => {
+                                                newThickness[index] = 15;
+                                            });
+                                            setPathThickness(prev => ({ ...prev, ...newThickness }));
+                                        }}
+                                        style={{
+                                            backgroundColor: '#6b7280',
+                                            color: 'white',
+                                            border: '1px solid #6b7280',
+                                            borderRadius: '4px',
+                                            padding: '8px 16px',
+                                            fontSize: '12px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        6mm
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const newThickness = {};
+                                            selectedTubes.forEach(index => {
+                                                newThickness[index] = 20;
+                                            });
+                                            setPathThickness(prev => ({ ...prev, ...newThickness }));
+                                        }}
+                                        style={{
+                                            backgroundColor: '#6b7280',
+                                            color: 'white',
+                                            border: '1px solid #6b7280',
+                                            borderRadius: '4px',
+                                            padding: '8px 16px',
+                                            fontSize: '12px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        8mm
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* 完了・キャンセルボタン */}
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+                            <button
+                                onClick={() => {
+                                    setShowBulkColorModal(false);
+                                    setIsCanvasSelectionMode(false);
+                                    setSelectedTubes(new Set());
+                                }}
+                                style={{
+                                    flex: 1,
+                                    padding: '10px',
+                                    backgroundColor: '#10b981',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                完了
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowBulkColorModal(false);
+                                    setIsCanvasSelectionMode(false);
+                                    setSelectedTubes(new Set());
+                                }}
+                                style={{
+                                    flex: 1,
+                                    padding: '10px',
+                                    backgroundColor: '#6b7280',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                キャンセル
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
