@@ -243,7 +243,8 @@
     gap: 0px;
     padding: 0px;
     padding-right: 46px;
-    margin-top: 16px;
+    margin-top: 25px;
+    margin-bottom: px;
 }
 
 .background-controls {
@@ -283,11 +284,17 @@
     opacity: 0;
 }
 
+/* ビュー操作セクション */
+.view-controls {
+    margin-bottom: 20px;
+}
+
 /* リセットボタン行 */
 .reset-buttons-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .half-width {
@@ -296,7 +303,6 @@
 
 /* 視点リセットボタン */
 .view-reset-button {
-    width: 28%;
     padding: 6px 4px;
     background-color: #dc2626;
     color: white;
@@ -308,12 +314,10 @@
     transition: all 0.2s;
     margin-left: 15px;
     margin-bottom: 15px;
-    margin-top: 15px;
 }
 
 .view-reset-button:hover {
-    background-color: #f97316;
-    transform: scale(1.05);
+    background-color: #ef4444;
 }
 
 /* グリッド切り替えコンテナ */
@@ -350,15 +354,33 @@
     background-color: #6b7280;
 }
 
-/* 描画モード */
-.draw-mode-title {
-    display: flex;
-    justify-content: center;
+/* 描画ツールタイトル */
+.draw-tools-title {
+    font-size: 16px;
+    font-weight: bold;
     color: #d1d5db;
-    font-weight: 600;
-    font-size: 18px;
-    margin-top: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+    text-align: center;
+}
+
+/* 修正ツールタイトル */
+.edit-tools-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    margin-top: 35px;
+    text-align: center;
+}
+
+/* リセット操作タイトル */
+.reset-tools-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 .draw-mode-buttons {
@@ -573,7 +595,7 @@
 
 /* 設定ボタン */
 .settings-button {
-    width: 100%;
+    width: 50%;
     padding: 12px;
     background-color: #374151;
     color: #d1d5db;
@@ -584,6 +606,7 @@
     cursor: pointer;
     transition: all 0.2s;
     transform: scale(1);
+    margin: 0 auto;
 }
 
 .settings-button:hover {
@@ -636,24 +659,6 @@
     box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
 }
 
-/* クリアボタン */
-.clear-button {
-    padding: 12px;
-    background-color: #dc2626;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    border: 1px solid #ef4444;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.2s;
-    transform: scale(1);
-}
-
-.clear-button:hover {
-    background-color: #ef4444;
-    transform: scale(1.05);
-}
 
 /* ネオン下絵サイドバー表示ボタン */
 .show-neon-sidebar-button {

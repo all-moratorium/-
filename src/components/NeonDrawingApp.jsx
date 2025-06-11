@@ -1082,7 +1082,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     </button>
 
                     {/* 描画ツール */}
-                    <div className="draw-mode-title">描画ツール</div>
+                    <div className="draw-tools-title">描画ツール</div>
                     
                     {/* チューブ・土台ボタン */}
                     <div className="draw-mode-buttons">
@@ -1127,11 +1127,11 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         onClick={() => setShowBgModal(true)}
                         className="settings-button"
                     >
-                        背景画像を追加
+                        背景画像
                     </button>
 
                     {/* 修正ツール */}
-                    <div className="draw-mode-title">修正ツール</div>
+                    <div className="edit-tools-title">修正ツール</div>
                     
                     {/* ←戻る・点修正・進む→ */}
                     <div className="edit-mode-buttons">
@@ -1219,29 +1219,30 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         </div>
                     </div>
 
-                    {/* リセット操作 */}
-                    <div className="draw-mode-title">リセット操作</div>
-                    
-                    <div className="reset-buttons-row">
-                        {/* 視点リセットボタン */}
-                        <button
-                            onClick={resetView}
-                            className="view-reset-button half-width"
-                        >
-                            視点リセット
-                        </button>
+                    <div className="view-controls">
+                        <h3 className="reset-tools-title">リセット操作</h3>
+                        
+                        <div className="reset-buttons-row">
+                            {/* 視点リセットボタン */}
+                            <button
+                                onClick={resetView}
+                                className="view-reset-button half-width"
+                            >
+                                視点リセット
+                            </button>
 
-                        {/* 全てクリアボタン */}
-                        <button
-                            onClick={() => {
-                                if (window.confirm('すべての描画がクリアされます。本当に実行しますか？')) {
-                                    clearCanvas();
-                                }
-                            }}
-                            className="clear-button half-width"
-                        >
-                            全てクリア
-                        </button>
+                            {/* 全てクリアボタン */}
+                            <button
+                                onClick={() => {
+                                    if (window.confirm('すべての描画がクリアされます。本当に実行しますか？')) {
+                                        clearCanvas();
+                                    }
+                                }}
+                                className="view-reset-button half-width"
+                            >
+                                全てクリア
+                            </button>
+                        </div>
                     </div>
 
                     {/* カスタマイズへ進む */}

@@ -1516,10 +1516,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             </button>
                         </div>
                         
-                        <p className="view-instructions">
-                            マウスホイール: ズーム<br/>
-                            右クリック+ドラッグ: パン
-                        </p>
+                    
                     </div>
 
 
