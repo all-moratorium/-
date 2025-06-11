@@ -93,8 +93,8 @@
 
 .customize-sidebar-hide-button {
     position: absolute;
-    right: 23px;
-    top: 45px;
+    right: 18px;
+    top: 36px;
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
@@ -386,7 +386,6 @@
 
 .customize-reset-button:hover {
     background-color: #ef4444;
-    transform: scale(1.05);
 }
 
 /* カスタマイズサイドバー表示ボタン */
@@ -748,18 +747,23 @@ html, body {
     cursor: pointer;
     transition: all 0.2s;
 }
-
+.bulk-action-button.cancel {
+    background-color: #dc2626;
+    border-color: #ef4444;
+}
+.bulk-action-button.cancel:hover {
+    background-color: #ef4444;
+}
 .bulk-action-button.apply {
     background-color: #10b981;
+    border-color:rgb(46, 197, 147);
 }
-
+.bulk-action-button.apply:hover {
+    background-color:rgb(46, 197, 147);
+}
 .bulk-action-button.apply:disabled {
     background-color: #6b7280;
     cursor: not-allowed;
-}
-
-.bulk-action-button.cancel {
-    background-color: #6b7280;
 }
 
 /* ネオンチューブ設定メインセクション */

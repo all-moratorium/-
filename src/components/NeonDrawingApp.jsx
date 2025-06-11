@@ -1239,7 +1239,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         }}
                         className="download-button"
                     >
-                        🎨 色・仕様のカスタマイズ
+                        カスタマイズへ進む
                     </button>
 
                     {/* クリアボタン */}
