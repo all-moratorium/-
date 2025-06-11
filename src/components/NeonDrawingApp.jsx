@@ -94,7 +94,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [showColorModal, setShowColorModal] = useState(false);
     const [sidebarVisible, setSidebarVisible] = useState(true);
     // 土台モード時に描画タイプ選択モーダルを表示するためのステート
-    const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false); 
+    const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false);
+    // ガイドモーダル関連のstate
+    const [showGuideModal, setShowGuideModal] = useState(false);
+    const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false); 
     
     // 履歴管理 (Undo/Redo)
     const [history, setHistory] = useState(() => {
@@ -1041,19 +1044,26 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             {/* サイドバー - オーバーレイ */}
             {sidebarVisible && (
                 <div className="neon-sidebar">
-                    <h1 className="neon-sidebar-title">
-                        下絵描画
-                    </h1>
-
-                    {/* サイドバー非表示ボタン */}
-                    <div className="neon-sidebar-hide-button-container">
-                        <button 
-                            onClick={() => setSidebarVisible(false)}
-                            className="neon-sidebar-hide-button"
+                    <div className="neon-header">
+                        <h1 className="neon-sidebar-title">
+                            下絵描画
+                        </h1>
+                        {/* ガイドボタン */}
+                        <button
+                            onClick={() => setShowGuideModal(true)}
+                            className={`neon-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
-                            サイドバー非表示
                         </button>
                     </div>
+
+                    {/* サイドバー非表示ボタン */}
+                    <button 
+                        onClick={() => setSidebarVisible(false)}
+                        className="neon-sidebar-hide-button"
+                        aria-label="サイドバー非表示"
+                    >
+                        ▲
+                    </button>
 
                     {/* 描画モード (チューブ/土台) */}
                     <div className="draw-mode-title">
@@ -1554,6 +1564,62 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     </button>
                 </div>
             </Modal>
+
+            {/* ガイドモーダル */}
+            {showGuideModal && (
+                <div className="neon-guide-modal-overlay">
+                    <div className="neon-guide-modal-content">
+                        <div className="neon-guide-modal-inner">
+                            <h2>下絵描画ガイド</h2>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">1</div>
+                                    描画モードの選択
+                                </div>
+                                <p>
+                                    「チューブ」モードではネオンチューブの線を描画し、「土台」モードではベースプレートの形状を描画できます。描画タイプは「スプライン」で滑らかな曲線、「直線」で角ばった線が描けます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">2</div>
+                                    基本操作
+                                </div>
+                                <p>
+                                    左クリックで点を追加、右クリック+ドラッグでビューを移動、マウスホイールでズームができます。「編集」モードで点をドラッグして移動、「削除」モードで点や線を削除できます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">3</div>
+                                    新しいパスの作成
+                                </div>
+                                <p>
+                                    「新しいパス」ボタンで別の線や形状を開始できます。複数のパスを組み合わせて複雑なネオンサインのデザインを作成しましょう。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">4</div>
+                                    設定とカスタマイズ
+                                </div>
+                                <p>
+                                    色設定で線や背景の色を変更、背景画像を読み込んでトレース、グリッド表示で正確な描画ができます。完成したら「SVGダウンロード」でファイルを保存できます。
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => {
+                                    setShowGuideModal(false);
+                                    setIsGuideEffectStopped(true);
+                                }} 
+                                className="neon-guide-modal-close-button"
+                            >
+                                閉じる
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

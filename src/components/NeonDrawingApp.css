@@ -81,30 +81,109 @@
     font-weight: bold;
     color:rgb(255, 255, 255);
     text-align: center;
-    margin-bottom: 16px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-.neon-sidebar-hide-button-container {
+/* ヘッダーコンテナ */
+.neon-header {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 55px;
 }
 
 .neon-sidebar-hide-button {
-    padding: 4px 12px;
-    font-size: 14px;
-    background-color: #7c3aed;
-    color: white;
-    border-radius: 9999px;
-    border: 1px solid #8b5cf6;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    right: 18px;
+    top: 36px;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #0a0a0a;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
 }
 
 .neon-sidebar-hide-button:hover {
-    background-color: #8b5cf6;
-    transform: scale(1.05);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ガイドボタン（文字サイズに合わせて調整） */
+.neon-guide-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: absolute;
+    right: 76px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: neon-lightning-flash 1.5s infinite;
+    overflow: visible;
+    transition: all 0.3s ease;
+    margin-top: 0px;
+}
+
+.neon-guide-button:hover {
+    transform: translateY(-50%) translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.neon-guide-button::before {
+    content: 'i';
+    font-weight: bold;
+    font-style: italic;
+    font-family: 'Times New Roman', serif;
+    color: #333;
+    animation: neon-lightning-flicker 1.5s infinite;
+}
+
+.neon-guide-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: neon-ripple-wave 1.5s infinite;
+    pointer-events: none;
+}
+
+/* エフェクト停止用 */
+.neon-guide-button.stopped {
+    animation: none;
+}
+
+.neon-guide-button.stopped::before {
+    animation: none;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    color: #333;
+}
+
+.neon-guide-button.stopped::after {
+    animation: none;
+    opacity: 0;
 }
 
 /* 描画モード */
@@ -671,4 +750,233 @@
 
 .drawing-type-button:hover:not(.button-disabled) {
     transform: scale(1.05);
+}
+
+/* アニメーション定義（ネオン下絵専用） */
+@keyframes neon-lightning-flash {
+    0%, 90%, 100% { 
+        box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+        border-color: #ffffff; 
+    }
+    5%, 10% { 
+        box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+        border-color: #ffffff; 
+        background: #ffffff; 
+    }
+}
+
+@keyframes neon-lightning-flicker {
+    0%, 90%, 100% { 
+        text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+        color: #333; 
+    }
+    5%, 10% { 
+        text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+        color: #ffffff; 
+    }
+}
+
+@keyframes neon-ripple-wave {
+    0% { 
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        border-color: rgba(255,255,255,0.7);
+    }
+    10% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+        border-color: rgba(255,255,255,0.7);
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0;
+        border-color: rgba(255,255,255,0);
+    }
+}
+
+/* ガイドモーダル */
+.neon-guide-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2147483647;
+    animation: fadeIn 0.3s ease-out;
+    isolation: isolate;
+}
+
+.neon-guide-modal-content {
+    background: linear-gradient(145deg, #0a0a0a, #141414);
+    border: 1px solid #222;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+    margin: 0;
+    padding: 40px;
+    width: 820px;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neon-guide-modal-inner {
+    height: 100%;
+    max-height: calc(90vh - 80px);
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-right: -8px;
+}
+
+.neon-guide-modal-content h2 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.neon-guide-modal-content .guide-notice-section {
+    margin-bottom: 28px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border-left: 4px solid #00ff80;
+    position: relative;
+}
+
+.neon-guide-modal-content .guide-notice-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.neon-guide-modal-content .guide-section-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.neon-guide-modal-content .guide-section-icon {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: black;
+    font-weight: bold;
+}
+
+.neon-guide-modal-content p {
+    color: #c0c0c0;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    text-align: justify;
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+.neon-guide-modal-close-button {
+    color: #000;
+    border: none;
+    background: linear-gradient(135deg, #00ffff, #00cccc);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 120px;
+    height: 45px;
+    border-radius: 10px;
+    display: block;
+    margin: 30px auto 0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.neon-guide-modal-close-button:hover {
+    background: linear-gradient(135deg, #33ffff, #00dddd);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+}
+
+/* スクロールバーのカスタマイズ（ガイドモーダル用） */
+.neon-guide-modal-inner::-webkit-scrollbar {
+    width: 8px;
+}
+
+.neon-guide-modal-inner::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.neon-guide-modal-inner::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+    border: 1px solid #222;
+}
+
+.neon-guide-modal-inner::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* Firefox用 */
+.neon-guide-modal-inner {
+    scrollbar-width: thin;
+    scrollbar-color: #333 #1a1a1a;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 640px) {
+    .neon-guide-modal-content {
+        width: 95%;
+        padding: 24px;
+        max-height: 85vh;
+    }
+    
+    .neon-guide-modal-content h2 {
+        font-size: 20px;
+    }
+    
+    .neon-guide-modal-content .guide-section-title {
+        font-size: 16px;
+    }
+    
+    .neon-guide-modal-content p {
+        font-size: 14px;
+    }
+    
+    .neon-guide-modal-close-button {
+        width: 100px;
+        height: 40px;
+        font-size: 14px;
+    }
 }
