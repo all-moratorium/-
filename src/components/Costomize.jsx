@@ -33,8 +33,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [showBulkColorModal, setShowBulkColorModal] = useState(false);
     const [selectedTubes, setSelectedTubes] = useState(new Set());
     const [highlightedTube, setHighlightedTube] = useState(null);
+    const [highlightedBase, setHighlightedBase] = useState(null);
     const [isCanvasSelectionMode, setIsCanvasSelectionMode] = useState(false);
     const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(false);
+    const [showGuideModal, setShowGuideModal] = useState(false);
+    const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -543,15 +546,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
 
-    // パスのヒット判定を行う関数
+    // パスのヒット判定を行う関数（stroke と fill の両方に対応）
     const getPathAtPosition = useCallback((x, y) => {
         const hitRadius = 20; // ヒット判定の半径を20pxに設定
         let closestPath = null;
         let closestDistance = Infinity;
+        let pathType = null; // 'stroke' または 'fill'
         
         for (let pathIndex = 0; pathIndex < neonPaths.length; pathIndex++) {
             const pathObj = neonPaths[pathIndex];
-            if (!pathObj || !Array.isArray(pathObj.points) || pathObj.mode !== 'stroke') {
+            if (!pathObj || !Array.isArray(pathObj.points)) {
                 continue;
             }
             
@@ -560,50 +564,68 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             
             let minDistanceForPath = Infinity;
             
-            // パス上の各セグメントに対してヒット判定
-            for (let i = 0; i < pathPoints.length - 1; i++) {
-                const p1 = pathPoints[i];
-                const p2 = pathPoints[i + 1];
-                
-                // 線分との距離を計算
-                const distance = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
-                minDistanceForPath = Math.min(minDistanceForPath, distance);
-                
-                if (distance <= hitRadius) {
-                    // 最も近いパスを選択
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
-                        closestPath = pathIndex;
-                    }
-                }
-            }
-            
-            // スプライン補間されたパスの場合、より細かくチェック
-            if (pathObj.type === 'spline' && minDistanceForPath > hitRadius) {
-                // スプライン曲線の補間点もチェック
+            if (pathObj.mode === 'stroke') {
+                // strokeモードの場合：線分との距離をチェック
                 for (let i = 0; i < pathPoints.length - 1; i++) {
-                    const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
                     const p1 = pathPoints[i];
                     const p2 = pathPoints[i + 1];
-                    const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
-
-                    // スプライン補間された点をチェック
-                    for (let t = 0; t <= canvasSettings.segmentsPerCurve; t += 3) { // 3刻みでより細かく判定
-                        const step = t / canvasSettings.segmentsPerCurve;
-                        const splineX = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                        const splineY = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                        
-                        const pointDistance = Math.sqrt((x - splineX) ** 2 + (y - splineY) ** 2);
-                        if (pointDistance <= hitRadius && pointDistance < closestDistance) {
-                            closestDistance = pointDistance;
+                    
+                    // 線分との距離を計算
+                    const distance = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
+                    minDistanceForPath = Math.min(minDistanceForPath, distance);
+                    
+                    if (distance <= hitRadius) {
+                        // 最も近いパスを選択
+                        if (distance < closestDistance) {
+                            closestDistance = distance;
                             closestPath = pathIndex;
+                            pathType = 'stroke';
                         }
+                    }
+                }
+                
+                // スプライン補間されたパスの場合、より細かくチェック
+                if (pathObj.type === 'spline' && minDistanceForPath > hitRadius) {
+                    // スプライン曲線の補間点もチェック
+                    for (let i = 0; i < pathPoints.length - 1; i++) {
+                        const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                        const p1 = pathPoints[i];
+                        const p2 = pathPoints[i + 1];
+                        const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+
+                        // スプライン補間された点をチェック
+                        for (let t = 0; t <= canvasSettings.segmentsPerCurve; t += 3) { // 3刻みでより細かく判定
+                            const step = t / canvasSettings.segmentsPerCurve;
+                            const splineX = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                            const splineY = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                            
+                            const pointDistance = Math.sqrt((x - splineX) ** 2 + (y - splineY) ** 2);
+                            if (pointDistance <= hitRadius && pointDistance < closestDistance) {
+                                closestDistance = pointDistance;
+                                closestPath = pathIndex;
+                                pathType = 'stroke';
+                            }
+                        }
+                    }
+                }
+            } else if (pathObj.mode === 'fill' && pathPoints.length >= 3) {
+                // fillモードの場合：ポリゴン内部の点かどうかをチェック
+                if (isPointInPolygon(x, y, pathPoints)) {
+                    // ポリゴン内部の場合、中心からの距離を計算
+                    const centerX = pathPoints.reduce((sum, p) => sum + p.x, 0) / pathPoints.length;
+                    const centerY = pathPoints.reduce((sum, p) => sum + p.y, 0) / pathPoints.length;
+                    const centerDistance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                    
+                    if (centerDistance < closestDistance) {
+                        closestDistance = centerDistance;
+                        closestPath = pathIndex;
+                        pathType = 'fill';
                     }
                 }
             }
         }
         
-        return closestPath;
+        return closestPath !== null ? { pathIndex: closestPath, mode: pathType } : null;
     }, [neonPaths, canvasSettings.segmentsPerCurve]);
 
     // 点と線分の距離を計算する関数
@@ -620,11 +642,41 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         return Math.sqrt((px - projection.x) ** 2 + (py - projection.y) ** 2);
     };
 
+    // 点がポリゴン内部にあるかどうかを判定する関数（Ray casting algorithm）
+    const isPointInPolygon = (x, y, polygon) => {
+        let inside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i].x;
+            const yi = polygon[i].y;
+            const xj = polygon[j].x;
+            const yj = polygon[j].y;
+            
+            if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    };
+
     // チューブ設定コンテナまでスクロールする関数
     const scrollToTubeContainer = useCallback((pathIndex) => {
         // 少し遅延を入れてDOM更新を待つ
         setTimeout(() => {
             const containerElement = document.querySelector(`[data-tube-index="${pathIndex}"]`);
+            if (containerElement) {
+                containerElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }, 100);
+    }, []);
+
+    // 土台設定コンテナまでスクロールする関数
+    const scrollToBaseContainer = useCallback((pathIndex) => {
+        // 少し遅延を入れてDOM更新を待つ
+        setTimeout(() => {
+            const containerElement = document.querySelector(`[data-base-index="${pathIndex}"]`);
             if (containerElement) {
                 containerElement.scrollIntoView({
                     behavior: 'smooth',
@@ -713,36 +765,56 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const mouseX = (e.clientX - rect.left - canvasSettings.offsetX) / canvasSettings.scale;
             const mouseY = (e.clientY - rect.top - canvasSettings.offsetY) / canvasSettings.scale;
             
-            const hitPathIndex = getPathAtPosition(mouseX, mouseY);
+            const hitResult = getPathAtPosition(mouseX, mouseY);
             
-            if (hitPathIndex !== null) {
-                if (isCanvasSelectionMode) {
-                    // 一括色変更モードの場合
-                    const newSelected = new Set(selectedTubes);
-                    if (newSelected.has(hitPathIndex)) {
-                        newSelected.delete(hitPathIndex);
+            if (hitResult !== null) {
+                const { pathIndex: hitPathIndex, mode: hitMode } = hitResult;
+                
+                if (hitMode === 'stroke') {
+                    // チューブ（stroke）の処理
+                    if (isCanvasSelectionMode) {
+                        // 一括色変更モードの場合
+                        const newSelected = new Set(selectedTubes);
+                        if (newSelected.has(hitPathIndex)) {
+                            newSelected.delete(hitPathIndex);
+                        } else {
+                            newSelected.add(hitPathIndex);
+                        }
+                        setSelectedTubes(newSelected);
                     } else {
-                        newSelected.add(hitPathIndex);
+                        // 通常モードの場合：ハイライト切り替え
+                        if (highlightedTube === hitPathIndex) {
+                            setHighlightedTube(null);
+                        } else {
+                            setHighlightedTube(hitPathIndex);
+                            setHighlightedBase(null); // 土台のハイライトをクリア
+                            // 対応する設定コンテナにスクロール
+                            scrollToTubeContainer(hitPathIndex);
+                        }
                     }
-                    setSelectedTubes(newSelected);
-                } else {
-                    // 通常モードの場合：ハイライト切り替え
-                    if (highlightedTube === hitPathIndex) {
-                        setHighlightedTube(null);
-                    } else {
-                        setHighlightedTube(hitPathIndex);
-                        // 対応する設定コンテナにスクロール
-                        scrollToTubeContainer(hitPathIndex);
+                } else if (hitMode === 'fill') {
+                    // 土台（fill）の処理
+                    if (!isCanvasSelectionMode) {
+                        // 通常モードの場合：ハイライト切り替え
+                        if (highlightedBase === hitPathIndex) {
+                            setHighlightedBase(null);
+                        } else {
+                            setHighlightedBase(hitPathIndex);
+                            setHighlightedTube(null); // チューブのハイライトをクリア
+                            // 対応する設定コンテナにスクロール
+                            scrollToBaseContainer(hitPathIndex);
+                        }
                     }
                 }
             } else {
                 // パス以外の場所をクリックした場合
                 if (!isCanvasSelectionMode) {
                     setHighlightedTube(null);
+                    setHighlightedBase(null);
                 }
             }
         }
-    }, [canvasSettings, getPathAtPosition, isCanvasSelectionMode, selectedTubes, highlightedTube]);
+    }, [canvasSettings, getPathAtPosition, isCanvasSelectionMode, selectedTubes, highlightedTube, highlightedBase, scrollToTubeContainer, scrollToBaseContainer]);
 
     const handleMouseMove = useCallback((e) => {
         if (isPanning) { // パン操作中
@@ -884,11 +956,49 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
             if (pathPoints.length < 2) return;
 
+            // ハイライト状態をチェック
+            const isHighlighted = highlightedBase === pathIndex;
+
             // ベースプレートの色（透明・白・黒のみ）
             const fillColorValue = pathColors[`${pathIndex}_fill`] || neonColors.fillArea;
-            // 境界線は常に1px黒線
-            const borderColor = '#000000';
-            const borderWidth = 1;
+            // 境界線は常に1px黒線（ハイライト時は太くする）
+            const borderColor = isHighlighted ? '#ff6b35' : '#000000';
+            const borderWidth = isHighlighted ? 4 : 1;
+
+            // ハイライト表示（外側境界）
+            if (isHighlighted) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
+
+                if (pathType === 'spline') {
+                    for (let i = 0; i < pathPoints.length - 1; i++) {
+                        const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                        const p1 = pathPoints[i];
+                        const p2 = pathPoints[i + 1];
+                        const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+
+                        for (let t = 0; t <= canvasSettings.segmentsPerCurve; t++) {
+                            const step = t / canvasSettings.segmentsPerCurve;
+                            const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                            const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                } else {
+                    for (let i = 1; i < pathPoints.length; i++) {
+                        ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
+                    }
+                }
+                ctx.closePath();
+                
+                // 外側の白いハイライト
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 8;
+                ctx.globalAlpha = 0.8;
+                ctx.stroke();
+                ctx.restore();
+            }
 
             // 透明の場合は塗りつぶしをスキップ
             const isTransparent = fillColorValue === 'transparent';
@@ -1010,7 +1120,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube, isCanvasSelectionMode, selectedTubes]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
 
     return (
         <div className="customize-app-container">
@@ -1033,9 +1143,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             {/* サイドバー */}
             {sidebarVisible && (
                 <div className="customize-sidebar">
-                    <h1 className="customize-sidebar-title">
-                        カスタマイズ
-                    </h1>
+                    <div className="customize-header">
+                        <h1 className="customize-sidebar-title">
+                            カスタマイズ
+                        </h1>
+                        {/* ガイドボタン */}
+                        <button
+                            onClick={() => setShowGuideModal(true)}
+                            className={`customize-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
+                        >
+                        </button>
+                    </div>
 
                     {/* ネオンON/OFFスイッチと背景色設定 */}
                     <div className="neon-power-section">
@@ -1074,18 +1192,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 </div>
                             </div>
                         </div>
+                        
+                        {/* グリッド表示切り替え */}
+                        <div className="grid-toggle-container">
+                            <label className="grid-toggle-label">グリッド表示</label>
+                            <button
+                                onClick={() => setShowGrid(!showGrid)}
+                                className={`grid-toggle-button ${showGrid ? 'on' : 'off'}`}
+                            >
+                                {showGrid ? 'ON' : 'OFF'}
+                            </button>
+                        </div>
                        
                     </div>
 
                     {/* サイドバー非表示ボタン */}
-                    <div className="customize-sidebar-hide-button-container">
-                        <button 
-                            onClick={() => setSidebarVisible(false)}
-                            className="customize-sidebar-hide-button"
-                        >
-                            サイドバー非表示
-                        </button>
-                    </div>
+                    <button 
+                        onClick={() => setSidebarVisible(false)}
+                        className="customize-sidebar-hide-button"
+                        aria-label="サイドバー非表示"
+                    >
+                        ▲
+                    </button>
+
 
                     {/* 一括設定 */}
                     <div className="bulk-setting-section">
@@ -1103,7 +1232,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         ) : (
                             <div>
                                 <div className="bulk-selection-active">
-                                    キャンバス上のチューブをクリックして選択 ({selectedTubes.size}個選択中)
+                                    キャンバス上のチューブをクリックして選択<br/>({selectedTubes.size}本選択中)
                                 </div>
                                 <div className="bulk-action-buttons">
                                     <button
@@ -1255,17 +1384,41 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     {/* 土台設定 */}
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length > 0 && (
                         <div className="base-settings">
-                            <h3 className="customize-setting-title">土台設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length}個)</h3>
+                            <h3 className="customize-setting-title">ベースプレート設定</h3>
                             {neonPaths.map((pathObj, index) => {
                                 if (!pathObj || pathObj.mode !== 'fill') return null;
                                 return (
-                                    <div key={index} className="base-item">
-                                        <label className="base-item-label">
-                                            土台 {neonPaths.filter((p, i) => p && p.mode === 'fill' && i <= index).length}
-                                        </label>
+                                    <div 
+                                        key={index} 
+                                        className="base-item"
+                                        data-base-index={index}
+                                        onClick={(e) => {
+                                            // ボタンやコントロール要素をクリックした場合は処理しない
+                                            if (e.target.tagName === 'BUTTON' || 
+                                                e.target.tagName === 'INPUT' || 
+                                                e.target.closest('button') || 
+                                                e.target.closest('input')) {
+                                                return;
+                                            }
+                                            
+                                            if (highlightedBase === index) {
+                                                setHighlightedBase(null); // 既にハイライトされている場合は解除
+                                            } else {
+                                                setHighlightedBase(index); // ハイライト設定
+                                            }
+                                        }}
+                                        style={{
+                                            cursor: 'pointer',
+                                            border: highlightedBase === index ? '3px solid #ff6b35' : '1px solid rgba(255, 255, 255, 0.1)',
+                                            backgroundColor: highlightedBase === index ? 'rgba(255, 107, 53, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                            transition: 'all 0.2s ease',
+                                            boxShadow: highlightedBase === index ? '0 0 15px rgba(255, 107, 53, 0.3)' : 'none'
+                                        }}
+                                    >
+                                      
                                         
                                         {/* ベースプレートの色設定 */}
-                                        <div className="base-color-label">ベースプレートの色</div>
+                                        <div className="base-color-label">色の設定</div>
                                         <div className="base-color-options">
                                             <button
                                                 className={`base-color-button transparent ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
@@ -1289,88 +1442,86 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </div>
                     )}
 
-                    <div className="view-controls">
-                        <h3 className="customize-setting-title">ビュー操作</h3>
-                        
-                        {/* ビューリセットボタン */}
-                        <button
-                            onClick={() => {
-                                setCanvasSettings(prev => ({
-                                    ...prev,
-                                    scale: 1,
-                                    offsetX: canvasWidth / 2,
-                                    offsetY: canvasHeight / 2
-                                }));
-                            }}
-                            className="view-reset-button"
-                        >
-                            🎯 ビューリセット
-                        </button>
+                    {/* 一番上へスクロールボタン（常に表示） */}
+                    <div className="scroll-top-section">
+                        <div className="neon-tube-header">
+                            <h3 className="neon-tube-title"></h3>
+                            <div className="neon-tube-actions">
+                                <button
+                                    onClick={scrollToTop}
+                                    className="tube-action-button scroll-top"
+                                    title="サイドバーの一番上へスクロール"
+                                >
+                                    ↑ 一番上へ戻る
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                        {/* すべてリセットボタン */}
-                        <button
-                            onClick={() => {
-                                setSelectedColor('#ff0080');
-                                setThickness(20);
-                                setBlinkEffect(false);
-                                setAnimationSpeed(1);
-                                setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
-                                setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
-                                setGridColor('#646464'); // RGB(100,100,100)
-                                setGridColorOff('#000000'); // RGB(0,0,0)
-                                setShowGrid(true);
-                                setGridOpacity(0.3); // 30%
-                                setGridSize(160);
-                                setNeonPower(true); // 電源もONにリセット
-                                
-                                // パス別設定もリセット
-                                const resetColors = {};
-                                const resetThickness = {};
-                                neonPaths.forEach((pathObj, index) => {
-                                    if (pathObj.mode === 'stroke') {
-                                        resetColors[index] = '#ffff00';
-                                        resetThickness[index] = 15;
-                                    } else {
-                                        resetColors[index] = '#000000';
-                                        resetThickness[index] = 3;
+                    <div className="view-controls">
+                        <h3 className="customize-setting-title">リセット操作</h3>
+                        
+                        <div className="reset-buttons-row">
+                            {/* ビューリセットボタン */}
+                            <button
+                                onClick={() => {
+                                    setCanvasSettings(prev => ({
+                                        ...prev,
+                                        scale: 1,
+                                        offsetX: canvasWidth / 2,
+                                        offsetY: canvasHeight / 2
+                                    }));
+                                }}
+                                className="view-reset-button half-width"
+                            >
+                                視点リセット
+                            </button>
+
+                            {/* すべてリセットボタン */}
+                            <button
+                                onClick={() => {
+                                    if (window.confirm('すべてのカスタマイズ設定がリセットされます。本当に実行しますか？')) {
+                                        setSelectedColor('#ff0080');
+                                        setThickness(20);
+                                        setBlinkEffect(false);
+                                        setAnimationSpeed(1);
+                                        setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
+                                        setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                                        setGridColor('#646464'); // RGB(100,100,100)
+                                        setGridColorOff('#000000'); // RGB(0,0,0)
+                                        setShowGrid(true);
+                                        setGridOpacity(0.3); // 30%
+                                        setGridSize(160);
+                                        setNeonPower(true); // 電源もONにリセット
+                                        
+                                        // パス別設定もリセット
+                                        const resetColors = {};
+                                        const resetThickness = {};
+                                        neonPaths.forEach((pathObj, index) => {
+                                            if (pathObj.mode === 'stroke') {
+                                                resetColors[index] = '#ffff00';
+                                                resetThickness[index] = 15;
+                                            } else {
+                                                resetColors[index] = '#000000';
+                                                resetThickness[index] = 3;
+                                            }
+                                        });
+                                        setPathColors(resetColors);
+                                        setPathThickness(resetThickness);
                                     }
-                                });
-                                setPathColors(resetColors);
-                                setPathThickness(resetThickness);
-                            }}
-                            className="view-reset-button"
-                        >
-                            🔄 すべてリセット
-                        </button>
+                                }}
+                                className="view-reset-button half-width"
+                            >
+                                全てリセット
+                            </button>
+                        </div>
                         
                         <p className="view-instructions">
                             マウスホイール: ズーム<br/>
                             右クリック+ドラッグ: パン
                         </p>
                     </div>
-                    <div className="display-settings">
-                        <h3 className="customize-setting-title">表示設定</h3>
-                        
-                        {/* グリッド表示切り替え */}
-                        <div className="grid-toggle-container">
-                            <label className="grid-toggle-label">グリッド表示</label>
-                            <button
-                                onClick={() => setShowGrid(!showGrid)}
-                                className={`grid-toggle-button ${showGrid ? 'on' : 'off'}`}
-                            >
-                                {showGrid ? 'ON' : 'OFF'}
-                            </button>
-                        </div>
-                    </div>
 
-                    {/* 一番上へスクロールボタン */}
-                    <button
-                        onClick={scrollToTop}
-                        className="scroll-top-button"
-                        title="サイドバーの一番上へスクロール"
-                    >
-                        ↑ 一番上へ戻る
-                    </button>
 
                     {/* 3Dモデル生成 */}
                     <button
@@ -1397,7 +1548,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         className="customize-download-button"
                         disabled={neonPaths.length === 0}
                     >
-                        🎯 3Dモデル生成
+                        3Dモデル生成
                     </button>
 
                 </div>
@@ -1694,6 +1845,62 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 }}
                             >
                                 キャンセル
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ガイドモーダル */}
+            {showGuideModal && (
+                <div className="customize-guide-modal-overlay">
+                    <div className="customize-guide-modal-content">
+                        <div className="customize-guide-modal-inner">
+                            <h2>カスタマイズガイド</h2>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">1</div>
+                                    ネオンチューブの色と太さ
+                                </div>
+                                <p>
+                                    各チューブの色は12色のプリセットから選択できます。太さは6mm（15px）または8mm（20px）から選択可能です。キャンバス上のチューブをクリックするか、右側のコンテナをクリックして選択できます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">2</div>
+                                    ベースプレートの設定
+                                </div>
+                                <p>
+                                    土台となるベースプレートは透明、白、黒の3色から選択できます。キャンバス上の土台エリアをクリックするか、ベースプレート設定のコンテナをクリックして選択できます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">3</div>
+                                    一括設定機能
+                                </div>
+                                <p>
+                                    複数のチューブを同時に設定する場合は、一括設定機能を使用してください。「キャンバスからチューブを選択」ボタンをクリックし、キャンバス上で変更したいチューブをクリックして選択後、設定を変更できます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">4</div>
+                                    ネオンON/OFF切り替え
+                                </div>
+                                <p>
+                                    ネオン効果のON/OFFを切り替えて、点灯時と消灯時の見た目を確認できます。背景色も点灯状態に応じて自動的に切り替わります。
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => {
+                                    setShowGuideModal(false);
+                                    setIsGuideEffectStopped(true);
+                                }} 
+                                className="customize-guide-modal-close-button"
+                            >
+                                閉じる
                             </button>
                         </div>
                     </div>

@@ -1042,7 +1042,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             {sidebarVisible && (
                 <div className="neon-sidebar">
                     <h1 className="neon-sidebar-title">
-                        🎯 スプライン描画
+                        下絵描画
                     </h1>
 
                     {/* サイドバー非表示ボタン */}

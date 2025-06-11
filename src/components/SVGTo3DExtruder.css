@@ -238,7 +238,7 @@ body {
 }
 
 .proceed-button {
-  background-color: #FFFF00; /* .process-button に合わせる */
+  background-color: #FFFF00; /* 黄色に変更 */
   color: #000; /* .process-button に合わせる */
   border: none;
   padding: 12px 24px; /* サイズ維持 */
@@ -249,12 +249,12 @@ body {
   transition: all 0.3s ease; /* .process-button に合わせる */
   width: 100%; /* サイズ維持 */
   box-sizing: border-box; /* 維持 */
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* .process-button に合わせる */
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* 黄色のグロー効果に変更 */
 }
 
 .proceed-button:hover {
-  background-color: #00ffff; /* .process-button ホバーに合わせる */
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.75); /* .process-button ホバーに合わせる */
+  background-color: #FFFF00; /* 黄色を維持 */
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.75); /* 黄色のグロー効果に変更 */
 }
 
 .proceed-button:active {
