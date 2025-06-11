@@ -92,6 +92,7 @@
     justify-content: center;
     position: relative;
     margin-top: 55px;
+    margin-bottom: 30px;
 }
 
 .neon-sidebar-hide-button {
@@ -184,6 +185,166 @@
 .neon-guide-button.stopped::after {
     animation: none;
     opacity: 0;
+}
+
+/* 設定タイトル */
+.neon-setting-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* 削除ボタン */
+.delete-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.delete-button {
+    padding: 12px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    font-size: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.delete-button:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}
+
+/* 中央の点修正ボタン */
+.edit-mode-button-center {
+    padding: 12px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 1px solid;
+    font-size: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+    transform: scale(1);
+    flex: 1;
+}
+
+.edit-mode-button-center:hover:not(.button-disabled) {
+    transform: scale(1.05);
+}
+
+/* グリッド・背景コントロール */
+.grid-bg-controls {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    padding: 0px;
+    padding-right: 46px;
+    margin-top: 16px;
+}
+
+.background-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.background-label {
+    color: #d1d5db;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.background-color-picker-wrapper {
+    position: relative;
+}
+
+.background-color-preview {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.background-color-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+/* リセットボタン行 */
+.reset-buttons-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.half-width {
+    flex: 1;
+}
+
+/* 視点リセットボタン */
+.view-reset-button {
+    padding: 12px 16px;
+    background-color: #ea580c;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #f97316;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    transform: scale(1);
+}
+
+.view-reset-button:hover {
+    background-color: #f97316;
+    transform: scale(1.05);
+}
+
+/* グリッド切り替えコンテナ */
+.grid-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.grid-toggle-label {
+    color: #d1d5db;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.grid-toggle-button {
+    width: 50px;
+    height: 24px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.grid-toggle-button.on {
+    background-color: #10b981;
+}
+
+.grid-toggle-button.off {
+    background-color: #6b7280;
 }
 
 /* 描画モード */

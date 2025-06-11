@@ -1065,10 +1065,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         ▲
                     </button>
 
-                    {/* 描画モード (チューブ/土台) */}
-                    <div className="draw-mode-title">
-                        描画モード
-                    </div>
+                    {/* 描画ツール */}
+                    <h3 className="neon-setting-title">描画ツール</h3>
+                    
+                    {/* チューブ・土台ボタン */}
                     <div className="draw-mode-buttons">
                         <button
                             onClick={() => handleSetDrawMode('stroke')}
@@ -1106,7 +1106,18 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         新しいパス
                     </button>
 
-                    {/* 戻る・視点リセット・進む */}
+                    {/* 背景画像を追加 */}
+                    <button
+                        onClick={() => setShowBgModal(true)}
+                        className="new-path-button"
+                    >
+                        背景画像を追加
+                    </button>
+
+                    {/* 修正ツール */}
+                    <h3 className="neon-setting-title">修正ツール</h3>
+                    
+                    {/* ←戻る・点修正・進む→ */}
                     <div className="undo-redo-controls">
                         <button
                             onClick={handleUndo}
@@ -1115,40 +1126,11 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 historyIndex === 0 ? 'button-disabled' : ''
                             }`}
                         >
-                            ← 戻る
+                            ←戻る
                         </button>
-                        <button
-                            onClick={resetView}
-                            className="reset-view-button"
-                        >
-                            視点リセット
-                        </button>
-                        <button
-                            onClick={handleRedo}
-                            disabled={historyIndex === history.length - 1}
-                            className={`undo-redo-button ${
-                                historyIndex === history.length - 1 ? 'button-disabled' : ''
-                            }`}
-                        >
-                            進む →
-                        </button>
-                    </div>
-
-                    {/* ガイド（視点リセットボタンとして機能） */}
-                    <div className="guide-button-container">
-                        <button
-                            onClick={resetView}
-                            className="guide-button"
-                        >
-                            ガイド
-                        </button>
-                    </div>
-
-                    {/* 点修正・パス削除・点削除ボタン */}
-                    <div className="edit-mode-buttons">
                         <button
                             onClick={toggleModifyMode}
-                            className={`edit-mode-button ${
+                            className={`edit-mode-button-center ${
                                 isModifyingPoints
                                         ? 'button-active button-yellow' 
                                         : 'button-secondary'
@@ -1157,18 +1139,21 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             点修正
                         </button>
                         <button
-                            onClick={togglePathDeleteMode}
-                            className={`edit-mode-button ${
-                                isPathDeleteMode
-                                        ? 'button-active button-red' 
-                                        : 'button-secondary'
+                            onClick={handleRedo}
+                            disabled={historyIndex === history.length - 1}
+                            className={`undo-redo-button ${
+                                historyIndex === history.length - 1 ? 'button-disabled' : ''
                             }`}
                         >
-                            パス削除
+                            進む→
                         </button>
+                    </div>
+
+                    {/* 点削除・パス削除 */}
+                    <div className="delete-buttons">
                         <button
                             onClick={togglePointDeleteMode}
-                            className={`edit-mode-button ${
+                            className={`delete-button ${
                                 isPointDeleteMode
                                         ? 'button-active button-red' 
                                         : 'button-secondary'
@@ -1176,45 +1161,74 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         >
                             点削除
                         </button>
-                    </div>
-
-                    {/* グリッド・背景画像 */}
-                    <div className="grid-bg-buttons">
                         <button
-                            onClick={() => setShowGridModal(true)}
-                            className={`grid-bg-button ${
-                                showGrid
-                                        ? 'button-active button-teal'
+                            onClick={togglePathDeleteMode}
+                            className={`delete-button ${
+                                isPathDeleteMode
+                                        ? 'button-active button-red' 
                                         : 'button-secondary'
                             }`}
                         >
-                            グリッド
-                        </button>
-                        <button
-                            onClick={() => setShowBgModal(true)}
-                            className="grid-bg-button button-secondary"
-                        >
-                            背景画像を追加
+                            パス削除
                         </button>
                     </div>
 
-                    {/* 設定 */}
-                    <button
-                        onClick={() => setShowSettingsModal(true)}
-                        className="settings-button"
-                    >
-                        ⚙️ 設定
-                    </button>
+                    {/* グリッド表示・背景色 */}
+                    <div className="grid-bg-controls">
+                        <div className="grid-toggle-container">
+                            <label className="grid-toggle-label">グリッド表示</label>
+                            <button
+                                onClick={() => setShowGrid(!showGrid)}
+                                className={`grid-toggle-button ${showGrid ? 'on' : 'off'}`}
+                            >
+                                {showGrid ? 'ON' : 'OFF'}
+                            </button>
+                        </div>
+                        <div className="background-controls">
+                            <span className="background-label">背景色</span>
+                            <div className="background-color-picker-wrapper">
+                                <div 
+                                    className="background-color-preview"
+                                    style={{
+                                        backgroundColor: colors.background
+                                    }}
+                                />
+                                <input
+                                    type="color"
+                                    value={colors.background}
+                                    onChange={(e) => setColors(prev => ({ ...prev, background: e.target.value }))}
+                                    className="background-color-input"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-                    {/* 色・太さ設定 */}
-                    <button
-                        onClick={() => setShowColorModal(true)}
-                        className="color-settings-button"
-                    >
-                        🎨 色・太さ設定
-                    </button>
+                    {/* リセット操作 */}
+                    <h3 className="neon-setting-title">リセット操作</h3>
+                    
+                    <div className="reset-buttons-row">
+                        {/* 視点リセットボタン */}
+                        <button
+                            onClick={resetView}
+                            className="view-reset-button half-width"
+                        >
+                            視点リセット
+                        </button>
 
-                    {/* 色・仕様のカスタマイズ */}
+                        {/* 全てクリアボタン */}
+                        <button
+                            onClick={() => {
+                                if (window.confirm('すべての描画がクリアされます。本当に実行しますか？')) {
+                                    clearCanvas();
+                                }
+                            }}
+                            className="view-reset-button half-width"
+                        >
+                            全てクリア
+                        </button>
+                    </div>
+
+                    {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
                             const { strokePathData, fillPathData } = generateSvgPaths();
@@ -1250,14 +1264,6 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         className="download-button"
                     >
                         カスタマイズへ進む
-                    </button>
-
-                    {/* クリアボタン */}
-                    <button
-                        onClick={clearCanvas}
-                        className="clear-button"
-                    >
-                        🗑️ クリア
                     </button>
                 </div>
             )}

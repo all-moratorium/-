@@ -951,6 +951,7 @@ html, body {
 .grid-toggle-label {
     font-size: 14px;
     color: #d1d5db;
+    margin-left: -3px;
     
 }
 
