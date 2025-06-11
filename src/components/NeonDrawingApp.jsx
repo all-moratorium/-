@@ -391,7 +391,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             const b = parseInt(match[3]).toString(16).padStart(2, '0');
             return `#${r}${g}${b}`;
         }
-        return '#fbbf24'; // デフォルト色
+        return '#FFFF00'; // デフォルト色
     };
 
     // 履歴を保存する関数

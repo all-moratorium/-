@@ -66,7 +66,7 @@
 .neon-sidebar-title {
     font-size: 24px;
     font-weight: bold;
-    color: #fbbf24;
+    color: #FFFF00;
     text-align: center;
     margin-bottom: 16px;
 }
@@ -151,7 +151,7 @@
 .button-yellow {
     background-color: #eab308;
     color: #1f2937;
-    border-color: #fbbf24;
+    border-color: #FFFF00;
 }
 
 .button-red {
@@ -187,7 +187,7 @@
     color: #1f2937;
     font-weight: bold;
     border-radius: 6px;
-    border: 1px solid #fbbf24;
+    border: 1px solid #FFFF00;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
@@ -195,7 +195,7 @@
 }
 
 .new-path-button:hover {
-    background-color: #fbbf24;
+    background-color: #FFFF00;
     transform: scale(1.05);
 }
 
@@ -472,7 +472,7 @@
 .modal-title {
     font-size: 20px;
     font-weight: bold;
-    color: #fbbf24;
+    color: #FFFF00;
 }
 
 .modal-close-btn {

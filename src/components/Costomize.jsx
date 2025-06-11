@@ -337,7 +337,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
             
             if (svgData.lineWidths) {
-                setNeonLineWidths(svgData.lineWidths);
+                // strokeLineの太さを6mm（15px）に調整
+                const adjustedLineWidths = {
+                    ...svgData.lineWidths,
+                    strokeLine: 15 // 6mm相当に固定
+                };
+                setNeonLineWidths(adjustedLineWidths);
             }
             
             if (svgData.canvasData) {
@@ -377,7 +382,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         (svgData.colors?.strokeLine || '#ffff00') : 
                         (svgData.colors?.fillBorder || '#000000');
                     const defaultThickness = pathObj.mode === 'stroke' ? 
-                        (svgData.lineWidths?.strokeLine || 20) :  // 20pxに変更
+                        15 :  // チューブは常に15px（6mm）で開始
                         (svgData.lineWidths?.fillBorder || 3);
                     
                     initialColors[pathIndex] = defaultColor;
@@ -540,7 +545,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // パスのヒット判定を行う関数
     const getPathAtPosition = useCallback((x, y) => {
-        const hitRadius = 15; // ヒット判定の半径を拡大
+        const hitRadius = 20; // ヒット判定の半径を20pxに設定
         let closestPath = null;
         let closestDistance = Infinity;
         
@@ -583,7 +588,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
                     // スプライン補間された点をチェック
-                    for (let t = 0; t <= canvasSettings.segmentsPerCurve; t += 5) { // 5刻みで高速化
+                    for (let t = 0; t <= canvasSettings.segmentsPerCurve; t += 3) { // 3刻みでより細かく判定
                         const step = t / canvasSettings.segmentsPerCurve;
                         const splineX = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
                         const splineY = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
@@ -1029,7 +1034,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             {sidebarVisible && (
                 <div className="customize-sidebar">
                     <h1 className="customize-sidebar-title">
-                        💡 ネオンチューブ カスタマイズ
+                        カスタマイズ
                     </h1>
 
                     {/* ネオンON/OFFスイッチと背景色設定 */}
@@ -1069,9 +1074,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 </div>
                             </div>
                         </div>
-                        <p className="neon-status-description">
-                            {neonPower ? 'LEDネオンが点灯しています' : 'LEDネオンが消灯しています'}
-                        </p>
+                       
                     </div>
 
                     {/* サイドバー非表示ボタン */}
@@ -1133,7 +1136,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         <div className="neon-tube-settings">
                             <div className="neon-tube-header">
                                 <h3 className="neon-tube-title">
-                                    ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}個)
+                                    ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}本)
                                 </h3>
                                 <div className="neon-tube-actions">
                                     {/* 最後のチューブへスクロールボタン */}
@@ -1326,7 +1329,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 neonPaths.forEach((pathObj, index) => {
                                     if (pathObj.mode === 'stroke') {
                                         resetColors[index] = '#ffff00';
-                                        resetThickness[index] = 20;
+                                        resetThickness[index] = 15;
                                     } else {
                                         resetColors[index] = '#000000';
                                         resetThickness[index] = 3;
@@ -1431,7 +1434,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         border: '1px solid #374151',
                         minWidth: '320px'
                     }}>
-                        <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
+                        <h3 style={{ color: '#FFFF00', marginBottom: '16px', textAlign: 'center' }}>
                             チューブの色を選択
                         </h3>
                         <div style={{
@@ -1505,7 +1508,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         maxHeight: '80vh',
                         overflowY: 'auto'
                     }}>
-                        <h3 style={{ color: '#fbbf24', marginBottom: '16px', textAlign: 'center' }}>
+                        <h3 style={{ color: '#FFFF00', marginBottom: '16px', textAlign: 'center' }}>
                             選択したチューブの設定を変更
                         </h3>
                         
