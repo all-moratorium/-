@@ -111,6 +111,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     });
     const [historyIndex, setHistoryIndex] = useState(0);
     
+    // 背景色変更のデバウンス用ref
+    const backgroundColorTimeoutRef = useRef(null);
+    
     // 色設定 - デフォルト値を変更
     const [colors, setColors] = useState(initialState?.colors || {
         strokePoint: '#00ffff',  // チューブの点：シアン
@@ -127,6 +130,19 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         strokeLine: 4,  // チューブの線の太さ
         fillBorder: 3   // 土台の境界線の太さ
     });
+
+    // 背景色変更のデバウンス処理
+    const handleBackgroundColorChange = useCallback((color) => {
+        // 既存のタイマーをクリア
+        if (backgroundColorTimeoutRef.current) {
+            clearTimeout(backgroundColorTimeoutRef.current);
+        }
+        
+        // 200ms後に実際の更新を実行
+        backgroundColorTimeoutRef.current = setTimeout(() => {
+            setColors(prev => ({ ...prev, background: color }));
+        }, 200);
+    }, []);
 
     // 背景画像のロード処理
     useEffect(() => {
@@ -1066,7 +1082,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     </button>
 
                     {/* 描画ツール */}
-                    <h3 className="neon-setting-title">描画ツール</h3>
+                    <div className="draw-mode-title">描画ツール</div>
                     
                     {/* チューブ・土台ボタン */}
                     <div className="draw-mode-buttons">
@@ -1109,28 +1125,28 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     {/* 背景画像を追加 */}
                     <button
                         onClick={() => setShowBgModal(true)}
-                        className="new-path-button"
+                        className="settings-button"
                     >
                         背景画像を追加
                     </button>
 
                     {/* 修正ツール */}
-                    <h3 className="neon-setting-title">修正ツール</h3>
+                    <div className="draw-mode-title">修正ツール</div>
                     
                     {/* ←戻る・点修正・進む→ */}
-                    <div className="undo-redo-controls">
+                    <div className="edit-mode-buttons">
                         <button
                             onClick={handleUndo}
                             disabled={historyIndex === 0}
-                            className={`undo-redo-button ${
-                                historyIndex === 0 ? 'button-disabled' : ''
+                            className={`edit-mode-button ${
+                                historyIndex === 0 ? 'button-disabled' : 'button-secondary'
                             }`}
                         >
                             ←戻る
                         </button>
                         <button
                             onClick={toggleModifyMode}
-                            className={`edit-mode-button-center ${
+                            className={`edit-mode-button ${
                                 isModifyingPoints
                                         ? 'button-active button-yellow' 
                                         : 'button-secondary'
@@ -1141,8 +1157,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         <button
                             onClick={handleRedo}
                             disabled={historyIndex === history.length - 1}
-                            className={`undo-redo-button ${
-                                historyIndex === history.length - 1 ? 'button-disabled' : ''
+                            className={`edit-mode-button ${
+                                historyIndex === history.length - 1 ? 'button-disabled' : 'button-secondary'
                             }`}
                         >
                             進む→
@@ -1196,7 +1212,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 <input
                                     type="color"
                                     value={colors.background}
-                                    onChange={(e) => setColors(prev => ({ ...prev, background: e.target.value }))}
+                                    onChange={(e) => handleBackgroundColorChange(e.target.value)}
                                     className="background-color-input"
                                 />
                             </div>
@@ -1204,7 +1220,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     </div>
 
                     {/* リセット操作 */}
-                    <h3 className="neon-setting-title">リセット操作</h3>
+                    <div className="draw-mode-title">リセット操作</div>
                     
                     <div className="reset-buttons-row">
                         {/* 視点リセットボタン */}
@@ -1222,7 +1238,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     clearCanvas();
                                 }
                             }}
-                            className="view-reset-button half-width"
+                            className="clear-button half-width"
                         >
                             全てクリア
                         </button>
