@@ -38,6 +38,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(false);
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
+    const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -52,24 +53,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
 
-    // 背景色変更のデバウンス用ref
-    const backgroundColorTimeoutRef = useRef(null);
-
-    // 背景色変更のデバウンス処理
+    // 背景色変更処理（即座に変更）
     const handleBackgroundColorChange = useCallback((color) => {
-        // 既存のタイマーをクリア
-        if (backgroundColorTimeoutRef.current) {
-            clearTimeout(backgroundColorTimeoutRef.current);
+        if (neonPower) {
+            setBackgroundColor(color);
+        } else {
+            setBackgroundColorOff(color);
         }
-        
-        // 200ms後に実際の更新を実行
-        backgroundColorTimeoutRef.current = setTimeout(() => {
-            if (neonPower) {
-                setBackgroundColor(color);
-            } else {
-                setBackgroundColorOff(color);
-            }
-        }, 200);
     }, [neonPower]);
 
     // 現在の状態を保存する関数
@@ -381,15 +371,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 const initialColors = {};
                 const initialThickness = {};
                 svgData.paths.forEach((pathObj, pathIndex) => {
-                    const defaultColor = pathObj.mode === 'stroke' ? 
-                        (svgData.colors?.strokeLine || '#ffff00') : 
-                        (svgData.colors?.fillBorder || '#000000');
-                    const defaultThickness = pathObj.mode === 'stroke' ? 
-                        15 :  // チューブは常に15px（6mm）で開始
-                        (svgData.lineWidths?.fillBorder || 3);
-                    
-                    initialColors[pathIndex] = defaultColor;
-                    initialThickness[pathIndex] = defaultThickness;
+                    if (pathObj.mode === 'stroke') {
+                        // チューブの場合
+                        initialColors[pathIndex] = svgData.colors?.strokeLine || '#ffff00';
+                        initialThickness[pathIndex] = 15;  // チューブは常に15px（6mm）で開始
+                    } else if (pathObj.mode === 'fill') {
+                        // ベースプレートの場合
+                        initialColors[`${pathIndex}_fill`] = 'transparent';  // ベースプレートは透明がデフォルト
+                        initialThickness[pathIndex] = svgData.lineWidths?.fillBorder || 3;
+                    }
                 });
                 
                 setPathColors(prev => ({ ...prev, ...initialColors }));
@@ -1239,6 +1229,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     <button
                                         onClick={() => {
                                             if (selectedTubes.size > 0) {
+                                                setSelectedBulkThickness(null); // 太さ選択をリセット
+                                                setSidebarVisible(false); // サイドバーを閉じる
                                                 setShowBulkColorModal(true);
                                             }
                                         }}
@@ -1251,6 +1243,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         onClick={() => {
                                             setIsCanvasSelectionMode(false);
                                             setSelectedTubes(new Set());
+                                            setSelectedBulkThickness(null);
+                                            setSidebarVisible(true); // サイドバーを復活
                                         }}
                                         className="bulk-action-button cancel"
                                     >
@@ -1577,10 +1571,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     zIndex: 1000
                 }}>
                     <div style={{
-                        backgroundColor: '#1f2937',
+                        backgroundColor: 'rgb(29, 29, 29)',
                         padding: '24px',
                         borderRadius: '12px',
-                        border: '1px solid #374151',
+                        border: '1px solid #4b5563',
                         minWidth: '320px'
                     }}>
                         <h3 style={{ color: '#FFFF00', marginBottom: '16px', textAlign: 'center' }}>
@@ -1642,21 +1636,25 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    pointerEvents: 'none'
                 }}>
-                    <div style={{
-                        backgroundColor: '#1f2937',
-                        padding: '24px',
-                        borderRadius: '12px',
-                        border: '1px solid #374151',
-                        width: '500px',
-                        maxHeight: '80vh',
-                        overflowY: 'auto'
-                    }}>
+                    <div 
+                        className="bulk-modal-content"
+                        style={{
+                            backgroundColor: 'rgb(29, 29, 29)',
+                            padding: '24px',
+                            borderRadius: '12px',
+                            border: 'none',
+                            width: '500px',
+                            maxHeight: '80vh',
+                            overflowY: 'auto',
+                            position: 'fixed',
+                            right: '20px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            pointerEvents: 'auto'
+                        }}>
                         <h3 style={{ color: '#FFFF00', marginBottom: '16px', textAlign: 'center' }}>
                             選択したチューブの設定を変更
                         </h3>
@@ -1763,11 +1761,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 newThickness[index] = 15;
                                             });
                                             setPathThickness(prev => ({ ...prev, ...newThickness }));
+                                            setSelectedBulkThickness(15);
                                         }}
                                         style={{
-                                            backgroundColor: '#6b7280',
+                                            backgroundColor: selectedBulkThickness === 15 ? '#10b981' : '#6b7280',
                                             color: 'white',
-                                            border: '1px solid #6b7280',
+                                            border: `1px solid ${selectedBulkThickness === 15 ? '#10b981' : '#6b7280'}`,
                                             borderRadius: '4px',
                                             padding: '8px 16px',
                                             fontSize: '12px',
@@ -1784,11 +1783,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 newThickness[index] = 20;
                                             });
                                             setPathThickness(prev => ({ ...prev, ...newThickness }));
+                                            setSelectedBulkThickness(20);
                                         }}
                                         style={{
-                                            backgroundColor: '#6b7280',
+                                            backgroundColor: selectedBulkThickness === 20 ? '#10b981' : '#6b7280',
                                             color: 'white',
-                                            border: '1px solid #6b7280',
+                                            border: `1px solid ${selectedBulkThickness === 20 ? '#10b981' : '#6b7280'}`,
                                             borderRadius: '4px',
                                             padding: '8px 16px',
                                             fontSize: '12px',
@@ -1809,6 +1809,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     setShowBulkColorModal(false);
                                     setIsCanvasSelectionMode(false);
                                     setSelectedTubes(new Set());
+                                    setSelectedBulkThickness(null);
+                                    setSidebarVisible(true); // サイドバーを復活
                                 }}
                                 style={{
                                     flex: 1,
@@ -1829,6 +1831,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     setShowBulkColorModal(false);
                                     setIsCanvasSelectionMode(false);
                                     setSelectedTubes(new Set());
+                                    setSelectedBulkThickness(null);
+                                    setSidebarVisible(true); // サイドバーを復活
                                 }}
                                 style={{
                                     flex: 1,

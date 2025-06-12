@@ -554,7 +554,44 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         }];
         setHistory(initialHistory);
         setHistoryIndex(0);
-    }, [drawMode, drawingType, canvasWidth, canvasHeight]);
+        
+        // 親コンポーネントにクリア状態を通知
+        if (onStateChange) {
+            const clearedState = {
+                paths: initialPaths,
+                currentPathIndex: 0,
+                drawMode: drawMode,
+                drawingType: drawingType,
+                scale: 1,
+                offsetX: canvasWidth / 2,
+                offsetY: canvasHeight / 2,
+                backgroundImage: null,
+                initialBgImageWidth: 0,
+                initialBgImageHeight: 0,
+                bgImageScale: 1.0,
+                bgImageX: 0,
+                bgImageY: 0,
+                bgImageOpacity: 1.0,
+                showGrid: true,
+                gridSize: 100,
+                gridOpacity: 0.5,
+                colors: {
+                    strokePoint: '#00ffff',
+                    strokeLine: '#ffff00',
+                    fillPoint: '#000000',
+                    fillArea: 'rgba(110, 110, 110, 0.5)',
+                    fillBorder: '#000000',
+                    background: '#303030',
+                    grid: '#000000'
+                },
+                lineWidths: {
+                    strokeLine: 4,
+                    fillBorder: 3
+                }
+            };
+            onStateChange(clearedState);
+        }
+    }, [drawMode, drawingType, canvasWidth, canvasHeight, onStateChange]);
 
     // 新しいパスを開始
     const startNewPath = useCallback(() => {
@@ -1341,6 +1378,16 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
+                            // 土台（fillモード）が存在するかチェック
+                            const hasFillPath = paths.some(pathObj => 
+                                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+                            );
+                            
+                            if (!hasFillPath) {
+                                alert('土台を描画してください。');
+                                return;
+                            }
+                            
                             // カスタマイズへ進む前に現在の状態を親に保存
                             if (onStateChange) {
                                 const currentState = {
@@ -1463,7 +1510,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         <>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageScale" className="modal-label">
-                                    サイズ: {(bgImageScale * 100).toFixed(1)}% 
+                                    画像サイズ: {(bgImageScale * 100).toFixed(1)}% 
                                     ({((initialBgImageWidth * bgImageScale) / 25).toFixed(1)}×{((initialBgImageHeight * bgImageScale) / 25).toFixed(1)}cm)
                                 </label>
                                 <input
@@ -1477,7 +1524,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     className="range-input"
                                 />
                                 <div className="direct-input-container">
-                                    <label className="direct-input-label">横幅:</label>
+                                    <label className="direct-input-label">画像横幅:</label>
                                     <input
                                         ref={widthInputRef}
                                         type="number"

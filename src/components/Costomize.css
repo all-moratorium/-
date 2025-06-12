@@ -1258,6 +1258,23 @@ html, body {
     scrollbar-color: #333 #1a1a1a;
 }
 
+/* 一括設定モーダルのアニメーション */
+@keyframes bulkModalSlideIn {
+    from {
+        right: -520px;
+        opacity: 0;
+    }
+    to {
+        right: 20px;
+        opacity: 1;
+    }
+}
+
+.bulk-modal-content {
+    position: relative;
+    animation: bulkModalSlideIn 0.3s ease-out;
+}
+
 @media (max-width: 640px) {
     .customize-guide-modal-content {
         width: 95%;
