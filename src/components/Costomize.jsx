@@ -1161,7 +1161,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             {/* 左側：ON/OFFスイッチ */}
                             <div className="neon-power-status">
                                 <span className={`neon-status-text ${neonPower ? 'on' : 'off'}`}>
-                                    {neonPower ? '💡 ON' : '⚫ OFF'}
+                                    <span className={`status-dot ${neonPower ? 'on' : 'off'}`}></span>
+                                    {neonPower ? 'ON' : 'OFF'}
                                 </span>
                                 <button
                                     onClick={() => setNeonPower(!neonPower)}
@@ -1557,7 +1558,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     onClick={() => setSidebarVisible(true)}
                     className="customize-show-sidebar-button"
                 >
-                    💡 ネオン設定を表示
+                    サイドバー表示
                 </button>
             )}
 

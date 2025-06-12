@@ -520,9 +520,18 @@
     transition: all 0.3s ease;
 }
 
-.new-path-button:hover {
+.new-path-button:hover:not(:disabled) {
     background-color: #FFFF00;
     box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
+}
+
+.new-path-button.button-disabled,
+.new-path-button:disabled {
+    background-color: rgb(29, 29, 29) !important;
+    color: #9ca3af !important;
+    border: 1px solid #6b7280 !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
 }
 
 /* Undo/Redo コントロール */
@@ -904,7 +913,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: #ffff00;
     cursor: pointer;
 }
 
@@ -912,7 +921,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: #ffff00;
     cursor: pointer;
     border: none;
 }

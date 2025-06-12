@@ -60,9 +60,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [segmentsPerCurve, setSegmentsPerCurve] = useState(30);
 
     // ズームとパン
-    const [scale, setScale] = useState(initialState?.scale || 1);
-    const [offsetX, setOffsetX] = useState(initialState?.offsetX || 0);
-    const [offsetY, setOffsetY] = useState(initialState?.offsetY || 0);
+    const [scale, setScale] = useState(initialState?.scale !== undefined ? initialState.scale : 1);
+    const [offsetX, setOffsetX] = useState(initialState?.offsetX !== undefined ? initialState.offsetX : 0);
+    const [offsetY, setOffsetY] = useState(initialState?.offsetY !== undefined ? initialState.offsetY : 0);
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
@@ -73,21 +73,22 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [isModifyingPoints, setIsModifyingPoints] = useState(false);
     const [isPathDeleteMode, setIsPathDeleteMode] = useState(false); // パス削除モード
     const [isPointDeleteMode, setIsPointDeleteMode] = useState(false); // 点削除モード
+    const [isNewPathDisabled, setIsNewPathDisabled] = useState(false); // 新しいパスボタンの無効化状態
 
     // 背景画像
     const [backgroundImage, setBackgroundImage] = useState(initialState?.backgroundImage || null);
     const [loadedBackgroundImage, setLoadedBackgroundImage] = useState(null);
     const [initialBgImageWidth, setInitialBgImageWidth] = useState(initialState?.initialBgImageWidth || 0);
     const [initialBgImageHeight, setInitialBgImageHeight] = useState(initialState?.initialBgImageHeight || 0);
-    const [bgImageScale, setBgImageScale] = useState(initialState?.bgImageScale || 1.0);
-    const [bgImageX, setBgImageX] = useState(initialState?.bgImageX || 0); 
-    const [bgImageY, setBgImageY] = useState(initialState?.bgImageY || 0); 
-    const [bgImageOpacity, setBgImageOpacity] = useState(initialState?.bgImageOpacity || 1.0);
+    const [bgImageScale, setBgImageScale] = useState(initialState?.bgImageScale !== undefined ? initialState.bgImageScale : 1.0);
+    const [bgImageX, setBgImageX] = useState(initialState?.bgImageX !== undefined ? initialState.bgImageX : 0); 
+    const [bgImageY, setBgImageY] = useState(initialState?.bgImageY !== undefined ? initialState.bgImageY : 0); 
+    const [bgImageOpacity, setBgImageOpacity] = useState(initialState?.bgImageOpacity !== undefined ? initialState.bgImageOpacity : 1.0);
 
     // グリッド - デフォルトでオンに変更
     const [showGrid, setShowGrid] = useState(initialState?.showGrid !== undefined ? initialState.showGrid : true); 
     const [gridSize, setGridSize] = useState(initialState?.gridSize || 100); // 4cm = 100px (20px=8mm基準)
-    const [gridOpacity, setGridOpacity] = useState(initialState?.gridOpacity || 0.5);
+    const [gridOpacity, setGridOpacity] = useState(initialState?.gridOpacity !== undefined ? initialState.gridOpacity : 0.5);
 
     // モーダル状態
     const [showGridModal, setShowGridModal] = useState(false);
@@ -115,7 +116,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 fillPoint: '#000000',
                 fillArea: 'rgba(110, 110, 110, 0.5)',
                 fillBorder: '#000000',
-                background: '#d2d2d2',
+                background: '#303030',
                 grid: '#000000'
             },
             lineWidths: {
@@ -136,7 +137,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         fillPoint: '#000000',    // 土台の点：黒
         fillArea: 'rgba(110, 110, 110, 0.5)', // 土台の中身：RGB(110, 110, 110) 透明度50%
         fillBorder: '#000000',   // 土台の境界線：黒
-        background: '#d2d2d2',   // 背景色：RGB(210,210,210)
+        background: '#303030',   // 背景色：グレー
         grid: '#000000'          // グリッド色：黒
     });
     
@@ -175,26 +176,29 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             img.onload = () => {
                 setLoadedBackgroundImage(img);
 
-                const drawingAreaWidth = 800; // 仮想的な初期サイズ
-                const drawingAreaHeight = 600;
+                // 既に設定済みの場合は初期化しない
+                if (initialBgImageWidth === 0 && initialBgImageHeight === 0) {
+                    const drawingAreaWidth = 800; // 仮想的な初期サイズ
+                    const drawingAreaHeight = 600;
 
-                let fittedWidth, fittedHeight;
-                // 画像のアスペクト比に合わせてフィットさせる
-                if (img.width / img.height > drawingAreaWidth / drawingAreaHeight) {
-                    fittedWidth = drawingAreaWidth;
-                    fittedHeight = img.height * (drawingAreaWidth / img.width);
-                } else {
-                    fittedHeight = drawingAreaHeight;
-                    fittedWidth = img.width * (drawingAreaHeight / img.height);
+                    let fittedWidth, fittedHeight;
+                    // 画像のアスペクト比に合わせてフィットさせる
+                    if (img.width / img.height > drawingAreaWidth / drawingAreaHeight) {
+                        fittedWidth = drawingAreaWidth;
+                        fittedHeight = img.height * (drawingAreaWidth / img.width);
+                    } else {
+                        fittedHeight = drawingAreaHeight;
+                        fittedWidth = img.width * (drawingAreaHeight / img.height);
+                    }
+
+                    setInitialBgImageWidth(fittedWidth);
+                    setInitialBgImageHeight(fittedHeight);
+                    setBgImageScale(1.0);
+                    // 中央に配置（無限キャンバスの原点付近）
+                    setBgImageX(0);
+                    setBgImageY(0);
+                    setBgImageOpacity(1.0);
                 }
-
-                setInitialBgImageWidth(fittedWidth);
-                setInitialBgImageHeight(fittedHeight);
-                setBgImageScale(1.0);
-                // 中央に配置（無限キャンバスの原点付近）
-                setBgImageX(0);
-                setBgImageY(0);
-                setBgImageOpacity(1.0);
             };
             img.onerror = () => {
                 console.error("背景画像の読み込みに失敗しました。");
@@ -204,14 +208,17 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             img.src = backgroundImage;
         } else {
             setLoadedBackgroundImage(null);
-            setInitialBgImageWidth(0);
-            setInitialBgImageHeight(0);
-            setBgImageScale(1.0);
-            setBgImageX(0);
-            setBgImageY(0);
-            setBgImageOpacity(1.0);
+            // 既に設定済みの場合は初期化しない
+            if (initialBgImageWidth === 0 && initialBgImageHeight === 0) {
+                setInitialBgImageWidth(0);
+                setInitialBgImageHeight(0);
+                setBgImageScale(1.0);
+                setBgImageX(0);
+                setBgImageY(0);
+                setBgImageOpacity(1.0);
+            }
         }
-    }, [backgroundImage]);
+    }, [backgroundImage, initialBgImageWidth, initialBgImageHeight]);
 
     // スプライン曲線を描画する関数
     const drawSpline = useCallback(() => {
@@ -471,10 +478,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 newHistory.shift(); // 最も古い履歴を削除
             }
             
-            // 親コンポーネントに状態変更を通知
-            if (onStateChange) {
-                onStateChange(newState);
-            }
+            // 親コンポーネントに状態変更を通知（重要な変更のみ）
+            // if (onStateChange) {
+            //     onStateChange(newState);
+            // }
             
             console.log("History saved. newHistory.length:", newHistory.length, "historyIndex to be:", newHistory.length -1, "Saved state:", newState);
             return newHistory;
@@ -502,6 +509,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 setIsModifyingPoints(false);
                 setIsPathDeleteMode(false); // Redo時にモードを解除
                 setIsPointDeleteMode(false); // Redo時にモードを解除
+                setIsNewPathDisabled(false); // Redo時に新しいパスボタンを有効化
             } else {
                 console.error("Redo failed: nextState is invalid or missing at index", nextIndex, { nextState, historySnapshot: history });
             }
@@ -522,6 +530,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setIsModifyingPoints(false);
         setIsPathDeleteMode(false); // クリア時にモードを解除
         setIsPointDeleteMode(false); // クリア時にモードを解除
+        setIsNewPathDisabled(false); // クリア時に新しいパスボタンを有効化
         
         // 履歴を完全にリセット
         const initialHistory = [{
@@ -535,7 +544,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 fillPoint: '#000000',
                 fillArea: 'rgba(110, 110, 110, 0.5)',
                 fillBorder: '#000000',
-                background: '#d2d2d2',
+                background: '#303030',
                 grid: '#000000'
             },
             lineWidths: {
@@ -549,6 +558,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // 新しいパスを開始
     const startNewPath = useCallback(() => {
+        console.log('新しいパスボタンが押されました - ボタンを無効化します');
+        setIsNewPathDisabled(true); // ボタンを無効化
+        
         setPaths(prevPaths => {
             const currentPath = prevPaths[currentPathIndex];
             // 現在のパスに既に点が描画されている場合のみ新しいパスを追加
@@ -567,6 +579,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 const updatedPaths = [...prevPaths];
                 // 変更がない場合は履歴に保存しない
                 if (updatedPaths[currentPathIndex].mode === drawMode && updatedPaths[currentPathIndex].type === drawingType) {
+                    setIsNewPathDisabled(false); // 変更なしの場合はすぐ有効化
                     return prevPaths;
                 }
                 updatedPaths[currentPathIndex] = { points: [], mode: drawMode, type: drawingType };
@@ -599,6 +612,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 setIsModifyingPoints(false);
                 setIsPathDeleteMode(false); // Undo時にモードを解除
                 setIsPointDeleteMode(false); // Undo時にモードを解除
+                setIsNewPathDisabled(false); // Undo時に新しいパスボタンを有効化
             } else {
                 console.error("Undo failed: Previous state is invalid or missing.", { historyIndex, prevIndex, historySnapshot: history });
             }
@@ -709,6 +723,18 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         drawSpline();
     }, [paths, drawSpline]);
 
+    // コンポーネントマウント時にキャンバスを再描画
+    useEffect(() => {
+        drawSpline();
+    }, [drawSpline]);
+
+    // キャンバスサイズ変更時にも再描画
+    useEffect(() => {
+        if (canvasWidth > 0 && canvasHeight > 0) {
+            drawSpline();
+        }
+    }, [canvasWidth, canvasHeight, drawSpline]);
+
     // キャンバスのサイズを画面サイズに合わせる
     useEffect(() => {
         const handleResize = () => {
@@ -742,6 +768,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             setShowFillDrawingTypeModal(false);
             setDrawingType('spline'); // チューブは常にスプライン描画として扱う
         }
+
+        // モード変更時は新しいパスボタンを有効化
+        setIsNewPathDisabled(false);
 
         setPaths(prevPaths => {
             const newPaths = [...prevPaths];
@@ -1029,6 +1058,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             // 新しい点を追加
             targetPath.points = [...targetPath.points, { x: contentX, y: contentY }];
             
+            // 最初の点が追加された場合、新しいパスボタンを有効化
+            if (targetPath.points.length === 1) {
+                console.log('最初の点が描画されました - ボタンを有効化します');
+                setIsNewPathDisabled(false);
+            }
+            
             // 点追加後の状態を履歴に保存
             saveToHistory(newPaths, currentPathIndex, drawMode, drawingType); 
             return newPaths;
@@ -1171,7 +1206,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     {/* 新しいパス */}
                     <button
                         onClick={startNewPath}
-                        className="new-path-button"
+                        disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
+                        className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
                     >
                         新しいパス
                     </button>
@@ -1305,6 +1341,32 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
+                            // カスタマイズへ進む前に現在の状態を親に保存
+                            if (onStateChange) {
+                                const currentState = {
+                                    paths: paths,
+                                    currentPathIndex: currentPathIndex,
+                                    drawMode: drawMode,
+                                    drawingType: drawingType,
+                                    scale: scale,
+                                    offsetX: offsetX,
+                                    offsetY: offsetY,
+                                    backgroundImage: backgroundImage,
+                                    initialBgImageWidth: initialBgImageWidth,
+                                    initialBgImageHeight: initialBgImageHeight,
+                                    bgImageScale: bgImageScale,
+                                    bgImageX: bgImageX,
+                                    bgImageY: bgImageY,
+                                    bgImageOpacity: bgImageOpacity,
+                                    showGrid: showGrid,
+                                    gridSize: gridSize,
+                                    gridOpacity: gridOpacity,
+                                    colors: colors,
+                                    lineWidths: lineWidths
+                                };
+                                onStateChange(currentState);
+                            }
+                            
                             const { strokePathData, fillPathData } = generateSvgPaths();
                             const svgContent = `
 <svg width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -1622,7 +1684,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 fillPoint: '#000000',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
-                                background: '#d2d2d2',
+                                background: '#303030',
                                 grid: '#000000'
                             });
                             setLineWidths({
