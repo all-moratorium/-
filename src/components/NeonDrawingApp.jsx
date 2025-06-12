@@ -20,7 +20,7 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
     if (!isOpen) return null;
     
     const modalClass = position === 'right' 
-        ? "modal-overlay modal-right"
+        ? "modal-overlay"
         : "modal-overlay modal-center";
     
     const contentClass = position === 'right'
@@ -51,6 +51,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [drawingType, setDrawingType] = useState(initialState?.drawingType || 'spline');
 
     const canvasRef = useRef(null);
+    const widthInputRef = useRef(null);
+    const isUserTypingRef = useRef(false);
     const [paths, setPaths] = useState(initialState?.paths || [{ points: [], mode: initialState?.drawMode || 'stroke', type: initialState?.drawingType || 'spline' }]);
     const [currentPathIndex, setCurrentPathIndex] = useState(initialState?.currentPathIndex || 0);
     const [canvasWidth, setCanvasWidth] = useState(800);
@@ -143,6 +145,15 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             setColors(prev => ({ ...prev, background: color }));
         }, 200);
     }, []);
+
+    // スライダー変更時に入力フィールドを更新（ユーザーが入力中でない場合のみ）
+    useEffect(() => {
+        if (widthInputRef.current && initialBgImageWidth > 0 && !isUserTypingRef.current) {
+            const currentWidth = (initialBgImageWidth * bgImageScale) / 25;
+            // 整数の場合は小数点を表示しない
+            widthInputRef.current.value = currentWidth % 1 === 0 ? currentWidth.toString() : currentWidth.toFixed(1);
+        }
+    }, [bgImageScale, initialBgImageWidth]);
 
     // 背景画像のロード処理
     useEffect(() => {
@@ -1132,7 +1143,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
                     {/* 背景画像を追加 */}
                     <button
-                        onClick={() => setShowBgModal(true)}
+                        onClick={() => {
+                            setShowBgModal(true);
+                            setSidebarVisible(false);
+                        }}
                         className="settings-button"
                     >
                         背景画像
@@ -1337,7 +1351,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             </Modal>
 
             {/* 背景画像設定モーダル */}
-            <Modal isOpen={showBgModal} onClose={() => setShowBgModal(false)} title="背景画像設定" position="right">
+            <Modal isOpen={showBgModal} onClose={() => {
+                setShowBgModal(false);
+                setSidebarVisible(true);
+            }} title="背景画像設定" position="right">
                 <div className="modal-content-inner">
                     <input
                         type="file"
@@ -1347,56 +1364,55 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     />
                     {loadedBackgroundImage && (
                         <>
-                            <button
-                                onClick={clearBackgroundImage}
-                                className="clear-image-button"
-                            >
-                                画像をクリア
-                            </button>
-                            <div className="modal-setting-item">
-                                <label htmlFor="bgImageX" className="modal-label">
-                                    X位置: {bgImageX.toFixed(0)}px
-                                </label>
-                                <input
-                                    id="bgImageX"
-                                    type="range"
-                                    min="-2000"
-                                    max="2000"
-                                    step="10"
-                                    value={bgImageX}
-                                    onChange={(e) => setBgImageX(Number(e.target.value))}
-                                    className="range-input"
-                                />
-                            </div>
-                            <div className="modal-setting-item">
-                                <label htmlFor="bgImageY" className="modal-label">
-                                    Y位置: {bgImageY.toFixed(0)}px
-                                </label>
-                                <input
-                                    id="bgImageY"
-                                    type="range"
-                                    min="-2000"
-                                    max="2000"
-                                    step="10"
-                                    value={bgImageY}
-                                    onChange={(e) => setBgImageY(Number(e.target.value))}
-                                    className="range-input"
-                                />
-                            </div>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageScale" className="modal-label">
-                                    サイズ: {(bgImageScale * 100).toFixed(0)}%
+                                    サイズ: {(bgImageScale * 100).toFixed(1)}% 
+                                    ({((initialBgImageWidth * bgImageScale) / 25).toFixed(1)}×{((initialBgImageHeight * bgImageScale) / 25).toFixed(1)}cm)
                                 </label>
                                 <input
                                     id="bgImageScale"
                                     type="range"
                                     min="0.1"
-                                    max="3.0"
-                                    step="0.01"
+                                    max="5.0"
+                                    step="0.001"
                                     value={bgImageScale}
                                     onChange={(e) => setBgImageScale(Number(e.target.value))}
                                     className="range-input"
                                 />
+                                <div className="direct-input-container">
+                                    <label className="direct-input-label">横幅:</label>
+                                    <input
+                                        ref={widthInputRef}
+                                        type="number"
+                                        min="0.5"
+                                        placeholder="横幅を入力"
+                                        onInput={() => {
+                                            isUserTypingRef.current = true;
+                                        }}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            if (inputValue === '') return;
+                                            
+                                            const targetWidthCm = parseFloat(inputValue);
+                                            if (!isNaN(targetWidthCm) && targetWidthCm >= 0.5 && initialBgImageWidth > 0) {
+                                                const newScale = (targetWidthCm * 25) / initialBgImageWidth;
+                                                setBgImageScale(Math.max(0.1, Math.min(5.0, newScale)));
+                                            }
+                                        }}
+                                        onFocus={(e) => {
+                                            isUserTypingRef.current = true;
+                                            e.target.select();
+                                        }}
+                                        onBlur={() => {
+                                            isUserTypingRef.current = false;
+                                        }}
+                                        onWheel={(e) => {
+                                            e.target.blur();
+                                        }}
+                                        className="direct-number-input"
+                                    />
+                                    <span className="input-unit">cm</span>
+                                </div>
                             </div>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageOpacity" className="modal-label">
@@ -1412,6 +1428,23 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     onChange={(e) => setBgImageOpacity(Number(e.target.value))}
                                     className="range-input"
                                 />
+                            </div>
+                            <div className="modal-buttons-container">
+                                <button
+                                    onClick={() => {
+                                        setBgImageScale(1.0);
+                                        setBgImageOpacity(1.0);
+                                    }}
+                                    className="reset-size-button"
+                                >
+                                    サイズ・透明度をリセット
+                                </button>
+                                <button
+                                    onClick={clearBackgroundImage}
+                                    className="clear-image-button"
+                                >
+                                    画像をクリア
+                                </button>
                             </div>
                         </>
                     )}
