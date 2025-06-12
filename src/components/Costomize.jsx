@@ -1259,9 +1259,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
                         <div className="neon-tube-settings">
                             <div className="neon-tube-header">
-                                <h3 className="neon-tube-title">
-                                    ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}本)
-                                </h3>
+                                <div className="neon-tube-title-container">
+                                    <h3 className="neon-tube-title">
+                                        ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}本)
+                                    </h3>
+                                    <span className="tube-total-length-subtitle">
+                                        合計長さ: {Math.round(
+                                            neonPaths
+                                                .filter(pathObj => pathObj && pathObj.mode === 'stroke')
+                                                .reduce((total, pathObj) => total + calculatePathLength(pathObj), 0) / 25 * 10
+                                        ) / 10}cm
+                                    </span>
+                                </div>
                                 <div className="neon-tube-actions">
                                     {/* 最後のチューブへスクロールボタン */}
                                     <button

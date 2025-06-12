@@ -768,7 +768,7 @@
 .modal-content {
     background-color: rgb(29, 29, 29);
     padding: 24px;
-    border: 1px solid #4b5563;
+    border: none;
     pointer-events: auto;
 }
 
@@ -777,6 +777,7 @@
     max-width: 448px;
     width: 100%;
     margin: 0 16px;
+    border:none;
 }
 
 .modal-content-right {
@@ -1129,6 +1130,7 @@
 .modal-content-center .modal-setting-item {
     gap: 8px;
     margin-bottom: 8px;
+    border:none;
 }
 
 .drawing-type-button {
@@ -1142,11 +1144,11 @@
 }
 
 .drawing-type-button.button-secondary {
-    border: 1px solid transparent !important;
+    border: none !important;
 }
 
 .drawing-type-button {
-    border: 1px solid transparent !important;
+    border: none !important;
 }
 
 .drawing-type-button:hover:not(.button-disabled) {

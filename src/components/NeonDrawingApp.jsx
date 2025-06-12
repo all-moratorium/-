@@ -176,29 +176,27 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             img.onload = () => {
                 setLoadedBackgroundImage(img);
 
-                // 既に設定済みの場合は初期化しない
-                if (initialBgImageWidth === 0 && initialBgImageHeight === 0) {
-                    const drawingAreaWidth = 800; // 仮想的な初期サイズ
-                    const drawingAreaHeight = 600;
+                // 新しい画像が読み込まれた時は常に初期化する
+                const drawingAreaWidth = 800; // 仮想的な初期サイズ
+                const drawingAreaHeight = 600;
 
-                    let fittedWidth, fittedHeight;
-                    // 画像のアスペクト比に合わせてフィットさせる
-                    if (img.width / img.height > drawingAreaWidth / drawingAreaHeight) {
-                        fittedWidth = drawingAreaWidth;
-                        fittedHeight = img.height * (drawingAreaWidth / img.width);
-                    } else {
-                        fittedHeight = drawingAreaHeight;
-                        fittedWidth = img.width * (drawingAreaHeight / img.height);
-                    }
-
-                    setInitialBgImageWidth(fittedWidth);
-                    setInitialBgImageHeight(fittedHeight);
-                    setBgImageScale(1.0);
-                    // 中央に配置（無限キャンバスの原点付近）
-                    setBgImageX(0);
-                    setBgImageY(0);
-                    setBgImageOpacity(1.0);
+                let fittedWidth, fittedHeight;
+                // 画像のアスペクト比に合わせてフィットさせる
+                if (img.width / img.height > drawingAreaWidth / drawingAreaHeight) {
+                    fittedWidth = drawingAreaWidth;
+                    fittedHeight = img.height * (drawingAreaWidth / img.width);
+                } else {
+                    fittedHeight = drawingAreaHeight;
+                    fittedWidth = img.width * (drawingAreaHeight / img.height);
                 }
+
+                setInitialBgImageWidth(fittedWidth);
+                setInitialBgImageHeight(fittedHeight);
+                setBgImageScale(1.0);
+                // 中央に配置（無限キャンバスの原点付近）
+                setBgImageX(0);
+                setBgImageY(0);
+                setBgImageOpacity(1.0);
             };
             img.onerror = () => {
                 console.error("背景画像の読み込みに失敗しました。");
@@ -208,17 +206,15 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             img.src = backgroundImage;
         } else {
             setLoadedBackgroundImage(null);
-            // 既に設定済みの場合は初期化しない
-            if (initialBgImageWidth === 0 && initialBgImageHeight === 0) {
-                setInitialBgImageWidth(0);
-                setInitialBgImageHeight(0);
-                setBgImageScale(1.0);
-                setBgImageX(0);
-                setBgImageY(0);
-                setBgImageOpacity(1.0);
-            }
+            // 画像がクリアされた時は全ての設定をリセット
+            setInitialBgImageWidth(0);
+            setInitialBgImageHeight(0);
+            setBgImageScale(1.0);
+            setBgImageX(0);
+            setBgImageY(0);
+            setBgImageOpacity(1.0);
         }
-    }, [backgroundImage, initialBgImageWidth, initialBgImageHeight]);
+    }, [backgroundImage]);
 
     // スプライン曲線を描画する関数
     const drawSpline = useCallback(() => {
@@ -283,6 +279,29 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         }
 
         ctx.restore(); // グリッドと背景の変換を元に戻す
+
+        // スケール表示（1マス = 4cm）
+        if (showGrid) {
+            ctx.save();
+            
+            // 画面の横の真ん中（50%）、上側に表示
+            const textX = canvas.width / 2;
+            const textY = 16;
+            
+            // 背景の半透明ボックス（中央揃えのため少し左にずらす）
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(textX - 40, textY - 4, 80, 24);
+            ctx.globalAlpha = 1;
+            
+            // テキストを描画（中央揃え）
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('1マス = 4cm', textX, textY);
+            ctx.restore();
+        }
 
         // パスと制御点の描画
         ctx.save();
@@ -1146,6 +1165,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     // 背景画像をクリア
     const clearBackgroundImage = useCallback(() => {
         setBackgroundImage(null);
+        setInitialBgImageWidth(0);
+        setInitialBgImageHeight(0);
+        setBgImageScale(1.0);
+        setBgImageX(0);
+        setBgImageY(0);
+        setBgImageOpacity(1.0);
     }, []);
 
     // カーソルクラスを決定

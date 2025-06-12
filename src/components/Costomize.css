@@ -794,6 +794,20 @@ html, body {
     cursor: not-allowed;
 }
 
+/* ネオンチューブタイトルコンテナ */
+.neon-tube-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tube-total-length-subtitle {
+    font-size: 15px;
+    color: #d1d5db;
+    font-weight: normal;
+    opacity: 1;
+}
+
 /* ネオンチューブ設定メインセクション */
 .neon-tube-settings {
     margin-bottom: 20px;
