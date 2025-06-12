@@ -915,7 +915,6 @@ html, body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
-    margin-left: 15px;
     margin-bottom: 15px;
     margin-top: 15px;
 }

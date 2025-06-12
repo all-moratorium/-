@@ -1072,6 +1072,18 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         </button>
                     </div>
 
+                    {/* ステータスメッセージ表示エリア */}
+                    <div className="status-message-area">
+                        <div className="status-message">
+                            {isModifyingPoints ? '点修正モードアクティブ中' :
+                             isPathDeleteMode ? 'パス削除モードアクティブ中' :
+                             isPointDeleteMode ? '点削除モードアクティブ中' :
+                             drawMode === 'stroke' ? `チューブパス${currentPathIndex + 1}描画中` :
+                             drawMode === 'fill' ? '土台描画中' :
+                             '描画モード選択'}
+                        </div>
+                    </div>
+
                     {/* サイドバー非表示ボタン */}
                     <button 
                         onClick={() => setSidebarVisible(false)}
@@ -1091,10 +1103,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             disabled={areDrawModeButtonsDisabled}
                             className={`draw-mode-button ${
                                 areDrawModeButtonsDisabled
-                                        ? 'button-disabled'
-                                        : drawMode === 'stroke' 
-                                            ? 'button-active button-blue' 
-                                            : 'button-secondary'
+                                    ? (drawMode === 'stroke' ? 'button-blue' : 'button-disabled')
+                                    : (drawMode === 'stroke' ? 'button-blue' : 'button-secondary')
                             }`}
                         >
                             チューブ
@@ -1104,10 +1114,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             disabled={areDrawModeButtonsDisabled}
                             className={`draw-mode-button ${
                                 areDrawModeButtonsDisabled
-                                        ? 'button-disabled'
-                                        : drawMode === 'fill' 
-                                            ? 'button-active button-green' 
-                                            : 'button-secondary'
+                                    ? (drawMode === 'fill' ? 'button-green' : 'button-disabled')
+                                    : (drawMode === 'fill' ? 'button-green' : 'button-secondary')
                             }`}
                         >
                             土台
@@ -1139,7 +1147,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={handleUndo}
                             disabled={historyIndex === 0}
                             className={`edit-mode-button ${
-                                historyIndex === 0 ? 'button-disabled' : 'button-secondary'
+                                historyIndex === 0 ? 'button-disabled' : 'button-purple'
                             }`}
                         >
                             ←戻る
@@ -1148,7 +1156,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={toggleModifyMode}
                             className={`edit-mode-button ${
                                 isModifyingPoints
-                                        ? 'button-active button-yellow' 
+                                        ? 'button-blue' 
                                         : 'button-secondary'
                             }`}
                         >
@@ -1158,7 +1166,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={handleRedo}
                             disabled={historyIndex === history.length - 1}
                             className={`edit-mode-button ${
-                                historyIndex === history.length - 1 ? 'button-disabled' : 'button-secondary'
+                                historyIndex === history.length - 1 ? 'button-disabled' : 'button-purple'
                             }`}
                         >
                             進む→
@@ -1171,7 +1179,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={togglePointDeleteMode}
                             className={`delete-button ${
                                 isPointDeleteMode
-                                        ? 'button-active button-red' 
+                                        ? 'button-red' 
                                         : 'button-secondary'
                             }`}
                         >
@@ -1181,7 +1189,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={togglePathDeleteMode}
                             className={`delete-button ${
                                 isPathDeleteMode
-                                        ? 'button-active button-red' 
+                                        ? 'button-red' 
                                         : 'button-secondary'
                             }`}
                         >

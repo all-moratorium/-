@@ -200,8 +200,10 @@
 .delete-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 16px;
+    width:65%;
+    margin: 0 auto;
 }
 
 .delete-button {
@@ -216,13 +218,12 @@
 }
 
 .delete-button:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* 中央の点修正ボタン */
 .edit-mode-button-center {
     padding: 12px 8px;
-    border-radius: 6px;
     font-weight: bold;
     border: 1px solid;
     font-size: 14px;
@@ -233,7 +234,7 @@
 }
 
 .edit-mode-button-center:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* グリッド・背景コントロール */
@@ -243,8 +244,8 @@
     gap: 0px;
     padding: 0px;
     padding-right: 46px;
-    margin-top: 25px;
-    margin-bottom: px;
+    margin-top: 35px;
+    margin-bottom: 16px;
 }
 
 .background-controls {
@@ -292,13 +293,20 @@
 /* リセットボタン行 */
 .reset-buttons-row {
     display: flex;
-    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 15px;
     margin-top: 15px;
+    width: 100%;
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .half-width {
-    flex: 1;
+    width: 80px;
+    flex: none;
 }
 
 /* 視点リセットボタン */
@@ -312,8 +320,6 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
-    margin-left: 15px;
-    margin-bottom: 15px;
 }
 
 .view-reset-button:hover {
@@ -354,13 +360,35 @@
     background-color: #6b7280;
 }
 
+/* ステータスメッセージ表示エリア */
+.status-message-area {
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.status-message {
+    color: #00ffff;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 
+        0 0 3px rgba(0, 255, 255, 0.5),
+        0 0 6px rgba(0, 255, 255, 0.3);
+    letter-spacing: 0.5px;
+    animation: status-glow-pulse 3s ease-in-out infinite alternate;
+}
+
 /* 描画ツールタイトル */
 .draw-tools-title {
     font-size: 16px;
     font-weight: bold;
     color: #d1d5db;
     margin-bottom: 16px;
-    margin-top: 32px;
+    margin-top: 16px;
     text-align: center;
 }
 
@@ -386,11 +414,13 @@
 .draw-mode-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 20px;
+    width: 90%;
+    margin: 0 auto;
 }
 
 .draw-mode-button {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-radius: 6px;
     font-weight: bold;
     border: 1px solid;
@@ -400,14 +430,14 @@
 }
 
 .draw-mode-button:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* 基本ボタンスタイル */
 .button-disabled {
-    background-color: #374151;
-    color: #6b7280;
-    border-color: #4b5563;
+    background-color: rgb(29, 29, 29);
+    color: #9ca3af;
+    border-color: #6b7280;
     cursor: not-allowed;
 }
 
@@ -419,22 +449,36 @@
 .button-blue {
     background-color: #2563eb;
     border-color: #3b82f6;
+    color: white;
 }
 
 .button-green {
     background-color: #16a34a;
     border-color: #22c55e;
+    color: white;
 }
 
 .button-yellow {
-    background-color: #eab308;
-    color: #1f2937;
-    border-color: #FFFF00;
+    background-color: #2563eb;
+    color: white;
+    border-color: #3b82f6;
 }
 
 .button-red {
     background-color: #dc2626;
     border-color: #ef4444;
+    color: white;
+}
+
+.button-orange {
+    background-color: #ea580c;
+    border-color: #f97316;
+}
+
+.button-purple {
+    background-color: #7c3aed;
+    border-color: #8b5cf6;
+    color: white;
 }
 
 .button-teal {
@@ -459,22 +503,26 @@
 
 /* 新しいパス */
 .new-path-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #eab308;
-    color: #1f2937;
+    padding: 12px 24px;
+    margin: 0 auto;
+    background-color: #FFFF00;
+    color: #000;
     font-weight: bold;
-    border-radius: 6px;
-    border: 1px solid #FFFF00;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-size: 1em;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 16px;
+    margin-top: 6px;
+    width: 90%;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
     cursor: pointer;
-    transition: all 0.2s;
-    transform: scale(1);
+    transition: all 0.3s ease;
 }
 
 .new-path-button:hover {
     background-color: #FFFF00;
-    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
 }
 
 /* Undo/Redo コントロール */
@@ -500,7 +548,6 @@
 
 .undo-redo-button:hover:not(.button-disabled) {
     background-color: #6b7280;
-    transform: scale(1.05);
 }
 
 .reset-view-button {
@@ -518,7 +565,6 @@
 
 .reset-view-button:hover {
     background-color: #f97316;
-    transform: scale(1.05);
 }
 
 /* ガイドボタン */
@@ -547,29 +593,35 @@
 
 .guide-button:hover {
     background-color: #f97316;
-    transform: scale(1.1);
 }
 
 /* 編集モードボタン */
 .edit-mode-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
+    width:90%;
+    margin: 0 auto;
 }
 
 .edit-mode-button {
-    padding: 12px 8px;
+    padding: 15px 8px;
     border-radius: 6px;
     font-weight: bold;
-    border: 1px solid;
+    border: 1px solid transparent;
     font-size: 14px;
     transition: all 0.2s;
     cursor: pointer;
     transform: scale(1);
+    margin-bottom: 8px;
+}
+
+.edit-mode-button.button-disabled {
+    border: 1px solid #6b7280;
 }
 
 .edit-mode-button:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* グリッド・背景画像ボタン */
@@ -590,29 +642,27 @@
 }
 
 .grid-bg-button:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* 設定ボタン */
 .settings-button {
-    width: 50%;
-    padding: 12px;
-    background-color: #374151;
-    color: #d1d5db;
+    width: 30%;
+    padding: 12px 0;
+    background-color: #6b7280;
+    color: white;
+    border: 1px solid #6b7280;
     font-weight: bold;
-    border-radius: 6px;
-    border: 1px solid #4b5563;
+    border-radius: 10px;
+    border: 1px solidrgb(255, 255, 255);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
-    transform: scale(1);
     margin: 0 auto;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
-.settings-button:hover {
-    background-color: #4b5563;
-    transform: scale(1.05);
-}
 
 /* 色・太さ設定ボタン */
 .color-settings-button {
@@ -631,7 +681,6 @@
 
 .color-settings-button:hover {
     background-color: #8b5cf6;
-    transform: scale(1.05);
 }
 
 /* SVGダウンロードボタン */
@@ -646,9 +695,9 @@
     border: none;
     margin-bottom: 16px;
     margin-top: 16px;
-    width: 90%; /* サイズ維持 */
-    box-sizing: border-box; /* 維持 */
-    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* 黄色のグロー効果に変更 */
+    width: 90%;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
     cursor: pointer;
     transition: all 0.3s ease;
     transform: scale(1);
@@ -679,7 +728,6 @@
 
 .show-neon-sidebar-button:hover {
     background-color: #8b5cf6;
-    transform: scale(1.1);
 }
 
 /* モーダル */
@@ -860,7 +908,6 @@
 
 .clear-image-button:hover {
     background-color: #ef4444;
-    transform: scale(1.05);
 }
 
 .setting-description {
@@ -891,7 +938,6 @@
 
 .reset-colors-button:hover {
     background-color: #3b82f6;
-    transform: scale(1.05);
 }
 
 .drawing-type-description {
@@ -917,7 +963,7 @@
 }
 
 .drawing-type-button:hover:not(.button-disabled) {
-    transform: scale(1.05);
+    /* hover effect removed */
 }
 
 /* アニメーション定義（ネオン下絵専用） */
@@ -1120,6 +1166,20 @@
     to { 
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+}
+
+/* ステータスメッセージの光るブレスエフェクト */
+@keyframes status-glow-pulse {
+    0% {
+        text-shadow: 
+            0 0 3px rgba(0, 255, 255, 0.5),
+            0 0 6px rgba(0, 255, 255, 0.3);
+    }
+    100% {
+        text-shadow: 
+            0 0 5px rgba(0, 255, 255, 0.7),
+            0 0 10px rgba(0, 255, 255, 0.4);
     }
 }
 
