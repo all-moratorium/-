@@ -108,7 +108,20 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             paths: JSON.parse(JSON.stringify(initialPaths)), 
             currentPathIndex: 0, 
             drawMode: 'stroke', 
-            drawingType: 'spline' 
+            drawingType: 'spline',
+            colors: {
+                strokePoint: '#00ffff',
+                strokeLine: '#ffff00',
+                fillPoint: '#000000',
+                fillArea: 'rgba(110, 110, 110, 0.5)',
+                fillBorder: '#000000',
+                background: '#d2d2d2',
+                grid: '#000000'
+            },
+            lineWidths: {
+                strokeLine: 4,
+                fillBorder: 3
+            }
         }];
     });
     const [historyIndex, setHistoryIndex] = useState(0);
@@ -123,7 +136,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         fillPoint: '#000000',    // 土台の点：黒
         fillArea: 'rgba(110, 110, 110, 0.5)', // 土台の中身：RGB(110, 110, 110) 透明度50%
         fillBorder: '#000000',   // 土台の境界線：黒
-        background: '#303030',   // 背景色：RGB(48,48,48)
+        background: '#d2d2d2',   // 背景色：RGB(210,210,210)
         grid: '#000000'          // グリッド色：黒
     });
     
@@ -515,7 +528,20 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             paths: JSON.parse(JSON.stringify(initialPaths)),
             currentPathIndex: 0,
             drawMode: drawMode,
-            drawingType: drawingType
+            drawingType: drawingType,
+            colors: {
+                strokePoint: '#00ffff',
+                strokeLine: '#ffff00',
+                fillPoint: '#000000',
+                fillArea: 'rgba(110, 110, 110, 0.5)',
+                fillBorder: '#000000',
+                background: '#d2d2d2',
+                grid: '#000000'
+            },
+            lineWidths: {
+                strokeLine: 4,
+                fillBorder: 3
+            }
         }];
         setHistory(initialHistory);
         setHistoryIndex(0);
@@ -1596,7 +1622,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 fillPoint: '#000000',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
-                                background: '#303030',
+                                background: '#d2d2d2',
                                 grid: '#000000'
                             });
                             setLineWidths({
