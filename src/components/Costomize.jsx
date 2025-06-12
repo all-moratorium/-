@@ -1573,18 +1573,24 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backgroundColor: 'transparent',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000
+                    justifyContent: 'flex-end',
+                    zIndex: 1000,
+                    pointerEvents: 'none'
                 }}>
                     <div style={{
                         backgroundColor: 'rgb(29, 29, 29)',
                         padding: '24px',
                         borderRadius: '12px',
-                        border: '1px solid #4b5563',
-                        minWidth: '320px'
+                        border: 'none',
+                        minWidth: '320px',
+                        position: 'fixed',
+                        right: '430px',
+                        top: '20px',
+                        animation: 'colorModalFadeIn 0.15s ease-out',
+                        pointerEvents: 'auto'
                     }}>
                         <h3 style={{ color: '#FFFF00', marginBottom: '16px', textAlign: 'center' }}>
                             チューブの色を選択

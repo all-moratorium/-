@@ -147,6 +147,79 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         fillBorder: 3   // 土台の境界線の太さ
     });
 
+    // LocalStorageから保存されたデータがあれば、それを初期状態として使用
+    useEffect(() => {
+        try {
+            const savedDrawingData = localStorage.getItem('neonDrawingData');
+            if (savedDrawingData) {
+                const parsedData = JSON.parse(savedDrawingData);
+                
+                // 保存されたデータで状態を初期化
+                setPaths(parsedData.paths || [{ points: [], mode: initialState?.drawMode || 'stroke', type: initialState?.drawingType || 'spline' }]);
+                setCurrentPathIndex(parsedData.currentPathIndex || 0);
+                setDrawMode(parsedData.drawMode || initialState?.drawMode || 'stroke');
+                setDrawingType(parsedData.drawingType || initialState?.drawingType || 'spline');
+                setScale(parsedData.scale || 1);
+                setOffsetX(parsedData.offsetX || 0);
+                setOffsetY(parsedData.offsetY || 0);
+                setBackgroundImage(parsedData.backgroundImage || null);
+                setInitialBgImageWidth(parsedData.initialBgImageWidth || 0);
+                setInitialBgImageHeight(parsedData.initialBgImageHeight || 0);
+                setBgImageScale(parsedData.bgImageScale || 1.0);
+                setBgImageX(parsedData.bgImageX || 0);
+                setBgImageY(parsedData.bgImageY || 0);
+                setBgImageOpacity(parsedData.bgImageOpacity || 1.0);
+                setShowGrid(parsedData.showGrid !== undefined ? parsedData.showGrid : true);
+                setGridSize(parsedData.gridSize || 100);
+                setGridOpacity(parsedData.gridOpacity || 0.5);
+                setColors(parsedData.colors || colors);
+                setLineWidths(parsedData.lineWidths || lineWidths);
+                
+                console.log('描画データをLocalStorageから復元しました');
+            }
+        } catch (error) {
+            console.error('LocalStorageからのデータ復元に失敗しました:', error);
+        }
+    }, []); // コンポーネントマウント時に一度だけ実行
+
+    // 状態変更時にLocalStorageに保存する関数
+    const saveToLocalStorage = useCallback(() => {
+        try {
+            const dataToSave = {
+                paths,
+                currentPathIndex,
+                drawMode,
+                drawingType,
+                scale,
+                offsetX,
+                offsetY,
+                backgroundImage,
+                initialBgImageWidth,
+                initialBgImageHeight,
+                bgImageScale,
+                bgImageX,
+                bgImageY,
+                bgImageOpacity,
+                showGrid,
+                gridSize,
+                gridOpacity,
+                colors,
+                lineWidths
+            };
+            localStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
+            console.log('描画データをLocalStorageに保存しました');
+        } catch (error) {
+            console.error('LocalStorageへのデータ保存に失敗しました:', error);
+        }
+    }, [paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, backgroundImage, 
+        initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, 
+        showGrid, gridSize, gridOpacity, colors, lineWidths]);
+
+    // 重要なデータが変更されたときにLocalStorageに保存
+    useEffect(() => {
+        saveToLocalStorage();
+    }, [paths, saveToLocalStorage]);
+
     // 背景色変更のデバウンス処理
     const handleBackgroundColorChange = useCallback((color) => {
         // 既存のタイマーをクリア
@@ -498,9 +571,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             }
             
             // 親コンポーネントに状態変更を通知（重要な変更のみ）
-            // if (onStateChange) {
-            //     onStateChange(newState);
-            // }
+            if (onStateChange) {
+                onStateChange(newState);
+            }
+            
+            // 履歴更新時にもLocalStorageに保存
+            saveToLocalStorage();
             
             console.log("History saved. newHistory.length:", newHistory.length, "historyIndex to be:", newHistory.length -1, "Saved state:", newState);
             return newHistory;
@@ -510,7 +586,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             console.log("setHistoryIndex to:", newIndex);
             return newIndex;
         });
-    }, [historyIndex, onStateChange, scale, offsetX, offsetY, backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths]); 
+    }, [historyIndex, onStateChange, scale, offsetX, offsetY, backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, saveToLocalStorage]); 
 
     // やり直し (Redo)
     const handleRedo = useCallback(() => {
