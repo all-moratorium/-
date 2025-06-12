@@ -147,40 +147,67 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         fillBorder: 3   // 土台の境界線の太さ
     });
 
-    // LocalStorageから保存されたデータがあれば、それを初期状態として使用
+    // initialStateまたはLocalStorageから保存されたデータを初期状態として使用
     useEffect(() => {
         try {
-            const savedDrawingData = localStorage.getItem('neonDrawingData');
-            if (savedDrawingData) {
-                const parsedData = JSON.parse(savedDrawingData);
+            // 親コンポーネントから初期状態が提供されている場合はそれを優先
+            if (initialState && Object.keys(initialState).length > 0) {
+                // 親コンポーネントの状態で初期化
+                setPaths(initialState.paths || [{ points: [], mode: initialState.drawMode || 'stroke', type: initialState.drawingType || 'spline' }]);
+                setCurrentPathIndex(initialState.currentPathIndex || 0);
+                setDrawMode(initialState.drawMode || 'stroke');
+                setDrawingType(initialState.drawingType || 'spline');
+                setScale(initialState.scale || 1);
+                setOffsetX(initialState.offsetX || 0);
+                setOffsetY(initialState.offsetY || 0);
+                setBackgroundImage(initialState.backgroundImage || null);
+                setInitialBgImageWidth(initialState.initialBgImageWidth || 0);
+                setInitialBgImageHeight(initialState.initialBgImageHeight || 0);
+                setBgImageScale(initialState.bgImageScale || 1.0);
+                setBgImageX(initialState.bgImageX || 0);
+                setBgImageY(initialState.bgImageY || 0);
+                setBgImageOpacity(initialState.bgImageOpacity || 1.0);
+                setShowGrid(initialState.showGrid !== undefined ? initialState.showGrid : true);
+                setGridSize(initialState.gridSize || 100);
+                setGridOpacity(initialState.gridOpacity || 0.5);
+                setColors(initialState.colors || colors);
+                setLineWidths(initialState.lineWidths || lineWidths);
                 
-                // 保存されたデータで状態を初期化
-                setPaths(parsedData.paths || [{ points: [], mode: initialState?.drawMode || 'stroke', type: initialState?.drawingType || 'spline' }]);
-                setCurrentPathIndex(parsedData.currentPathIndex || 0);
-                setDrawMode(parsedData.drawMode || initialState?.drawMode || 'stroke');
-                setDrawingType(parsedData.drawingType || initialState?.drawingType || 'spline');
-                setScale(parsedData.scale || 1);
-                setOffsetX(parsedData.offsetX || 0);
-                setOffsetY(parsedData.offsetY || 0);
-                setBackgroundImage(parsedData.backgroundImage || null);
-                setInitialBgImageWidth(parsedData.initialBgImageWidth || 0);
-                setInitialBgImageHeight(parsedData.initialBgImageHeight || 0);
-                setBgImageScale(parsedData.bgImageScale || 1.0);
-                setBgImageX(parsedData.bgImageX || 0);
-                setBgImageY(parsedData.bgImageY || 0);
-                setBgImageOpacity(parsedData.bgImageOpacity || 1.0);
-                setShowGrid(parsedData.showGrid !== undefined ? parsedData.showGrid : true);
-                setGridSize(parsedData.gridSize || 100);
-                setGridOpacity(parsedData.gridOpacity || 0.5);
-                setColors(parsedData.colors || colors);
-                setLineWidths(parsedData.lineWidths || lineWidths);
-                
-                console.log('描画データをLocalStorageから復元しました');
+                console.log('描画データを親コンポーネントから復元しました');
+            } else {
+                // 親コンポーネントからの初期状態がない場合のみLocalStorageから復元
+                const savedDrawingData = localStorage.getItem('neonDrawingData');
+                if (savedDrawingData) {
+                    const parsedData = JSON.parse(savedDrawingData);
+                    
+                    // 保存されたデータで状態を初期化
+                    setPaths(parsedData.paths || [{ points: [], mode: 'stroke', type: 'spline' }]);
+                    setCurrentPathIndex(parsedData.currentPathIndex || 0);
+                    setDrawMode(parsedData.drawMode || 'stroke');
+                    setDrawingType(parsedData.drawingType || 'spline');
+                    setScale(parsedData.scale || 1);
+                    setOffsetX(parsedData.offsetX || 0);
+                    setOffsetY(parsedData.offsetY || 0);
+                    setBackgroundImage(parsedData.backgroundImage || null);
+                    setInitialBgImageWidth(parsedData.initialBgImageWidth || 0);
+                    setInitialBgImageHeight(parsedData.initialBgImageHeight || 0);
+                    setBgImageScale(parsedData.bgImageScale || 1.0);
+                    setBgImageX(parsedData.bgImageX || 0);
+                    setBgImageY(parsedData.bgImageY || 0);
+                    setBgImageOpacity(parsedData.bgImageOpacity || 1.0);
+                    setShowGrid(parsedData.showGrid !== undefined ? parsedData.showGrid : true);
+                    setGridSize(parsedData.gridSize || 100);
+                    setGridOpacity(parsedData.gridOpacity || 0.5);
+                    setColors(parsedData.colors || colors);
+                    setLineWidths(parsedData.lineWidths || lineWidths);
+                    
+                    console.log('描画データをLocalStorageから復元しました');
+                }
             }
         } catch (error) {
-            console.error('LocalStorageからのデータ復元に失敗しました:', error);
+            console.error('データ復元に失敗しました:', error);
         }
-    }, []); // コンポーネントマウント時に一度だけ実行
+    }, [initialState]); // initialStateが変更されたときも実行
 
     // 状態変更時にLocalStorageに保存する関数
     const saveToLocalStorage = useCallback(() => {
@@ -218,7 +245,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     // 重要なデータが変更されたときにLocalStorageに保存
     useEffect(() => {
         saveToLocalStorage();
-    }, [paths, saveToLocalStorage]);
+    }, [paths, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors.background, saveToLocalStorage]);
 
     // 背景色変更のデバウンス処理
     const handleBackgroundColorChange = useCallback((color) => {
@@ -230,8 +257,34 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         // 200ms後に実際の更新を実行
         backgroundColorTimeoutRef.current = setTimeout(() => {
             setColors(prev => ({ ...prev, background: color }));
+            // 背景色変更時に保存
+            saveToLocalStorage();
+            if (onStateChange) {
+                const currentState = {
+                    paths: paths,
+                    currentPathIndex: currentPathIndex,
+                    drawMode: drawMode,
+                    drawingType: drawingType,
+                    scale: scale,
+                    offsetX: offsetX,
+                    offsetY: offsetY,
+                    backgroundImage: backgroundImage,
+                    initialBgImageWidth: initialBgImageWidth,
+                    initialBgImageHeight: initialBgImageHeight,
+                    bgImageScale: bgImageScale,
+                    bgImageX: bgImageX,
+                    bgImageY: bgImageY,
+                    bgImageOpacity: bgImageOpacity,
+                    showGrid: showGrid,
+                    gridSize: gridSize,
+                    gridOpacity: gridOpacity,
+                    colors: { ...colors, background: color },
+                    lineWidths: lineWidths
+                };
+                onStateChange(currentState);
+            }
         }, 200);
-    }, []);
+    }, [paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, saveToLocalStorage, onStateChange]);
 
     // スライダー変更時に入力フィールドを更新（ユーザーが入力中でない場合のみ）
     useEffect(() => {
@@ -249,7 +302,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             img.onload = () => {
                 setLoadedBackgroundImage(img);
 
-                // 新しい画像が読み込まれた時は常に初期化する
+                // localStorageから復元された場合はサイズ計算のみ行い、設定値は保持する
+                const isRestoredFromStorage = bgImageScale !== 1.0 || bgImageX !== 0 || bgImageY !== 0 || bgImageOpacity !== 1.0;
+                
                 const drawingAreaWidth = 800; // 仮想的な初期サイズ
                 const drawingAreaHeight = 600;
 
@@ -265,11 +320,14 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
                 setInitialBgImageWidth(fittedWidth);
                 setInitialBgImageHeight(fittedHeight);
-                setBgImageScale(1.0);
-                // 中央に配置（無限キャンバスの原点付近）
-                setBgImageX(0);
-                setBgImageY(0);
-                setBgImageOpacity(1.0);
+                
+                // 新しい画像の場合のみ設定をリセット
+                if (!isRestoredFromStorage) {
+                    setBgImageScale(1.0);
+                    setBgImageX(0);
+                    setBgImageY(0);
+                    setBgImageOpacity(1.0);
+                }
             };
             img.onerror = () => {
                 console.error("背景画像の読み込みに失敗しました。");
@@ -1425,7 +1483,35 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         <div className="grid-toggle-container">
                             <label className="grid-toggle-label">グリッド表示</label>
                             <button
-                                onClick={() => setShowGrid(!showGrid)}
+                                onClick={() => {
+                                    setShowGrid(!showGrid);
+                                    // グリッド設定変更時に保存
+                                    saveToLocalStorage();
+                                    if (onStateChange) {
+                                        const currentState = {
+                                            paths: paths,
+                                            currentPathIndex: currentPathIndex,
+                                            drawMode: drawMode,
+                                            drawingType: drawingType,
+                                            scale: scale,
+                                            offsetX: offsetX,
+                                            offsetY: offsetY,
+                                            backgroundImage: backgroundImage,
+                                            initialBgImageWidth: initialBgImageWidth,
+                                            initialBgImageHeight: initialBgImageHeight,
+                                            bgImageScale: bgImageScale,
+                                            bgImageX: bgImageX,
+                                            bgImageY: bgImageY,
+                                            bgImageOpacity: bgImageOpacity,
+                                            showGrid: !showGrid,
+                                            gridSize: gridSize,
+                                            gridOpacity: gridOpacity,
+                                            colors: colors,
+                                            lineWidths: lineWidths
+                                        };
+                                        onStateChange(currentState);
+                                    }
+                                }}
                                 className={`grid-toggle-button ${showGrid ? 'on' : 'off'}`}
                             >
                                 {showGrid ? 'ON' : 'OFF'}
@@ -1569,7 +1655,35 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     <div className="modal-setting-item">
                         <label className="modal-label">グリッド表示</label>
                         <button
-                            onClick={() => setShowGrid(!showGrid)}
+                            onClick={() => {
+                                setShowGrid(!showGrid);
+                                // グリッド設定変更時に保存
+                                saveToLocalStorage();
+                                if (onStateChange) {
+                                    const currentState = {
+                                        paths: paths,
+                                        currentPathIndex: currentPathIndex,
+                                        drawMode: drawMode,
+                                        drawingType: drawingType,
+                                        scale: scale,
+                                        offsetX: offsetX,
+                                        offsetY: offsetY,
+                                        backgroundImage: backgroundImage,
+                                        initialBgImageWidth: initialBgImageWidth,
+                                        initialBgImageHeight: initialBgImageHeight,
+                                        bgImageScale: bgImageScale,
+                                        bgImageX: bgImageX,
+                                        bgImageY: bgImageY,
+                                        bgImageOpacity: bgImageOpacity,
+                                        showGrid: !showGrid,
+                                        gridSize: gridSize,
+                                        gridOpacity: gridOpacity,
+                                        colors: colors,
+                                        lineWidths: lineWidths
+                                    };
+                                    onStateChange(currentState);
+                                }
+                            }}
                             className={`toggle-button ${
                                 showGrid ? 'toggle-active' : 'toggle-inactive'
                             }`}
@@ -1597,6 +1711,32 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
             {/* 背景画像設定モーダル */}
             <Modal isOpen={showBgModal} onClose={() => {
+                // モーダルを閉じる前に現在の状態を保存
+                saveToLocalStorage();
+                if (onStateChange) {
+                    const currentState = {
+                        paths: paths,
+                        currentPathIndex: currentPathIndex,
+                        drawMode: drawMode,
+                        drawingType: drawingType,
+                        scale: scale,
+                        offsetX: offsetX,
+                        offsetY: offsetY,
+                        backgroundImage: backgroundImage,
+                        initialBgImageWidth: initialBgImageWidth,
+                        initialBgImageHeight: initialBgImageHeight,
+                        bgImageScale: bgImageScale,
+                        bgImageX: bgImageX,
+                        bgImageY: bgImageY,
+                        bgImageOpacity: bgImageOpacity,
+                        showGrid: showGrid,
+                        gridSize: gridSize,
+                        gridOpacity: gridOpacity,
+                        colors: colors,
+                        lineWidths: lineWidths
+                    };
+                    onStateChange(currentState);
+                }
                 setShowBgModal(false);
                 setSidebarVisible(true);
             }} title="背景画像設定" position="right">
