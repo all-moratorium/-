@@ -509,8 +509,17 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setIsModifyingPoints(false);
         setIsPathDeleteMode(false); // クリア時にモードを解除
         setIsPointDeleteMode(false); // クリア時にモードを解除
-        saveToHistory(initialPaths, 0, drawMode, drawingType); // クリア後の状態を履歴に保存
-    }, [drawMode, drawingType, saveToHistory, canvasWidth, canvasHeight]);
+        
+        // 履歴を完全にリセット
+        const initialHistory = [{
+            paths: JSON.parse(JSON.stringify(initialPaths)),
+            currentPathIndex: 0,
+            drawMode: drawMode,
+            drawingType: drawingType
+        }];
+        setHistory(initialHistory);
+        setHistoryIndex(0);
+    }, [drawMode, drawingType, canvasWidth, canvasHeight]);
 
     // 新しいパスを開始
     const startNewPath = useCallback(() => {

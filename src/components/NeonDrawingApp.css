@@ -745,6 +745,9 @@
 .modal-center {
     align-items: center;
     justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    pointer-events: all;
 }
 
 .modal-right {
@@ -1113,14 +1116,28 @@
     gap: 16px;
 }
 
+/* 土台モーダル専用：元の間隔に戻す */
+.modal-content-center .modal-setting-item {
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
 .drawing-type-button {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-radius: 6px;
     font-weight: bold;
     border: 1px solid;
     transition: all 0.2s;
     cursor: pointer;
     transform: scale(1);
+}
+
+.drawing-type-button.button-secondary {
+    border: 1px solid transparent !important;
+}
+
+.drawing-type-button {
+    border: 1px solid transparent !important;
 }
 
 .drawing-type-button:hover:not(.button-disabled) {
