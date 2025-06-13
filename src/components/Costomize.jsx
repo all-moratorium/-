@@ -39,6 +39,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
+    const [isProcessing3D, setIsProcessing3D] = useState(false); // 3D処理中フラグ
+    const [processing3DProgress, setProcessing3DProgress] = useState(0); // 3D処理進捗
+    const [processing3DMessage, setProcessing3DMessage] = useState(''); // 3D処理メッセージ
     const [neonPaths, setNeonPaths] = useState([]);
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
@@ -325,6 +328,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         if (svgData && svgData.paths) {
             setNeonPaths(svgData.paths);
             
+            // 全パスにデフォルト太さを設定
+            const defaultThickness = {};
+            svgData.paths.forEach((path, index) => {
+                if (path.mode === 'stroke') {
+                    defaultThickness[index] = 15; // 6mm デフォルト
+                }
+            });
+            setPathThickness(prev => ({
+                ...defaultThickness,
+                ...prev // 既存の設定があれば上書き
+            }));
+            
             if (svgData.colors) {
                 setNeonColors(svgData.colors);
             }
@@ -422,6 +437,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const pathType = pathObj.type;
             const customColor = pathColors[pathIndex];
             const customThickness = pathThickness[pathIndex];
+            
+            // デバッグ情報
+            console.log(`パス${pathIndex}: mode=${pathMode}, customThickness=${customThickness}, pathThickness=`, pathThickness);
 
             if (pathPoints.length < 2) return;
 
@@ -460,7 +478,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </defs>
                 `;
                 
-                strokePathData += `<path d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${customThickness || neonLineWidths.strokeLine}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
+                const effectiveThickness = customThickness || neonLineWidths.strokeLine || 15; // キャンバス表示と同じロジック
+                console.log(`SVG出力 パス${pathIndex}: effectiveThickness=${effectiveThickness}`);
+                strokePathData += `<path class="neon-stroke" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
             }
 
             if (pathMode === 'fill' && pathPoints.length >= 3) {
@@ -485,12 +505,63 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     }
                 }
                 currentFillSegment += ` Z`;
-                fillPathData += `<path d="${currentFillSegment}" fill="${neonColors.fillArea}" stroke="${customColor || neonColors.fillBorder}" stroke-width="${customThickness || neonLineWidths.fillBorder}"/>\n    `;
+                const effectiveFillThickness = 3; // 土台の境界線は常に3px
+                const fillColor = pathColors[`${pathIndex}_fill`] || neonColors.fillArea; // ベースプレート設定の色を使用
+                const strokeColor = customColor || neonColors.fillBorder;
+                fillPathData += `<path class="base-stroke" d="${currentFillSegment}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${effectiveFillThickness}"/>\n    `;
             }
         });
 
+        // 土台（fillパス）の境界のみを計算
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        
+        neonPaths.forEach(pathObj => {
+            if (!pathObj || !Array.isArray(pathObj.points)) return;
+            // fillパス（土台）のみを境界計算に使用
+            if (pathObj.mode === 'fill') {
+                pathObj.points.forEach(point => {
+                    minX = Math.min(minX, point.x);
+                    minY = Math.min(minY, point.y);
+                    maxX = Math.max(maxX, point.x);
+                    maxY = Math.max(maxY, point.y);
+                });
+            }
+        });
+
+        // 土台がない場合は全パスを使用
+        if (minX === Infinity) {
+            neonPaths.forEach(pathObj => {
+                if (!pathObj || !Array.isArray(pathObj.points)) return;
+                pathObj.points.forEach(point => {
+                    minX = Math.min(minX, point.x);
+                    minY = Math.min(minY, point.y);
+                    maxX = Math.max(maxX, point.x);
+                    maxY = Math.max(maxY, point.y);
+                });
+            });
+        }
+
+        // 余白なし（土台の輪郭ぴったり）
+        const margin = 0;
+
+        const svgWidth = maxX - minX;
+        const svgHeight = maxY - minY;
+
+        // パスデータの座標を調整（全ての数値座標を対象）
+        const adjustedStrokePathData = strokePathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
+            const adjustedX = parseFloat(x) - minX;
+            const adjustedY = parseFloat(y) - minY;
+            return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
+        });
+
+        const adjustedFillPathData = fillPathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
+            const adjustedX = parseFloat(x) - minX;
+            const adjustedY = parseFloat(y) - minY;
+            return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
+        });
+
         const customizedSvg = `
-<svg width="${canvasSettings.scale * canvasWidth}" height="${canvasSettings.scale * canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}" xmlns="http://www.w3.org/2000/svg">
+<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
     <defs>
         ${neonPaths.map((_, index) => `
         <filter id="neon-glow-${index}">
@@ -501,8 +572,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             </feMerge>
         </filter>`).join('')}
     </defs>
-    <rect width="100%" height="100%" fill="${neonPower ? backgroundColor : backgroundColorOff}"/>
-    ${fillPathData}${strokePathData}
+    <style>
+        .base-stroke { stroke-width: 3px !important; }
+    </style>
+    ${adjustedFillPathData}${adjustedStrokePathData}
 </svg>
         `.trim();
 
@@ -1524,14 +1597,49 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </div>
 
 
+                    {/* SVGダウンロード */}
+                    <button
+                        onClick={handleDownloadSVG}
+                        className="customize-download-button"
+                        disabled={neonPaths.length === 0}
+                    >
+                        SVGダウンロード
+                    </button>
+
                     {/* 3Dモデル生成 */}
                     <button
-                        onClick={() => {
+                        onClick={async () => {
                             const totalPoints = neonPaths.reduce((acc, pathObj) => acc + (pathObj?.points?.length || 0), 0);
                             if (totalPoints < 2) {
                                 alert('3Dモデルを生成するには少なくとも2点が必要です。');
                                 return;
                             }
+
+                            // 進捗モーダルを表示
+                            setIsProcessing3D(true);
+                            setProcessing3DProgress(0);
+                            setProcessing3DMessage('3Dモデル生成を開始しています...');
+
+                            // 進捗更新シミュレーション
+                            setProcessing3DProgress(20);
+                            setProcessing3DMessage('土台データを解析しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                            
+                            setProcessing3DProgress(50);
+                            setProcessing3DMessage('3Dジオメトリを生成しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                            
+                            setProcessing3DProgress(85);
+                            setProcessing3DMessage('レンダリング準備中...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setProcessing3DProgress(100);
+                            setProcessing3DMessage('完了！');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 200));
 
                             // 3Dプレビューイベントを発行
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
@@ -1545,11 +1653,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     backgroundColorOff: backgroundColorOff
                                 }
                             }));
+                            
+                            // 進捗モーダルを閉じる
+                            setIsProcessing3D(false);
                         }}
                         className="customize-download-button"
-                        disabled={neonPaths.length === 0}
+                        disabled={neonPaths.length === 0 || isProcessing3D}
                     >
-                        3Dモデル生成
+                        {isProcessing3D ? '生成中...' : '3Dモデル生成'}
                     </button>
 
                 </div>
@@ -1919,6 +2030,61 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             >
                                 閉じる
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 3D処理進捗モーダル */}
+            {isProcessing3D && (
+                <div className="customize-3d-progress-modal-overlay">
+                    <div className="customize-3d-progress-modal-content">
+                        <div className="customize-3d-progress-modal-inner">
+                            <h2 style={{ color: '#FFFF00', textAlign: 'center', marginBottom: '20px' }}>
+                                3Dモデル生成中...
+                            </h2>
+                            
+                            {/* 進捗バー */}
+                            <div className="progress-bar-container" style={{
+                                width: '100%',
+                                height: '8px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                                marginBottom: '20px'
+                            }}>
+                                <div 
+                                    className="progress-bar-fill"
+                                    style={{
+                                        width: `${processing3DProgress}%`,
+                                        height: '100%',
+                                        background: 'linear-gradient(135deg, #FFFF00, #FFCC00)',
+                                        borderRadius: '4px',
+                                        transition: 'width 0.3s ease',
+                                        boxShadow: '0 0 10px rgba(255, 255, 0, 0.6)'
+                                    }}
+                                />
+                            </div>
+                            
+                            {/* 進捗メッセージ */}
+                            <div style={{
+                                color: '#FFFFFF',
+                                textAlign: 'center',
+                                fontSize: '14px',
+                                marginBottom: '10px'
+                            }}>
+                                {processing3DMessage}
+                            </div>
+                            
+                            {/* 進捗パーセント */}
+                            <div style={{
+                                color: '#FFFF00',
+                                textAlign: 'center',
+                                fontSize: '18px',
+                                fontWeight: 'bold'
+                            }}>
+                                {processing3DProgress}%
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .test-stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+    
+    <!-- 15px stroke -->
+    <path class="test-stroke" d="M 50,50 L 350,50" stroke="#ff0000" stroke-width="15"/>
+    <text x="50" y="40" fill="black" font-size="12">15px (6mm)</text>
+    
+    <!-- 20px stroke -->
+    <path class="test-stroke" d="M 50,100 L 350,100" stroke="#00ff00" stroke-width="20"/>
+    <text x="50" y="90" fill="black" font-size="12">20px (8mm)</text>
+    
+    <!-- 50px stroke for testing -->
+    <path class="test-stroke" d="M 50,150 L 350,150" stroke="#0000ff" stroke-width="50"/>
+    <text x="50" y="140" fill="black" font-size="12">50px (test)</text>
+</svg>

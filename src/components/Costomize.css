@@ -1326,3 +1326,69 @@ html, body {
         transform: scale(1);
     }
 }
+
+/* 3D処理進捗モーダル */
+.customize-3d-progress-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.customize-3d-progress-modal-content {
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 0, 0.2);
+    border: 1px solid rgba(255, 255, 0, 0.3);
+    min-width: 400px;
+    max-width: 500px;
+    animation: progressModalFadeIn 0.3s ease-out;
+}
+
+.customize-3d-progress-modal-inner {
+    padding: 32px;
+}
+
+/* 進捗バーのアニメーション */
+.progress-bar-fill {
+    animation: progressGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes progressGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 255, 0, 0.9), 0 0 30px rgba(255, 255, 0, 0.5);
+    }
+}
+
+@keyframes progressModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .customize-3d-progress-modal-content {
+        min-width: 320px;
+        margin: 20px;
+    }
+    
+    .customize-3d-progress-modal-inner {
+        padding: 24px;
+    }
+}
