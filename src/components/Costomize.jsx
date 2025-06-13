@@ -2037,53 +2037,36 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
             {/* 3D処理進捗モーダル */}
             {isProcessing3D && (
-                <div className="customize-3d-progress-modal-overlay">
-                    <div className="customize-3d-progress-modal-content">
-                        <div className="customize-3d-progress-modal-inner">
-                            <h2 style={{ color: '#FFFF00', textAlign: 'center', marginBottom: '20px' }}>
-                                3Dモデル生成中...
-                            </h2>
+                <div className="processing-overlay">
+                    <div className="processing-modal">
+                        <div className="processing-content">
+                            <div className="processing-spinner"></div>
                             
-                            {/* 進捗バー */}
-                            <div className="progress-bar-container" style={{
-                                width: '100%',
-                                height: '8px',
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                borderRadius: '4px',
-                                overflow: 'hidden',
-                                marginBottom: '20px'
-                            }}>
-                                <div 
-                                    className="progress-bar-fill"
-                                    style={{
-                                        width: `${processing3DProgress}%`,
-                                        height: '100%',
-                                        background: 'linear-gradient(135deg, #FFFF00, #FFCC00)',
-                                        borderRadius: '4px',
-                                        transition: 'width 0.3s ease',
-                                        boxShadow: '0 0 10px rgba(255, 255, 0, 0.6)'
-                                    }}
-                                />
+                            <h3>3Dモデル生成中...</h3>
+                            
+                            <div className="progress-bar-container">
+                                <div className="progress-bar">
+                                    <div
+                                        className="progress-fill"
+                                        style={{ width: `${processing3DProgress}%` }}
+                                    ></div>
+                                </div>
+                                <div className="progress-text">
+                                    {Math.round(processing3DProgress)}% 完了
+                                </div>
                             </div>
                             
-                            {/* 進捗メッセージ */}
-                            <div style={{
-                                color: '#FFFFFF',
-                                textAlign: 'center',
-                                fontSize: '14px',
-                                marginBottom: '10px'
-                            }}>
+                            <div className="processing-message">
                                 {processing3DMessage}
                             </div>
                             
-                            {/* 進捗パーセント */}
-                            <div style={{
-                                color: '#FFFF00',
-                                textAlign: 'center',
-                                fontSize: '18px',
-                                fontWeight: 'bold'
-                            }}>
-                                {processing3DProgress}%
+                            <div className="processing-tips">
+                                <h4>処理時間を短縮するコツ</h4>
+                                <ul className="tips-list">
+                                    <li className="tip-item">色数の少ないシンプルな画像を使用</li>
+                                    <li className="tip-item">適切なレイヤー数</li>
+                                    <li className="tip-item">画像サイズを2000px以下に調整</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
