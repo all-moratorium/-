@@ -5,6 +5,7 @@ import ThreeDModelGenerator from './ThreeDModelGenerator';
 import Gallery3D from './Gallery3D';
 import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネントをインポート
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート
+import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
 import { lab as culoriLabConverter, differenceEuclidean } from 'culori'; // Gallery3Dコンポーネントをインポート // ThreeDModelGeneratorコンポーネントをインポート
 
 // Canvasプールの実装 - メモリリーク対策
@@ -2437,6 +2438,8 @@ const quantizeColors = (pixels, k) => {
           initialState={customizeState}
           onStateChange={setCustomizeState}
         />;
+      case 'neonSvg3dPreview':
+        return <NeonSVGTo3DExtruder />;
       case 'layerPreview':
         return (
           <div className="main-content">
@@ -3218,6 +3221,18 @@ case '3dPreview':
                         </div>
                         <span className="nav-text">3Dプレビュー</span>
                         <div className="tooltip">3Dプレビュー</div>
+                    </button>
+                    <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('neonSvg3dPreview')}>
+                        <div className="nav-icon">
+                        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M7 10L17 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" fill="none"/>
+                        </svg>
+                        </div>
+                        <span className="nav-text">ネオンサイン3Dプレビュー</span>
+                        <div className="tooltip">ネオンサイン3Dプレビュー</div>
                     </button>
                     <button className={currentPage === 'layerPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('layerPreview')}>
                         <div className="nav-icon">
