@@ -23,6 +23,7 @@ const NeonSVGTo3DExtruder = () => {
   // State for UI controls
   const [color, setColor] = useState('#ff0088');
   const [backgroundColor, setBackgroundColor] = useState('#000000');
+  const backgroundColorRef = useRef(backgroundColor);
   const [emissiveValue, setEmissiveValue] = useState(1.0);
   const [glowValue, setGlowValue] = useState(1.8);
   const [scatterStrength, setScatterStrength] = useState(0.05);
@@ -399,41 +400,35 @@ const NeonSVGTo3DExtruder = () => {
 
     const neonTube = new THREE.Mesh(geometry, neonMaterial);
     neonTube.castShadow = true;
-    neonTube.receiveShadow = true;
-    neonTube.layers.enable(BLOOM_SCENE_LAYER);
-    if (neonGroupRef.current) {
-      neonGroupRef.current.add(neonTube);
-    }
+    neonTube.layers.set(BLOOM_SCENE_LAYER); // Set layer for blooming
 
-    const capGeometry = new THREE.CircleGeometry(tubeSize, radialSegments);
+    const capGeometry = new THREE.SphereGeometry(tubeSize * 1.01, 16, 16);
+    const capMaterial = neonMaterial.clone();
+
+    const startCap = new THREE.Mesh(capGeometry, capMaterial);
+    startCap.position.copy(points[0]);
+    startCap.layers.set(BLOOM_SCENE_LAYER);
+
+    const endCap = new THREE.Mesh(capGeometry, capMaterial);
+    endCap.position.copy(points[points.length - 1]);
+    endCap.layers.set(BLOOM_SCENE_LAYER);
+
+    const group = new THREE.Group();
+    group.add(neonTube);
+    group.add(startCap);
+    group.add(endCap);
     
-    const startCap = new THREE.Mesh(capGeometry, neonMaterial.clone());
-    const endCap = new THREE.Mesh(capGeometry, neonMaterial.clone());
-
-    const startPoint = curve.getPointAt(0);
-    const startTangent = curve.getTangentAt(0).normalize();
-    startCap.position.copy(startPoint);
-    startCap.lookAt(startPoint.clone().add(startTangent.negate()));
-    startCap.layers.enable(BLOOM_SCENE_LAYER);
-    if (neonGroupRef.current) {
-      neonGroupRef.current.add(startCap);
-    }
-
-    const endPoint = curve.getPointAt(1);
-    const endTangent = curve.getTangentAt(1).normalize();
-    endCap.position.copy(endPoint);
-    endCap.lookAt(endPoint.clone().add(endTangent));
-    endCap.layers.enable(BLOOM_SCENE_LAYER);
-    if (neonGroupRef.current) {
-      neonGroupRef.current.add(endCap);
-    }
-
-    neonMaterialsRef.current.push({
+    neonMaterialsRef.current[materialIndex] = {
       main: neonMaterial,
-      baseColor: tubeColor.clone(),
       caps: [startCap, endCap]
-    });
-  }, [tubeSize, emissiveValue, BLOOM_SCENE_LAYER, neonVertexShader, neonFragmentShader]);
+    };
+
+    return group;
+  }, [emissiveValue, tubeSize, neonVertexShader, neonFragmentShader]);
+
+  useEffect(() => {
+    backgroundColorRef.current = backgroundColor;
+  }, [backgroundColor]);
 
   const loadSVGFile = useCallback((file) => {
     SimpleSVGLoader.loadFromFile(file, (elementsData) => {
@@ -457,7 +452,10 @@ const NeonSVGTo3DExtruder = () => {
       elementsData.forEach((elementData, index) => {
         if (elementData.type === 'neon') {
           if (elementData.points.length > 1) {
-            createNeonTube(elementData.points, index, elementData.stroke);
+            const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke);
+            if (neonTubeGroup) {
+              neonGroupRef.current.add(neonTubeGroup);
+            }
           }
         }
       });
@@ -633,27 +631,51 @@ const NeonSVGTo3DExtruder = () => {
     mountRef.current.appendChild(renderer.domElement);
     console.log('Renderer added to DOM');
 
-    // シンプルなブルーム設定
-    const composer = new EffectComposer(renderer);
+    // Post-processing setup for selective bloom
     const renderPass = new RenderPass(scene, camera);
-    composer.addPass(renderPass);
 
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      glowValue,
-      scatterStrength,
-      0.85
+      glowValue, 0, 0
     );
-    composer.addPass(bloomPass);
-    
-    composerRef.current = composer;
     unrealBloomPassRef.current = bloomPass;
-    
-    // 初期化直後にパラメータを強制設定
-    bloomPass.strength = glowValue;
-    bloomPass.threshold = scatterStrength;
-    console.log('Bloom parameters force set:', { strength: bloomPass.strength, threshold: bloomPass.threshold });
-    console.log('Simple bloom setup complete');
+
+    const bloomComposer = new EffectComposer(renderer);
+    bloomComposer.renderToScreen = false;
+    bloomComposer.addPass(renderPass);
+    bloomComposer.addPass(bloomPass);
+
+    const finalPass = new ShaderPass(
+      new THREE.ShaderMaterial({
+        uniforms: {
+          baseTexture: { value: null },
+          bloomTexture: { value: bloomComposer.renderTarget2.texture }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D baseTexture;
+          uniform sampler2D bloomTexture;
+          varying vec2 vUv;
+          void main() {
+            gl_FragColor = (texture2D(baseTexture, vUv) + vec4(1.0) * texture2D(bloomTexture, vUv));
+          }
+        `,
+        defines: {}
+      }), 'baseTexture'
+    );
+    finalPass.needsSwap = true;
+
+    const finalComposer = new EffectComposer(renderer);
+    finalComposer.addPass(renderPass);
+    finalComposer.addPass(finalPass);
+
+    composerRef.current = { bloom: bloomComposer, final: finalComposer };
     
     // Controls
     const controls = new SimpleOrbitControls(camera, renderer.domElement);
@@ -663,6 +685,19 @@ const NeonSVGTo3DExtruder = () => {
     const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
     ambientLight.layers.enable(ENTIRE_SCENE_LAYER);
     scene.add(ambientLight);
+
+    // Add a directional light to illuminate the wall
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(0, 2, 10);
+    directionalLight.target.position.set(0, 0, 0);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 50;
+    directionalLight.layers.set(ENTIRE_SCENE_LAYER);
+    scene.add(directionalLight);
+    scene.add(directionalLight.target);
 
     // Wall lights
     const wallLightColor = 0xffffff;
@@ -696,7 +731,7 @@ const NeonSVGTo3DExtruder = () => {
     plane.rotation.x = 0;
     plane.position.z = wallZPosition;
     plane.receiveShadow = true;
-    plane.layers.enable(ENTIRE_SCENE_LAYER);
+    plane.layers.set(ENTIRE_SCENE_LAYER);
     scene.add(plane);
 
     // Initialize neon group
@@ -751,7 +786,15 @@ const NeonSVGTo3DExtruder = () => {
       }
 
       if (composerRef.current) {
-        composerRef.current.render();
+        // 1. Render bloom scene
+        camera.layers.set(BLOOM_SCENE_LAYER);
+        scene.background = new THREE.Color(0x000000); // Black background for bloom
+        composerRef.current.bloom.render();
+
+        // 2. Render final scene
+        camera.layers.set(ENTIRE_SCENE_LAYER);
+        scene.background = new THREE.Color(backgroundColorRef.current);
+        composerRef.current.final.render();
       } else {
         renderer.render(scene, camera);
       }
@@ -765,7 +808,8 @@ const NeonSVGTo3DExtruder = () => {
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
       if (composerRef.current) {
-        composerRef.current.setSize(window.innerWidth, window.innerHeight);
+        composerRef.current.bloom.setSize(window.innerWidth, window.innerHeight);
+        composerRef.current.final.setSize(window.innerWidth, window.innerHeight);
       }
     };
 
@@ -794,9 +838,10 @@ const NeonSVGTo3DExtruder = () => {
         neonGroupRef.current.clear();
       }
       
-      // Clean up composer
+      // Clean up composers
       if (composerRef.current) {
-        composerRef.current.dispose();
+        composerRef.current.bloom.dispose();
+        composerRef.current.final.dispose();
         composerRef.current = null;
       }
       
