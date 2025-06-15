@@ -5,6 +5,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
 const NeonSVGTo3DExtruder = () => {
@@ -19,11 +21,12 @@ const NeonSVGTo3DExtruder = () => {
   const unrealBloomPassRef = useRef(null);
   const wallLightsRef = useRef([]);
   const animationIdRef = useRef(null);
+  const loadedRoomModelRef = useRef(null);
+  const wallPlaneRef = useRef(null);
 
   // State for UI controls
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const [color, setColor] = useState('#ff0088');
-  const [backgroundColor, setBackgroundColor] = useState('#000000');
-  const backgroundColorRef = useRef(backgroundColor);
   const [emissiveValue, setEmissiveValue] = useState(1.0);
   const [glowValue, setGlowValue] = useState(0.80);
   const [scatterStrength, setScatterStrength] = useState(0.05);
@@ -276,94 +279,6 @@ const NeonSVGTo3DExtruder = () => {
     }
   }
 
-  // SimpleOrbitControls class
-  class SimpleOrbitControls {
-    constructor(camera, domElement) {
-      this.camera = camera;
-      this.domElement = domElement;
-      this.isMouseDown = false;
-      this.mouseX = 0;
-      this.mouseY = 0;
-      this.targetX = 0;
-      this.targetY = 0;
-      this.rotationX = 0;
-      this.rotationY = 0;
-      this.distance = 8;
-
-      this.addEventListeners();
-    }
-    
-    addEventListeners() {
-      this.domElement.addEventListener('mousedown', (e) => {
-        this.isMouseDown = true;
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-        e.preventDefault();
-      });
-      
-      this.domElement.addEventListener('mousemove', (e) => {
-        if (!this.isMouseDown) return;
-        
-        const deltaX = e.clientX - this.mouseX;
-        const deltaY = e.clientY - this.mouseY;
-        
-        this.targetX += deltaX * 0.01;
-        this.targetY += deltaY * 0.01;
-        
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-      });
-      
-      this.domElement.addEventListener('mouseup', () => {
-        this.isMouseDown = false;
-      });
-      
-      this.domElement.addEventListener('wheel', (e) => {
-        this.distance += e.deltaY * 0.01;
-        this.distance = Math.max(2, Math.min(20, this.distance));
-        e.preventDefault();
-      });
-
-      this.domElement.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          this.isMouseDown = true;
-          this.mouseX = e.touches[0].clientX;
-          this.mouseY = e.touches[0].clientY;
-        }
-        e.preventDefault();
-      });
-
-      this.domElement.addEventListener('touchmove', (e) => {
-        if (!this.isMouseDown || e.touches.length !== 1) return;
-        
-        const deltaX = e.touches[0].clientX - this.mouseX;
-        const deltaY = e.touches[0].clientY - this.mouseY;
-        
-        this.targetX += deltaX * 0.01;
-        this.targetY += deltaY * 0.01;
-        
-        this.mouseX = e.touches[0].clientX;
-        this.mouseY = e.touches[0].clientY;
-      });
-
-      this.domElement.addEventListener('touchend', () => {
-        this.isMouseDown = false;
-      });
-    }
-    
-    update() {
-      this.rotationX += (this.targetX - this.rotationX) * 0.05;
-      this.rotationY += (this.targetY - this.rotationY) * 0.05;
-      this.rotationY = Math.max(-Math.PI/2, Math.min(Math.PI/2, this.rotationY));
-      
-      const x = Math.sin(this.rotationX) * Math.cos(this.rotationY) * this.distance;
-      const y = Math.sin(this.rotationY) * this.distance;
-      const z = Math.cos(this.rotationX) * Math.cos(this.rotationY) * this.distance;
-      
-      this.camera.position.set(x, y, z);
-      this.camera.lookAt(0, 0, 0);
-    }
-  }
 
 
   const createNeonTube = useCallback((points, materialIndex, svgColor) => {
@@ -426,9 +341,6 @@ const NeonSVGTo3DExtruder = () => {
     return group;
   }, [emissiveValue, tubeSize, neonVertexShader, neonFragmentShader]);
 
-  useEffect(() => {
-    backgroundColorRef.current = backgroundColor;
-  }, [backgroundColor]);
 
   const loadSVGFile = useCallback((file) => {
     SimpleSVGLoader.loadFromFile(file, (elementsData) => {
@@ -469,7 +381,8 @@ const NeonSVGTo3DExtruder = () => {
       neonGroupRef.current.position.sub(center);
 
       const maxDim = Math.max(size.x, size.y, size.z);
-      controlsRef.current.distance = maxDim * 1.8;
+      const distance = maxDim * 1.8;
+      cameraRef.current.position.z = distance;
     });
   }, [createNeonTube]);
 
@@ -502,12 +415,6 @@ const NeonSVGTo3DExtruder = () => {
     });
   }, [emissiveValue]);
 
-  const updateBackground = useCallback(() => {
-    const bgColor = new THREE.Color(backgroundColor);
-    if (sceneRef.current) {
-      sceneRef.current.background = bgColor;
-    }
-  }, [backgroundColor]);
 
   const updateGlow = useCallback(() => {
     if (unrealBloomPassRef.current) {
@@ -550,7 +457,6 @@ const NeonSVGTo3DExtruder = () => {
     sceneRef.current.add(neonGroupRef.current);
 
     setColor('#ff0088');
-    setBackgroundColor('#000000');
     setEmissiveValue(1.0);
     setGlowValue(1.7);
     setScatterStrength(1.40);
@@ -561,11 +467,9 @@ const NeonSVGTo3DExtruder = () => {
     setWallLightsEnabled(true);
 
     if (controlsRef.current) {
-      controlsRef.current.rotationX = 0;
-      controlsRef.current.rotationY = 0;
-      controlsRef.current.targetX = 0;
-      controlsRef.current.targetY = 0;
-      controlsRef.current.distance = 8;
+      controlsRef.current.target.set(0, 0, 0);
+      cameraRef.current.position.set(0, 0, 1500);
+      controlsRef.current.update();
     }
 
     wallLightsRef.current.forEach(light => {
@@ -582,9 +486,6 @@ const NeonSVGTo3DExtruder = () => {
     updateEmissive();
   }, [updateEmissive]);
 
-  useEffect(() => {
-    updateBackground();
-  }, [updateBackground]);
 
   useEffect(() => {
     updateGlow();
@@ -607,29 +508,30 @@ const NeonSVGTo3DExtruder = () => {
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(backgroundColor);
+    scene.background = new THREE.Color(0x242424);
     sceneRef.current = scene;
-    console.log('Scene background set to:', backgroundColor);
+    console.log('Scene background set to: 0x242424');
 
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 8);
-    camera.lookAt(0, 0, 0);
+    // Camera setup - match SVGTo3DExtruder settings
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
+    camera.position.set(0, 0, 1500);
     camera.layers.enable(ENTIRE_SCENE_LAYER);
     camera.layers.enable(BLOOM_SCENE_LAYER);
     cameraRef.current = camera;
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    console.log('WebGL renderer created:', renderer);
+    // Renderer setup - match SVGTo3DExtruder settings
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      logarithmicDepthBuffer: true,
+      powerPreference: "high-performance"
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.setClearColor(0x242424);
+    renderer.shadowMap.enabled = false;
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
-    console.log('Renderer added to DOM');
 
     // Post-processing setup for selective bloom
     const renderPass = new RenderPass(scene, camera);
@@ -677,35 +579,67 @@ const NeonSVGTo3DExtruder = () => {
 
     composerRef.current = { bloom: bloomComposer, final: finalComposer };
     
-    // Controls
-    const controls = new SimpleOrbitControls(camera, renderer.domElement);
+    // Lighting - match SVGTo3DExtruder settings (before controls)
+    // 全体的な明るさを底上げするためにHemisphereLightを追加
+    const hemisphereLight = new THREE.HemisphereLight(
+      0xffffff, // 空の色 (白)
+      0x888888, // 地面の色 (少し明るいグレー)
+      1.0       // 光の強さ (1.0から試してみましょう)
+    );
+    scene.add(hemisphereLight);
+
+    // Controls - match SVGTo3DExtruder settings
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 0);
+    controls.maxDistance = 9000;
+    controls.minDistance = 20;
+    
+    // 視点移動を180度までに制限
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = Math.PI;
+    controls.minAzimuthAngle = -Math.PI / 2;
+    controls.maxAzimuthAngle = Math.PI / 2;
+    
+    // 物体にめり込まないように設定
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.12;
+    controls.update();
+    controls.enablePan = false;
     controlsRef.current = controls;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
-    ambientLight.layers.enable(ENTIRE_SCENE_LAYER);
-    scene.add(ambientLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
-    // Add a directional light to illuminate the wall
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 2, 10);
-    directionalLight.target.position.set(0, 0, 0);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    directionalLight.shadow.camera.near = 0.5;
-    directionalLight.shadow.camera.far = 50;
-    directionalLight.layers.set(ENTIRE_SCENE_LAYER);
+    // Wall - match SVGTo3DExtruder settings
+    const gridCellSize = 50;
+    const gridCount = 60;
+    const wallWidth = gridCellSize * gridCount;
+    const wallHeight = gridCellSize * gridCount;
+    const wallDepth = 10;
+
+    const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
+    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0xf0f0f0, shininess: 10 });
+    const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
+    wallPlane.name = "wallPlane";
+    wallPlane.position.set(0, 0, -(wallDepth / 2));
+    wallPlane.receiveShadow = true;
+    wallPlane.layers.set(ENTIRE_SCENE_LAYER);
+    scene.add(wallPlane);
+    wallPlaneRef.current = wallPlane;
+
+    // Add a directional light to illuminate the wall - match SVGTo3DExtruder settings
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(wallWidth / 4, wallHeight / 4, Math.max(wallWidth, wallHeight) / 2);
+    directionalLight.target = wallPlane;
     scene.add(directionalLight);
     scene.add(directionalLight.target);
 
-    // Wall lights
+    // Wall lights - match SVGTo3DExtruder settings
     const wallLightColor = 0xffffff;
     const wallLightIntensity = 0.00005;
     const wallLightDistance = 500;
-    const wallSizeHalf = 40 / 2;
-    const wallZPosition = -0.8 - (0.1 / 2);
+    const wallSizeHalf = wallWidth / 2;
 
+    const wallZPosition = -(wallDepth / 2);
     const lightPositions = [
       new THREE.Vector3(-wallSizeHalf * 3, wallSizeHalf * 3, wallZPosition - 500),
       new THREE.Vector3(-wallSizeHalf * 3, -wallSizeHalf * 3, wallZPosition - 500),
@@ -722,18 +656,6 @@ const NeonSVGTo3DExtruder = () => {
     });
     wallLightsRef.current = wallLights;
 
-    // Wall
-    const wallThickness = 0.1;
-    const wallSize = 40;
-    const planeGeometry = new THREE.BoxGeometry(wallSize, wallSize, wallThickness);
-    const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, roughness: 0.8, metalness: 0.2 });
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.rotation.x = 0;
-    plane.position.z = wallZPosition;
-    plane.receiveShadow = true;
-    plane.layers.set(ENTIRE_SCENE_LAYER);
-    scene.add(plane);
-
     // Initialize neon group
     neonGroupRef.current = new THREE.Group();
     scene.add(neonGroupRef.current);
@@ -742,7 +664,9 @@ const NeonSVGTo3DExtruder = () => {
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
       
-      controls.update();
+      if (controls.enableDamping) {
+        controls.update();
+      }
 
       const baseIntensity = emissiveValue;
 
@@ -788,12 +712,12 @@ const NeonSVGTo3DExtruder = () => {
       if (composerRef.current) {
         // 1. Render bloom scene
         camera.layers.set(BLOOM_SCENE_LAYER);
-        scene.background = new THREE.Color(0x000000); // Black background for bloom
+        scene.background = new THREE.Color(0x242424); // Black background for bloom
         composerRef.current.bloom.render();
 
         // 2. Render final scene
         camera.layers.set(ENTIRE_SCENE_LAYER);
-        scene.background = new THREE.Color(backgroundColorRef.current);
+        scene.background = new THREE.Color(0x242424); // Fixed background color to match SVGTo3DExtruder
         composerRef.current.final.render();
       } else {
         renderer.render(scene, camera);
@@ -804,12 +728,14 @@ const NeonSVGTo3DExtruder = () => {
 
     // Handle window resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(width, height);
       if (composerRef.current) {
-        composerRef.current.bloom.setSize(window.innerWidth, window.innerHeight);
-        composerRef.current.final.setSize(window.innerWidth, window.innerHeight);
+        composerRef.current.bloom.setSize(width, height);
+        composerRef.current.final.setSize(width, height);
       }
     };
 
@@ -838,6 +764,30 @@ const NeonSVGTo3DExtruder = () => {
         neonGroupRef.current.clear();
       }
       
+      // Clean up room model
+      if (loadedRoomModelRef.current && sceneRef.current) {
+        sceneRef.current.remove(loadedRoomModelRef.current);
+        loadedRoomModelRef.current.traverse(object => {
+          if (object.isMesh) {
+            if (object.geometry) {
+              object.geometry.dispose();
+            }
+            if (object.material) {
+              if (Array.isArray(object.material)) {
+                object.material.forEach(material => {
+                  if (material.map) material.map.dispose();
+                  material.dispose();
+                });
+              } else {
+                if (object.material.map) object.material.map.dispose();
+                object.material.dispose();
+              }
+            }
+          }
+        });
+        loadedRoomModelRef.current = null;
+      }
+      
       // Clean up composers
       if (composerRef.current) {
         composerRef.current.bloom.dispose();
@@ -861,6 +811,132 @@ const NeonSVGTo3DExtruder = () => {
     };
   }, [ENTIRE_SCENE_LAYER, BLOOM_SCENE_LAYER]);
 
+  // Room model loading effect
+  useEffect(() => {
+    if (!sceneRef.current) return;
+
+    const scene = sceneRef.current;
+    const gltfLoader = new GLTFLoader();
+    const modelPath = '/models/room.black.glb';
+
+    gltfLoader.load(
+      modelPath,
+      (gltf) => {
+        if (loadedRoomModelRef.current) {
+          scene.remove(loadedRoomModelRef.current);
+        }
+
+        const loadedScene = gltf.scene;
+
+        // Remove any cameras from the loaded GLB scene
+        const camerasToRemove = [];
+        loadedScene.traverse((object) => {
+          if (object.isCamera) {
+            camerasToRemove.push(object);
+          }
+        });
+        camerasToRemove.forEach(cam => {
+          if (cam.parent) {
+            cam.parent.remove(cam);
+          }
+        });
+
+        loadedRoomModelRef.current = loadedScene;
+        scene.add(loadedRoomModelRef.current);
+        const model = loadedRoomModelRef.current;
+
+        // Rotate the model to orient the dark back wall correctly
+        model.rotation.y = -Math.PI / 2;
+        model.updateMatrixWorld(true);
+
+        // Get model's size after rotation for scaling purposes
+        const initialModelBoxForScaling = new THREE.Box3().setFromObject(model);
+        const modelSizeForScaling = new THREE.Vector3();
+        initialModelBoxForScaling.getSize(modelSizeForScaling);
+
+        // Get grid dimensions
+        const currentWallPlane = wallPlaneRef.current;
+        let gridWidth = currentWallPlane.geometry.parameters.width;
+        let gridHeight = currentWallPlane.geometry.parameters.height;
+        
+        if (!gridWidth) gridWidth = 1000; 
+        if (!gridHeight) gridHeight = 600;
+
+        // Calculate scaleFactor
+        let scaleFactor = 1;
+        if (modelSizeForScaling.x > 0.001 && modelSizeForScaling.y > 0.001) {
+          const scaleX = gridWidth / modelSizeForScaling.x;
+          const scaleY = gridHeight / modelSizeForScaling.y;
+          scaleFactor = Math.min(scaleX, scaleY) * 0.9;
+        } else if (modelSizeForScaling.z > 0.001) {
+          const arbitraryGridDepth = Math.min(gridWidth, gridHeight);
+          scaleFactor = (arbitraryGridDepth / modelSizeForScaling.z) * 0.9;
+        }
+        if (scaleFactor <= 0 || !isFinite(scaleFactor)) {
+          console.warn("Calculated scaleFactor is invalid, defaulting to 0.1. Model size:", modelSizeForScaling);
+          scaleFactor = 0.1; 
+        }
+
+        // User Defined Scale Adjustment
+        const currentVisualRepresentsCm = 270.0;
+        const modelPartTrueSizeCm = 910.0;
+        const finalScaleFactor = scaleFactor * (modelPartTrueSizeCm / currentVisualRepresentsCm);
+
+        model.scale.set(finalScaleFactor, finalScaleFactor, finalScaleFactor);
+        model.updateMatrixWorld(true);
+
+        // For X/Y centering: Bounding box of the entire scaled and rotated model
+        const overallScaledRotatedModelBox = new THREE.Box3().setFromObject(model);
+        const overallModelCenter = new THREE.Vector3();
+        overallScaledRotatedModelBox.getCenter(overallModelCenter);
+
+        // Find RoomBackWall
+        let roomBackWallObject = null;
+        model.traverse((child) => {
+          if (child.isMesh && child.name === 'RoomBackWall') {
+            roomBackWallObject = child;
+          }
+        });
+
+        const gridSurfaceZ = wallPlaneRef.current.position.z;
+
+        // Position model
+        model.position.x = -overallModelCenter.x;
+        model.position.y = -overallModelCenter.y;
+
+        if (roomBackWallObject) {
+          const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
+          const fineTuneZOffset = 94.925;
+          model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
+        } else {
+          console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
+          const overallModelMinZ = overallScaledRotatedModelBox.min.z; 
+          model.position.z = gridSurfaceZ - overallModelMinZ;
+        }
+
+        // Hide the original preview wall if the room model is loaded
+        if (wallPlaneRef.current) {
+          wallPlaneRef.current.visible = false;
+        }
+        
+        // Set room model to not bloom
+        loadedScene.traverse((child) => {
+          if (child.isMesh) {
+            child.layers.set(ENTIRE_SCENE_LAYER);
+          }
+        });
+      },
+      undefined, // onProgress
+      (error) => {
+        console.error('Error loading room.black.glb:', error);
+      }
+    );
+
+    return () => {
+      // Room model specific cleanup is handled in disposeResources
+    };
+  }, [sceneRef, wallPlaneRef]);
+
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
       loadSVGFile(e.target.files[0]);
@@ -868,14 +944,20 @@ const NeonSVGTo3DExtruder = () => {
   };
 
   const colorPresets = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
-  const backgroundPresets = ['#000000', '#1a1a2e', '#0f3460', '#16213e', '#2d1b69'];
 
   return (
     <div className="neon-container">
       <div ref={mountRef} className="neon-canvas-mount" />
       
       {/* Controls Panel */}
-      <div className="controls-panel">
+      <div className={`controls-panel ${sidebarVisible ? '' : 'collapsed'}`}>
+        <button 
+          className="sidebar-toggle-button"
+          onClick={() => setSidebarVisible(!sidebarVisible)}
+          aria-label={sidebarVisible ? '閉じる' : '開く'}
+        >
+          {sidebarVisible ? '▲' : '▼'}
+        </button>
         <div className="control-group">
           <label className="control-label">SVGファイル読み込み:</label>
           <input
@@ -958,25 +1040,6 @@ const NeonSVGTo3DExtruder = () => {
           />
         </div>
 
-        <div className="control-group">
-          <label className="control-label">背景色:</label>
-          <input
-            type="color"
-            value={backgroundColor}
-            onChange={(e) => setBackgroundColor(e.target.value)}
-            className="color-input"
-          />
-          <div className="color-presets">
-            {backgroundPresets.map((preset) => (
-              <div
-                key={preset}
-                className="color-preset"
-                style={{ backgroundColor: preset }}
-                onClick={() => setBackgroundColor(preset)}
-              />
-            ))}
-          </div>
-        </div>
         
         <div className="control-group">
           <label className="control-label">アニメーション速度: {animationSpeed.toFixed(1)}</label>
