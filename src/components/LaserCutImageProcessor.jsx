@@ -366,10 +366,16 @@ const LaserCutImageProcessor = () => {
   
   // Costomizeコンポーネントの状態を保存
   const [customizeState, setCustomizeState] = useState(null);
+  
+  // NeonSVGTo3DExtruderの状態を保存
+  const [neonSvgData, setNeonSvgData] = useState(null);
+  const [neonCameraState, setNeonCameraState] = useState(null);
+  
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const svgTo3DExtruderRef = useRef(null);
+  const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
   const threeDModelGeneratorRef = useRef(null); // ThreeDModelGeneratorへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
@@ -1077,12 +1083,32 @@ const handleLayerSelectionForMerge = (layerIndex) => {
       svgTo3DExtruderRef.current.saveCameraState();
     }
     
+    // 🔥 ネオン3Dプレビューから離れる時にカメラ状態を保存
+    if (currentPage === 'neonSvg3dPreview' && neonSvgTo3DExtruderRef.current) {
+      console.log('ネオンカメラ状態を保存中...');
+      const saveResult = neonSvgTo3DExtruderRef.current.saveCameraState();
+      if (saveResult) {
+        console.log('ネオンカメラ状態を保存しました');
+      }
+    }
+    
     setCurrentPage(page);
     
     // 🔥 3Dプレビューに戻る時にカメラ状態を復元
     if (page === '3dPreview' && svgTo3DExtruderRef.current) {
       setTimeout(() => {
         svgTo3DExtruderRef.current.restoreCameraState();
+      }, 100);
+    }
+    
+    // 🔥 ネオン3Dプレビューに戻る時にカメラ状態を復元
+    if (page === 'neonSvg3dPreview' && neonSvgTo3DExtruderRef.current) {
+      setTimeout(() => {
+        console.log('ネオンカメラ状態を復元中...');
+        const restoreResult = neonSvgTo3DExtruderRef.current.restoreCameraState();
+        if (restoreResult) {
+          console.log('ネオンカメラ状態を復元しました');
+        }
       }, 100);
     }
   };
@@ -2439,7 +2465,7 @@ const quantizeColors = (pixels, k) => {
           onStateChange={setCustomizeState}
         />;
       case 'neonSvg3dPreview':
-        return <NeonSVGTo3DExtruder />;
+        return null; // NeonSVGTo3DExtruderはルートレベルで表示
       case 'layerPreview':
         return (
           <div className="main-content">
@@ -3170,6 +3196,20 @@ case '3dPreview':
           hideNavigationButton={currentPage !== '3dPreview'} 
           onDimensionsUpdate={handleDimensionsUpdate} // Added prop
         />
+      </div>
+      
+      {/* NeonSVGTo3DExtruder - Always rendered but controlled by visibility */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        visibility: currentPage === 'neonSvg3dPreview' ? 'visible' : 'hidden',
+        zIndex: currentPage === 'neonSvg3dPreview' ? 1 : -1,
+        pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
+      }}>
+        <NeonSVGTo3DExtruder ref={neonSvgTo3DExtruderRef} />
       </div>
       
       {/* Main layout */}

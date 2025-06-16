@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -9,7 +9,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = () => {
+const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -23,6 +23,10 @@ const NeonSVGTo3DExtruder = () => {
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
   const wallPlaneRef = useRef(null);
+  
+  // マウント状態とカメラ状態保持用
+  const isMountedRef = useRef(false);
+  const [savedCameraState, setSavedCameraState] = useState(null);
 
   // State for UI controls
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -499,6 +503,7 @@ const NeonSVGTo3DExtruder = () => {
   useEffect(() => {
     if (!mountRef.current) return;
     
+    isMountedRef.current = true;
     console.log('Initializing Three.js scene...');
     
     // Clear any existing content
@@ -514,7 +519,12 @@ const NeonSVGTo3DExtruder = () => {
 
     // Camera setup - match SVGTo3DExtruder settings
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
-    camera.position.set(0, 0, 1500);
+    // 保存された状態があれば復元、なければデフォルト
+    if (savedCameraState) {
+      camera.position.copy(savedCameraState.position);
+    } else {
+      camera.position.set(0, 0, 1500);
+    }
     camera.layers.enable(ENTIRE_SCENE_LAYER);
     camera.layers.enable(BLOOM_SCENE_LAYER);
     cameraRef.current = camera;
@@ -590,7 +600,12 @@ const NeonSVGTo3DExtruder = () => {
 
     // Controls - match SVGTo3DExtruder settings
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 0, 0);
+    // 保存された状態があれば復元、なければデフォルト
+    if (savedCameraState && savedCameraState.target) {
+      controls.target.copy(savedCameraState.target);
+    } else {
+      controls.target.set(0, 0, 0);
+    }
     controls.maxDistance = 9000;
     controls.minDistance = 20;
     
@@ -744,6 +759,7 @@ const NeonSVGTo3DExtruder = () => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      isMountedRef.current = false;
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
         animationIdRef.current = null;
@@ -945,6 +961,53 @@ const NeonSVGTo3DExtruder = () => {
 
   const colorPresets = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
 
+  // カメラ状態を保存する関数
+  const saveCameraState = useCallback(() => {
+    if (cameraRef.current && controlsRef.current) {
+      setSavedCameraState({
+        position: cameraRef.current.position.clone(),
+        target: controlsRef.current.target.clone()
+      });
+      console.log('カメラ状態を保存しました');
+      return true;
+    }
+    return false;
+  }, []);
+
+  // カメラ状態を復元する関数
+  const restoreCameraState = useCallback(() => {
+    if (savedCameraState && cameraRef.current && controlsRef.current) {
+      cameraRef.current.position.copy(savedCameraState.position);
+      controlsRef.current.target.copy(savedCameraState.target);
+      controlsRef.current.update();
+      console.log('カメラ状態を復元しました');
+      return true;
+    }
+    return false;
+  }, [savedCameraState]);
+
+  // 外部から呼び出せるメソッドを公開
+  useImperativeHandle(ref, () => ({
+    // カメラ状態を保存
+    saveCameraState: () => {
+      return saveCameraState();
+    },
+    
+    // カメラ状態を復元
+    restoreCameraState: () => {
+      return restoreCameraState();
+    },
+    
+    // SVGファイルを読み込む
+    loadSVGFile: (file) => {
+      if (file) {
+        loadSVGFile(file);
+        return true;
+      }
+      return false;
+    }
+  }), [saveCameraState, restoreCameraState, loadSVGFile]);
+
   return (
     <div className="neon-container">
       <div ref={mountRef} className="neon-canvas-mount" />
@@ -1087,6 +1150,6 @@ const NeonSVGTo3DExtruder = () => {
       </div>
     </div>
   );
-};
+});
 
 export default NeonSVGTo3DExtruder;
