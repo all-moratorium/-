@@ -6,6 +6,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
@@ -90,27 +91,31 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
         
         const isPathLikeElement = ['path', 'rect', 'circle', 'polygon'].includes(element.tagName.toLowerCase());
 
-        if (dataType === 'base' || (isFilled && isPathLikeElement && dataType !== 'neon')) {
-          console.warn('SVG element identified as base/filled shape and skipped for neon tube generation:', element);
+        // Fill要素（土台）の処理
+        if (isFilled && isPathLikeElement && dataType !== 'neon') {
+          const points = this.elementToPathPoints(element, scale);
+          if (points.length > 0) {
+            elements.push({
+              type: 'base',
+              points: points,
+              fill: fill
+            });
+          }
           return;
         }
 
-        if (!stroke || stroke === 'none') {
-          if (element.tagName.toLowerCase() !== 'line' && element.tagName.toLowerCase() !== 'polyline') {
-            console.warn('SVG element skipped as it has no stroke attribute and is not a line/polyline, thus not suitable for neon tube:', element);
-            return;
+        // Stroke要素（ネオンチューブ）の処理
+        if (stroke && stroke !== 'none') {
+          const points = this.elementToPathPoints(element, scale);
+          const strokeWidth = element.getAttribute('stroke-width');
+          if (points.length > 0) {
+            elements.push({
+              type: 'neon',
+              points: points,
+              strokeWidth: strokeWidth ? parseFloat(strokeWidth) : null,
+              stroke: stroke || '#ffffff'
+            });
           }
-        }
-
-        const points = this.elementToPathPoints(element, scale);
-        const strokeWidth = element.getAttribute('stroke-width');
-        if (points.length > 0) {
-          elements.push({
-            type: 'neon',
-            points: points,
-            strokeWidth: strokeWidth ? parseFloat(strokeWidth) : null,
-            stroke: stroke || '#ffffff'
-          });
         }
       });
       
@@ -286,6 +291,75 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
 
 
 
+  // 土台作成関数
+  const createBase = useCallback((points, fillColor) => {
+    const shape = new THREE.Shape();
+    
+    if (points.length < 3) return null;
+    
+    shape.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      shape.lineTo(points[i].x, points[i].y);
+    }
+    shape.closePath();
+    
+    const extrudeSettings = {
+      depth: 7, // 7mm厚
+      bevelEnabled: false
+    };
+    
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    
+    // アクリル風マテリアル
+    let material;
+    if (fillColor === 'transparent' || fillColor === 'none') {
+      // 透明アクリル
+      material = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.001,
+        shininess: 100,
+        specular: 0xffffff,
+        reflectivity: 0.5,
+        side: THREE.DoubleSide
+      });
+    } else if (fillColor === 'white' || fillColor === '#ffffff' || fillColor === '#fff') {
+      // 白いアクリル
+      material = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.9,
+        shininess: 80,
+        specular: 0xffffff
+      });
+    } else if (fillColor === 'black' || fillColor === '#000000' || fillColor === '#000') {
+      // 黒いアクリル
+      material = new THREE.MeshPhongMaterial({
+        color: 0x111111,
+        transparent: true,
+        opacity: 0.8,
+        shininess: 60,
+        specular: 0x333333
+      });
+    } else {
+      // その他の色のアクリル
+      material = new THREE.MeshPhongMaterial({
+        color: fillColor || 0x888888,
+        transparent: true,
+        opacity: 0.7,
+        shininess: 70,
+        specular: 0xffffff
+      });
+    }
+    
+    const baseMesh = new THREE.Mesh(geometry, material);
+    baseMesh.position.z = 7; // 土台を7mm前に移動
+    baseMesh.receiveShadow = true;
+    baseMesh.layers.set(ENTIRE_SCENE_LAYER);
+    
+    return baseMesh;
+  }, []);
+
   const createNeonTube = useCallback((points, materialIndex, svgColor, strokeWidthPx) => {
     if (points.length < 2) return;
 
@@ -319,13 +393,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
       tubeColor = new THREE.Color(colors[materialIndex % colors.length]);
     }
 
+    // クリッピングプレーン：チューブを全部切るテスト（Z=20mm以下をカット）
+    const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -20);
+    
     const neonMaterial = new THREE.ShaderMaterial({
       uniforms: {
         baseColor: { value: tubeColor },
         emissiveIntensity: { value: emissiveValue }  // 元に戻す
       },
       vertexShader: neonVertexShader,
-      fragmentShader: neonFragmentShader
+      fragmentShader: neonFragmentShader,
+      clippingPlanes: [clippingPlane]
     });
 
     const neonTube = new THREE.Mesh(geometry, neonMaterial);
@@ -334,6 +412,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
 
     const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.01, 16, 16);
     const capMaterial = neonMaterial.clone();
+    capMaterial.clippingPlanes = [clippingPlane]; // キャップにもクリッピング適用
 
     const startCap = new THREE.Mesh(capGeometry, capMaterial);
     startCap.position.copy(points[0]);
@@ -347,6 +426,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     group.add(neonTube);
     group.add(startCap);
     group.add(endCap);
+    
+    // チューブ全体をZ=16mmに移動（土台上面14mm + 余白2mm）
+    group.position.z = 16;
     
     neonMaterialsRef.current[materialIndex] = {
       main: neonMaterial,
@@ -415,7 +497,16 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
       neonGroupRef.current = new THREE.Group();
       
       elementsData.forEach((elementData, index) => {
-        if (elementData.type === 'neon') {
+        if (elementData.type === 'base') {
+          // 土台の処理
+          if (elementData.points.length > 2) {
+            const baseMesh = createBase(elementData.points, elementData.fill);
+            if (baseMesh) {
+              neonGroupRef.current.add(baseMesh);
+            }
+          }
+        } else if (elementData.type === 'neon') {
+          // ネオンチューブの処理
           if (elementData.points.length > 1) {
             const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
             if (neonTubeGroup) {
@@ -438,7 +529,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
       cameraRef.current.position.z = distance;
     };
     reader.readAsText(file);
-  }, [createNeonTube, neonSvgData]);
+  }, [createNeonTube, createBase, neonSvgData]);
 
   const updateColor = useCallback(() => {
     const colorObj = new THREE.Color(color);
@@ -590,6 +681,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x242424);
     renderer.shadowMap.enabled = false;
+    renderer.localClippingEnabled = true; // クリッピングプレーンを有効化
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
@@ -640,13 +732,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     composerRef.current = { bloom: bloomComposer, final: finalComposer };
     
     // Lighting - match SVGTo3DExtruder settings (before controls)
-    // 全体的な明るさを底上げするためにHemisphereLightを追加
-    const hemisphereLight = new THREE.HemisphereLight(
-      0xffffff, // 空の色 (白)
-      0x888888, // 地面の色 (少し明るいグレー)
-      1.0       // 光の強さ (1.0から試してみましょう)
-    );
-    scene.add(hemisphereLight);
 
     // Controls - match SVGTo3DExtruder settings
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -656,18 +741,18 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     } else {
       controls.target.set(0, 0, 0);
     }
-    controls.maxDistance = 9000;
-    controls.minDistance = 20;
+    controls.maxDistance = 9000; // ズームアウトの最大距離を設定
+    controls.minDistance = 20; // ズームインの最小距離を設定（物体にめり込まないように）
     
     // 視点移動を180度までに制限
-    controls.minPolarAngle = 0;
-    controls.maxPolarAngle = Math.PI;
-    controls.minAzimuthAngle = -Math.PI / 2;
-    controls.maxAzimuthAngle = Math.PI / 2;
+    controls.minPolarAngle = 0; // 上方向の視点制限（0度）
+    controls.maxPolarAngle = Math.PI; // 下方向の視点制限（180度）
+    controls.minAzimuthAngle = -Math.PI / 2; // 左方向の視点制限（-90度）
+    controls.maxAzimuthAngle = Math.PI / 2; // 右方向の視点制限（90度）
     
     // 物体にめり込まないように設定
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.12;
+    controls.enableDamping = true; // カメラの動きを滑らかに
+    controls.dampingFactor = 0.12; // 滑らかさの度合い
     controls.update();
     controls.enablePan = false;
     controlsRef.current = controls;
@@ -682,42 +767,16 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     const wallDepth = 10;
 
     const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
-    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0x000000, shininess: 10 });
+    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0x505050, shininess: 10 }); // 白っぽいグレーに変更
     const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
     wallPlane.name = "wallPlane";
-    wallPlane.position.set(0, 0, -(wallDepth / 2));
+    wallPlane.position.set(0, 0, -21); // 壁表面をZ=0に調整
     wallPlane.receiveShadow = true;
     wallPlane.layers.set(ENTIRE_SCENE_LAYER);
     scene.add(wallPlane);
     wallPlaneRef.current = wallPlane;
 
-    // 1マス5cmのグリッドを壁に追加
-    const gridGeometry = new THREE.BufferGeometry();
-    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x888888, opacity: 0.3, transparent: true });
-    
-    const gridSize = 50; // 5cm = 50mm
-    const wallGridCount = Math.ceil(wallWidth / gridSize);
-    const gridVertices = [];
-    
-    // 縦線
-    for (let i = 0; i <= wallGridCount; i++) {
-      const x = (i * gridSize) - (wallWidth / 2);
-      gridVertices.push(x, -wallHeight / 2, 1); // 壁の表面より少し前
-      gridVertices.push(x, wallHeight / 2, 1);
-    }
-    
-    // 横線
-    for (let i = 0; i <= wallGridCount; i++) {
-      const y = (i * gridSize) - (wallHeight / 2);
-      gridVertices.push(-wallWidth / 2, y, 1);
-      gridVertices.push(wallWidth / 2, y, 1);
-    }
-    
-    gridGeometry.setAttribute('position', new THREE.Float32BufferAttribute(gridVertices, 3));
-    const gridLines = new THREE.LineSegments(gridGeometry, gridMaterial);
-    gridLines.name = "wallGrid";
-    gridLines.layers.set(ENTIRE_SCENE_LAYER);
-    scene.add(gridLines);
+    // グリッド非表示
 
     // Add a directional light to illuminate the wall - match SVGTo3DExtruder settings
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -725,6 +784,18 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     directionalLight.target = wallPlane;
     scene.add(directionalLight);
     scene.add(directionalLight.target);
+
+    // SVGTo3DExtruderと同じライト設定
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+
+    // HemisphereLightを追加（SVGTo3DExtruderと同じ）
+    const hemisphereLight = new THREE.HemisphereLight(
+      0xffffff, // sky color
+      0x444444, // ground color  
+      0.6       // intensity
+    );
+    scene.add(hemisphereLight);
 
     // Wall lights - match SVGTo3DExtruder settings
     const wallLightColor = 0xffffff;
@@ -910,7 +981,14 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     if (!sceneRef.current) return;
 
     const scene = sceneRef.current;
+    
+    // DRACOLoaderを設定
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/'); // DRACOデコーダーのパス（CDN）
+    
     const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+    
     const modelPath = '/models/room.black.glb';
 
     gltfLoader.load(
