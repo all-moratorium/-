@@ -103,12 +103,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
         }
 
         const points = this.elementToPathPoints(element, scale);
+        const strokeWidth = element.getAttribute('stroke-width');
         if (points.length > 0) {
           elements.push({
             type: 'neon',
             points: points,
-            stroke: stroke || '#ffffff',
-            strokeWidth: parseFloat(element.getAttribute('stroke-width') || '1')
+            strokeWidth: strokeWidth ? parseFloat(strokeWidth) : null,
+            stroke: stroke || '#ffffff'
           });
         }
       });
@@ -285,14 +286,24 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
 
 
 
-  const createNeonTube = useCallback((points, materialIndex, svgColor) => {
+  const createNeonTube = useCallback((points, materialIndex, svgColor, strokeWidthPx) => {
     if (points.length < 2) return;
+
+    // 太さをピクセル単位からmm単位に変換
+    let actualTubeSizeMm = tubeSize; // デフォルト値
+    if (strokeWidthPx && neonSvgData && neonSvgData.gridSizePx) {
+      // カスタマイズのピクセル→mm変換: gridSizePx = 4cm なので 1px = 40mm / gridSizePx
+      const pixelToMm = (4 * 10) / neonSvgData.gridSizePx; // 4cm = 40mm
+      actualTubeSizeMm = (strokeWidthPx * pixelToMm) / 2; // 半径なので÷2
+      
+      console.log(`太さ変換: ${strokeWidthPx}px → ${actualTubeSizeMm}mm (1px = ${pixelToMm}mm)`);
+    }
 
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.1);
     const radialSegments = 16;
     const tubularSegments = Math.max(100, points.length * 12);
     
-    const geometry = new THREE.TubeGeometry(curve, tubularSegments, tubeSize, radialSegments, false);
+    const geometry = new THREE.TubeGeometry(curve, tubularSegments, actualTubeSizeMm, radialSegments, false);
 
     let tubeColor;
     if (svgColor && svgColor !== 'none') {
@@ -321,7 +332,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     neonTube.castShadow = true;
     neonTube.layers.set(BLOOM_SCENE_LAYER); // Set layer for blooming
 
-    const capGeometry = new THREE.SphereGeometry(tubeSize * 1.01, 16, 16);
+    const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.01, 16, 16);
     const capMaterial = neonMaterial.clone();
 
     const startCap = new THREE.Mesh(capGeometry, capMaterial);
@@ -343,7 +354,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     };
 
     return group;
-  }, [emissiveValue, tubeSize, neonVertexShader, neonFragmentShader]);
+  }, [emissiveValue, tubeSize, neonVertexShader, neonFragmentShader, neonSvgData]);
 
 
   const loadSVGFile = useCallback((file) => {
@@ -406,7 +417,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
       elementsData.forEach((elementData, index) => {
         if (elementData.type === 'neon') {
           if (elementData.points.length > 1) {
-            const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke);
+            const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
             if (neonTubeGroup) {
               neonGroupRef.current.add(neonTubeGroup);
             }
@@ -671,7 +682,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
     const wallDepth = 10;
 
     const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
-    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0xf0f0f0, shininess: 10 });
+    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0x000000, shininess: 10 });
     const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
     wallPlane.name = "wallPlane";
     wallPlane.position.set(0, 0, -(wallDepth / 2));

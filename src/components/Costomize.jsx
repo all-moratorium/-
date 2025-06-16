@@ -1785,7 +1785,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     gridSizePx: gridSize, // 100px = 4cm
                                     gridSizeCm: 4,
                                     // SVGファイル内容を追加
-                                    svgContent: customizedSvg
+                                    svgContent: customizedSvg,
+                                    // 線の太さ情報を追加（ピクセル単位）
+                                    strokeWidthsPx: neonLineWidths
                                 }
                             }));
                             
