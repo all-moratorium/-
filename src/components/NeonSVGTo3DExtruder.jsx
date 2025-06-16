@@ -9,7 +9,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -65,22 +65,22 @@ const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
 
   // SimpleSVGLoader class (same as original)
   class SimpleSVGLoader {
-    static loadFromFile(file, callback) {
+    static loadFromFile(file, callback, customScale) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const svgText = e.target.result;
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-        const elements = this.extractElements(svgDoc);
+        const elements = this.extractElements(svgDoc, customScale);
         callback(elements);
       };
       reader.readAsText(file);
     }
     
-    static extractElements(svgDoc) {
+    static extractElements(svgDoc, customScale = 0.01) {
       const elements = [];
       const allSvgElements = svgDoc.querySelectorAll('path, circle, rect, line, polyline, polygon');
-      const scale = 0.01;
+      const scale = customScale;
 
       allSvgElements.forEach(element => {
         const dataType = element.getAttribute('data-type');
@@ -347,7 +347,45 @@ const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
 
 
   const loadSVGFile = useCallback((file) => {
-    SimpleSVGLoader.loadFromFile(file, (elementsData) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const svgText = e.target.result;
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+      
+      // SVGのviewBox属性から寸法を取得
+      const svgElement = svgDoc.querySelector('svg');
+      const viewBoxAttr = svgElement ? svgElement.getAttribute('viewBox') : null;
+      
+      let calculatedScale = 0.01; // デフォルト値
+      
+      if (viewBoxAttr && neonSvgData && neonSvgData.svgSizeCm) {
+        const parts = viewBoxAttr.split(' ').map(parseFloat);
+        const [, , svgViewBoxWidth, svgViewBoxHeight] = parts;
+        
+        // カスタマイズで設定されたCMサイズを使用してスケールを計算
+        // SVGTo3DExtruderと同じ方式：実際のmm / SVGのviewBox幅
+        const actualWidthMm = neonSvgData.svgSizeCm.width * 10; // cmをmmに変換
+        calculatedScale = actualWidthMm / svgViewBoxWidth;
+        
+        console.log('SVG viewBox幅:', svgViewBoxWidth, 'px');
+        console.log('実際の幅:', actualWidthMm, 'mm');
+        console.log('計算されたスケール:', calculatedScale);
+        console.log('SVGサイズ(cm):', neonSvgData.svgSizeCm);
+      } else if (neonSvgData && neonSvgData.gridSizePx) {
+        // フォールバック：グリッドベースの計算
+        const customizePixelToMm = 4 * 10 / neonSvgData.gridSizePx; // 4cm = 40mm, グリッドサイズで割る
+        const neonUnitToMm = 5 * 10 / 50; // 5cm = 50mm, 50Three.js単位で割る
+        calculatedScale = customizePixelToMm / neonUnitToMm;
+        
+        console.log('フォールバック計算 - カスタマイズ: 1px =', customizePixelToMm, 'mm');
+        console.log('フォールバック計算 - ネオン3D: 1単位 =', neonUnitToMm, 'mm');
+        console.log('フォールバック計算 - スケール:', calculatedScale);
+      }
+      
+      const elementsData = SimpleSVGLoader.extractElements(svgDoc, calculatedScale);
+      
+      // 元のloadFromFileのコールバック処理を実行
       if (neonGroupRef.current) {
         sceneRef.current.remove(neonGroupRef.current);
         neonGroupRef.current.children.forEach(child => {
@@ -387,8 +425,9 @@ const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
       const maxDim = Math.max(size.x, size.y, size.z);
       const distance = maxDim * 1.8;
       cameraRef.current.position.z = distance;
-    });
-  }, [createNeonTube]);
+    };
+    reader.readAsText(file);
+  }, [createNeonTube, neonSvgData]);
 
   const updateColor = useCallback(() => {
     const colorObj = new THREE.Color(color);
@@ -640,6 +679,34 @@ const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
     wallPlane.layers.set(ENTIRE_SCENE_LAYER);
     scene.add(wallPlane);
     wallPlaneRef.current = wallPlane;
+
+    // 1マス5cmのグリッドを壁に追加
+    const gridGeometry = new THREE.BufferGeometry();
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x888888, opacity: 0.3, transparent: true });
+    
+    const gridSize = 50; // 5cm = 50mm
+    const wallGridCount = Math.ceil(wallWidth / gridSize);
+    const gridVertices = [];
+    
+    // 縦線
+    for (let i = 0; i <= wallGridCount; i++) {
+      const x = (i * gridSize) - (wallWidth / 2);
+      gridVertices.push(x, -wallHeight / 2, 1); // 壁の表面より少し前
+      gridVertices.push(x, wallHeight / 2, 1);
+    }
+    
+    // 横線
+    for (let i = 0; i <= wallGridCount; i++) {
+      const y = (i * gridSize) - (wallHeight / 2);
+      gridVertices.push(-wallWidth / 2, y, 1);
+      gridVertices.push(wallWidth / 2, y, 1);
+    }
+    
+    gridGeometry.setAttribute('position', new THREE.Float32BufferAttribute(gridVertices, 3));
+    const gridLines = new THREE.LineSegments(gridGeometry, gridMaterial);
+    gridLines.name = "wallGrid";
+    gridLines.layers.set(ENTIRE_SCENE_LAYER);
+    scene.add(gridLines);
 
     // Add a directional light to illuminate the wall - match SVGTo3DExtruder settings
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -960,6 +1027,19 @@ const NeonSVGTo3DExtruder = forwardRef((props, ref) => {
   };
 
   const colorPresets = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
+
+  // neonSvgDataが変更された時に自動的にSVGをロード
+  useEffect(() => {
+    if (neonSvgData && neonSvgData.svgContent) {
+      console.log('SVGデータを自動ロード中...');
+      // SVGファイル内容をBlobに変換してFileオブジェクトを作成
+      const blob = new Blob([neonSvgData.svgContent], { type: 'image/svg+xml' });
+      const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
+      
+      // SVGファイルをロード
+      loadSVGFile(file);
+    }
+  }, [neonSvgData, loadSVGFile]);
 
   // カメラ状態を保存する関数
   const saveCameraState = useCallback(() => {

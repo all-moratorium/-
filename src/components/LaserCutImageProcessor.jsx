@@ -534,10 +534,11 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
   useEffect(() => {
     const handleShow3DPreview = (event) => {
       if (event.detail) {
-        // 3Dプレビュー用のデータを保存
-        setCustomizeSvgData(event.detail);
+        // ネオン3Dプレビュー用のデータを保存
+        setNeonSvgData(event.detail);
+        console.log('ネオンSVGデータを受信:', event.detail);
       }
-      setCurrentPage('3dPreview');
+      setCurrentPage('neonSvg3dPreview'); // ネオン3Dプレビューに移動
     };
 
     window.addEventListener('show3DPreview', handleShow3DPreview);
@@ -3209,7 +3210,10 @@ case '3dPreview':
         zIndex: currentPage === 'neonSvg3dPreview' ? 1 : -1,
         pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
       }}>
-        <NeonSVGTo3DExtruder ref={neonSvgTo3DExtruderRef} />
+        <NeonSVGTo3DExtruder 
+          ref={neonSvgTo3DExtruderRef} 
+          neonSvgData={neonSvgData}
+        />
       </div>
       
       {/* Main layout */}

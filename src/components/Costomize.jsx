@@ -1641,6 +1641,128 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             
                             await new Promise(resolve => setTimeout(resolve, 200));
 
+                            // サイズ情報を計算（4cm基準）
+                            // neonPathsから境界ボックスを計算
+                            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                            
+                            neonPaths.forEach(path => {
+                                if (path && path.points) {
+                                    path.points.forEach(point => {
+                                        minX = Math.min(minX, point.x);
+                                        minY = Math.min(minY, point.y);
+                                        maxX = Math.max(maxX, point.x);
+                                        maxY = Math.max(maxY, point.y);
+                                    });
+                                }
+                            });
+                            
+                            const svgWidth = maxX - minX;
+                            const svgHeight = maxY - minY;
+                            const svgWidthCm = (svgWidth / gridSize) * 4; // 100px = 4cm
+                            const svgHeightCm = (svgHeight / gridSize) * 4;
+                            
+                            // SVGファイル内容を生成（既存のロジックを使用）
+                            let strokePathData = '';
+                            let fillPathData = '';
+
+                            neonPaths.forEach((pathObj, pathIndex) => {
+                                if (!pathObj || !Array.isArray(pathObj.points)) return;
+
+                                const pathPoints = pathObj.points;
+                                const pathMode = pathObj.mode;
+                                const pathType = pathObj.type;
+                                const customColor = pathColors[pathIndex];
+                                const customThickness = pathThickness[pathIndex];
+
+                                if (pathPoints.length < 2) return;
+
+                                if (pathMode === 'stroke') {
+                                    let currentStrokeSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
+                                    if (pathType === 'spline') {
+                                        for (let i = 0; i < pathPoints.length - 1; i++) {
+                                            const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                                            const p1 = pathPoints[i];
+                                            const p2 = pathPoints[i + 1];
+                                            const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+
+                                            for (let t = 0; t <= canvasSettings.segmentsPerCurve; t++) {
+                                                const step = t / canvasSettings.segmentsPerCurve;
+                                                const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                                                const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                                                currentStrokeSegment += ` L ${x},${y}`;
+                                            }
+                                        }
+                                    } else {
+                                        for (let i = 1; i < pathPoints.length; i++) {
+                                            currentStrokeSegment += ` L ${pathPoints[i].x},${pathPoints[i].y}`;
+                                        }
+                                    }
+                                    
+                                    const effectiveThickness = customThickness || neonLineWidths.strokeLine || 15;
+                                    strokePathData += `<path class="neon-stroke" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
+                                }
+
+                                if (pathMode === 'fill' && pathPoints.length >= 3) {
+                                    let currentFillSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
+                                    if (pathType === 'spline') {
+                                        for (let i = 0; i < pathPoints.length - 1; i++) {
+                                            const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                                            const p1 = pathPoints[i];
+                                            const p2 = pathPoints[i + 1];
+                                            const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+
+                                            for (let t = 0; t <= canvasSettings.segmentsPerCurve; t++) {
+                                                const step = t / canvasSettings.segmentsPerCurve;
+                                                const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                                                const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                                                currentFillSegment += ` L ${x},${y}`;
+                                            }
+                                        }
+                                    } else {
+                                        for (let i = 1; i < pathPoints.length; i++) {
+                                            currentFillSegment += ` L ${pathPoints[i].x},${pathPoints[i].y}`;
+                                        }
+                                    }
+                                    currentFillSegment += ` Z`;
+                                    const effectiveFillThickness = 3;
+                                    const fillColor = pathColors[`${pathIndex}_fill`] || neonColors.fillArea;
+                                    const strokeColor = customColor || neonColors.fillBorder;
+                                    fillPathData += `<path class="base-stroke" d="${currentFillSegment}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${effectiveFillThickness}"/>\n    `;
+                                }
+                            });
+                            
+                            // パスデータの座標を調整（全ての数値座標を対象）
+                            const adjustedStrokePathData = strokePathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
+                                const adjustedX = parseFloat(x) - minX;
+                                const adjustedY = parseFloat(y) - minY;
+                                return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
+                            });
+
+                            const adjustedFillPathData = fillPathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
+                                const adjustedX = parseFloat(x) - minX;
+                                const adjustedY = parseFloat(y) - minY;
+                                return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
+                            });
+
+                            const customizedSvg = `
+<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        ${neonPaths.map((_, index) => `
+        <filter id="neon-glow-${index}">
+            <feGaussianBlur stdDeviation="${glowIntensity/10}" result="coloredBlur"/>
+            <feMerge> 
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>`).join('')}
+    </defs>
+    <style>
+        .base-stroke { stroke-width: 3px !important; }
+    </style>
+    ${adjustedFillPathData}${adjustedStrokePathData}
+</svg>
+                            `.trim();
+                            
                             // 3Dプレビューイベントを発行
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
                                 detail: {
@@ -1650,7 +1772,20 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     canvasSettings: canvasSettings,
                                     neonPower: neonPower,
                                     backgroundColor: backgroundColor,
-                                    backgroundColorOff: backgroundColorOff
+                                    backgroundColorOff: backgroundColorOff,
+                                    // サイズ情報を追加
+                                    svgSizeCm: {
+                                        width: svgWidthCm,
+                                        height: svgHeightCm
+                                    },
+                                    svgSizePx: {
+                                        width: svgWidth,
+                                        height: svgHeight
+                                    },
+                                    gridSizePx: gridSize, // 100px = 4cm
+                                    gridSizeCm: 4,
+                                    // SVGファイル内容を追加
+                                    svgContent: customizedSvg
                                 }
                             }));
                             
