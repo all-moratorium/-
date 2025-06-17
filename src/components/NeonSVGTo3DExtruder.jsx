@@ -10,7 +10,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424' }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -24,6 +24,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
   const wallPlaneRef = useRef(null);
+  const backgroundColorRef = useRef(backgroundColor);
   
   // マウント状態とカメラ状態保持用
   const isMountedRef = useRef(false);
@@ -44,6 +45,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
   // Define layers for selective rendering
   const ENTIRE_SCENE_LAYER = 0;
   const BLOOM_SCENE_LAYER = 1;
+
+  useEffect(() => {
+    backgroundColorRef.current = backgroundColor;
+  }, [backgroundColor]);
 
 
   // Custom Shader for Neon Tubes
@@ -874,14 +879,21 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData }, ref) => {
       }
 
       if (composerRef.current) {
+        const originalClearColor = renderer.getClearColor(new THREE.Color());
+        const originalClearAlpha = renderer.getClearAlpha();
+
         // 1. Render bloom scene
         camera.layers.set(BLOOM_SCENE_LAYER);
-        scene.background = new THREE.Color(0x242424); // Black background for bloom
+        scene.background = new THREE.Color(0x000000); // Black background for bloom
+        if (wallPlaneRef.current) wallPlaneRef.current.visible = false; // Hide wall for bloom pass
+        renderer.setClearColor(0x000000, 0); // Ensure bloom pass renders with black transparent background
         composerRef.current.bloom.render();
 
         // 2. Render final scene
         camera.layers.set(ENTIRE_SCENE_LAYER);
-        scene.background = new THREE.Color(0x242424); // Fixed background color to match SVGTo3DExtruder
+        scene.background = new THREE.Color(backgroundColorRef.current); // Use the reactive background color
+        if (wallPlaneRef.current) wallPlaneRef.current.visible = true; // Show wall for final pass
+        renderer.setClearColor(originalClearColor, originalClearAlpha); // Restore original clear color for final pass
         composerRef.current.final.render();
       } else {
         renderer.render(scene, camera);
