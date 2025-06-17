@@ -322,28 +322,28 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       material = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         transparent: true,
-        opacity: 0.001,
-        shininess: 100,
+        opacity: 0.01,
+        shininess: 4000,
         specular: 0xffffff,
-        reflectivity: 0.5,
+        reflectivity: 1,
         side: THREE.DoubleSide
       });
     } else if (fillColor === 'white' || fillColor === '#ffffff' || fillColor === '#fff') {
       // 白いアクリル
       material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.9,
-        shininess: 80,
-        specular: 0xffffff
+        color: 0xdddddd,
+        transparent: false,
+        opacity: 1,
+        shininess: 6660,
+        specular: 0x000000
       });
     } else if (fillColor === 'black' || fillColor === '#000000' || fillColor === '#000') {
       // 黒いアクリル
       material = new THREE.MeshPhongMaterial({
         color: 0x111111,
-        transparent: true,
+        transparent: false,
         opacity: 0.8,
-        shininess: 60,
+        shininess: 400,
         specular: 0x333333
       });
     } else {
@@ -762,7 +762,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     controls.enablePan = false;
     controlsRef.current = controls;
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.1));
 
     // Wall - match SVGTo3DExtruder settings
     const gridCellSize = 50;
@@ -784,7 +784,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // グリッド非表示
 
     // Add a directional light to illuminate the wall - match SVGTo3DExtruder settings
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
     directionalLight.position.set(wallWidth / 4, wallHeight / 4, Math.max(wallWidth, wallHeight) / 2);
     directionalLight.target = wallPlane;
     scene.add(directionalLight);
