@@ -12,7 +12,8 @@
       "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n \"addEventListener\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
       "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -A 5 -B 2 \"useEffect\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
       "Bash(/home/ra/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n -A 3 -B 3 \"customizeSvgData\" /mnt/c/Users/ramun/neon-sign-app/src/components/LaserCutImageProcessor.jsx)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(git restore:*)"
     ],
     "deny": []
   }

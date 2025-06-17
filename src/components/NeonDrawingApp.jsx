@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './NeonDrawingApp.css';
 
 // Catmull-Rom補間関数
@@ -45,24 +45,103 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
     );
 };
 
-const NeonDrawingApp = ({ initialState, onStateChange }) => {
-    // 初期状態の設定（propsから受け取るか、デフォルト値を使用）
-    const [drawMode, setDrawMode] = useState(initialState?.drawMode || 'stroke');
-    const [drawingType, setDrawingType] = useState(initialState?.drawingType || 'spline');
+// 安全なLocalStorage読み込み関数
+const safeGetFromLocalStorage = (key, fallback = null) => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+    } catch (error) {
+        console.error(`LocalStorage読み込みエラー (${key}):`, error);
+        return fallback;
+    }
+};
 
+// 包括的な初期状態取得関数
+const getInitialDrawingState = (initialState) => {
+    const savedData = safeGetFromLocalStorage('neonDrawingData');
+    
+    // 優先順位: initialState > LocalStorage > デフォルト値
+    const getStateValue = (key, defaultValue) => {
+        if (initialState && initialState[key] !== undefined) {
+            return initialState[key];
+        }
+        if (savedData && savedData[key] !== undefined) {
+            return savedData[key];
+        }
+        return defaultValue;
+    };
+    
+    const defaultColors = {
+        strokePoint: '#00ffff',
+        strokeLine: '#ffff00',
+        fillPoint: '#000000',
+        fillArea: 'rgba(110, 110, 110, 0.5)',
+        fillBorder: '#000000',
+        background: '#303030',
+        grid: '#000000'
+    };
+    
+    const defaultLineWidths = {
+        strokeLine: 4,
+        fillBorder: 3
+    };
+    
+    const defaultPaths = [{ points: [], mode: 'stroke', type: 'spline' }];
+    
+    return {
+        drawMode: getStateValue('drawMode', 'stroke'),
+        drawingType: getStateValue('drawingType', 'spline'),
+        paths: getStateValue('paths', defaultPaths),
+        currentPathIndex: getStateValue('currentPathIndex', 0),
+        scale: getStateValue('scale', 1),
+        offsetX: getStateValue('offsetX', 0),
+        offsetY: getStateValue('offsetY', 0),
+        backgroundImage: getStateValue('backgroundImage', null),
+        initialBgImageWidth: getStateValue('initialBgImageWidth', 0),
+        initialBgImageHeight: getStateValue('initialBgImageHeight', 0),
+        bgImageScale: getStateValue('bgImageScale', 1.0),
+        bgImageX: getStateValue('bgImageX', 0),
+        bgImageY: getStateValue('bgImageY', 0),
+        bgImageOpacity: getStateValue('bgImageOpacity', 1.0),
+        showGrid: getStateValue('showGrid', true),
+        gridSize: getStateValue('gridSize', 100),
+        gridOpacity: getStateValue('gridOpacity', 0.5),
+        colors: getStateValue('colors', defaultColors),
+        lineWidths: getStateValue('lineWidths', defaultLineWidths),
+        history: getStateValue('history', [{
+            paths: JSON.parse(JSON.stringify(defaultPaths)),
+            currentPathIndex: 0,
+            drawMode: 'stroke',
+            drawingType: 'spline'
+        }]),
+        historyIndex: getStateValue('historyIndex', 0)
+    };
+};
+
+const NeonDrawingApp = ({ initialState, onStateChange }) => {
+    // 包括的な初期状態を取得
+    const initialDrawingState = useMemo(() => getInitialDrawingState(initialState), [initialState]);
+    
+    // 初期化完了フラグ
+    const isInitialized = useRef(false);
+    
     const canvasRef = useRef(null);
     const widthInputRef = useRef(null);
     const isUserTypingRef = useRef(false);
-    const [paths, setPaths] = useState(initialState?.paths || [{ points: [], mode: initialState?.drawMode || 'stroke', type: initialState?.drawingType || 'spline' }]);
-    const [currentPathIndex, setCurrentPathIndex] = useState(initialState?.currentPathIndex || 0);
+    
+    // すべてのstateを包括的な初期値で初期化
+    const [drawMode, setDrawMode] = useState(initialDrawingState.drawMode);
+    const [drawingType, setDrawingType] = useState(initialDrawingState.drawingType);
+    const [paths, setPaths] = useState(initialDrawingState.paths);
+    const [currentPathIndex, setCurrentPathIndex] = useState(initialDrawingState.currentPathIndex);
     const [canvasWidth, setCanvasWidth] = useState(800);
     const [canvasHeight, setCanvasHeight] = useState(600);
     const [segmentsPerCurve, setSegmentsPerCurve] = useState(30);
 
     // ズームとパン
-    const [scale, setScale] = useState(initialState?.scale !== undefined ? initialState.scale : 1);
-    const [offsetX, setOffsetX] = useState(initialState?.offsetX !== undefined ? initialState.offsetX : 0);
-    const [offsetY, setOffsetY] = useState(initialState?.offsetY !== undefined ? initialState.offsetY : 0);
+    const [scale, setScale] = useState(initialDrawingState.scale);
+    const [offsetX, setOffsetX] = useState(initialDrawingState.offsetX);
+    const [offsetY, setOffsetY] = useState(initialDrawingState.offsetY);
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
@@ -76,19 +155,19 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [isNewPathDisabled, setIsNewPathDisabled] = useState(false); // 新しいパスボタンの無効化状態
 
     // 背景画像
-    const [backgroundImage, setBackgroundImage] = useState(initialState?.backgroundImage || null);
+    const [backgroundImage, setBackgroundImage] = useState(initialDrawingState.backgroundImage);
     const [loadedBackgroundImage, setLoadedBackgroundImage] = useState(null);
-    const [initialBgImageWidth, setInitialBgImageWidth] = useState(initialState?.initialBgImageWidth || 0);
-    const [initialBgImageHeight, setInitialBgImageHeight] = useState(initialState?.initialBgImageHeight || 0);
-    const [bgImageScale, setBgImageScale] = useState(initialState?.bgImageScale !== undefined ? initialState.bgImageScale : 1.0);
-    const [bgImageX, setBgImageX] = useState(initialState?.bgImageX !== undefined ? initialState.bgImageX : 0); 
-    const [bgImageY, setBgImageY] = useState(initialState?.bgImageY !== undefined ? initialState.bgImageY : 0); 
-    const [bgImageOpacity, setBgImageOpacity] = useState(initialState?.bgImageOpacity !== undefined ? initialState.bgImageOpacity : 1.0);
+    const [initialBgImageWidth, setInitialBgImageWidth] = useState(initialDrawingState.initialBgImageWidth);
+    const [initialBgImageHeight, setInitialBgImageHeight] = useState(initialDrawingState.initialBgImageHeight);
+    const [bgImageScale, setBgImageScale] = useState(initialDrawingState.bgImageScale);
+    const [bgImageX, setBgImageX] = useState(initialDrawingState.bgImageX);
+    const [bgImageY, setBgImageY] = useState(initialDrawingState.bgImageY);
+    const [bgImageOpacity, setBgImageOpacity] = useState(initialDrawingState.bgImageOpacity);
 
-    // グリッド - デフォルトでオンに変更
-    const [showGrid, setShowGrid] = useState(initialState?.showGrid !== undefined ? initialState.showGrid : true); 
-    const [gridSize, setGridSize] = useState(initialState?.gridSize || 100); // 4cm = 100px (20px=8mm基準)
-    const [gridOpacity, setGridOpacity] = useState(initialState?.gridOpacity !== undefined ? initialState.gridOpacity : 0.5);
+    // グリッド
+    const [showGrid, setShowGrid] = useState(initialDrawingState.showGrid);
+    const [gridSize, setGridSize] = useState(initialDrawingState.gridSize);
+    const [gridOpacity, setGridOpacity] = useState(initialDrawingState.gridOpacity);
 
     // モーダル状態
     const [showGridModal, setShowGridModal] = useState(false);
@@ -102,115 +181,59 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false); 
     
-    // 履歴管理 (Undo/Redo)
-    const [history, setHistory] = useState(() => {
-        const initialPaths = [{ points: [], mode: 'stroke', type: 'spline' }];
-        return [{ 
-            paths: JSON.parse(JSON.stringify(initialPaths)), 
-            currentPathIndex: 0, 
-            drawMode: 'stroke', 
-            drawingType: 'spline',
-            colors: {
-                strokePoint: '#00ffff',
-                strokeLine: '#ffff00',
-                fillPoint: '#000000',
-                fillArea: 'rgba(110, 110, 110, 0.5)',
-                fillBorder: '#000000',
-                background: '#303030',
-                grid: '#000000'
-            },
-            lineWidths: {
-                strokeLine: 4,
-                fillBorder: 3
-            }
-        }];
-    });
-    const [historyIndex, setHistoryIndex] = useState(0);
+    // 履歴管理 (Undo/Redo) - 包括的な初期化
+    const [history, setHistory] = useState(initialDrawingState.history);
+    const [historyIndex, setHistoryIndex] = useState(initialDrawingState.historyIndex);
     
     // 背景色変更のデバウンス用ref
     const backgroundColorTimeoutRef = useRef(null);
     
-    // 色設定 - デフォルト値を変更
-    const [colors, setColors] = useState(initialState?.colors || {
-        strokePoint: '#00ffff',  // チューブの点：シアン
-        strokeLine: '#ffff00',   // チューブの線：イエロー
-        fillPoint: '#000000',    // 土台の点：黒
-        fillArea: 'rgba(110, 110, 110, 0.5)', // 土台の中身：RGB(110, 110, 110) 透明度50%
-        fillBorder: '#000000',   // 土台の境界線：黒
-        background: '#303030',   // 背景色：グレー
-        grid: '#000000'          // グリッド色：黒
-    });
+    // 色設定 - 包括的な初期化
+    const [colors, setColors] = useState(initialDrawingState.colors);
     
-    // 線の太さ設定 - デフォルト値を変更
-    const [lineWidths, setLineWidths] = useState(initialState?.lineWidths || {
-        strokeLine: 4,  // チューブの線の太さ
-        fillBorder: 3   // 土台の境界線の太さ
-    });
+    // 線の太さ設定 - 包括的な初期化
+    const [lineWidths, setLineWidths] = useState(initialDrawingState.lineWidths);
 
-    // initialStateまたはLocalStorageから保存されたデータを初期状態として使用
+    // 初期化完了マーカー + LocalStorageから最新状態を確実に復元
     useEffect(() => {
+        // リマウント時に最新の状態を確実に復元
         try {
-            // 親コンポーネントから初期状態が提供されている場合はそれを優先
-            if (initialState && Object.keys(initialState).length > 0) {
-                // 親コンポーネントの状態で初期化
-                setPaths(initialState.paths || [{ points: [], mode: initialState.drawMode || 'stroke', type: initialState.drawingType || 'spline' }]);
-                setCurrentPathIndex(initialState.currentPathIndex || 0);
-                setDrawMode(initialState.drawMode || 'stroke');
-                setDrawingType(initialState.drawingType || 'spline');
-                setScale(initialState.scale || 1);
-                setOffsetX(initialState.offsetX || 0);
-                setOffsetY(initialState.offsetY || 0);
-                setBackgroundImage(initialState.backgroundImage || null);
-                setInitialBgImageWidth(initialState.initialBgImageWidth || 0);
-                setInitialBgImageHeight(initialState.initialBgImageHeight || 0);
-                setBgImageScale(initialState.bgImageScale || 1.0);
-                setBgImageX(initialState.bgImageX || 0);
-                setBgImageY(initialState.bgImageY || 0);
-                setBgImageOpacity(initialState.bgImageOpacity || 1.0);
-                setShowGrid(initialState.showGrid !== undefined ? initialState.showGrid : true);
-                setGridSize(initialState.gridSize || 100);
-                setGridOpacity(initialState.gridOpacity || 0.5);
-                setColors(initialState.colors || colors);
-                setLineWidths(initialState.lineWidths || lineWidths);
+            const savedData = localStorage.getItem('neonDrawingData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                console.log('リマウント時にLocalStorageから最新状態を復元:', parsedData);
                 
-                console.log('描画データを親コンポーネントから復元しました');
-            } else {
-                // 親コンポーネントからの初期状態がない場合のみLocalStorageから復元
-                const savedDrawingData = localStorage.getItem('neonDrawingData');
-                if (savedDrawingData) {
-                    const parsedData = JSON.parse(savedDrawingData);
-                    
-                    // 保存されたデータで状態を初期化
-                    setPaths(parsedData.paths || [{ points: [], mode: 'stroke', type: 'spline' }]);
-                    setCurrentPathIndex(parsedData.currentPathIndex || 0);
-                    setDrawMode(parsedData.drawMode || 'stroke');
-                    setDrawingType(parsedData.drawingType || 'spline');
-                    setScale(parsedData.scale || 1);
-                    setOffsetX(parsedData.offsetX || 0);
-                    setOffsetY(parsedData.offsetY || 0);
-                    setBackgroundImage(parsedData.backgroundImage || null);
-                    setInitialBgImageWidth(parsedData.initialBgImageWidth || 0);
-                    setInitialBgImageHeight(parsedData.initialBgImageHeight || 0);
-                    setBgImageScale(parsedData.bgImageScale || 1.0);
-                    setBgImageX(parsedData.bgImageX || 0);
-                    setBgImageY(parsedData.bgImageY || 0);
-                    setBgImageOpacity(parsedData.bgImageOpacity || 1.0);
-                    setShowGrid(parsedData.showGrid !== undefined ? parsedData.showGrid : true);
-                    setGridSize(parsedData.gridSize || 100);
-                    setGridOpacity(parsedData.gridOpacity || 0.5);
-                    setColors(parsedData.colors || colors);
-                    setLineWidths(parsedData.lineWidths || lineWidths);
-                    
-                    console.log('描画データをLocalStorageから復元しました');
+                // 確実に最新の描画状態を復元
+                if (parsedData.paths && Array.isArray(parsedData.paths)) {
+                    setPaths(parsedData.paths);
                 }
+                if (parsedData.currentPathIndex !== undefined) {
+                    setCurrentPathIndex(parsedData.currentPathIndex);
+                }
+                if (parsedData.history && Array.isArray(parsedData.history)) {
+                    setHistory(parsedData.history);
+                }
+                if (parsedData.historyIndex !== undefined) {
+                    setHistoryIndex(parsedData.historyIndex);
+                }
+                
+                console.log('最新状態復元完了 - パス数:', parsedData.paths?.length, '履歴:', parsedData.history?.length, 'インデックス:', parsedData.historyIndex);
             }
         } catch (error) {
-            console.error('データ復元に失敗しました:', error);
+            console.error('最新状態復元エラー:', error);
         }
-    }, [initialState]); // initialStateが変更されたときも実行
+        
+        isInitialized.current = true;
+        console.log('NeonDrawingApp初期化完了 - LocalStorageから最新状態を確実に復元');
+    }, []);
 
-    // 状態変更時にLocalStorageに保存する関数
+    // 状態変更時にLocalStorageに保存する関数 - 履歴も含めて保存
     const saveToLocalStorage = useCallback(() => {
+        if (!isInitialized.current) {
+            console.log('LocalStorage保存スキップ - 初期化未完了');
+            return;
+        }
+        
         try {
             const dataToSave = {
                 paths,
@@ -231,21 +254,31 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 gridSize,
                 gridOpacity,
                 colors,
-                lineWidths
+                lineWidths,
+                history,
+                historyIndex
             };
             localStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
-            console.log('描画データをLocalStorageに保存しました');
+            console.log('描画データをLocalStorageに保存しました - 履歴:', history.length, '個');
         } catch (error) {
             console.error('LocalStorageへのデータ保存に失敗しました:', error);
         }
-    }, [paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, backgroundImage, 
+    }, [isInitialized, paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, backgroundImage, 
         initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, 
-        showGrid, gridSize, gridOpacity, colors, lineWidths]);
+        showGrid, gridSize, gridOpacity, colors, lineWidths, history, historyIndex]);
 
-    // 重要なデータが変更されたときにLocalStorageに保存
+    // Undo/Redo時のパス変更を監視してLocalStorageに保存
     useEffect(() => {
-        saveToLocalStorage();
-    }, [paths, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors.background, saveToLocalStorage]);
+        if (isInitialized.current && paths.length > 0) {
+            // デバウンス処理でパス変更を監視
+            const timeoutId = setTimeout(() => {
+                console.log('パス変更検出 - LocalStorageに保存');
+                saveToLocalStorage();
+            }, 150);
+            
+            return () => clearTimeout(timeoutId);
+        }
+    }, [paths, isInitialized, saveToLocalStorage]);
 
     // 背景色変更のデバウンス処理
     const handleBackgroundColorChange = useCallback((color) => {
@@ -596,55 +629,73 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // 履歴を保存する関数
     const saveToHistory = useCallback((currentPaths, currentPathIdx, currentDrawMode, currentDrawingType) => {
-        setHistory(prevHistory => {
-            const newHistory = prevHistory.slice(0, historyIndex + 1); // 現在のhistoryIndexまでを保持
+        if (!isInitialized.current) {
+            console.log('履歴保存スキップ - 初期化未完了');
+            return;
+        }
 
-            // 最新のstateを履歴に追加
+        // 同期的な履歴更新 - 確実な実装
+        let newHistoryIndex;
+        let finalHistory;
+        
+        setHistory(prevHistory => {
+            // 現在のhistoryIndexより後の履歴は破棄
+            const truncatedHistory = prevHistory.slice(0, historyIndex + 1);
+            
+            // 描画状態のみを履歴に追加（UI設定は除外）
             const newState = {
                 paths: JSON.parse(JSON.stringify(currentPaths)), // ディープコピー
                 currentPathIndex: currentPathIdx,
                 drawMode: currentDrawMode,
-                drawingType: currentDrawingType,
-                scale: scale,
-                offsetX: offsetX,
-                offsetY: offsetY,
-                backgroundImage: backgroundImage,
-                initialBgImageWidth: initialBgImageWidth,
-                initialBgImageHeight: initialBgImageHeight,
-                bgImageScale: bgImageScale,
-                bgImageX: bgImageX,
-                bgImageY: bgImageY,
-                bgImageOpacity: bgImageOpacity,
-                showGrid: showGrid,
-                gridSize: gridSize,
-                gridOpacity: gridOpacity,
-                colors: colors,
-                lineWidths: lineWidths
+                drawingType: currentDrawingType
             };
-            newHistory.push(newState);
-
-            // 履歴の最大数（50個）を管理
-            if (newHistory.length > 50) {
-                newHistory.shift(); // 最も古い履歴を削除
-            }
             
-            // 親コンポーネントに状態変更を通知（重要な変更のみ）
+            const newHistory = [...truncatedHistory, newState];
+            
+            // 履歴の最大数（50個）を管理
+            finalHistory = newHistory.length > 50 ? newHistory.slice(-50) : newHistory;
+            newHistoryIndex = finalHistory.length - 1;
+            
+            // 親コンポーネントに状態変更を通知
             if (onStateChange) {
                 onStateChange(newState);
             }
             
-            // 履歴更新時にもLocalStorageに保存
-            saveToLocalStorage();
-            
-            console.log("History saved. newHistory.length:", newHistory.length, "historyIndex to be:", newHistory.length -1, "Saved state:", newState);
-            return newHistory;
+            console.log("履歴保存完了 - 長さ:", finalHistory.length, "インデックス:", newHistoryIndex);
+            return finalHistory;
         });
-        setHistoryIndex(prev => {
-            const newIndex = Math.min(prev + 1, 49); // 最大履歴数に合わせる
-            console.log("setHistoryIndex to:", newIndex);
-            return newIndex;
-        });
-    }, [historyIndex, onStateChange, scale, offsetX, offsetY, backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, saveToLocalStorage]); 
+        
+        // 同期的にhistoryIndexを更新
+        setHistoryIndex(newHistoryIndex);
+        
+        // 履歴更新後にLocalStorageに保存（非同期で実行）
+        setTimeout(() => {
+            const dataToSave = {
+                paths: currentPaths,
+                currentPathIndex: currentPathIdx,
+                drawMode: currentDrawMode,
+                drawingType: currentDrawingType,
+                scale,
+                offsetX,
+                offsetY,
+                backgroundImage,
+                initialBgImageWidth,
+                initialBgImageHeight,
+                bgImageScale,
+                bgImageX,
+                bgImageY,
+                bgImageOpacity,
+                showGrid,
+                gridSize,
+                gridOpacity,
+                colors,
+                lineWidths,
+                history: finalHistory,
+                historyIndex: newHistoryIndex
+            };
+            localStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
+        }, 50);
+    }, [historyIndex, isInitialized, onStateChange]); 
 
     // やり直し (Redo)
     const handleRedo = useCallback(() => {
@@ -654,22 +705,33 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             const nextState = history[nextIndex];
             console.log("Attempting to access nextIndex:", nextIndex, "history[nextIndex]:", nextState);
             if (nextState && Array.isArray(nextState.paths)) { 
+                // 描画状態のみを復元（UI設定は現在の状態を維持）
                 setPaths(nextState.paths);
                 setCurrentPathIndex(nextState.currentPathIndex);
-                setDrawMode(nextState.drawMode);
-                setDrawingType(nextState.drawingType);
                 setHistoryIndex(nextIndex);
+                
+                // 一時的なモード状態はリセット
                 setIsModifyingPoints(false);
                 setIsPathDeleteMode(false); // Redo時にモードを解除
                 setIsPointDeleteMode(false); // Redo時にモードを解除
                 setIsNewPathDisabled(false); // Redo時に新しいパスボタンを有効化
+                
+                // Redo後のLocalStorage保存 - 状態更新を確実に反映
+                setTimeout(() => {
+                    console.log('Redo後の状態をLocalStorageに保存:', {
+                        paths: nextState.paths,
+                        currentPathIndex: nextState.currentPathIndex,
+                        historyIndex: nextIndex
+                    });
+                    saveToLocalStorage();
+                }, 100);
             } else {
                 console.error("Redo failed: nextState is invalid or missing at index", nextIndex, { nextState, historySnapshot: history });
             }
         } else {
             console.log("Redo not possible: historyIndex is at end.");
         }
-    }, [history, historyIndex]);
+    }, [history, historyIndex, saveToLocalStorage]);
 
     // キャンバスをクリア
     const clearCanvas = useCallback(() => {
@@ -685,25 +747,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setIsPointDeleteMode(false); // クリア時にモードを解除
         setIsNewPathDisabled(false); // クリア時に新しいパスボタンを有効化
         
-        // 履歴を完全にリセット
+        // 履歴を完全にリセット（描画状態のみ）
         const initialHistory = [{
             paths: JSON.parse(JSON.stringify(initialPaths)),
             currentPathIndex: 0,
             drawMode: drawMode,
-            drawingType: drawingType,
-            colors: {
-                strokePoint: '#00ffff',
-                strokeLine: '#ffff00',
-                fillPoint: '#000000',
-                fillArea: 'rgba(110, 110, 110, 0.5)',
-                fillBorder: '#000000',
-                background: '#303030',
-                grid: '#000000'
-            },
-            lineWidths: {
-                strokeLine: 4,
-                fillBorder: 3
-            }
+            drawingType: drawingType
         }];
         setHistory(initialHistory);
         setHistoryIndex(0);
@@ -794,22 +843,33 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
             // prevStateが存在し、かつそのpathsプロパティが配列であることを確認
             if (prevState && Array.isArray(prevState.paths)) { 
+                // 描画状態のみを復元（UI設定は現在の状態を維持）
                 setPaths(prevState.paths);
                 setCurrentPathIndex(prevState.currentPathIndex);
-                setDrawMode(prevState.drawMode);
-                setDrawingType(prevState.drawingType);
                 setHistoryIndex(prevIndex);
+                
+                // 一時的なモード状態はリセット
                 setIsModifyingPoints(false);
                 setIsPathDeleteMode(false); // Undo時にモードを解除
                 setIsPointDeleteMode(false); // Undo時にモードを解除
                 setIsNewPathDisabled(false); // Undo時に新しいパスボタンを有効化
+                
+                // Undo後のLocalStorage保存 - 状態更新を確実に反映
+                setTimeout(() => {
+                    console.log('Undo後の状態をLocalStorageに保存:', {
+                        paths: prevState.paths,
+                        currentPathIndex: prevState.currentPathIndex,
+                        historyIndex: prevIndex
+                    });
+                    saveToLocalStorage();
+                }, 100);
             } else {
                 console.error("Undo failed: Previous state is invalid or missing.", { historyIndex, prevIndex, historySnapshot: history });
             }
         } else {
             console.log("Undo not possible: historyIndex is 0.");
         }
-    }, [history, historyIndex]);
+    }, [history, historyIndex, saveToLocalStorage]);
 
     // SVGパスを生成
     const generateSvgPaths = useCallback(() => {
