@@ -1754,6 +1754,34 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         </div>
                     </div>
 
+                    {/* エクスポート機能 */}
+                    <div className="project-controls">
+                        <h3 className="project-tools-title">プロジェクトの保存/読み込み</h3>
+                        <div className="reset-buttons-row">
+                            <button
+                                onClick={downloadNeonProject}
+                                className="project-save-btn"
+                                title="現在のネオン下絵プロジェクトをJSONファイルとしてダウンロード"
+                            >
+                                📤 保存
+                            </button>
+                            <label className="project-load-btn">
+                                📥 読み込む
+                                <input
+                                    type="file"
+                                    accept=".json"
+                                    onChange={(e) => {
+                                        if (e.target.files.length > 0) {
+                                            loadNeonProject(e.target.files[0]);
+                                        }
+                                        e.target.value = ''; // ファイル選択をリセット
+                                    }}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                        </div>
+                    </div>
+
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
@@ -2244,6 +2272,15 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 </div>
                                 <p>
                                     色設定で線や背景の色を変更、背景画像を読み込んでトレース、グリッド表示で正確な描画ができます。完成したら「SVGダウンロード」でファイルを保存できます。
+                                </p>
+                            </div>
+                            <div className="guide-notice-section">
+                                <div className="guide-section-title">
+                                    <div className="guide-section-icon">5</div>
+                                    プロジェクトの保存・読み込み
+                                </div>
+                                <p>
+                                    描いたネオン下絵を保存して、後で続きから作業できます。他の端末でも同じデータを読み込んで作業を再開できます。
                                 </p>
                             </div>
                             <button 

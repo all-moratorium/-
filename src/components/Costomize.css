@@ -952,9 +952,8 @@ html, body {
     background-color: #dc2626;
     color: white;
     font-weight: bold;
+    font-size: 14px;
     border-radius: 6px;
-    border: 1px solid #ef4444;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
     margin-bottom: 15px;
