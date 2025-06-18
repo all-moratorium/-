@@ -540,7 +540,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               requestAnimationFrame(() => {
-                window.dispatchEvent(new CustomEvent('3DRenderComplete'));
+                window.dispatchEvent(new CustomEvent('NeonRenderingCompleted'));
               });
             });
           });

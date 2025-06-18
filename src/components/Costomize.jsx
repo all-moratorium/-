@@ -1802,9 +1802,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             `.trim();
                             
                             setProcessing3DProgress(60);
-                            setProcessing3DMessage('SVG生成完了...');
+                            setProcessing3DMessage('生成完了...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 250));
+                            await new Promise(resolve => setTimeout(resolve, 500));
                             
                             // 3Dモデルデータ生成完了
                             setProcessing3DProgress(65);
@@ -1838,14 +1838,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             await new Promise(resolve => setTimeout(resolve, 15));
                             
                             setProcessing3DProgress(85);
-                            setProcessing3DMessage('3D画面を準備中...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 200));
-                            
-                            // 3Dプレビューイベントを発行
-                            setProcessing3DProgress(87);
-                            setProcessing3DMessage('3D画面に移行中...');
-                            
+                            setProcessing3DMessage('3Dモデルのレンダリングを待っています...');
+
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
                                 detail: {
                                     paths: neonPaths,
@@ -1855,58 +1849,38 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     neonPower: neonPower,
                                     backgroundColor: backgroundColor,
                                     backgroundColorOff: backgroundColorOff,
-                                    // サイズ情報を追加
-                                    svgSizeCm: {
-                                        width: svgWidthCm,
-                                        height: svgHeightCm
-                                    },
-                                    svgSizePx: {
-                                        width: svgWidth,
-                                        height: svgHeight
-                                    },
-                                    gridSizePx: gridSize, // 100px = 4cm
+                                    svgSizeCm: { width: svgWidthCm, height: svgHeightCm },
+                                    svgSizePx: { width: svgWidth, height: svgHeight },
+                                    gridSizePx: gridSize,
                                     gridSizeCm: 4,
-                                    // SVGファイル内容を追加
                                     svgContent: customizedSvg,
-                                    // 線の太さ情報を追加（ピクセル単位）
                                     strokeWidthsPx: neonLineWidths
                                 }
                             }));
                             
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                           
-                            
-                            // 3D処理完了イベントを待つ
+                            // NeonRenderingCompleted イベントを待つ
                             await new Promise(resolve => {
-                                const handle3DComplete = () => {
-                                    window.removeEventListener('3DProcessingComplete', handle3DComplete);
+                                const handleNeonRenderingComplete = () => {
+                                    window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
                                     resolve();
                                 };
-                                window.addEventListener('3DProcessingComplete', handle3DComplete);
+                                window.addEventListener('NeonRenderingCompleted', handleNeonRenderingComplete, { once: true });
                                 
-                                // フォールバック：3秒後に強制完了
                                 setTimeout(() => {
-                                    window.removeEventListener('3DProcessingComplete', handle3DComplete);
-                                    resolve();
+                                    window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
+                                    console.warn('NeonRenderingCompleted event timed out.');
+                                    resolve(); 
                                 }, 30000);
                             });
-                            
-                            // 3D処理完了後
-                            setProcessing3DProgress(95);
-                            setProcessing3DMessage('3Dレンダリング完了！');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                            // 完了表示
+
                             setProcessing3DProgress(100);
-                            setProcessing3DMessage('完了！');
+                            setProcessing3DMessage('レンダリング完了！');
                             
-                            // 100%を少し表示してから進捗モーダルを閉じる
                             await new Promise(resolve => setTimeout(resolve, 500));
                             
-                            // 進捗モーダルを閉じる
                             setIsProcessing3D(false);
+                            
+                            window.dispatchEvent(new CustomEvent('RequestPageTransitionTo3DPreview'));
                         }}
                         className="customize-download-button"
                         disabled={neonPaths.length === 0 || isProcessing3D}
