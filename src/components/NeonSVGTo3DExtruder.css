@@ -18,22 +18,32 @@
 }
 
 .controls-panel {
-  width: 270px;
-  background-color:#0a0a0a;
-  padding: 16px;
-  border-radius: 12px;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  box-shadow: 1px 0 10px rgba(241, 241, 241, 0);
-  z-index: 100;
   position: fixed;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 98%;
-  max-height: calc(100vh - 20px);
-  transition: all 0.3s ease;
-  color: white;
+    top: 0;
+    right: 0;
+    width: 320px;
+    height: 100vh;
+    background-color:rgb(29, 29, 29);
+    border-radius: 12px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    z-index: 10;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: 0;
+    height: 98%;
+    transition: all 0.3s ease;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 10;
+    overflow-y: auto;
+    overflow-x: hidden !important;
+    box-sizing: border-box;
+    max-width: 380px !important;
+    word-wrap: break-word;
 }
 
 .control-group {
@@ -175,7 +185,10 @@
 /* サイドバー内のコンテンツを折りたたみ時に非表示にする */
 .controls-panel.collapsed .control-group,
 .controls-panel.collapsed .button-group,
-.controls-panel.collapsed .info-text {
+.controls-panel.collapsed .info-text,
+.controls-panel.collapsed .neon3d-detail-info-header,
+.controls-panel.collapsed .neon3d-details-info-container,
+.controls-panel.collapsed .neon3d-proceed-button-container {
   display: none;
 }
 
@@ -185,8 +198,8 @@
   right: 23px;
   top: 46px;
   transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   background-color: #0a0a0a;
   color: rgba(255, 255, 255, 0.6);
   display: flex;
@@ -225,4 +238,326 @@
   .controls-panel {
     right: 10px;
   }
+}
+
+/* ===== Neon3D専用スタイル（クラス名重複回避） ===== */
+
+/* 詳細情報ヘッダー */
+.neon3d-detail-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+  margin-top: 40px;
+}
+
+.neon3d-detail-info-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+  line-height: 28px;
+}
+
+/* ガイドボタン（カスタマイズと同じデザイン、独自クラス名） */
+.neon3d-guide-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  animation: neon3d-lightning-flash 1.5s infinite;
+  overflow: visible;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.neon3d-guide-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.neon3d-guide-button::before {
+  content: 'i';
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Times New Roman', serif;
+  color: #333;
+  animation: neon3d-lightning-flicker 1.5s infinite;
+}
+
+.neon3d-guide-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: neon3d-ripple-wave 1.5s infinite;
+  pointer-events: none;
+}
+
+/* アニメーション定義（neon3d専用） */
+@keyframes neon3d-lightning-flash {
+  0%, 90%, 100% { 
+    box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+    border-color: #ffffff; 
+  }
+  5%, 10% { 
+    box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+    border-color: #ffffff; 
+    background: #ffffff; 
+  }
+}
+
+@keyframes neon3d-lightning-flicker {
+  0%, 90%, 100% { 
+    text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+    color: #333; 
+  }
+  5%, 10% { 
+    text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+    color: #ffffff; 
+  }
+}
+
+@keyframes neon3d-ripple-wave {
+  0% { 
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-color: rgba(255,255,255,0.7);
+  }
+  10% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+    border-color: rgba(255,255,255,0.7);
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    border-color: rgba(255,255,255,0);
+  }
+}
+
+/* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
+.neon3d-glow-power-section {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background-color: rgba(10, 10, 10, 0.9);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 103;
+  min-width: 160px;
+}
+
+.neon3d-glow-power-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.neon3d-glow-power-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.neon3d-glow-status-text {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.neon3d-glow-status-text.on {
+  color: #10b981;
+}
+
+.neon3d-glow-status-text.off {
+  color: #6b7280;
+}
+
+.neon3d-status-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.neon3d-status-dot.on {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.neon3d-status-dot.off {
+  background-color: #374151;
+}
+
+/* グローパワースイッチ（カスタマイズからコピー） */
+.neon3d-glow-power-switch {
+  width: 70px;
+  height: 36px;
+  border-radius: 18px;
+  border: 2px solid;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.neon3d-glow-power-switch.on {
+  background-color: #10b981;
+  border-color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.neon3d-glow-power-switch.off {
+  background-color: #374151;
+  border-color: #6b7280;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+}
+
+.neon3d-glow-switch-handle {
+  position: absolute;
+  top: 2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: white;
+  transition: left 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.neon3d-glow-switch-handle.on {
+  left: 38px;
+}
+
+.neon3d-glow-switch-handle.off {
+  left: 2px;
+}
+
+/* モデル詳細情報表示セクション */
+.neon3d-details-info-container {
+  margin-bottom: 40px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.neon3d-info-section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 8px;
+}
+
+.neon3d-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 4px 0;
+}
+
+.neon3d-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.neon3d-info-label {
+  font-size: 14px;
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.neon3d-info-value {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* Dimension item styles (copied from SVGTo3DExtruder) */
+.neon3d-dimension-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.9em;
+  border-bottom: 1px solid #4a4a4a;
+  margin-top:30px;
+  width: 100%;
+}
+
+
+.neon3d-dimension-label {
+  font-size: 16px;
+  color:rgb(255, 255, 255);
+  font-weight: 500;
+  text-align: left;
+  flex: 1;
+}
+
+.neon3d-dimension-value {
+  font-size: 19px;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: right;
+  min-width: 80px;
+  padding-left: 8px;
+}
+
+/* 商品情報へ進むボタン */
+.neon3d-proceed-button-container {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+}
+
+.neon3d-proceed-button {
+  padding: 12px 24px;
+  margin: 0 auto;
+  background-color: #FFFF00;
+  color: #000;
+  font-weight: bold;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 32px;
+  margin-top: 16px;
+  width: 90%; /* サイズ維持 */
+  box-sizing: border-box; /* 維持 */
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* 黄色のグロー効果に変更 */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.neon3d-proceed-button:hover {
+  background-color: #FFFF00;
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
+ 
 }

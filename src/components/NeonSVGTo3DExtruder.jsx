@@ -10,7 +10,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424' }, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -32,6 +32,25 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
   // State for UI controls
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  
+  // Model data state
+  const [calculatedModelData, setCalculatedModelData] = useState(null);
+  
+  // Calculate path length function (same as Customize component)
+  const calculatePathLength = (pathObj) => {
+    if (!pathObj || !pathObj.points || pathObj.points.length < 2) return 0;
+    
+    let totalLength = 0;
+    const points = pathObj.points;
+    
+    for (let i = 0; i < points.length - 1; i++) {
+      const dx = points[i + 1].x - points[i].x;
+      const dy = points[i + 1].y - points[i].y;
+      totalLength += Math.sqrt(dx * dx + dy * dy);
+    }
+    
+    return totalLength;
+  };
   const [color, setColor] = useState('#ff0088');
   const [emissiveValue, setEmissiveValue] = useState(1.0);
   const [glowValue, setGlowValue] = useState(0.58);
@@ -49,6 +68,69 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   useEffect(() => {
     backgroundColorRef.current = backgroundColor;
   }, [backgroundColor]);
+  
+  // Listen for model data from Customize component
+  useEffect(() => {
+    const handleShow3DPreview = (event) => {
+      const data = event.detail;
+      if (data && data.paths) {
+        // Calculate model data
+        const strokePaths = data.paths.filter(pathObj => pathObj && pathObj.mode === 'stroke');
+        const totalLengthPx = strokePaths.reduce((total, pathObj) => total + calculatePathLength(pathObj), 0);
+        const totalLengthCm = Math.round(totalLengthPx / 25 * 10) / 10; // Convert px to cm
+        
+        // Calculate 8mm and 6mm tube lengths and counts based on thickness
+        let tubeLength8mm = 0;
+        let tubeLength6mm = 0;
+        let tubeCount8mm = 0;
+        let tubeCount6mm = 0;
+        
+        strokePaths.forEach(pathObj => {
+          const pathIndex = data.paths.indexOf(pathObj);
+          const thickness = data.pathThickness[pathIndex] || data.strokeWidthsPx?.strokeLine || 15;
+          const lengthPx = calculatePathLength(pathObj);
+          const lengthCm = Math.round(lengthPx / 25 * 10) / 10;
+          
+          if (thickness >= 20) {
+            tubeLength8mm += lengthCm;
+            tubeCount8mm += 1;
+          } else {
+            tubeLength6mm += lengthCm;
+            tubeCount6mm += 1;
+          }
+        });
+        
+        // Calculate model size from SVG dimensions
+        const modelWidth = data.svgSizeCm?.width || 0;
+        const modelHeight = data.svgSizeCm?.height || 0;
+        
+        // Get base color (background color)
+        const baseColor = data.backgroundColor === 'transparent' ? '透明' : 
+                         data.backgroundColor === '#ffffff' ? '白' :
+                         data.backgroundColor === '#000000' ? '黒' : '透明';
+        
+        // Determine type (indoor/outdoor) - default to indoor for now
+        const modelType = '屋内ー非防水'; // Can be modified based on user selection
+        
+        setCalculatedModelData({
+          tubeLength8mm: tubeLength8mm * 10, // Convert to mm for display calculation
+          tubeLength6mm: tubeLength6mm * 10, // Convert to mm for display calculation
+          totalLength: totalLengthCm * 10, // Convert to mm for display calculation
+          tubeCount8mm: tubeCount8mm,
+          tubeCount6mm: tubeCount6mm,
+          totalTubeCount: tubeCount8mm + tubeCount6mm,
+          modelWidth: modelWidth * 10, // Convert cm to mm
+          modelHeight: modelHeight * 10, // Convert cm to mm
+          baseColor: baseColor,
+          modelType: modelType,
+          isGenerated: true // Flag to indicate model has been generated
+        });
+      }
+    };
+    
+    window.addEventListener('show3DPreview', handleShow3DPreview);
+    return () => window.removeEventListener('show3DPreview', handleShow3DPreview);
+  }, [calculatePathLength]);
 
 
   // Custom Shader for Neon Tubes
@@ -1255,126 +1337,78 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         >
           {sidebarVisible ? '▲' : '▼'}
         </button>
-        <div className="control-group">
-          <label className="control-label">SVGファイル読み込み:</label>
-          <input
-            type="file"
-            accept=".svg"
-            onChange={handleFileChange}
-            className="file-input"
-          />
-        </div>
         
-        <div className="control-group">
-          <label className="control-label">メインカラー:</label>
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="color-input"
-          />
-          <div className="color-presets">
-            {colorPresets.map((preset) => (
-              <div
-                key={preset}
-                className="color-preset"
-                style={{ backgroundColor: preset }}
-                onClick={() => setColor(preset)}
-              />
-            ))}
-          </div>
-        </div>
-        
-        <div className="control-group">
-          <label className="control-label">発光強度: {emissiveValue.toFixed(1)}</label>
-          <input
-            type="range"
-            min="0"
-            max="20"
-            step="0.5"
-            value={emissiveValue}
-            onChange={(e) => setEmissiveValue(parseFloat(e.target.value))}
-            className="slider"
-          />
-        </div>
-        
-        <div className="control-group">
-          <label className="control-label">グロー強度: {glowValue.toFixed(1)}</label>
-          <input
-            type="range"
-            min="0"
-            max="3"
-            step="0.1"
-            value={glowValue}
-            onChange={(e) => setGlowValue(parseFloat(e.target.value))}
-            className="slider"
-          />
-        </div>
-        
-        <div className="control-group">
-          <label className="control-label">拡散光強度: {scatterStrength.toFixed(2)}</label>
-          <input
-            type="range"
-            min="0"
-            max="2"
-            step="0.05"
-            value={scatterStrength}
-            onChange={(e) => setScatterStrength(parseFloat(e.target.value))}
-            className="slider"
-          />
-        </div>
-        
-        <div className="control-group">
-          <label className="control-label">チューブ太さ: {tubeSize.toFixed(3)}</label>
-          <input
-            type="range"
-            min="0.01"
-            max="0.15"
-            step="0.005"
-            value={tubeSize}
-            onChange={(e) => setTubeSize(parseFloat(e.target.value))}
-            className="slider"
-          />
+        {/* 詳細情報とガイドボタン */}
+        <div className="neon3d-detail-info-header">
+          <h3 className="neon3d-detail-info-title">詳細情報</h3>
+          <button
+            onClick={() => {/* ガイドモーダル表示処理 */}}
+            className="neon3d-guide-button"
+          >
+          </button>
         </div>
 
-        
-        <div className="control-group">
-          <label className="control-label">アニメーション速度: {animationSpeed.toFixed(1)}</label>
-          <input
-            type="range"
-            min="0"
-            max="3"
-            step="0.1"
-            value={animationSpeed}
-            onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
-            className="slider"
-          />
+        {/* グロー ON/OFF スイッチ */}
+        <div className="neon3d-glow-power-section">
+          <div className="neon3d-glow-power-controls">
+            <div className="neon3d-glow-power-status">
+              <span className={`neon3d-status-dot ${glowValue > 0 ? 'on' : 'off'}`}></span>
+              <span className={`neon3d-glow-status-text ${glowValue > 0 ? 'on' : 'off'}`}>
+                {glowValue > 0 ? 'ON' : 'OFF'}
+              </span>
+            </div>
+            <button
+              onClick={() => setGlowValue(glowValue > 0 ? 0 : 0.6)}
+              className={`neon3d-glow-power-switch ${glowValue > 0 ? 'on' : 'off'}`}
+            >
+              <div className={`neon3d-glow-switch-handle ${glowValue > 0 ? 'on' : 'off'}`} />
+            </button>
+          </div>
         </div>
-        
-        <div className="button-group">
-          <button
-            onClick={() => setFlickerEnabled(!flickerEnabled)}
-            className="control-button"
+
+        {/* モデル詳細情報表示 */}
+        <div className="neon3d-details-info-container">
+          <div className="neon3d-info-section-title">モデル詳細情報</div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">サイズ(幅x高)</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${Math.round(calculatedModelData.modelWidth)}x${Math.round(calculatedModelData.modelHeight)}mm` : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">タイプ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.modelType : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">6mmチューブ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${calculatedModelData.tubeCount6mm}本` : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">8mmチューブ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${calculatedModelData.tubeCount8mm}本` : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">6mmチューブ長さ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${(calculatedModelData.tubeLength6mm / 10).toFixed(1)}cm` : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">8mmチューブ長さ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${(calculatedModelData.tubeLength8mm / 10).toFixed(1)}cm` : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">ベースプレート色</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.baseColor : 'N/A'}</span>
+          </div>
+        </div>
+
+        {/* 商品情報へ進むボタン */}
+        <div className="neon3d-proceed-button-container">
+          <button 
+            className="neon3d-proceed-button"
+            onClick={() => {
+              // 商品情報ページへの遷移処理
+              console.log('商品情報へ進む');
+            }}
           >
-            {flickerEnabled ? 'チラつき停止' : 'チラつき効果'}
-          </button>
-          <button
-            onClick={() => setRotationEnabled(!rotationEnabled)}
-            className="control-button"
-          >
-            {rotationEnabled ? '回転停止' : '回転効果'}
-          </button>
-          <button
-            onClick={resetScene}
-            className="control-button"
-          >
-            リセット
-          </button>
-          <button
-            onClick={toggleWallLights}
-            className="control-button"
-          >
-            {wallLightsEnabled ? '壁ライトをオフ' : '壁ライトをオン'}
+            商品情報へ進む
           </button>
         </div>
       </div>
