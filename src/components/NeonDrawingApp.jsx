@@ -1527,8 +1527,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             </div>
 
             {/* サイドバー - オーバーレイ */}
-            {sidebarVisible && (
-                <div className="neon-sidebar">
+            <div className={`neon-sidebar ${sidebarVisible ? '' : 'collapsed'}`}>
                     <div className="neon-header">
                         <h1 className="neon-sidebar-title">
                             下絵描画
@@ -1538,6 +1537,14 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             onClick={() => setShowGuideModal(true)}
                             className={`neon-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
+                        </button>
+
+                        {/* サイドバー切り替えボタン */}
+                        <button
+                            onClick={() => setSidebarVisible(!sidebarVisible)}
+                            className="neon-toggle-sidebar-button"
+                        >
+                            {sidebarVisible ? '▲' : '▼'}
                         </button>
                     </div>
 
@@ -1553,14 +1560,6 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         </div>
                     </div>
 
-                    {/* サイドバー非表示ボタン */}
-                    <button 
-                        onClick={() => setSidebarVisible(false)}
-                        className="neon-sidebar-hide-button"
-                        aria-label="サイドバー非表示"
-                    >
-                        ▲
-                    </button>
 
                     {/* 描画ツール */}
                     <div className="draw-tools-title">描画ツール</div>
@@ -1856,17 +1855,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         カスタマイズへ進む
                     </button>
                 </div>
-            )}
 
-            {/* サイドバー表示ボタン（サイドバーが非表示の時） */}
-            {!sidebarVisible && (
-                <button
-                    onClick={() => setSidebarVisible(true)}
-                    className="show-neon-sidebar-button"
-                >
-                    サイドバー表示
-                </button>
-            )}
 
             {/* モーダル群 */}
             {/* グリッド設定モーダル */}

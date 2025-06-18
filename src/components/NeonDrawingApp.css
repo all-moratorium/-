@@ -76,6 +76,47 @@
     word-wrap: break-word;
 }
 
+/* 折りたたまれたサイドバー */
+.neon-sidebar.collapsed {
+    background-color: transparent;
+    overflow: hidden;
+}
+
+/* サイドバー内のコンテンツを折りたたみ時に非表示にする */
+.neon-sidebar.collapsed .neon-sidebar-title,
+.neon-sidebar.collapsed .neon-guide-button,
+.neon-sidebar.collapsed .status-message-area,
+.neon-sidebar.collapsed .draw-tools-title,
+.neon-sidebar.collapsed .draw-mode-buttons,
+.neon-sidebar.collapsed .draw-mode-button,
+.neon-sidebar.collapsed .new-path-button,
+.neon-sidebar.collapsed .settings-button,
+.neon-sidebar.collapsed .edit-tools-title,
+.neon-sidebar.collapsed .edit-mode-buttons,
+.neon-sidebar.collapsed .edit-mode-button,
+.neon-sidebar.collapsed .delete-buttons,
+.neon-sidebar.collapsed .delete-button,
+.neon-sidebar.collapsed .grid-bg-controls,
+.neon-sidebar.collapsed .grid-toggle-container,
+.neon-sidebar.collapsed .grid-toggle-label,
+.neon-sidebar.collapsed .grid-toggle-button,
+.neon-sidebar.collapsed .background-controls,
+.neon-sidebar.collapsed .background-label,
+.neon-sidebar.collapsed .background-color-picker-wrapper,
+.neon-sidebar.collapsed .background-color-preview,
+.neon-sidebar.collapsed .background-color-input,
+.neon-sidebar.collapsed .view-controls,
+.neon-sidebar.collapsed .reset-tools-title,
+.neon-sidebar.collapsed .reset-buttons-row,
+.neon-sidebar.collapsed .view-reset-button,
+.neon-sidebar.collapsed .project-controls,
+.neon-sidebar.collapsed .project-tools-title,
+.neon-sidebar.collapsed .project-save-btn,
+.neon-sidebar.collapsed .project-load-btn,
+.neon-sidebar.collapsed .download-button {
+    display: none;
+}
+
 .neon-sidebar-title {
     font-size: 24px;
     font-weight: bold;
@@ -95,29 +136,33 @@
     margin-bottom: 30px;
 }
 
-.neon-sidebar-hide-button {
+.neon-toggle-sidebar-button {
     position: absolute;
-    right: 18px;
-    top: 36px;
+    right: 7px;
+    top: -26px;
     transform: translateY(-50%);
+    z-index: 101;
     width: 40px;
     height: 40px;
+    padding: 0;
     background-color: #0a0a0a;
     color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
-    cursor: pointer;
     font-size: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.2s ease;
 }
 
-.neon-sidebar-hide-button:hover {
+.neon-toggle-sidebar-button:hover {
     color: #ffffff;
     border-color: rgba(255, 255, 255, 0.2);
 }
+
 
 /* ガイドボタン（文字サイズに合わせて調整） */
 .neon-guide-button {
@@ -718,26 +763,6 @@
 }
 
 
-/* ネオン下絵サイドバー表示ボタン */
-.show-neon-sidebar-button {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 50;
-    padding: 8px 16px;
-    background-color: #7c3aed;
-    color: white;
-    border-radius: 9999px;
-    border: 1px solid #8b5cf6;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.2s;
-    transform: scale(1);
-}
-
-.show-neon-sidebar-button:hover {
-    background-color: #8b5cf6;
-}
 
 /* モーダル */
 .modal-overlay {

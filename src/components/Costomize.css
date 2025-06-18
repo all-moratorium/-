@@ -73,6 +73,29 @@
     word-wrap: break-word;
 }
 
+/* 折りたたまれたサイドバー */
+.customize-sidebar.collapsed {
+    background-color: transparent;
+    overflow: hidden;
+}
+
+/* サイドバー内のコンテンツを折りたたみ時に非表示にする */
+.customize-sidebar.collapsed .customize-sidebar-title,
+.customize-sidebar.collapsed .customize-guide-button,
+.customize-sidebar.collapsed .customize-setting-group,
+.customize-sidebar.collapsed .customize-download-button,
+.customize-sidebar.collapsed .neon-power-section,
+.customize-sidebar.collapsed .neon-tube-settings,
+.customize-sidebar.collapsed .base-settings,
+.customize-sidebar.collapsed .view-controls,
+.customize-sidebar.collapsed .display-settings,
+.customize-sidebar.collapsed .project-controls,
+.customize-sidebar.collapsed .bulk-setting-section,
+.customize-sidebar.collapsed .scroll-top-section {
+    display: none;
+}
+
+
 /* ヘッダーコンテナ */
 .customize-header {
     display: flex;
@@ -91,29 +114,6 @@
     text-align: center;
 }
 
-.customize-sidebar-hide-button {
-    position: absolute;
-    right: 18px;
-    top: 36px;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background-color: #0a0a0a;
-    color: rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.2s ease;
-}
-
-.customize-sidebar-hide-button:hover {
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.2);
-}
 
 .customize-setting-group {
     margin-bottom: 20px;
@@ -388,26 +388,32 @@
     background-color: #ef4444;
 }
 
-/* カスタマイズサイドバー表示ボタン */
-.customize-show-sidebar-button {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 50;
-    padding: 8px 16px;
-    background-color: #7c3aed;
-    color: white;
-    border-radius: 9999px;
-    border: 1px solid #8b5cf6;
+/* カスタマイズサイドバー切り替えボタン */
+.customize-toggle-sidebar-button {
+    position: absolute;
+    right: 7px;
+    top: -26px;
+    transform: translateY(-50%);
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: #0a0a0a;
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.2s;
-    transform: scale(1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
 }
 
-.customize-show-sidebar-button:hover {
-    background-color: #8b5cf6;
-    transform: scale(1.1);
+.customize-toggle-sidebar-button:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* レスポンシブデザイン */

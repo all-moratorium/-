@@ -1352,8 +1352,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             </div>
 
             {/* サイドバー */}
-            {sidebarVisible && (
-                <div className="customize-sidebar">
+            <div className={`customize-sidebar ${sidebarVisible ? '' : 'collapsed'}`}>
                     <div className="customize-header">
                         <h1 className="customize-sidebar-title">
                             カスタマイズ
@@ -1363,6 +1362,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             onClick={() => setShowGuideModal(true)}
                             className={`customize-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
+                        </button>
+
+                        {/* サイドバー切り替えボタン */}
+                        <button
+                            onClick={() => setSidebarVisible(!sidebarVisible)}
+                            className="customize-toggle-sidebar-button"
+                        >
+                            {sidebarVisible ? '▲' : '▼'}
                         </button>
                     </div>
 
@@ -1418,14 +1425,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                        
                     </div>
 
-                    {/* サイドバー非表示ボタン */}
-                    <button 
-                        onClick={() => setSidebarVisible(false)}
-                        className="customize-sidebar-hide-button"
-                        aria-label="サイドバー非表示"
-                    >
-                        ▲
-                    </button>
 
 
                     {/* 一括設定 */}
@@ -2111,17 +2110,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </button>
 
                 </div>
-            )}
 
-            {/* サイドバー表示ボタン（サイドバーが非表示の時） */}
-            {!sidebarVisible && (
-                <button
-                    onClick={() => setSidebarVisible(true)}
-                    className="customize-show-sidebar-button"
-                >
-                    サイドバー表示
-                </button>
-            )}
 
             {/* 色選択モーダル */}
             {showColorModal && (
