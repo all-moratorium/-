@@ -131,7 +131,7 @@
     font-size: 16px;
     font-weight: bold;
     color: #d1d5db;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -871,12 +871,6 @@ html, body {
     margin-bottom: 20px;
 }
 
-.base-settings-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
 
 .base-settings-actions {
     display: flex;
@@ -908,6 +902,7 @@ html, body {
     display: flex;
     gap: 8px;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .base-color-button {
@@ -942,16 +937,60 @@ html, body {
 }
 
 .base-color-button.active {
-    border-color: #00ff80 !important;
+    border-color: #10b981 !important;
     border-width: 3px !important;
     transform: scale(1.15);
-    box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
+}
+
+/* 設置環境ボタンスタイル（独自クラス名） */
+.installation-environment-button {
+    background-color: #6b7280;
+    color: white;
+    border: 1px solid #6b7280;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 90px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.installation-environment-button:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+}
+
+.installation-environment-button.active {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* 設置環境セクションスタイル */
+.installation-environment-section {
+    margin-bottom: 20px;
+}
+
+.installation-environment-section .base-color-label {
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.installation-environment-section .base-color-options {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
 .base-color-button.active:hover {
-    border-color: #00ff80 !important;
-    transform: scale(1.2);
-    box-shadow: 0 0 16px rgba(0, 255, 128, 0.8);
+    border-color: #10b981 !important;
+    transform: scale(1.15);
 }
 
 /* ビュー操作セクション */

@@ -110,7 +110,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
                          data.backgroundColor === '#000000' ? '黒' : '透明';
         
         // Determine type (indoor/outdoor) - default to indoor for now
-        const modelType = '屋内ー非防水'; // Can be modified based on user selection
+        // Determine type (indoor/outdoor) based on user selection
+        const modelType = data.installationEnvironment === 'outdoor' ? '屋外 - IP67防水' : '屋内 - 非防水';
         
         setCalculatedModelData({
           tubeLength8mm: tubeLength8mm * 10, // Convert to mm for display calculation
@@ -1338,16 +1339,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           {sidebarVisible ? '▲' : '▼'}
         </button>
         
-        {/* 詳細情報とガイドボタン */}
-        <div className="neon3d-detail-info-header">
-          <h3 className="neon3d-detail-info-title">詳細情報</h3>
-          <button
-            onClick={() => {/* ガイドモーダル表示処理 */}}
-            className="neon3d-guide-button"
-          >
-          </button>
-        </div>
-
         {/* グロー ON/OFF スイッチ */}
         <div className="neon3d-glow-power-section">
           <div className="neon3d-glow-power-controls">
@@ -1368,14 +1359,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         {/* モデル詳細情報表示 */}
         <div className="neon3d-details-info-container">
-          <div className="neon3d-info-section-title">モデル詳細情報</div>
+          <div className="neon3d-model-details-header">
+            <div className="neon3d-info-section-title">モデル詳細情報</div>
+            <button
+              onClick={() => {/* ガイドモーダル表示処理 */}}
+              className="neon3d-guide-button"
+            >
+            </button>
+          </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">サイズ(幅x高)</span>
             <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${Math.round(calculatedModelData.modelWidth)}x${Math.round(calculatedModelData.modelHeight)}mm` : 'N/A'}</span>
-          </div>
-          <div className="neon3d-dimension-item">
-            <span className="neon3d-dimension-label">タイプ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.modelType : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">6mmチューブ</span>
@@ -1396,6 +1390,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">ベースプレート色</span>
             <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.baseColor : 'N/A'}</span>
+          </div>
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">タイプ</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.modelType : 'N/A'}</span>
           </div>
         </div>
 

@@ -253,30 +253,32 @@
 }
 
 .neon3d-detail-info-title {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
-  color: #ffffff;
+  color:rgb(255, 255, 255);
   margin: 0;
-  line-height: 28px;
+  text-align: center;
 }
 
-/* ガイドボタン（カスタマイズと同じデザイン、独自クラス名） */
+/* ガイドボタン（モデル詳細情報用） */
 .neon3d-guide-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 2px solid #ddd;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ddd; 
   border-radius: 50%;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 17px;
   background: white;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   animation: neon3d-lightning-flash 1.5s infinite;
   overflow: visible;
   transition: all 0.3s ease;
-  position: relative;
+  position: absolute;
+  right: 19px;
+  top: 5px;
 }
 
 .neon3d-guide-button:hover {
@@ -352,7 +354,7 @@
 /* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
 .neon3d-glow-power-section {
   position: absolute;
-  top: 70%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -460,18 +462,43 @@
 /* モデル詳細情報表示セクション */
 .neon3d-details-info-container {
   margin-bottom: 40px;
+  margin-top: 60px;
   padding: 12px;
   border-radius: 8px;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: neon3d-slideInFromRight 0.3s ease-out forwards;
+}
+
+/* モデル詳細情報ヘッダー（customize-headerスタイルを参考） */
+.neon3d-model-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* 右からのスライドインアニメーション */
+@keyframes neon3d-slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .neon3d-info-section-title {
-  font-size: 16px;
+  font-size: 1.3em;
   font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 12px;
+  color:rgb(255, 247, 247); /* Accent color for titles */
+  margin: 0;
+  padding: 0;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 8px;
+  margin-bottom: 25px;
 }
 
 .neon3d-info-item {

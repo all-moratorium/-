@@ -56,6 +56,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         offsetY: 0,
         segmentsPerCurve: 30
     });
+    const [installationEnvironment, setInstallationEnvironment] = useState(initialState?.installationEnvironment || 'indoor'); // 'indoor' or 'outdoor'
     
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
@@ -109,7 +110,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 gridSize,
                 pathColors,
                 pathThickness,
-                isTubeSettingsMinimized
+                isTubeSettingsMinimized,
+                installationEnvironment
             };
             onStateChange(currentState);
         }
@@ -152,7 +154,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             neonPaths,
             neonColors,
             neonLineWidths,
-            canvasSettings
+            canvasSettings,
+            installationEnvironment
         };
 
         const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
@@ -164,7 +167,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings]);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
 
     // プロジェクト読み込み機能
     const loadProjectFromFile = useCallback((event) => {
@@ -197,6 +200,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
                 if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
                 if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
+                if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
 
                 alert('プロジェクトが正常に読み込まれました！');
             } catch (error) {
@@ -1671,6 +1675,35 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     </div>
                                 );
                             })}
+                        </div>
+                    )}
+
+                    {/* 設置環境設定 */}
+                    {neonPaths.some(pathObj => pathObj && pathObj.mode === 'fill') && (
+                        <div className="base-settings">
+                            <div className="base-settings-header">
+                                <h3 className="customize-setting-title">設置環境</h3>
+                            </div>
+                            <div className="base-item installation-environment-section">
+                                <label className="base-color-label">使用環境を選択してください</label>
+                                <div className="base-color-options">
+                                    <div 
+                                        className={`installation-environment-button ${installationEnvironment === 'indoor' ? 'active' : ''}`}
+                                        onClick={() => setInstallationEnvironment('indoor')}
+                                        title="屋内使用（非防水）"
+                                    >
+                                        屋内 - 非防水
+                                    </div>
+                                    <div 
+                                        className={`installation-environment-button ${installationEnvironment === 'outdoor' ? 'active' : ''}`}
+                                        onClick={() => setInstallationEnvironment('outdoor')}
+                                        title="屋外使用（IP67防水）"
+                                    >
+                                        <div>屋外 - IP67防水</div>
+                                        <div style={{marginTop: '4px'}}>(価格＋15%)</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
