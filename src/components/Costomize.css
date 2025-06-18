@@ -936,9 +936,22 @@ html, body {
     background-color: #000000;
 }
 
+.base-color-button:hover {
+    border-color: #888;
+    transform: scale(1.05);
+}
+
 .base-color-button.active {
-    border-color: #ffffff;
-    transform: scale(1.1);
+    border-color: #00ff80 !important;
+    border-width: 3px !important;
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
+}
+
+.base-color-button.active:hover {
+    border-color: #00ff80 !important;
+    transform: scale(1.2);
+    box-shadow: 0 0 16px rgba(0, 255, 128, 0.8);
 }
 
 /* ビュー操作セクション */

@@ -453,7 +453,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }));
             
             if (svgData.colors) {
-                setNeonColors(svgData.colors);
+                // fillAreaを透明に設定してからneonColorsを更新
+                const colorsWithTransparentFill = {
+                    ...svgData.colors,
+                    fillArea: 'transparent'
+                };
+                setNeonColors(colorsWithTransparentFill);
             }
             
             if (svgData.lineWidths) {

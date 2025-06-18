@@ -34,8 +34,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [color, setColor] = useState('#ff0088');
   const [emissiveValue, setEmissiveValue] = useState(1.0);
-  const [glowValue, setGlowValue] = useState(0.80);
-  const [scatterStrength, setScatterStrength] = useState(0.05);
+  const [glowValue, setGlowValue] = useState(0.58);
+  const [scatterStrength, setScatterStrength] = useState(0.00);
   const [tubeSize, setTubeSize] = useState(0.04);
   const [animationSpeed, setAnimationSpeed] = useState(0.0);
   const [flickerEnabled, setFlickerEnabled] = useState(false);
