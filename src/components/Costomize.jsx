@@ -1802,7 +1802,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             `.trim();
                             
                             setProcessing3DProgress(60);
-                            setProcessing3DMessage('生成完了...');
+                            setProcessing3DMessage('データ生成完了...');
                             
                             await new Promise(resolve => setTimeout(resolve, 500));
                             
@@ -1819,7 +1819,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             
                             // SVGデータをプリロード処理
                             setProcessing3DProgress(75);
-                            setProcessing3DMessage('SVGプリロード中...');
+                            setProcessing3DMessage('プリロード中...');
                             
                             const blob = new Blob([customizedSvg], { type: 'image/svg+xml' });
                             const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
@@ -1874,7 +1874,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             });
 
                             setProcessing3DProgress(100);
-                            setProcessing3DMessage('レンダリング完了！');
+                            setProcessing3DMessage('生成完了');
                             
                             await new Promise(resolve => setTimeout(resolve, 500));
                             
