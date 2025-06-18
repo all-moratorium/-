@@ -96,21 +96,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         
         const isPathLikeElement = ['path', 'rect', 'circle', 'polygon'].includes(element.tagName.toLowerCase());
 
-        // Fill要素（土台）の処理
-        if (isFilled && isPathLikeElement && dataType !== 'neon') {
-          const points = this.elementToPathPoints(element, scale);
-          if (points.length > 0) {
-            elements.push({
-              type: 'base',
-              points: points,
-              fill: fill
-            });
-          }
-          return;
-        }
-
-        // Stroke要素（ネオンチューブ）の処理
-        if (stroke && stroke !== 'none') {
+        // data-type属性を優先的にチェック
+        if (dataType === 'neon') {
+          // ネオンチューブの処理
           const points = this.elementToPathPoints(element, scale);
           const strokeWidth = element.getAttribute('stroke-width');
           if (points.length > 0) {
@@ -120,6 +108,42 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
               strokeWidth: strokeWidth ? parseFloat(strokeWidth) : null,
               stroke: stroke || '#ffffff'
             });
+          }
+        } else if (dataType === 'base') {
+          // 土台の処理
+          const points = this.elementToPathPoints(element, scale);
+          if (points.length > 0) {
+            elements.push({
+              type: 'base',
+              points: points,
+              fill: fill
+            });
+          }
+        } else {
+          // 従来のロジック（データ型が指定されていない場合）
+          // Fill要素（土台）の処理
+          if (isFilled && isPathLikeElement && stroke === 'none') {
+            const points = this.elementToPathPoints(element, scale);
+            if (points.length > 0) {
+              elements.push({
+                type: 'base',
+                points: points,
+                fill: fill
+              });
+            }
+          }
+          // Stroke要素（ネオンチューブ）の処理 - fillがない場合のみ
+          else if (stroke && stroke !== 'none' && (!isFilled || fill === 'none')) {
+            const points = this.elementToPathPoints(element, scale);
+            const strokeWidth = element.getAttribute('stroke-width');
+            if (points.length > 0) {
+              elements.push({
+                type: 'neon',
+                points: points,
+                strokeWidth: strokeWidth ? parseFloat(strokeWidth) : null,
+                stroke: stroke || '#ffffff'
+              });
+            }
           }
         }
       });
@@ -533,6 +557,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       const distance = maxDim * 1.8;
       cameraRef.current.position.z = distance;
       
+      // デバッグ: 処理された要素数をログ出力
+      console.log(`SimpleSVGLoader processed ${elementsData.length} elements:`);
+      elementsData.forEach((element, index) => {
+        console.log(`  Element ${index}: type=${element.type}, points=${element.points.length}, stroke=${element.stroke}, fill=${element.fill}`);
+        // 最初の5つのポイントをログ出力して形状を確認
+        if (element.points.length > 0) {
+          const firstFewPoints = element.points.slice(0, Math.min(5, element.points.length));
+          console.log(`    First points:`, firstFewPoints.map(p => `(${p.x.toFixed(2)}, ${p.y.toFixed(2)}, ${p.z.toFixed(2)})`));
+        }
+      });
+
       // レンダリング完了イベントを発行（実際のレンダリング後）
       setTimeout(() => {
         // 複数フレームレンダリングが完了するまで待機

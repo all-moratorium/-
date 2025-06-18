@@ -1692,18 +1692,37 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                                 if (pathMode === 'stroke') {
                                     let currentStrokeSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
-                                    if (pathType === 'spline') {
-                                        for (let i = 0; i < pathPoints.length - 1; i++) {
-                                            const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
-                                            const p1 = pathPoints[i];
-                                            const p2 = pathPoints[i + 1];
-                                            const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+                                    if (pathType === 'spline' && pathPoints.length >= 2) {
+                                        // 最初の点は既にMoveToで設定済み
+                                        // 2点の場合は直線で接続
+                                        if (pathPoints.length === 2) {
+                                            currentStrokeSegment += ` L ${pathPoints[1].x},${pathPoints[1].y}`;
+                                        } 
+                                        // 3点以上の場合はCatmull-Rom補間
+                                        else {
+                                            for (let i = 0; i < pathPoints.length - 1; i++) {
+                                                // 制御点の設定を修正
+                                                const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                                                const p1 = pathPoints[i];
+                                                const p2 = pathPoints[i + 1];
+                                                const p3 = (i + 2 < pathPoints.length) ? pathPoints[i + 2] : pathPoints[pathPoints.length - 1];
 
-                                            for (let t = 0; t <= canvasSettings.segmentsPerCurve; t++) {
-                                                const step = t / canvasSettings.segmentsPerCurve;
-                                                const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                                                const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                                                currentStrokeSegment += ` L ${x},${y}`;
+                                                // キャンバス描画と同じロジックを使用
+                                                for (let t = 0; t <= canvasSettings.segmentsPerCurve; t++) {
+                                                    const step = t / canvasSettings.segmentsPerCurve;
+                                                    const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                                                    const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                                                    
+                                                    // 有効な数値かチェック（NaN、Infinityを除外）
+                                                    if (isFinite(x) && isFinite(y)) {
+                                                        currentStrokeSegment += ` L ${x.toFixed(2)},${y.toFixed(2)}`;
+                                                    } else {
+                                                        console.warn(`Invalid spline point at pathIndex ${pathIndex}, segment ${i}, t=${step}: (${x}, ${y})`);
+                                                        // フォールバック：直線で接続
+                                                        currentStrokeSegment += ` L ${p2.x},${p2.y}`;
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     } else {
@@ -1713,7 +1732,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     }
                                     
                                     const effectiveThickness = customThickness || neonLineWidths.strokeLine || 15;
-                                    strokePathData += `<path class="neon-stroke" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
+                                    strokePathData += `<path class="neon-stroke" data-type="neon" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
                                 }
 
                                 if (pathMode === 'fill' && pathPoints.length >= 3) {
@@ -1741,7 +1760,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     const effectiveFillThickness = 3;
                                     const fillColor = pathColors[`${pathIndex}_fill`] || neonColors.fillArea;
                                     const strokeColor = customColor || neonColors.fillBorder;
-                                    fillPathData += `<path class="base-stroke" d="${currentFillSegment}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${effectiveFillThickness}"/>\n    `;
+                                    fillPathData += `<path class="base-stroke" data-type="base" d="${currentFillSegment}" fill="${fillColor}" stroke="none" stroke-width="0"/>\n    `;
                                 }
                                 
                                 // 各パス処理完了時に進捗更新
