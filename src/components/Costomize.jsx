@@ -126,6 +126,89 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         '#00ffff', '#ff00ff', '#ffffff', '#ff4080'
     ];
 
+    // プロジェクト保存機能
+    const saveProjectToFile = useCallback(() => {
+        const projectData = {
+            version: '1.0',
+            timestamp: new Date().toISOString(),
+            selectedColor,
+            brightness,
+            thickness,
+            glowIntensity,
+            blinkEffect,
+            animationSpeed,
+            sidebarVisible,
+            neonPower,
+            backgroundColor,
+            backgroundColorOff,
+            gridColor,
+            gridColorOff,
+            showGrid,
+            gridOpacity,
+            gridSize,
+            pathColors,
+            pathThickness,
+            isTubeSettingsMinimized,
+            neonPaths,
+            neonColors,
+            neonLineWidths,
+            canvasSettings
+        };
+
+        const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `neon-customize-project-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings]);
+
+    // プロジェクト読み込み機能
+    const loadProjectFromFile = useCallback((event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const projectData = JSON.parse(e.target.result);
+                
+                // データの復元
+                if (projectData.selectedColor !== undefined) setSelectedColor(projectData.selectedColor);
+                if (projectData.thickness !== undefined) setThickness(projectData.thickness);
+                if (projectData.blinkEffect !== undefined) setBlinkEffect(projectData.blinkEffect);
+                if (projectData.animationSpeed !== undefined) setAnimationSpeed(projectData.animationSpeed);
+                if (projectData.sidebarVisible !== undefined) setSidebarVisible(projectData.sidebarVisible);
+                if (projectData.neonPower !== undefined) setNeonPower(projectData.neonPower);
+                if (projectData.backgroundColor !== undefined) setBackgroundColor(projectData.backgroundColor);
+                if (projectData.backgroundColorOff !== undefined) setBackgroundColorOff(projectData.backgroundColorOff);
+                if (projectData.gridColor !== undefined) setGridColor(projectData.gridColor);
+                if (projectData.gridColorOff !== undefined) setGridColorOff(projectData.gridColorOff);
+                if (projectData.showGrid !== undefined) setShowGrid(projectData.showGrid);
+                if (projectData.gridOpacity !== undefined) setGridOpacity(projectData.gridOpacity);
+                if (projectData.gridSize !== undefined) setGridSize(projectData.gridSize);
+                if (projectData.pathColors !== undefined) setPathColors(projectData.pathColors);
+                if (projectData.pathThickness !== undefined) setPathThickness(projectData.pathThickness);
+                if (projectData.isTubeSettingsMinimized !== undefined) setIsTubeSettingsMinimized(projectData.isTubeSettingsMinimized);
+                if (projectData.neonPaths !== undefined) setNeonPaths(projectData.neonPaths);
+                if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
+                if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
+                if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
+
+                alert('プロジェクトが正常に読み込まれました！');
+            } catch (error) {
+                alert('プロジェクトファイルの読み込みに失敗しました。ファイル形式を確認してください。');
+                console.error('Project load error:', error);
+            }
+        };
+        reader.readAsText(file);
+        // ファイル選択をリセット
+        event.target.value = '';
+    }, []);
+
     // Catmull-Rom補間関数
     const getCatmullRomPt = (p0, p1, p2, p3, t) => {
         const t2 = t * t;
@@ -1664,14 +1747,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </div>
 
 
-                    {/* SVGダウンロード */}
-                    <button
-                        onClick={handleDownloadSVG}
-                        className="customize-download-button"
-                        disabled={neonPaths.length === 0}
-                    >
-                        SVGダウンロード
-                    </button>
+                    {/* 色仕様の保存・読み込み */}
+                    <div className="project-controls">
+                        <h3 className="project-tools-title">色仕様の保存/読み込み</h3>
+                        <div className="reset-buttons-row">
+                            <button
+                                onClick={saveProjectToFile}
+                                className="project-save-btn"
+                                disabled={neonPaths.length === 0}
+                                title="現在の色仕様設定をJSONファイルとしてダウンロード"
+                            >
+                                📤 保存
+                            </button>
+                            <label className="project-load-btn">
+                                📥 読み込む
+                                <input
+                                    type="file"
+                                    accept=".json"
+                                    onChange={loadProjectFromFile}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                        </div>
+                    </div>
 
                     {/* 3Dモデル生成 */}
                     <button
