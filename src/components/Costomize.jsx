@@ -39,6 +39,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
+    const [selectedBulkColor, setSelectedBulkColor] = useState(null); // 一括設定で選択された色
+    const [originalPathSettings, setOriginalPathSettings] = useState({}); // 元の設定を保存
     const [isProcessing3D, setIsProcessing3D] = useState(false); // 3D処理中フラグ
     const [processing3DProgress, setProcessing3DProgress] = useState(0); // 3D処理進捗
     const [processing3DMessage, setProcessing3DMessage] = useState(''); // 3D処理メッセージ
@@ -55,6 +57,25 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
+
+    // selectedTubesが変更された時に新しく追加されたチューブに設定を適用
+    useEffect(() => {
+        if (selectedTubes.size > 0 && (selectedBulkColor || selectedBulkThickness)) {
+            selectedTubes.forEach(index => {
+                // 既に色・太さが適用されているかチェック
+                const currentColor = pathColors[index];
+                const currentThickness = pathThickness[index];
+                
+                // 選択された色・太さと違う場合は適用
+                if (selectedBulkColor && currentColor !== selectedBulkColor) {
+                    setPathColors(prev => ({ ...prev, [index]: selectedBulkColor }));
+                }
+                if (selectedBulkThickness && currentThickness !== selectedBulkThickness) {
+                    setPathThickness(prev => ({ ...prev, [index]: selectedBulkThickness }));
+                }
+            });
+        }
+    }, [selectedTubes, selectedBulkColor, selectedBulkThickness, pathColors, pathThickness]);
 
     // 背景色変更処理（即座に変更）
     const handleBackgroundColorChange = useCallback((color) => {
@@ -839,9 +860,36 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         // 一括色変更モードの場合
                         const newSelected = new Set(selectedTubes);
                         if (newSelected.has(hitPathIndex)) {
+                            // 選択解除: 元の設定に戻す
                             newSelected.delete(hitPathIndex);
+                            if (originalPathSettings[hitPathIndex]) {
+                                setPathColors(prev => ({ 
+                                    ...prev, 
+                                    [hitPathIndex]: originalPathSettings[hitPathIndex].color 
+                                }));
+                                setPathThickness(prev => ({ 
+                                    ...prev, 
+                                    [hitPathIndex]: originalPathSettings[hitPathIndex].thickness 
+                                }));
+                            }
                         } else {
+                            // 新規選択: 元の設定を保存
+                            const currentColor = pathColors[hitPathIndex] || neonColors.strokeLine || '#ffff00';
+                            const currentThickness = pathThickness[hitPathIndex] || neonLineWidths.strokeLine || 15;
+                            
+                            // 元の設定を保存
+                            if (!originalPathSettings[hitPathIndex]) {
+                                setOriginalPathSettings(prev => ({
+                                    ...prev,
+                                    [hitPathIndex]: {
+                                        color: currentColor,
+                                        thickness: currentThickness
+                                    }
+                                }));
+                            }
+                            
                             newSelected.add(hitPathIndex);
+                            // 色・太さの適用はuseEffectで自動的に行われる
                         }
                         setSelectedTubes(newSelected);
                     } else {
@@ -1302,7 +1350,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     <button
                                         onClick={() => {
                                             if (selectedTubes.size > 0) {
+                                                // 選択中のチューブの元の設定を保存
+                                                const originalSettings = {};
+                                                selectedTubes.forEach(index => {
+                                                    originalSettings[index] = {
+                                                        color: pathColors[index] || neonColors.strokeLine || '#ffff00',
+                                                        thickness: pathThickness[index] || neonLineWidths.strokeLine || 15
+                                                    };
+                                                });
+                                                setOriginalPathSettings(originalSettings);
+                                                
                                                 setSelectedBulkThickness(null); // 太さ選択をリセット
+                                                setSelectedBulkColor(null); // 色選択をリセット
                                                 setSidebarVisible(false); // サイドバーを閉じる
                                                 setShowBulkColorModal(true);
                                             }
@@ -2105,6 +2164,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 transition: 'all 0.2s ease'
                                             }}
                                             onClick={() => {
+                                                setSelectedBulkColor(color);
+                                                // 現在選択中の全チューブに色を適用
                                                 const newColors = {};
                                                 selectedTubes.forEach(index => {
                                                     newColors[index] = color;
@@ -2126,12 +2187,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                     <button
                                         onClick={() => {
+                                            setSelectedBulkThickness(15);
+                                            // 現在選択中の全チューブに太さを適用
                                             const newThickness = {};
                                             selectedTubes.forEach(index => {
                                                 newThickness[index] = 15;
                                             });
                                             setPathThickness(prev => ({ ...prev, ...newThickness }));
-                                            setSelectedBulkThickness(15);
                                         }}
                                         style={{
                                             backgroundColor: selectedBulkThickness === 15 ? '#10b981' : '#6b7280',
@@ -2148,12 +2210,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     </button>
                                     <button
                                         onClick={() => {
+                                            setSelectedBulkThickness(20);
+                                            // 現在選択中の全チューブに太さを適用
                                             const newThickness = {};
                                             selectedTubes.forEach(index => {
                                                 newThickness[index] = 20;
                                             });
                                             setPathThickness(prev => ({ ...prev, ...newThickness }));
-                                            setSelectedBulkThickness(20);
                                         }}
                                         style={{
                                             backgroundColor: selectedBulkThickness === 20 ? '#10b981' : '#6b7280',
@@ -2176,10 +2239,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
                             <button
                                 onClick={() => {
+                                    // 完了: 現在の設定で確定
                                     setShowBulkColorModal(false);
                                     setIsCanvasSelectionMode(false);
                                     setSelectedTubes(new Set());
                                     setSelectedBulkThickness(null);
+                                    setSelectedBulkColor(null);
+                                    setOriginalPathSettings({}); // 元の設定データをクリア
                                     setSidebarVisible(true); // サイドバーを復活
                                 }}
                                 style={{
@@ -2198,10 +2264,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             </button>
                             <button
                                 onClick={() => {
+                                    // キャンセル: 全ての選択中チューブを元の設定に戻す
+                                    selectedTubes.forEach(index => {
+                                        if (originalPathSettings[index]) {
+                                            setPathColors(prev => ({ 
+                                                ...prev, 
+                                                [index]: originalPathSettings[index].color 
+                                            }));
+                                            setPathThickness(prev => ({ 
+                                                ...prev, 
+                                                [index]: originalPathSettings[index].thickness 
+                                            }));
+                                        }
+                                    });
+                                    
                                     setShowBulkColorModal(false);
                                     setIsCanvasSelectionMode(false);
                                     setSelectedTubes(new Set());
                                     setSelectedBulkThickness(null);
+                                    setSelectedBulkColor(null);
+                                    setOriginalPathSettings({}); // 元の設定データをクリア
                                     setSidebarVisible(true); // サイドバーを復活
                                 }}
                                 style={{
