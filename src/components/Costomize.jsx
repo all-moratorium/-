@@ -35,7 +35,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [highlightedTube, setHighlightedTube] = useState(null);
     const [highlightedBase, setHighlightedBase] = useState(null);
     const [isCanvasSelectionMode, setIsCanvasSelectionMode] = useState(false);
-    const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(false);
+    const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(
+        initialState?.isTubeSettingsMinimized !== undefined ? initialState.isTubeSettingsMinimized : false
+    );
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
@@ -106,11 +108,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 gridOpacity,
                 gridSize,
                 pathColors,
-                pathThickness
+                pathThickness,
+                isTubeSettingsMinimized
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, onStateChange]);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, onStateChange]);
+
+    // 最小化状態が変更された時に状態を保存
+    useEffect(() => {
+        saveCurrentState();
+    }, [isTubeSettingsMinimized, saveCurrentState]);
 
     const neonPresetColors = [
         '#ff0080', '#00ff80', '#8000ff', '#ff8000',
