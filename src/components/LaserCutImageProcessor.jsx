@@ -537,8 +537,24 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
         // ネオン3Dプレビュー用のデータを保存
         setNeonSvgData(event.detail);
         console.log('ネオンSVGデータを受信:', event.detail);
+        
+        // 3D処理完了イベントを待ってから画面遷移
+        const handle3DComplete = () => {
+          setCurrentPage('neonSvg3dPreview'); // ネオン3Dプレビューに移動
+          window.removeEventListener('3DRenderComplete', handle3DComplete);
+          // 進捗完了を通知
+          window.dispatchEvent(new CustomEvent('3DProcessingComplete'));
+        };
+        
+        window.addEventListener('3DRenderComplete', handle3DComplete);
+        
+        // フォールバック：3秒後に強制移行
+        setTimeout(() => {
+          window.removeEventListener('3DRenderComplete', handle3DComplete);
+          setCurrentPage('neonSvg3dPreview');
+          window.dispatchEvent(new CustomEvent('3DProcessingComplete'));
+        }, 3000);
       }
-      setCurrentPage('neonSvg3dPreview'); // ネオン3Dプレビューに移動
     };
 
     window.addEventListener('show3DPreview', handleShow3DPreview);

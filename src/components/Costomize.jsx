@@ -1619,33 +1619,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             setIsProcessing3D(true);
                             setProcessing3DProgress(0);
                             setProcessing3DMessage('3Dモデル生成を開始しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 30));
 
-                            // 進捗更新シミュレーション
-                            setProcessing3DProgress(20);
+                            // 実際のデータ処理開始
+                            setProcessing3DProgress(5);
                             setProcessing3DMessage('土台データを解析しています...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                            
-                            setProcessing3DProgress(50);
-                            setProcessing3DMessage('3Dジオメトリを生成しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                            
-                            setProcessing3DProgress(85);
-                            setProcessing3DMessage('レンダリング準備中...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                            setProcessing3DProgress(100);
-                            setProcessing3DMessage('完了！');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 200));
+                            await new Promise(resolve => setTimeout(resolve, 60));
 
                             // サイズ情報を計算（4cm基準）
+                            setProcessing3DProgress(10);
+                            setProcessing3DMessage('境界ボックスを計算しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 50));
+                            
                             // neonPathsから境界ボックスを計算
                             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
                             
-                            neonPaths.forEach(path => {
+                            for (let i = 0; i < neonPaths.length; i++) {
+                                const path = neonPaths[i];
                                 if (path && path.points) {
                                     path.points.forEach(point => {
                                         minX = Math.min(minX, point.x);
@@ -1654,19 +1647,40 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         maxY = Math.max(maxY, point.y);
                                     });
                                 }
-                            });
+                                
+                                // 境界ボックス計算の進捗
+                                if (i % 2 === 0) {
+                                    const progress = 10 + (i / neonPaths.length) * 5;
+                                    setProcessing3DProgress(Math.round(progress));
+                                    await new Promise(resolve => setTimeout(resolve, 15));
+                                }
+                            }
                             
                             const svgWidth = maxX - minX;
                             const svgHeight = maxY - minY;
                             const svgWidthCm = (svgWidth / gridSize) * 4; // 100px = 4cm
                             const svgHeightCm = (svgHeight / gridSize) * 4;
                             
+                            setProcessing3DProgress(20);
+                            setProcessing3DMessage('サイズ計算完了...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 40));
+                            
                             // SVGファイル内容を生成（既存のロジックを使用）
+                            setProcessing3DProgress(25);
+                            setProcessing3DMessage('SVGデータを生成しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 50));
+                            
                             let strokePathData = '';
                             let fillPathData = '';
 
-                            neonPaths.forEach((pathObj, pathIndex) => {
-                                if (!pathObj || !Array.isArray(pathObj.points)) return;
+                            let processedPaths = 0;
+                            const totalPaths = neonPaths.length;
+                            
+                            for (let pathIndex = 0; pathIndex < neonPaths.length; pathIndex++) {
+                                const pathObj = neonPaths[pathIndex];
+                                if (!pathObj || !Array.isArray(pathObj.points)) continue;
 
                                 const pathPoints = pathObj.points;
                                 const pathMode = pathObj.mode;
@@ -1674,7 +1688,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 const customColor = pathColors[pathIndex];
                                 const customThickness = pathThickness[pathIndex];
 
-                                if (pathPoints.length < 2) return;
+                                if (pathPoints.length < 2) continue;
 
                                 if (pathMode === 'stroke') {
                                     let currentStrokeSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
@@ -1729,20 +1743,44 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     const strokeColor = customColor || neonColors.fillBorder;
                                     fillPathData += `<path class="base-stroke" d="${currentFillSegment}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${effectiveFillThickness}"/>\n    `;
                                 }
-                            });
+                                
+                                // 各パス処理完了時に進捗更新
+                                processedPaths++;
+                                const progressPercent = 25 + (processedPaths / totalPaths) * 15; // 25-40%
+                                setProcessing3DProgress(Math.round(progressPercent));
+                                setProcessing3DMessage(`パス処理中... (${processedPaths}/${totalPaths})`);
+                                
+                                // 非同期処理のため少し待機
+                                await new Promise(resolve => setTimeout(resolve, 30));
+                            }
+                            
+                            setProcessing3DProgress(45);
+                            setProcessing3DMessage('パスデータ調整中...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 200));
                             
                             // パスデータの座標を調整（全ての数値座標を対象）
+                            setProcessing3DProgress(50);
+                            setProcessing3DMessage('ストロークデータを調整中...');
+                            
                             const adjustedStrokePathData = strokePathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
                                 const adjustedX = parseFloat(x) - minX;
                                 const adjustedY = parseFloat(y) - minY;
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
+                            
+                            await new Promise(resolve => setTimeout(resolve, 250));
+                            
+                            setProcessing3DProgress(55);
+                            setProcessing3DMessage('フィルデータを調整中...');
 
                             const adjustedFillPathData = fillPathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
                                 const adjustedX = parseFloat(x) - minX;
                                 const adjustedY = parseFloat(y) - minY;
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
+                            
+                            await new Promise(resolve => setTimeout(resolve, 300));
 
                             const customizedSvg = `
 <svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -1763,7 +1801,51 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 </svg>
                             `.trim();
                             
+                            setProcessing3DProgress(60);
+                            setProcessing3DMessage('SVG生成完了...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 250));
+                            
+                            // 3Dモデルデータ生成完了
+                            setProcessing3DProgress(65);
+                            setProcessing3DMessage('3Dモデルデータを構築しています...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setProcessing3DProgress(70);
+                            setProcessing3DMessage('3Dモデル事前生成中...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 350));
+                            
+                            // SVGデータをプリロード処理
+                            setProcessing3DProgress(75);
+                            setProcessing3DMessage('SVGプリロード中...');
+                            
+                            const blob = new Blob([customizedSvg], { type: 'image/svg+xml' });
+                            const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
+                            
+                            await new Promise(resolve => setTimeout(resolve, 200));
+                            
+                            // DOMParserで事前解析
+                            setProcessing3DProgress(80);
+                            setProcessing3DMessage('DOM解析中...');
+                            
+                            const parser = new DOMParser();
+                            const svgDoc = parser.parseFromString(customizedSvg, 'image/svg+xml');
+                            const svgElement = svgDoc.querySelector('svg');
+                            const viewBoxAttr = svgElement ? svgElement.getAttribute('viewBox') : null;
+                            
+                            await new Promise(resolve => setTimeout(resolve, 15));
+                            
+                            setProcessing3DProgress(85);
+                            setProcessing3DMessage('3D画面を準備中...');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 200));
+                            
                             // 3Dプレビューイベントを発行
+                            setProcessing3DProgress(87);
+                            setProcessing3DMessage('3D画面に移行中...');
+                            
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
                                 detail: {
                                     paths: neonPaths,
@@ -1790,6 +1872,38 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     strokeWidthsPx: neonLineWidths
                                 }
                             }));
+                            
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                           
+                            
+                            // 3D処理完了イベントを待つ
+                            await new Promise(resolve => {
+                                const handle3DComplete = () => {
+                                    window.removeEventListener('3DProcessingComplete', handle3DComplete);
+                                    resolve();
+                                };
+                                window.addEventListener('3DProcessingComplete', handle3DComplete);
+                                
+                                // フォールバック：3秒後に強制完了
+                                setTimeout(() => {
+                                    window.removeEventListener('3DProcessingComplete', handle3DComplete);
+                                    resolve();
+                                }, 30000);
+                            });
+                            
+                            // 3D処理完了後
+                            setProcessing3DProgress(95);
+                            setProcessing3DMessage('3Dレンダリング完了！');
+                            
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            // 完了表示
+                            setProcessing3DProgress(100);
+                            setProcessing3DMessage('完了！');
+                            
+                            // 100%を少し表示してから進捗モーダルを閉じる
+                            await new Promise(resolve => setTimeout(resolve, 500));
                             
                             // 進捗モーダルを閉じる
                             setIsProcessing3D(false);

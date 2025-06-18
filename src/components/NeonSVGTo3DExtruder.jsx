@@ -532,6 +532,20 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       const maxDim = Math.max(size.x, size.y, size.z);
       const distance = maxDim * 1.8;
       cameraRef.current.position.z = distance;
+      
+      // レンダリング完了イベントを発行（実際のレンダリング後）
+      setTimeout(() => {
+        // 複数フレームレンダリングが完了するまで待機
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                window.dispatchEvent(new CustomEvent('3DRenderComplete'));
+              });
+            });
+          });
+        });
+      }, 1500);
     };
     reader.readAsText(file);
   }, [createNeonTube, createBase, neonSvgData]);
@@ -1133,12 +1147,16 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   useEffect(() => {
     if (neonSvgData && neonSvgData.svgContent) {
       console.log('SVGデータを自動ロード中...');
-      // SVGファイル内容をBlobに変換してFileオブジェクトを作成
-      const blob = new Blob([neonSvgData.svgContent], { type: 'image/svg+xml' });
-      const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
+      // 少し遅延を入れてロード
+      const timer = setTimeout(() => {
+        const blob = new Blob([neonSvgData.svgContent], { type: 'image/svg+xml' });
+        const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
+        
+        // SVGファイルをロード
+        loadSVGFile(file);
+      }, 100);
       
-      // SVGファイルをロード
-      loadSVGFile(file);
+      return () => clearTimeout(timer);
     }
   }, [neonSvgData, loadSVGFile]);
 
