@@ -163,6 +163,30 @@
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* サイドバー閉じた時のトグルボタンのグロー効果 */
+.neon-sidebar.collapsed .neon-toggle-sidebar-button {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
+    animation: neon-glow-pulse 2s ease-in-out infinite alternate;
+}
+
+.neon-sidebar.collapsed .neon-toggle-sidebar-button:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes neon-glow-pulse {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+    }
+}
+
 
 /* ガイドボタン（文字サイズに合わせて調整） */
 .neon-guide-button {
