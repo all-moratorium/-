@@ -60,6 +60,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [flickerEnabled, setFlickerEnabled] = useState(false);
   const [rotationEnabled, setRotationEnabled] = useState(false);
   const [wallLightsEnabled, setWallLightsEnabled] = useState(true);
+  const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
 
   // Define layers for selective rendering
   const ENTIRE_SCENE_LAYER = 0;
@@ -126,6 +127,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           modelType: modelType,
           isGenerated: true // Flag to indicate model has been generated
         });
+        
+        // ネオンパワー状態を更新
+        setNeonPowerState(data.neonPower !== undefined ? data.neonPower : true);
       }
     };
     
@@ -425,24 +429,24 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // アクリル風マテリアル
     let material;
     if (fillColor === 'transparent' || fillColor === 'none') {
-      // 透明アクリル
+      // 透明アクリル - 反射を抑制してネオンチューブの色を保護
       material = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         transparent: true,
-        opacity: 0.01,
-        shininess: 4000,
-        specular: 0xffffff,
-        reflectivity: 1,
+        opacity: 0.02,
+        shininess: 3000,
+        specular: 0x888888,
+        reflectivity: 0.03,
         side: THREE.DoubleSide
       });
     } else if (fillColor === 'white' || fillColor === '#ffffff' || fillColor === '#fff') {
-      // 白いアクリル
+      // 白いアクリル - 反射を最小限に抑制してネオンチューブの色を保持
       material = new THREE.MeshPhongMaterial({
-        color: 0xdddddd,
+        color: 0xffffff,
         transparent: false,
         opacity: 1,
-        shininess: 6660,
-        specular: 0x000000
+        shininess: 3000,      // さらに反射を抑制
+        specular: 0x1f1f1f  // 反射光をさらに暗く
       });
     } else if (fillColor === 'black' || fillColor === '#000000' || fillColor === '#000') {
       // 黒いアクリル
@@ -450,17 +454,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         color: 0x111111,
         transparent: false,
         opacity: 0.8,
-        shininess: 400,
+        shininess: 3000,
         specular: 0x333333
       });
     } else {
-      // その他の色のアクリル
+      // その他の色のアクリル - 適度な反射に調整
       material = new THREE.MeshPhongMaterial({
         color: fillColor || 0x888888,
         transparent: true,
         opacity: 0.7,
-        shininess: 70,
-        specular: 0xffffff
+        shininess: 50,
+        specular: 0x444444
       });
     }
     
@@ -515,7 +519,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       },
       vertexShader: neonVertexShader,
       fragmentShader: neonFragmentShader,
-      clippingPlanes: [clippingPlane]
+      clippingPlanes: [clippingPlane],
+      transparent: false,  // 完全に非透明
+      opacity: 1.0        // 不透明度100%
     });
 
     const neonTube = new THREE.Mesh(geometry, neonMaterial);
@@ -685,17 +691,20 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   }, [color]);
 
   const updateEmissive = useCallback(() => {
+    // ネオンパワーがオフの場合は発光強度を0に、オンの場合は設定値を使用
+    const actualEmissiveValue = neonPowerState ? emissiveValue : 0;
+    
     neonMaterialsRef.current.forEach(materialSet => {
       if (materialSet.main.uniforms && materialSet.main.uniforms.emissiveIntensity) {
-        materialSet.main.uniforms.emissiveIntensity.value = emissiveValue;
+        materialSet.main.uniforms.emissiveIntensity.value = actualEmissiveValue;
         materialSet.caps.forEach(cap => {
           if (cap.material.uniforms && cap.material.uniforms.emissiveIntensity) {
-            cap.material.uniforms.emissiveIntensity.value = emissiveValue;
+            cap.material.uniforms.emissiveIntensity.value = actualEmissiveValue;
           }
         });
       }
     });
-  }, [emissiveValue]);
+  }, [emissiveValue, neonPowerState]);
 
 
   const updateGlow = useCallback(() => {
@@ -768,6 +777,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     updateEmissive();
   }, [updateEmissive]);
 
+  useEffect(() => {
+    updateEmissive();
+  }, [updateEmissive, neonPowerState]);
 
   useEffect(() => {
     updateGlow();
@@ -894,8 +906,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     controls.enablePan = false;
     controlsRef.current = controls;
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.1));
-
     // Wall - match SVGTo3DExtruder settings
     const gridCellSize = 50;
     const gridCount = 60;
@@ -922,15 +932,15 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     scene.add(directionalLight);
     scene.add(directionalLight.target);
 
-    // SVGTo3DExtruderと同じライト設定
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // SVGTo3DExtruderと同じライト設定 - 環境光を調整してネオンチューブの色彩を保護
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    // HemisphereLightを追加（SVGTo3DExtruderと同じ）
+    // HemisphereLightを追加 - 地面色を明るくしてより自然な照明に
     const hemisphereLight = new THREE.HemisphereLight(
       0xffffff, // sky color
-      0x444444, // ground color  
-      0.6       // intensity
+      0x888888, // ground color - より明るくして自然な環境光に
+      0.8       // intensity - 少し強めに
     );
     scene.add(hemisphereLight);
 
