@@ -8,6 +8,7 @@ import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import './NeonSVGTo3DExtruder.css';
 
 const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData }, ref) => {
@@ -807,6 +808,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     sceneRef.current = scene;
     console.log('Scene background set to: 0x242424');
 
+    // RectAreaLight サポートを初期化
+    RectAreaLightUniformsLib.init();
+
     // Camera setup - match SVGTo3DExtruder settings
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
     // 保存された状態があれば復元、なければデフォルト
@@ -914,7 +918,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const wallDepth = 10;
 
     const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
-    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0x505050, shininess: 10 }); // 白っぽいグレーに変更
+    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0xf0f0f0, shininess: 10 }); // SVGTo3DExtruderと同じ色に変更
     const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
     wallPlane.name = "wallPlane";
     wallPlane.position.set(0, 0, -21); // 壁表面をZ=0に調整
@@ -925,24 +929,21 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // グリッド非表示
 
-    // Add a directional light to illuminate the wall - match SVGTo3DExtruder settings
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
-    directionalLight.position.set(wallWidth / 4, wallHeight / 4, Math.max(wallWidth, wallHeight) / 2);
-    directionalLight.target = wallPlane;
-    scene.add(directionalLight);
-    scene.add(directionalLight.target);
-
-    // SVGTo3DExtruderと同じライト設定 - 環境光を調整してネオンチューブの色彩を保護
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-    scene.add(ambientLight);
-
-    // HemisphereLightを追加 - 地面色を明るくしてより自然な照明に
+    // 壁全体を均等に照らす環境光のみ（反射なし）
+    scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+    
+    // 半球ライトで自然な照明（反射なし）
     const hemisphereLight = new THREE.HemisphereLight(
-      0xffffff, // sky color
-      0x888888, // ground color - より明るくして自然な環境光に
-      0.8       // intensity - 少し強めに
+      0xffffff, // 空の色 (白)
+      0xbbbbbb, // 地面の色 (明るいグレー)
+      1.8       // 光の強さ
     );
     scene.add(hemisphereLight);
+    // 正面からの大きな面光源（10m×4m）
+    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.5, 2000, 2000);
+    rectAreaLight.position.set(0, 0, 500); // 正面から
+    rectAreaLight.lookAt(0, 0, 0); // 壁を向く
+    scene.add(rectAreaLight);
 
     // Wall lights - match SVGTo3DExtruder settings
     const wallLightColor = 0xffffff;
@@ -1232,7 +1233,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
-          const fineTuneZOffset = 94.925;
+          const fineTuneZOffset = 95.01;
           model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
         } else {
           console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
