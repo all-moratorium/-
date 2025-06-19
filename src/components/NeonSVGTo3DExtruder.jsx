@@ -22,6 +22,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const composerRef = useRef(null);
   const unrealBloomPassRef = useRef(null);
   const wallLightsRef = useRef([]);
+  const rectAreaLightRef = useRef(null); // 面光源参照
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
   const wallPlaneRef = useRef(null);
@@ -61,6 +62,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [flickerEnabled, setFlickerEnabled] = useState(false);
   const [rotationEnabled, setRotationEnabled] = useState(false);
   const [wallLightsEnabled, setWallLightsEnabled] = useState(true);
+  const [rectAreaLightEnabled, setRectAreaLightEnabled] = useState(true); // 面光源オン/オフ状態
   const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
 
   // Define layers for selective rendering
@@ -446,7 +448,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         color: 0xffffff,
         transparent: false,
         opacity: 1,
-        shininess: 3000,      // さらに反射を抑制
+        shininess: 300,      // さらに反射を抑制
         specular: 0x1f1f1f  // 反射光をさらに暗く
       });
     } else if (fillColor === 'black' || fillColor === '#000000' || fillColor === '#000') {
@@ -471,7 +473,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     
     const baseMesh = new THREE.Mesh(geometry, material);
     baseMesh.position.z = 7; // 土台を7mm前に移動
-    baseMesh.receiveShadow = true;
+    baseMesh.receiveShadow = false;
     baseMesh.layers.set(ENTIRE_SCENE_LAYER);
     
     return baseMesh;
@@ -526,7 +528,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     });
 
     const neonTube = new THREE.Mesh(geometry, neonMaterial);
-    neonTube.castShadow = true;
+    neonTube.castShadow = false;
     neonTube.layers.set(BLOOM_SCENE_LAYER); // Set layer for blooming
 
     const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.01, 16, 16);
@@ -730,6 +732,16 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     });
   }, []);
 
+  const toggleRectAreaLight = useCallback(() => {
+    setRectAreaLightEnabled(prev => {
+      const newState = !prev;
+      if (rectAreaLightRef.current) {
+        rectAreaLightRef.current.visible = newState;
+      }
+      return newState;
+    });
+  }, []);
+
   const resetScene = useCallback(() => {
     if (neonGroupRef.current) {
       sceneRef.current.remove(neonGroupRef.current);
@@ -922,7 +934,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
     wallPlane.name = "wallPlane";
     wallPlane.position.set(0, 0, -21); // 壁表面をZ=0に調整
-    wallPlane.receiveShadow = true;
+    wallPlane.receiveShadow = false;
     wallPlane.layers.set(ENTIRE_SCENE_LAYER);
     scene.add(wallPlane);
     wallPlaneRef.current = wallPlane;
@@ -930,25 +942,31 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // グリッド非表示
 
     // 壁全体を均等に照らす環境光のみ（反射なし）
-    scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+    scene.add(new THREE.AmbientLight(0xffffff, 1.4));
     
     // 半球ライトで自然な照明（反射なし）
     const hemisphereLight = new THREE.HemisphereLight(
       0xffffff, // 空の色 (白)
       0xbbbbbb, // 地面の色 (明るいグレー)
-      1.8       // 光の強さ
+      1.4       // 光の強さ
     );
     scene.add(hemisphereLight);
     // 正面からの大きな面光源（10m×4m）
     const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.5, 2000, 2000);
     rectAreaLight.position.set(0, 0, 500); // 正面から
     rectAreaLight.lookAt(0, 0, 0); // 壁を向く
+    rectAreaLight.visible = rectAreaLightEnabled; // 初期状態を設定
     scene.add(rectAreaLight);
+    rectAreaLightRef.current = rectAreaLight; // refに保存
+
+    // 部屋の中心に反射しない環境光を追加
+    const centerAmbientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(centerAmbientLight);
 
     // Wall lights - match SVGTo3DExtruder settings
     const wallLightColor = 0xffffff;
     const wallLightIntensity = 0.00005;
-    const wallLightDistance = 500;
+    const wallLightDistance = 2000;
     const wallSizeHalf = wallWidth / 2;
 
     const wallZPosition = -(wallDepth / 2);
@@ -1366,7 +1384,21 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
               <div className={`neon3d-glow-switch-handle ${glowValue > 0 ? 'on' : 'off'}`} />
             </button>
           </div>
+          
+          {/* 照明スイッチを追加 */}
+          <div className="neon3d-lighting-controls">
+            <span className="neon3d-lighting-label">壁面照明</span>
+            <button
+              onClick={toggleRectAreaLight}
+              className={`neon3d-lighting-toggle ${rectAreaLightEnabled ? 'on' : 'off'}`}
+            >
+              <span className="neon3d-lighting-text">
+                {rectAreaLightEnabled ? 'ON' : 'OFF'}
+              </span>
+            </button>
+          </div>
         </div>
+
 
         {/* モデル詳細情報表示 */}
         <div className="neon3d-details-info-container">
@@ -1407,6 +1439,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.modelType : 'N/A'}</span>
           </div>
         </div>
+
 
         {/* 商品情報へ進むボタン */}
         <div className="neon3d-proceed-button-container">

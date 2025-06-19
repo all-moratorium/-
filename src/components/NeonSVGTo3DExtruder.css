@@ -375,6 +375,18 @@
   }
 }
 
+/* スイッチコンテナ */
+.neon3d-switches-container {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 103;
+}
+
 /* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
 .neon3d-glow-power-section {
   position: absolute;
@@ -382,6 +394,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
@@ -397,6 +410,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  padding-bottom: 8px;
 }
 
 .neon3d-glow-power-status {
@@ -610,5 +624,61 @@
 .neon3d-proceed-button:hover {
   background-color: #FFFF00;
   box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
- 
+}
+
+/* 照明スイッチ専用スタイル（コンテナ内用） */
+.neon3d-lighting-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background-color: rgba(40, 40, 40, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 160px;
+}
+
+.neon3d-lighting-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.neon3d-lighting-label {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.neon3d-lighting-toggle {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 40px;
+}
+
+.neon3d-lighting-toggle.on {
+  background-color: #22c55e;
+  border-color: #22c55e;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.neon3d-lighting-toggle.off {
+  background-color: #64748b;
+  border-color: #64748b;
+  color: #ffffff;
+}
+
+.neon3d-lighting-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.neon3d-lighting-text {
+  display: block;
 }
