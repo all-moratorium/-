@@ -930,7 +930,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const wallDepth = 10;
 
     const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
-    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0xf0f0f0, shininess: 10 }); // SVGTo3DExtruderと同じ色に変更
+    const wallPlaneMaterial = new THREE.MeshPhongMaterial({ color: 0x000000, shininess: 0 }); // SVGTo3DExtruderと同じ色に変更
     const wallPlane = new THREE.Mesh(wallPlaneGeometry, wallPlaneMaterial);
     wallPlane.name = "wallPlane";
     wallPlane.position.set(0, 0, -21); // 壁表面をZ=0に調整

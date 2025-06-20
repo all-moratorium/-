@@ -56,6 +56,16 @@ const safeGetFromLocalStorage = (key, fallback = null) => {
     }
 };
 
+// 座標制限関数（3m×3m = 原点から1.5m四方制限）
+const limitCoordinates = (x, y) => {
+    const HALF_SIZE = 3750; // 1.5m = 3750px (100px = 4cm基準)
+    
+    return {
+        x: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, x)),
+        y: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, y))
+    };
+};
+
 // 包括的な初期状態取得関数
 const getInitialDrawingState = (initialState) => {
     const savedData = safeGetFromLocalStorage('neonDrawingData');
@@ -1421,8 +1431,11 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             const newRawClientX = e.clientX - rect.left;
             const newRawClientY = e.clientY - rect.top;
 
-            let newPointX = (newRawClientX - offsetX) / scale;
-            let newPointY = (newRawClientY - offsetY) / scale;
+            const rawNewPointX = (newRawClientX - offsetX) / scale;
+            const rawNewPointY = (newRawClientY - offsetY) / scale;
+            
+            // 3m×3m制限を適用
+            const { x: newPointX, y: newPointY } = limitCoordinates(rawNewPointX, rawNewPointY);
 
             // setPathsの関数形式で最新のpathsにアクセスし、直接更新
             setPaths(prevPaths => {
@@ -1472,8 +1485,11 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         const rawClientX = e.clientX - rect.left;
         const rawClientY = e.clientY - rect.top;
         // キャンバス座標をコンテンツ座標に変換
-        const contentX = (rawClientX - offsetX) / scale;
-        const contentY = (rawClientY - offsetY) / scale;
+        const rawContentX = (rawClientX - offsetX) / scale;
+        const rawContentY = (rawClientY - offsetY) / scale;
+        
+        // 3m×3m制限を適用
+        const { x: contentX, y: contentY } = limitCoordinates(rawContentX, rawContentY);
 
         setPaths((prevPaths) => {
             const newPaths = [...prevPaths];

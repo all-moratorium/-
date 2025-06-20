@@ -6,6 +6,16 @@ import './Costomize.css';
 // カスタマイズデータを保存するためのローカルストレージキー
 const CUSTOMIZE_DATA_KEY = 'neon-customize-data';
 
+// 座標制限関数（3m×3m = 原点から1.5m四方制限）
+const limitCoordinates = (x, y) => {
+    const HALF_SIZE = 3750; // 1.5m = 3750px (100px = 4cm基準)
+    
+    return {
+        x: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, x)),
+        y: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, y))
+    };
+};
+
 const Costomize = ({ svgData, initialState, onStateChange }) => {
     // 初期状態の設定（propsから受け取るか、デフォルト値を使用）
     const [selectedColor, setSelectedColor] = useState(initialState?.selectedColor || '#ff0080');
@@ -211,7 +221,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (projectData.pathColors !== undefined) setPathColors(projectData.pathColors);
                 if (projectData.pathThickness !== undefined) setPathThickness(projectData.pathThickness);
                 if (projectData.isTubeSettingsMinimized !== undefined) setIsTubeSettingsMinimized(projectData.isTubeSettingsMinimized);
-                if (projectData.neonPaths !== undefined) setNeonPaths(projectData.neonPaths);
+                if (projectData.neonPaths !== undefined) {
+                    // プロジェクトデータの座標に3m×3m制限を適用
+                    const limitedPaths = projectData.neonPaths.map(path => {
+                        if (path && path.points && Array.isArray(path.points)) {
+                            return {
+                                ...path,
+                                points: path.points.map(point => limitCoordinates(point.x, point.y))
+                            };
+                        }
+                        return path;
+                    });
+                    setNeonPaths(limitedPaths);
+                }
                 if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
                 if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
                 if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
@@ -485,7 +507,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             if (projectData.pathColors !== undefined) setPathColors(projectData.pathColors);
             if (projectData.pathThickness !== undefined) setPathThickness(projectData.pathThickness);
             if (projectData.isTubeSettingsMinimized !== undefined) setIsTubeSettingsMinimized(projectData.isTubeSettingsMinimized);
-            if (projectData.neonPaths !== undefined) setNeonPaths(projectData.neonPaths);
+            if (projectData.neonPaths !== undefined) {
+                // 初期化時の座標に3m×3m制限を適用
+                const limitedPaths = projectData.neonPaths.map(path => {
+                    if (path && path.points && Array.isArray(path.points)) {
+                        return {
+                            ...path,
+                            points: path.points.map(point => limitCoordinates(point.x, point.y))
+                        };
+                    }
+                    return path;
+                });
+                setNeonPaths(limitedPaths);
+            }
             if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
             if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
             if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
@@ -521,7 +555,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         const handleRestoreState = (event) => {
             const backupState = event.detail;
             if (backupState) {
-                if (backupState.neonPaths) setNeonPaths(backupState.neonPaths);
+                if (backupState.neonPaths) {
+                    // バックアップデータの座標に3m×3m制限を適用
+                    const limitedPaths = backupState.neonPaths.map(path => {
+                        if (path && path.points && Array.isArray(path.points)) {
+                            return {
+                                ...path,
+                                points: path.points.map(point => limitCoordinates(point.x, point.y))
+                            };
+                        }
+                        return path;
+                    });
+                    setNeonPaths(limitedPaths);
+                }
                 if (backupState.pathColors) setPathColors(backupState.pathColors);
                 if (backupState.pathThickness) setPathThickness(backupState.pathThickness);
                 if (backupState.selectedColor) setSelectedColor(backupState.selectedColor);
@@ -557,7 +603,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     // ネオン下絵データの解析
     useEffect(() => {
         if (svgData && svgData.paths) {
-            setNeonPaths(svgData.paths);
+            // パスの座標に3m×3m制限を適用
+            const limitedPaths = svgData.paths.map(path => {
+                if (path && path.points && Array.isArray(path.points)) {
+                    return {
+                        ...path,
+                        points: path.points.map(point => limitCoordinates(point.x, point.y))
+                    };
+                }
+                return path;
+            });
+            setNeonPaths(limitedPaths);
             
             // 全パスにデフォルト太さを設定
             const defaultThickness = {};
