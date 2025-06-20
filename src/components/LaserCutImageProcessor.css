@@ -1980,7 +1980,7 @@ canvas {
 .product-header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: #00ffff;
+  color: #ffff00;
 }
 
 .product-header p {
@@ -2044,8 +2044,8 @@ canvas {
 .form-group input:focus,
 .quantity-display:focus {
   outline: none;
-  border-color: #00ffff;
-  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+  border-color: #ffff00;
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.1);
 }
 
 .form-group textarea {
@@ -2118,11 +2118,12 @@ canvas {
 }
 
 .quantity-modifier:hover {
-  background-color: #222;
+  background-color: #333300;
+  border-color: #ffff00;
 }
 
 .quantity-modifier:active {
-  background-color: #333;
+  background-color: #555500;
   transform: translateY(1px);
 }
 
@@ -2134,8 +2135,8 @@ canvas {
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #00ffff;
-  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+  border-color: #ffff00;
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.1);
 }
 
 .form-group textarea::placeholder {
@@ -2208,7 +2209,7 @@ canvas {
 }
 
 .delivery-info h4 {
-  color: #00ffff;
+  color: #ffff00;
   margin-bottom: 15px;
   font-size: 1.1rem;
 }
@@ -2259,7 +2260,7 @@ canvas {
 .price-summary h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #00ffff;
+  color: #ffff00;
   text-align: center;
 }
 
@@ -2275,19 +2276,19 @@ canvas {
   border-bottom: none;
   margin-top: 15px;
   padding-top: 20px;
-  border-top: 2px solid #00ffff;
+  border-top: 2px solid #ffff00;
 }
 
 .price-item.total {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #00ffff;
+  color: #ffff00;
 }
 
 .estimate-button {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #00ffff, #0099ff);
+  background: linear-gradient(135deg, #ffff00, #ffcc00);
   color: #000;
   border: none;
   border-radius: 10px;
@@ -2300,7 +2301,7 @@ canvas {
 
 .estimate-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 255, 0, 0.4);
 }
 
 .features-section {
@@ -2353,7 +2354,7 @@ canvas {
 .contact-section h3 {
   font-size: 1.8rem;
   margin-bottom: 15px;
-  color: #00ffff;
+  color: #ffff00;
 }
 
 .contact-section p {

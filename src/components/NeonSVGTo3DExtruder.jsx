@@ -11,7 +11,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData }, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData, onNavigateToInfo }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -55,7 +55,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   };
   const [color, setColor] = useState('#ff0088');
   const [emissiveValue, setEmissiveValue] = useState(1.0);
-  const [glowValue, setGlowValue] = useState(0.58);
+  const [glowValue, setGlowValue] = useState(0.62);
   const [scatterStrength, setScatterStrength] = useState(0.00);
   const [tubeSize, setTubeSize] = useState(0.04);
   const [animationSpeed, setAnimationSpeed] = useState(0.0);
@@ -942,17 +942,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // グリッド非表示
 
     // 壁全体を均等に照らす環境光のみ（反射なし）
-    scene.add(new THREE.AmbientLight(0xffffff, 1.4));
+    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
     
     // 半球ライトで自然な照明（反射なし）
     const hemisphereLight = new THREE.HemisphereLight(
       0xffffff, // 空の色 (白)
       0xbbbbbb, // 地面の色 (明るいグレー)
-      1.4       // 光の強さ
+      1.2       // 光の強さ
     );
     scene.add(hemisphereLight);
     // 正面からの大きな面光源（10m×4m）
-    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.5, 2000, 2000);
+    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.3, 1750, 1750);
     rectAreaLight.position.set(0, 0, 500); // 正面から
     rectAreaLight.lookAt(0, 0, 0); // 壁を向く
     rectAreaLight.visible = rectAreaLightEnabled; // 初期状態を設定
@@ -960,7 +960,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     rectAreaLightRef.current = rectAreaLight; // refに保存
 
     // 部屋の中心に反射しない環境光を追加
-    const centerAmbientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    const centerAmbientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(centerAmbientLight);
 
     // Wall lights - match SVGTo3DExtruder settings
@@ -1162,7 +1162,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const gltfLoader = new GLTFLoader();
     gltfLoader.setDRACOLoader(dracoLoader);
     
-    const modelPath = '/models/room.black.glb';
+    const modelPath = '/models/room.black.neon.glb';
 
     gltfLoader.load(
       modelPath,
@@ -1247,7 +1247,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         // Position model
         model.position.x = -overallModelCenter.x;
-        model.position.y = -overallModelCenter.y;
+        model.position.y = -overallModelCenter.y - 480; // Y位置を30mm下げる
 
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
@@ -1273,7 +1273,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       },
       undefined, // onProgress
       (error) => {
-        console.error('Error loading room.black.glb:', error);
+        console.error('Error loading room.black.neon.glb:', error);
       }
     );
 
@@ -1446,8 +1446,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           <button 
             className="neon3d-proceed-button"
             onClick={() => {
-              // 商品情報ページへの遷移処理
-              console.log('商品情報へ進む');
+              if (onNavigateToInfo && calculatedModelData) {
+                onNavigateToInfo(calculatedModelData);
+              }
             }}
           >
             商品情報へ進む

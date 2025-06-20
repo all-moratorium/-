@@ -342,12 +342,12 @@ const MemoizedOriginalUiContent = memo(({
         </div>
         
         <div className="image-section">
-          <h3 className="section-title">レイヤー画像</h3>
+          <h3 className="section-title">プレビュー</h3>
           <div className="image-box">
             {layeredImageDataURL ? (
               <img src={layeredImageDataURL} alt="レイヤー" className="result-image" />
             ) : (
-              <p>レイヤー画像がありません</p>
+              <p>プレビュー画像がありません</p>
             )}
           </div>
         </div>
@@ -370,6 +370,8 @@ const LaserCutImageProcessor = () => {
   // NeonSVGTo3DExtruderの状態を保存
   const [neonSvgData, setNeonSvgData] = useState(null);
   const [neonCameraState, setNeonCameraState] = useState(null);
+  const [neonPreviewImageDataURL, setNeonPreviewImageDataURL] = useState(null);
+  const [neonCalculatedModelData, setNeonCalculatedModelData] = useState(null);
   
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -536,8 +538,9 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       if (event.detail) {
         // ネオン3Dプレビュー用のデータを保存
         setNeonSvgData(event.detail);
-        console.log('ネオンSVGデータを受信:', event.detail);
         
+        // ネオンサイン画像を生成
+        generateNeonPreviewImage(event.detail);
         
       }
     };
@@ -549,11 +552,113 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     };
     window.addEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
 
+    const handleRequestInfoPageTransition = () => {
+      setCurrentPage('info'); // 商品情報ページに移動
+    };
+    window.addEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
+
     return () => {
       window.removeEventListener('show3DPreview', handleShow3DPreview);
       window.removeEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
+      window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
     };
   }, []);
+
+  // ネオンサイン画像を生成する関数
+  const generateNeonPreviewImage = (neonData) => {
+    if (!neonData || !neonData.svgContent) return;
+    
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // キャンバスサイズを設定（背景が黒で原点中央になるように）
+    const size = 400; // 正方形
+    canvas.width = size;
+    canvas.height = size;
+    
+    // 背景を黒に設定
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, size, size);
+    
+    // SVGコンテンツをImageに変換
+    const svgBlob = new Blob([neonData.svgContent], { type: 'image/svg+xml' });
+    const svgUrl = URL.createObjectURL(svgBlob);
+    
+    const img = new Image();
+    img.onload = () => {
+      // 画像を中央に配置してスケール調整
+      const scale = Math.min(size * 0.8 / img.width, size * 0.8 / img.height);
+      const scaledWidth = img.width * scale;
+      const scaledHeight = img.height * scale;
+      const x = (size - scaledWidth) / 2;
+      const y = (size - scaledHeight) / 2;
+      
+      ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+      
+      // データURLに変換
+      const dataURL = canvas.toDataURL('image/png');
+      setNeonPreviewImageDataURL(dataURL);
+      
+      // クリーンアップ
+      URL.revokeObjectURL(svgUrl);
+    };
+    
+    img.src = svgUrl;
+  };
+
+  // パスの長さを計算する関数
+  const calculatePathLength = (pathObj) => {
+    if (!pathObj || !pathObj.points || pathObj.points.length < 2) {
+      return 0;
+    }
+    
+    let totalLength = 0;
+    const points = pathObj.points;
+    
+    for (let i = 0; i < points.length - 1; i++) {
+      const dx = points[i + 1].x - points[i].x;
+      const dy = points[i + 1].y - points[i].y;
+      totalLength += Math.sqrt(dx * dx + dy * dy);
+    }
+    
+    return totalLength;
+  };
+
+  // ネオンデータから詳細情報を計算する関数
+  const calculateNeonModelData = (neonData) => {
+    if (!neonData || !neonData.paths) return null;
+    
+    let tubeLength6mm = 0;
+    let tubeLength8mm = 0;
+    let tubeCount6mm = 0;
+    let tubeCount8mm = 0;
+    
+    // パスデータから長さと本数を計算
+    neonData.paths.forEach((path, index) => {
+      const thickness = neonData.pathThickness[index] || 15;
+      const lengthPx = calculatePathLength(path);
+      const lengthCm = Math.round(lengthPx / 25 * 10) / 10; // px to cm conversion with rounding
+      
+      if (thickness >= 20) {
+        tubeLength8mm += lengthCm;
+        tubeCount8mm += 1;
+      } else {
+        tubeLength6mm += lengthCm;
+        tubeCount6mm += 1;
+      }
+    });
+    
+    return {
+      modelWidth: neonData.svgSizeCm ? neonData.svgSizeCm.width * 10 : 0,
+      modelHeight: neonData.svgSizeCm ? neonData.svgSizeCm.height * 10 : 0,
+      tubeLength6mm: tubeLength6mm * 10, // Convert cm back to mm for consistency
+      tubeLength8mm: tubeLength8mm * 10, // Convert cm back to mm for consistency
+      tubeCount6mm: tubeCount6mm,
+      tubeCount8mm: tubeCount8mm,
+      baseColor: '透明アクリル',
+      modelType: neonData.installationEnvironment === 'outdoor' ? '屋外 - IP67防水' : '屋内 - 非防水'
+    };
+  };
 
   // コンポーネントのアンマウント時にリソースを解放
   useEffect(() => {
@@ -2848,9 +2953,9 @@ const quantizeColors = (pixels, k) => {
                   <div className="preview-item-title">レイヤープレビュー</div>
                   <div className="preview-item-content">
                     {layeredImageDataURL ? (
-                      <img src={layeredImageDataURL} alt="レイヤー画像" />
+                      <img src={layeredImageDataURL} alt="プレビュー" />
                     ) : (
-                      <p>レイヤー画像がありません</p>
+                      <p>プレビュー画像がありません</p>
                     )}
                   </div>
                 </div>
@@ -2885,29 +2990,82 @@ case '3dPreview':
         
                 <div className="product-estimate-container">
                   <div className="product-form-section">
-                    <h2 style={{marginBottom: '25px', color: '#00ffff'}}>仕様</h2>
+                    <h2 style={{marginBottom: '25px', color: '#ffff00'}}>仕様</h2>
                     
                     <div className="product-container-vertical">
                       
-                      <img className="product-image" src={layeredImageDataURL} alt="レイヤー画像" />
+                      <img className="product-image" src={neonPreviewImageDataURL || layeredImageDataURL} alt="プレビュー" />
                       
                       <div className="product-specs-list">
-                        <div className="spec-item-row">
-                          <span className="spec-label">幅</span>
-                          <span className="spec-value">{layers.length > 0 && productDimensions.width > 0 ? `${productDimensions.width.toFixed(1)}mm` : '---'}</span>
-                        </div>
-                        <div className="spec-item-row">
-                          <span className="spec-label">高さ</span>
-                          <span className="spec-value">{layers.length > 0 && productDimensions.height > 0 ? `${productDimensions.height.toFixed(1)}mm` : '---'}</span>
-                        </div>
-                        <div className="spec-item-row">
-                          <span className="spec-label">厚さ</span>
-                          <span className="spec-value">{layers.length > 0 && productDimensions.thickness > 0 ? `${productDimensions.thickness.toFixed(1)}mm` : '---'}</span>
-                        </div>
-                        <div className="spec-item-row">
-                          <span className="spec-label">レイヤー数</span>
-                          <span className="spec-value">{layers.length > 0 ? `${layers.length}層` : '---'}</span>
-                        </div>
+                        {(() => {
+                          // ネオン3Dプレビューから渡されたcalculatedModelDataを優先使用
+                          let neonModelData = neonCalculatedModelData;
+                          
+                          // calculatedModelDataがない場合のフォールバック
+                          if (!neonModelData) {
+                            neonModelData = calculateNeonModelData(neonSvgData);
+                          }
+                          
+                          // それでもない場合、レイヤーデータから推定
+                          if (!neonModelData) {
+                            if (layers.length > 0 && productDimensions.width > 0) {
+                              neonModelData = {
+                                modelWidth: productDimensions.width,
+                                modelHeight: productDimensions.height,
+                                tubeCount6mm: Math.max(1, Math.floor(layers.length * 0.7)),
+                                tubeCount8mm: Math.max(0, Math.floor(layers.length * 0.3)),
+                                tubeLength6mm: (productDimensions.width + productDimensions.height) / 2,
+                                tubeLength8mm: productDimensions.width * 0.8,
+                                baseColor: '透明アクリル',
+                                modelType: '屋内 - 非防水'
+                              };
+                            } else {
+                              neonModelData = {
+                                modelWidth: 200,
+                                modelHeight: 100,
+                                tubeCount6mm: 2,
+                                tubeCount8mm: 1,
+                                tubeLength6mm: 150,
+                                tubeLength8mm: 100,
+                                baseColor: '透明アクリル',
+                                modelType: '屋内 - 非防水'
+                              };
+                            }
+                          }
+                          
+                          return (
+                            <>
+                              <div className="spec-item-row">
+                                <span className="spec-label">サイズ(幅x高)</span>
+                                <span className="spec-value">{neonModelData ? `${Math.round(neonModelData.modelWidth)}x${Math.round(neonModelData.modelHeight)}mm` : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">6mmチューブ（本数）</span>
+                                <span className="spec-value">{neonModelData ? `${neonModelData.tubeCount6mm}本` : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">8mmチューブ（本数）</span>
+                                <span className="spec-value">{neonModelData ? `${neonModelData.tubeCount8mm}本` : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">6mmチューブ長さ</span>
+                                <span className="spec-value">{neonModelData ? `${(neonModelData.tubeLength6mm / 10).toFixed(1)}cm` : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">8mmチューブ長さ</span>
+                                <span className="spec-value">{neonModelData ? `${(neonModelData.tubeLength8mm / 10).toFixed(1)}cm` : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">ベースプレート色</span>
+                                <span className="spec-value">{neonModelData ? neonModelData.baseColor : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
+                                <span className="spec-label">タイプ</span>
+                                <span className="spec-value">{neonModelData ? neonModelData.modelType : '---'}</span>
+                              </div>
+                            </>
+                          );
+                        })()}
                       </div>
                       
                       <div className="delivery-info">
@@ -3201,7 +3359,12 @@ case '3dPreview':
           ref={svgTo3DExtruderRef} 
           svgLayersData={[]} 
           originalImageAspectRatio={originalImageAspectRatio}
-          onNavigateToInfo={() => setCurrentPage('info')}
+          onNavigateToInfo={(modelData) => {
+            if (modelData) {
+              setNeonCalculatedModelData(modelData);
+            }
+            setCurrentPage('info');
+          }}
           hideNavigationButton={currentPage !== '3dPreview'} 
           onDimensionsUpdate={handleDimensionsUpdate} // Added prop
         />
@@ -3221,6 +3384,12 @@ case '3dPreview':
         <NeonSVGTo3DExtruder 
           ref={neonSvgTo3DExtruderRef} 
           neonSvgData={neonSvgData}
+          onNavigateToInfo={(modelData) => {
+            if (modelData) {
+              setNeonCalculatedModelData(modelData);
+            }
+            setCurrentPage('info');
+          }}
         />
       </div>
       

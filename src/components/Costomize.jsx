@@ -1666,11 +1666,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}本)
                                     </h3>
                                     <span className="tube-total-length-subtitle">
-                                        合計長さ: {Math.round(
+                                        合計長さ: {(Math.round(
                                             neonPaths
                                                 .filter(pathObj => pathObj && pathObj.mode === 'stroke')
                                                 .reduce((total, pathObj) => total + calculatePathLength(pathObj), 0) / 25 * 10
-                                        ) / 10}cm
+                                        ) / 10).toFixed(1)}cm
                                     </span>
                                 </div>
                                 <div className="neon-tube-actions">
@@ -1725,7 +1725,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         }}
                                     >
                                         <label className="tube-title">
-                                            チューブ {sortedIndex + 1} (長さ: {Math.round(calculatePathLength(pathObj) / 25 * 10) / 10}cm)
+                                            チューブ {sortedIndex + 1} (長さ: {(Math.round(calculatePathLength(pathObj) / 25 * 10) / 10).toFixed(1)}cm)
                                         </label>
                                         
                                         {/* 色設定 */}

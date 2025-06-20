@@ -816,7 +816,7 @@ const SVGTo3DExtruder = forwardRef(({
 
     const scene = sceneRef.current; // Get scene from ref
     const gltfLoader = new GLTFLoader();
-    const modelPath = '/models/room.black.glb';
+    const modelPath = '/models/room.black.neon.glb';
 
     gltfLoader.load(
       modelPath,
@@ -910,7 +910,7 @@ const SVGTo3DExtruder = forwardRef(({
 
         // 3. Position model
         model.position.x = -overallModelCenter.x; // Center X based on overall model
-        model.position.y = -overallModelCenter.y; // Center Y based on overall model
+        model.position.y = -overallModelCenter.y - 30; // Center Y based on overall model, Y位置を30mm下げる
 
         if (roomBackWallObject) {
           // This box is in coordinates relative to the model's origin, after model's rotation & scaling.
@@ -936,8 +936,8 @@ const SVGTo3DExtruder = forwardRef(({
       },
       undefined, // onProgress
       (error) => {
-        console.error('Error loading room.black.glb:', error);
-        setError('room.black.glb の読み込みに失敗しました: ' + modelPath + ' エラー: ' + error.message); 
+        console.error('Error loading room.black.neon.glb:', error);
+        setError('room.black.neon.glb の読み込みに失敗しました: ' + modelPath + ' エラー: ' + error.message); 
       }
     );
 
