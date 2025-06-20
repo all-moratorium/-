@@ -964,6 +964,16 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     // ネオン下絵の完全な状態を保存してダウンロード
     const downloadNeonProject = useCallback(() => {
         try {
+            // データが空の場合は保存しない
+            const hasValidData = paths && paths.length > 0 && paths.some(path => 
+                path && Array.isArray(path.points) && path.points.length > 0
+            );
+            
+            if (!hasValidData) {
+                alert('保存できるデータがありません。描画してから保存してください。');
+                return;
+            }
+            
             const currentTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const projectData = {
                 // メタ情報
@@ -1037,9 +1047,47 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 const projectData = JSON.parse(e.target.result);
                 console.log('プロジェクトファイル読み込み:', projectData);
                 
-                // データ形式の検証
-                if (!projectData.metadata || projectData.metadata.type !== "neon-drawing-project") {
-                    alert('無効なネオンプロジェクトファイルです');
+                // データ形式の検証と変換
+                const isDrawingFile = projectData.metadata && projectData.metadata.type === 'neon-drawing-project';
+                const isCustomizeFile = projectData.version && projectData.neonPaths && !projectData.metadata;
+                
+                if (!isDrawingFile && !isCustomizeFile) {
+                    alert('サポートされていないファイル形式です');
+                    return;
+                }
+                
+                // 色仕様のカスタマイズファイルの場合は変換
+                if (isCustomizeFile) {
+                    if (projectData.svgData) {
+                        // svgDataからパスデータを復元
+                        try {
+                            const svgDataParsed = typeof projectData.svgData === 'string' ? 
+                                JSON.parse(projectData.svgData) : projectData.svgData;
+                            
+                            if (svgDataParsed && svgDataParsed.paths) {
+                                setPaths(svgDataParsed.paths);
+                                
+                                // カスタマイズされた色や線幅の設定も反映
+                                if (svgDataParsed.colors) setColors(svgDataParsed.colors);
+                                if (svgDataParsed.lineWidths) setLineWidths(svgDataParsed.lineWidths);
+                                if (svgDataParsed.canvasData) {
+                                    if (svgDataParsed.canvasData.scale) setScale(svgDataParsed.canvasData.scale);
+                                    if (svgDataParsed.canvasData.offsetX) setOffsetX(svgDataParsed.canvasData.offsetX);
+                                    if (svgDataParsed.canvasData.offsetY) setOffsetY(svgDataParsed.canvasData.offsetY);
+                                    if (svgDataParsed.canvasData.showGrid !== undefined) setShowGrid(svgDataParsed.canvasData.showGrid);
+                                    if (svgDataParsed.canvasData.gridSize) setGridSize(svgDataParsed.canvasData.gridSize);
+                                    if (svgDataParsed.canvasData.gridOpacity) setGridOpacity(svgDataParsed.canvasData.gridOpacity);
+                                }
+                                
+                                saveToLocalStorage();
+                                alert('色仕様のカスタマイズファイルを読み込みました');
+                                return;
+                            }
+                        } catch (parseError) {
+                            console.error('svgData parsing error:', parseError);
+                        }
+                    }
+                    alert('色仕様のカスタマイズファイルに下絵データが含まれていません');
                     return;
                 }
                 
@@ -1759,7 +1807,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         <div className="reset-buttons-row">
                             <button
                                 onClick={downloadNeonProject}
-                                className="project-save-btn"
+                                className={`project-save-btn ${(!paths || paths.length === 0 || !paths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) ? 'button-disabled' : ''}`}
+                                disabled={!paths || paths.length === 0 || !paths.some(path => path && Array.isArray(path.points) && path.points.length > 0)}
                                 title="現在のネオン下絵プロジェクトをJSONファイルとしてダウンロード"
                             >
                                 📤 保存

@@ -130,6 +130,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // プロジェクト保存機能
     const saveProjectToFile = useCallback(() => {
+        // データがない場合は保存しない
+        if (!neonPaths || neonPaths.length === 0) {
+            alert('保存できるデータがありません。ネオン下絵からデータを作成するか、前回保存したデータを読み込んでください。');
+            return;
+        }
+        
         const projectData = {
             version: '1.0',
             timestamp: new Date().toISOString(),
@@ -155,7 +161,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             neonColors,
             neonLineWidths,
             canvasSettings,
-            installationEnvironment
+            installationEnvironment,
+            svgData
         };
 
         const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
@@ -179,6 +186,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             try {
                 const projectData = JSON.parse(e.target.result);
                 
+                // ファイル形式の判定
+                const isDrawingFile = projectData.metadata && projectData.metadata.type === 'neon-drawing-project';
+                
+                if (isDrawingFile) {
+                    alert('こちらのファイルはネオン下絵で読み込んでください。');
+                    return;
+                }
+                
                 // データの復元
                 if (projectData.selectedColor !== undefined) setSelectedColor(projectData.selectedColor);
                 if (projectData.thickness !== undefined) setThickness(projectData.thickness);
@@ -201,6 +216,22 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
                 if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
                 if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
+
+                // svgDataの復元（ネオン下絵データ）
+                if (projectData.svgData !== undefined) {
+                    // svgDataを直接更新するのではなく、親コンポーネントに通知
+                    if (onStateChange) {
+                        onStateChange({ svgData: projectData.svgData });
+                    }
+                }
+
+                // データが読み込まれたことを明示的に設定
+                if (projectData.neonPaths && projectData.neonPaths.length > 0) {
+                    setIsDataLoaded(true);
+                }
+
+                // 読み込んだプロジェクトデータをグローバルにバックアップ
+                window.lastLoadedCustomizeProject = projectData;
 
                 alert('プロジェクトが正常に読み込まれました！');
             } catch (error) {
@@ -432,12 +463,96 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     // 初回マウント時にデータを読み込み
     useEffect(() => {
         loadCustomizeData();
+        
+        // グローバルバックアップからの復元を試行
+        if (window.lastLoadedCustomizeProject && !svgData && neonPaths.length === 0) {
+            const projectData = window.lastLoadedCustomizeProject;
+            
+            // データの復元
+            if (projectData.selectedColor !== undefined) setSelectedColor(projectData.selectedColor);
+            if (projectData.thickness !== undefined) setThickness(projectData.thickness);
+            if (projectData.blinkEffect !== undefined) setBlinkEffect(projectData.blinkEffect);
+            if (projectData.animationSpeed !== undefined) setAnimationSpeed(projectData.animationSpeed);
+            if (projectData.sidebarVisible !== undefined) setSidebarVisible(projectData.sidebarVisible);
+            if (projectData.neonPower !== undefined) setNeonPower(projectData.neonPower);
+            if (projectData.backgroundColor !== undefined) setBackgroundColor(projectData.backgroundColor);
+            if (projectData.backgroundColorOff !== undefined) setBackgroundColorOff(projectData.backgroundColorOff);
+            if (projectData.gridColor !== undefined) setGridColor(projectData.gridColor);
+            if (projectData.gridColorOff !== undefined) setGridColorOff(projectData.gridColorOff);
+            if (projectData.showGrid !== undefined) setShowGrid(projectData.showGrid);
+            if (projectData.gridOpacity !== undefined) setGridOpacity(projectData.gridOpacity);
+            if (projectData.gridSize !== undefined) setGridSize(projectData.gridSize);
+            if (projectData.pathColors !== undefined) setPathColors(projectData.pathColors);
+            if (projectData.pathThickness !== undefined) setPathThickness(projectData.pathThickness);
+            if (projectData.isTubeSettingsMinimized !== undefined) setIsTubeSettingsMinimized(projectData.isTubeSettingsMinimized);
+            if (projectData.neonPaths !== undefined) setNeonPaths(projectData.neonPaths);
+            if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
+            if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
+            if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
+            if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
+
+            // svgDataの復元
+            if (projectData.svgData !== undefined && onStateChange) {
+                onStateChange({ svgData: projectData.svgData });
+            }
+
+            if (projectData.neonPaths && projectData.neonPaths.length > 0) {
+                setIsDataLoaded(true);
+            }
+        }
     }, []);
 
     // svgDataの変更を即座に検知
     useEffect(() => {
         setIsDataLoaded(!!svgData);
     }, [svgData]);
+
+    // neonPathsの変更を検知してisDataLoadedを更新
+    useEffect(() => {
+        if (neonPaths.length > 0) {
+            setIsDataLoaded(true);
+        } else if (!svgData) {
+            setIsDataLoaded(false);
+        }
+    }, [neonPaths, svgData]);
+
+    // 3Dプレビューから戻った時の状態復元
+    useEffect(() => {
+        const handleRestoreState = (event) => {
+            const backupState = event.detail;
+            if (backupState) {
+                if (backupState.neonPaths) setNeonPaths(backupState.neonPaths);
+                if (backupState.pathColors) setPathColors(backupState.pathColors);
+                if (backupState.pathThickness) setPathThickness(backupState.pathThickness);
+                if (backupState.selectedColor) setSelectedColor(backupState.selectedColor);
+                if (backupState.thickness) setThickness(backupState.thickness);
+                if (backupState.blinkEffect !== undefined) setBlinkEffect(backupState.blinkEffect);
+                if (backupState.animationSpeed) setAnimationSpeed(backupState.animationSpeed);
+                if (backupState.neonPower !== undefined) setNeonPower(backupState.neonPower);
+                if (backupState.backgroundColor) setBackgroundColor(backupState.backgroundColor);
+                if (backupState.backgroundColorOff) setBackgroundColorOff(backupState.backgroundColorOff);
+                if (backupState.gridColor) setGridColor(backupState.gridColor);
+                if (backupState.gridColorOff) setGridColorOff(backupState.gridColorOff);
+                if (backupState.showGrid !== undefined) setShowGrid(backupState.showGrid);
+                if (backupState.gridOpacity) setGridOpacity(backupState.gridOpacity);
+                if (backupState.gridSize) setGridSize(backupState.gridSize);
+                if (backupState.neonColors) setNeonColors(backupState.neonColors);
+                if (backupState.neonLineWidths) setNeonLineWidths(backupState.neonLineWidths);
+                if (backupState.canvasSettings) setCanvasSettings(backupState.canvasSettings);
+                if (backupState.installationEnvironment) setInstallationEnvironment(backupState.installationEnvironment);
+                
+                // svgDataの復元
+                if (backupState.svgData && onStateChange) {
+                    onStateChange({ svgData: backupState.svgData });
+                }
+                
+                setIsDataLoaded(true);
+            }
+        };
+
+        window.addEventListener('restoreCustomizeState', handleRestoreState);
+        return () => window.removeEventListener('restoreCustomizeState', handleRestoreState);
+    }, []);
 
     // ネオン下絵データの解析
     useEffect(() => {
@@ -1057,8 +1172,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // データロード状態をチェック - svgDataがあればすぐに描画処理に進む
-        if (!isDataLoaded || !svgData) {
+        // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
+        if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
             // 画面の真の中央位置
             const canvasCenterX = canvas.width / 2;
             const canvasCenterY = canvas.height / 2;
@@ -1067,7 +1182,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             ctx.font = '24px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('ネオン下絵からデータを読み込んでください', canvasCenterX, canvasCenterY);
+            ctx.fillText('ネオン下絵からデータを作成するか、前回保存したデータを読み込んでください', canvasCenterX, canvasCenterY);
             return;
         }
         
@@ -1790,7 +1905,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         <div className="reset-buttons-row">
                             <button
                                 onClick={saveProjectToFile}
-                                className="project-save-btn"
+                                className={`project-save-btn ${neonPaths.length === 0 ? 'button-disabled' : ''}`}
                                 disabled={neonPaths.length === 0}
                                 title="現在の色仕様設定をJSONファイルとしてダウンロード"
                             >
@@ -2102,6 +2217,35 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             
                             setIsProcessing3D(false);
                             
+                            // 状態をバックアップしてから3Dプレビューに移行
+                            const stateBackup = {
+                                neonPaths,
+                                pathColors,
+                                pathThickness,
+                                selectedColor,
+                                thickness,
+                                blinkEffect,
+                                animationSpeed,
+                                neonPower,
+                                backgroundColor,
+                                backgroundColorOff,
+                                gridColor,
+                                gridColorOff,
+                                showGrid,
+                                gridOpacity,
+                                gridSize,
+                                neonColors,
+                                neonLineWidths,
+                                canvasSettings,
+                                installationEnvironment,
+                                svgData
+                            };
+                            
+                            // カスタムイベントでバックアップデータを保存
+                            window.dispatchEvent(new CustomEvent('storeCustomizeState', {
+                                detail: stateBackup
+                            }));
+
                             window.dispatchEvent(new CustomEvent('RequestPageTransitionTo3DPreview'));
                         }}
                         className="customize-download-button"

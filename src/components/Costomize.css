@@ -1656,6 +1656,19 @@ html, body {
     box-shadow: none !important;
 }
 
+.project-save-btn.button-disabled {
+    background-color: rgb(29, 29, 29) !important;
+    color: #9ca3af !important;
+    border-color: #6b7280 !important;
+    border: 1px solid #6b7280 !important;
+    cursor: not-allowed !important;
+}
+
+.project-save-btn.button-disabled:hover {
+    background-color: rgb(29, 29, 29) !important;
+    color: #9ca3af !important;
+}
+
 /* プロジェクト読み込みボタン */
 .project-load-btn {
     padding: 6px 4px !important;
