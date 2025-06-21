@@ -2551,7 +2551,7 @@ const quantizeColors = (pixels, k) => {
                     onClick={() => setCurrentPage('neonDrawing')}
                     className="process-button"
                   >
-                    ネオンサインを作成する
+                さっそく作成する
                   </button>
                 </div>
               </div>
@@ -2567,7 +2567,7 @@ const quantizeColors = (pixels, k) => {
                 >
                 </button>
                 <div className="bottom-explanation">
-                  生成前に一度お読みください
+                  作成前に一度お読みください
                 </div>
               </div>
              
@@ -3001,32 +3001,6 @@ const quantizeColors = (pixels, k) => {
                             neonModelData = calculateNeonModelData(neonSvgData);
                           }
                           
-                          // それでもない場合、レイヤーデータから推定
-                          if (!neonModelData) {
-                            if (layers.length > 0 && productDimensions.width > 0) {
-                              neonModelData = {
-                                modelWidth: productDimensions.width,
-                                modelHeight: productDimensions.height,
-                                tubeCount6mm: Math.max(1, Math.floor(layers.length * 0.7)),
-                                tubeCount8mm: Math.max(0, Math.floor(layers.length * 0.3)),
-                                tubeLength6mm: (productDimensions.width + productDimensions.height) / 2,
-                                tubeLength8mm: productDimensions.width * 0.8,
-                                baseColor: '透明アクリル',
-                                modelType: '屋内 - 非防水'
-                              };
-                            } else {
-                              neonModelData = {
-                                modelWidth: 200,
-                                modelHeight: 100,
-                                tubeCount6mm: 2,
-                                tubeCount8mm: 1,
-                                tubeLength6mm: 150,
-                                tubeLength8mm: 100,
-                                baseColor: '透明アクリル',
-                                modelType: '屋内 - 非防水'
-                              };
-                            }
-                          }
                           
                           return (
                             <>

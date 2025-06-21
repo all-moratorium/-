@@ -103,8 +103,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         cleanCanvas.width = maxDimension;
                         cleanCanvas.height = maxDimension;
                         
-                        // 背景を黒に設定
-                        cleanCtx.fillStyle = '#000000';
+                        // 背景色を設定（現在の背景色を使用）
+                        const currentBgColor = neonPower ? backgroundColor : backgroundColorOff;
+                        cleanCtx.fillStyle = currentBgColor;
                         cleanCtx.fillRect(0, 0, maxDimension, maxDimension);
                         
                         // キャンバス設定を適用
@@ -117,44 +118,51 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         cleanCtx.translate(centerX - modelCenterX * canvasSettings.scale, centerY - modelCenterY * canvasSettings.scale);
                         cleanCtx.scale(canvasSettings.scale, canvasSettings.scale);
                         
-                        // ネオンパスのみを描画（グリッドとテキストは除外）
+                        // 1. 土台（fill）パスを先に描画
                         neonPaths.forEach((pathObj, pathIndex) => {
-                            if (!pathObj || !pathObj.points || pathObj.points.length < 2) return;
+                            if (!pathObj || !pathObj.points || pathObj.points.length < 2 || pathObj.mode !== 'fill') return;
+                            
+                            const fillColor = pathColors[`${pathIndex}_fill`] || 'transparent';
+                            console.log(`PNG生成 fillパス${pathIndex}: fillColor=${fillColor}`);
+                            if (fillColor && fillColor !== 'transparent') {
+                                const opacity = neonPower ? 1.0 : 0.3;
+                                cleanCtx.save();
+                                cleanCtx.fillStyle = fillColor;
+                                cleanCtx.globalAlpha = opacity;
+                                cleanCtx.beginPath();
+                                cleanCtx.moveTo(pathObj.points[0].x, pathObj.points[0].y);
+                                pathObj.points.forEach((point, i) => {
+                                    if (i > 0) cleanCtx.lineTo(point.x, point.y);
+                                });
+                                cleanCtx.closePath();
+                                cleanCtx.fill();
+                                cleanCtx.restore();
+                                console.log(`PNG生成 fillパス${pathIndex}: 描画完了`);
+                            } else {
+                                console.log(`PNG生成 fillパス${pathIndex}: 透明のためスキップ`);
+                            }
+                        });
+                        
+                        // 2. ネオンチューブ（stroke）パスを後に描画
+                        neonPaths.forEach((pathObj, pathIndex) => {
+                            if (!pathObj || !pathObj.points || pathObj.points.length < 2 || pathObj.mode !== 'stroke') return;
                             
                             const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffff00';
                             const thickness = pathThickness[pathIndex] || 15;
                             const opacity = neonPower ? 1.0 : 0.3;
+                            console.log(`PNG生成 strokeパス${pathIndex}: color=${color} thickness=${thickness}`);
                             
-                            if (pathObj.mode === 'stroke') {
-                                // ネオンチューブ効果で描画（メインキャンバスと同じ効果）
-                                const currentBrightness = neonPower ? 100 : 30;
-                                drawNeonTube(
-                                    cleanCtx, 
-                                    pathObj.points, 
-                                    pathObj.type, 
-                                    color, 
-                                    thickness,
-                                    50, // glowIntensity
-                                    currentBrightness,
-                                    false // isHighlighted
-                                );
-                            } else if (pathObj.mode === 'fill') {
-                                // ベースプレート
-                                const fillColor = pathColors[`${pathIndex}_fill`] || 'transparent';
-                                if (fillColor && fillColor !== 'transparent') {
-                                    cleanCtx.save();
-                                    cleanCtx.fillStyle = fillColor;
-                                    cleanCtx.globalAlpha = opacity;
-                                    cleanCtx.beginPath();
-                                    cleanCtx.moveTo(pathObj.points[0].x, pathObj.points[0].y);
-                                    pathObj.points.forEach((point, i) => {
-                                        if (i > 0) cleanCtx.lineTo(point.x, point.y);
-                                    });
-                                    cleanCtx.closePath();
-                                    cleanCtx.fill();
-                                    cleanCtx.restore();
-                                }
-                            }
+                            const currentBrightness = neonPower ? 100 : 30;
+                            drawNeonTube(
+                                cleanCtx, 
+                                pathObj.points, 
+                                pathObj.type, 
+                                color, 
+                                thickness,
+                                50, // glowIntensity
+                                currentBrightness,
+                                false // isHighlighted
+                            );
                         });
                         
                         cleanCtx.restore();
@@ -402,10 +410,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     };
 
     const handlePathColorChange = (pathIndex, color) => {
-        setPathColors(prev => ({
-            ...prev,
-            [pathIndex]: color
-        }));
+        console.log(`色変更: パス${pathIndex} → ${color}`);
+        setPathColors(prev => {
+            const updated = {
+                ...prev,
+                [pathIndex]: color
+            };
+            console.log('更新後のpathColors:', updated);
+            return updated;
+        });
     };
 
     const handlePathThicknessChange = (pathIndex, thickness) => {
@@ -1935,11 +1948,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 className={`base-color-button transparent ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
                                                 onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
                                                 title="透明"
-                                            />
-                                            <button
-                                                className={`base-color-button white ${pathColors[`${index}_fill`] === '#ffffff' ? 'active' : ''}`}
-                                                onClick={() => handlePathColorChange(`${index}_fill`, '#ffffff')}
-                                                title="白"
                                             />
                                             <button
                                                 className={`base-color-button black ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}

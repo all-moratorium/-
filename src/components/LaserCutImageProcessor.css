@@ -599,7 +599,8 @@
     margin: 0;
     padding: 40px;
     width: 820px;
-    overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
     animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -713,6 +714,8 @@
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    z-index: 1001;
+    box-sizing: border-box;
   }
   
   .modal-confirm-button:hover {
@@ -939,7 +942,7 @@
   color: #000; /* これを変えると：処理ボタンの文字色が変わります（黒色） */
   cursor: pointer; /* これを変えると：処理ボタンにマウスを合わせたときのマウスカーソルの形が変わります（クリック可能を示すポインター） */
   font-weight: bold; /* これを変えると：処理ボタンの文字の太さが変わります（太字表示） */
-  font-size: 23px; /* これを変えると：処理ボタンの文字の大きさが変わります（16pxの大きさ） */
+  font-size: 19px; /* これを変えると：処理ボタンの文字の大きさが変わります（16pxの大きさ） */
   margin-top: 20px; /* これを変えると：処理ボタンの上の余白が変わります（上に20pxの余白） */
   box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* これを変えると：処理ボタンの影が変わります（水色の光るエフェクト） */
   transition: all 0.3s ease; /* これを変えると：処理ボタンの変化の速さが変わります（0.3秒の滑らかなアニメーション） */

@@ -442,15 +442,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         reflectivity: 0.03,
         side: THREE.DoubleSide
       });
-    } else if (fillColor === 'white' || fillColor === '#ffffff' || fillColor === '#fff') {
-      // 白いアクリル - 反射を最小限に抑制してネオンチューブの色を保持
-      material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        transparent: false,
-        opacity: 1,
-        shininess: 300,      // さらに反射を抑制
-        specular: 0x1f1f1f  // 反射光をさらに暗く
-      });
     } else if (fillColor === 'black' || fillColor === '#000000' || fillColor === '#000') {
       // 黒いアクリル
       material = new THREE.MeshPhongMaterial({
@@ -518,7 +509,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const neonMaterial = new THREE.ShaderMaterial({
       uniforms: {
         baseColor: { value: tubeColor },
-        emissiveIntensity: { value: emissiveValue }  // 元に戻す
+        emissiveIntensity: { value: emissiveValue }
       },
       vertexShader: neonVertexShader,
       fragmentShader: neonFragmentShader,
@@ -842,7 +833,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       logarithmicDepthBuffer: true,
       powerPreference: "high-performance"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x242424);
     renderer.shadowMap.enabled = false;
@@ -855,7 +846,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // ブルーム効果の解像度を高くしてズームアウト時もシャープに
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth * 1.5, window.innerHeight * 1.5),
+      new THREE.Vector2(window.innerWidth * 2.0, window.innerHeight * 2.0),
       glowValue, 0, 0
     );
     unrealBloomPassRef.current = bloomPass;
