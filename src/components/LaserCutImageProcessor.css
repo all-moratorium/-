@@ -71,7 +71,6 @@
   box-sizing: border-box; /* これを変えると：要素のサイズ計算方法が変わります */
   overflow: hidden; /* これを変えると：メインレイアウトがはみ出たときの表示方法が変わります（スクロールバーを非表示） */
   background: transparent; /* 背景グラデーションを見えるようにする */
-  z-index: 1; /* 背景より前面に */
 }
 
         /* Sidebar */

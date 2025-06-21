@@ -3224,8 +3224,11 @@ const quantizeColors = (pixels, k) => {
       }
     };
 
-    createParticles();
-  }, []);
+    // 3Dプレビューページ以外でパーティクルを作成
+    if (currentPage !== 'neonSvg3dPreview') {
+      createParticles();
+    }
+  }, [currentPage]);
   
   const MIN_QUANTITY = 1;
   const MAX_QUANTITY = 100;
@@ -3277,10 +3280,12 @@ const quantizeColors = (pixels, k) => {
 
   return (
     <div className={`app-container ${sidebarExpanded ? 'sidebar-open-for-preview' : ''}`}>
-      {/* Background image */}
-      <div className="background">
-        <div className="particles" id="particles"></div>
-      </div>
+      {/* Background image - 3Dプレビューページ以外で表示 */}
+      {currentPage !== 'neonSvg3dPreview' && (
+        <div className="background">
+          <div className="particles" id="particles"></div>
+        </div>
+      )}
       
       {/* 進捗表示オーバーレイ */}
       {isProcessing && (
@@ -3335,7 +3340,7 @@ const quantizeColors = (pixels, k) => {
         width: '100%', 
         height: '100%', 
         visibility: currentPage === 'neonSvg3dPreview' ? 'visible' : 'hidden',
-        zIndex: currentPage === 'neonSvg3dPreview' ? 1 : -1,
+        zIndex: currentPage === 'neonSvg3dPreview' ? 100 : -1,
         pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
       }}>
         <NeonSVGTo3DExtruder 
