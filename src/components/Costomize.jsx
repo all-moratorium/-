@@ -70,102 +70,105 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // Canvas画像を商品情報に送信する関数
     const sendCanvasImageToProductInfo = useCallback(() => {
-        try {
-            if (neonPaths.length > 0) {
-                // ネオンパスの境界を計算
-                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-                
-                neonPaths.forEach(pathObj => {
-                    if (pathObj && pathObj.points) {
-                        pathObj.points.forEach(point => {
-                            minX = Math.min(minX, point.x);
-                            minY = Math.min(minY, point.y);
-                            maxX = Math.max(maxX, point.x);
-                            maxY = Math.max(maxY, point.y);
-                        });
-                    }
-                });
-                
-                if (minX !== Infinity) {
-                    // 商品情報用のクリーンなCanvas画像を再生成（グリッドテキスト除外）
-                    const cleanCanvas = document.createElement('canvas');
-                    const cleanCtx = cleanCanvas.getContext('2d');
+        // 非同期で処理してUIをブロックしない（画像品質は維持）
+        setTimeout(() => {
+            try {
+                if (neonPaths.length > 0) {
+                    // ネオンパスの境界を計算
+                    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
                     
-                    // パディングを追加
-                    const padding = 40;
-                    const modelWidth = (maxX - minX) * canvasSettings.scale + padding * 2;
-                    const modelHeight = (maxY - minY) * canvasSettings.scale + padding * 2;
-                    
-                    // アスペクト比を維持して正方形にする
-                    const maxDimension = Math.max(modelWidth, modelHeight, 300); // 最小サイズ300px
-                    cleanCanvas.width = maxDimension;
-                    cleanCanvas.height = maxDimension;
-                    
-                    // 背景を黒に設定
-                    cleanCtx.fillStyle = '#000000';
-                    cleanCtx.fillRect(0, 0, maxDimension, maxDimension);
-                    
-                    // キャンバス設定を適用
-                    const centerX = maxDimension / 2;
-                    const centerY = maxDimension / 2;
-                    const modelCenterX = (minX + maxX) / 2;
-                    const modelCenterY = (minY + maxY) / 2;
-                    
-                    cleanCtx.save();
-                    cleanCtx.translate(centerX - modelCenterX * canvasSettings.scale, centerY - modelCenterY * canvasSettings.scale);
-                    cleanCtx.scale(canvasSettings.scale, canvasSettings.scale);
-                    
-                    // ネオンパスのみを描画（グリッドとテキストは除外）
-                    neonPaths.forEach((pathObj, pathIndex) => {
-                        if (!pathObj || !pathObj.points || pathObj.points.length < 2) return;
-                        
-                        const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffff00';
-                        const thickness = pathThickness[pathIndex] || 15;
-                        const opacity = neonPower ? 1.0 : 0.3;
-                        
-                        if (pathObj.mode === 'stroke') {
-                            // ネオンチューブ効果で描画（メインキャンバスと同じ効果）
-                            const currentBrightness = neonPower ? 100 : 30;
-                            drawNeonTube(
-                                cleanCtx, 
-                                pathObj.points, 
-                                pathObj.type, 
-                                color, 
-                                thickness,
-                                50, // glowIntensity
-                                currentBrightness,
-                                false // isHighlighted
-                            );
-                        } else if (pathObj.mode === 'fill') {
-                            // ベースプレート
-                            const fillColor = pathColors[`${pathIndex}_fill`] || 'transparent';
-                            if (fillColor && fillColor !== 'transparent') {
-                                cleanCtx.save();
-                                cleanCtx.fillStyle = fillColor;
-                                cleanCtx.globalAlpha = opacity;
-                                cleanCtx.beginPath();
-                                cleanCtx.moveTo(pathObj.points[0].x, pathObj.points[0].y);
-                                pathObj.points.forEach((point, i) => {
-                                    if (i > 0) cleanCtx.lineTo(point.x, point.y);
-                                });
-                                cleanCtx.closePath();
-                                cleanCtx.fill();
-                                cleanCtx.restore();
-                            }
+                    neonPaths.forEach(pathObj => {
+                        if (pathObj && pathObj.points) {
+                            pathObj.points.forEach(point => {
+                                minX = Math.min(minX, point.x);
+                                minY = Math.min(minY, point.y);
+                                maxX = Math.max(maxX, point.x);
+                                maxY = Math.max(maxY, point.y);
+                            });
                         }
                     });
                     
-                    cleanCtx.restore();
-                    
-                    const canvasImageDataURL = cleanCanvas.toDataURL('image/png');
-                    window.dispatchEvent(new CustomEvent('customizeCanvasImage', {
-                        detail: { canvasImageDataURL }
-                    }));
+                    if (minX !== Infinity) {
+                        // 商品情報用のクリーンなCanvas画像を再生成（グリッドテキスト除外）
+                        const cleanCanvas = document.createElement('canvas');
+                        const cleanCtx = cleanCanvas.getContext('2d');
+                        
+                        // パディングを追加
+                        const padding = 40;
+                        const modelWidth = (maxX - minX) * canvasSettings.scale + padding * 2;
+                        const modelHeight = (maxY - minY) * canvasSettings.scale + padding * 2;
+                        
+                        // アスペクト比を維持して正方形にする
+                        const maxDimension = Math.max(modelWidth, modelHeight, 300); // 最小サイズ300px
+                        cleanCanvas.width = maxDimension;
+                        cleanCanvas.height = maxDimension;
+                        
+                        // 背景を黒に設定
+                        cleanCtx.fillStyle = '#000000';
+                        cleanCtx.fillRect(0, 0, maxDimension, maxDimension);
+                        
+                        // キャンバス設定を適用
+                        const centerX = maxDimension / 2;
+                        const centerY = maxDimension / 2;
+                        const modelCenterX = (minX + maxX) / 2;
+                        const modelCenterY = (minY + maxY) / 2;
+                        
+                        cleanCtx.save();
+                        cleanCtx.translate(centerX - modelCenterX * canvasSettings.scale, centerY - modelCenterY * canvasSettings.scale);
+                        cleanCtx.scale(canvasSettings.scale, canvasSettings.scale);
+                        
+                        // ネオンパスのみを描画（グリッドとテキストは除外）
+                        neonPaths.forEach((pathObj, pathIndex) => {
+                            if (!pathObj || !pathObj.points || pathObj.points.length < 2) return;
+                            
+                            const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffff00';
+                            const thickness = pathThickness[pathIndex] || 15;
+                            const opacity = neonPower ? 1.0 : 0.3;
+                            
+                            if (pathObj.mode === 'stroke') {
+                                // ネオンチューブ効果で描画（メインキャンバスと同じ効果）
+                                const currentBrightness = neonPower ? 100 : 30;
+                                drawNeonTube(
+                                    cleanCtx, 
+                                    pathObj.points, 
+                                    pathObj.type, 
+                                    color, 
+                                    thickness,
+                                    50, // glowIntensity
+                                    currentBrightness,
+                                    false // isHighlighted
+                                );
+                            } else if (pathObj.mode === 'fill') {
+                                // ベースプレート
+                                const fillColor = pathColors[`${pathIndex}_fill`] || 'transparent';
+                                if (fillColor && fillColor !== 'transparent') {
+                                    cleanCtx.save();
+                                    cleanCtx.fillStyle = fillColor;
+                                    cleanCtx.globalAlpha = opacity;
+                                    cleanCtx.beginPath();
+                                    cleanCtx.moveTo(pathObj.points[0].x, pathObj.points[0].y);
+                                    pathObj.points.forEach((point, i) => {
+                                        if (i > 0) cleanCtx.lineTo(point.x, point.y);
+                                    });
+                                    cleanCtx.closePath();
+                                    cleanCtx.fill();
+                                    cleanCtx.restore();
+                                }
+                            }
+                        });
+                        
+                        cleanCtx.restore();
+                        
+                        const canvasImageDataURL = cleanCanvas.toDataURL('image/png');
+                        window.dispatchEvent(new CustomEvent('customizeCanvasImage', {
+                            detail: { canvasImageDataURL }
+                        }));
+                    }
                 }
+            } catch (error) {
+                // Canvas汚染エラー等の場合は無視
             }
-        } catch (error) {
-            // Canvas汚染エラー等の場合は無視
-        }
+        }, 100); // 100ms遅延で非同期実行（UIブロックを回避）
     }, [neonPaths, pathColors, pathThickness, neonColors, canvasSettings, neonPower]);
     
     const canvasRef = useRef(null);
