@@ -853,8 +853,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // Post-processing setup for selective bloom
     const renderPass = new RenderPass(scene, camera);
 
+    // ブルーム効果の解像度を高くしてズームアウト時もシャープに
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      new THREE.Vector2(window.innerWidth * 1.5, window.innerHeight * 1.5),
       glowValue, 0, 0
     );
     unrealBloomPassRef.current = bloomPass;
@@ -1071,7 +1072,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
       if (composerRef.current) {
-        composerRef.current.bloom.setSize(width, height);
+        composerRef.current.bloom.setSize(width * 1.5, height * 1.5);
         composerRef.current.final.setSize(width, height);
       }
     };
