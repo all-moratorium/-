@@ -372,6 +372,7 @@ const LaserCutImageProcessor = () => {
   const [neonCameraState, setNeonCameraState] = useState(null);
   const [neonPreviewImageDataURL, setNeonPreviewImageDataURL] = useState(null);
   const [neonCalculatedModelData, setNeonCalculatedModelData] = useState(null);
+  const [customizeCanvasImageDataURL, setCustomizeCanvasImageDataURL] = useState(null);
   
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -557,10 +558,18 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     };
     window.addEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
 
+    const handleCustomizeCanvasImage = (event) => {
+      if (event.detail && event.detail.canvasImageDataURL) {
+        setCustomizeCanvasImageDataURL(event.detail.canvasImageDataURL);
+      }
+    };
+    window.addEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
+
     return () => {
       window.removeEventListener('show3DPreview', handleShow3DPreview);
       window.removeEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
       window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
+      window.removeEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
     };
   }, []);
 
@@ -571,17 +580,43 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // キャンバスサイズを設定（背景が黒で原点中央になるように）
-    const size = 400; // 正方形
-    canvas.width = size;
-    canvas.height = size;
+    // 高解像度対応とアンチエイリアシング設定
+    const pixelRatio = window.devicePixelRatio || 1;
+    const size = 400; // 表示サイズ
+    const actualSize = size * pixelRatio; // 実際の描画サイズ
+    
+    canvas.width = actualSize;
+    canvas.height = actualSize;
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    
+    // 高品質レンダリング設定
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     
     // 背景を黒に設定
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, size, size);
     
-    // SVGコンテンツをImageに変換
-    const svgBlob = new Blob([neonData.svgContent], { type: 'image/svg+xml' });
+    // SVGコンテンツを修正してストローク幅を保持
+    let modifiedSvgContent = neonData.svgContent;
+    
+    // SVGにviewBox属性がない場合は追加
+    if (!modifiedSvgContent.includes('viewBox')) {
+      modifiedSvgContent = modifiedSvgContent.replace(
+        /<svg[^>]*>/,
+        match => match.replace('>', ` viewBox="0 0 ${neonData.svgSizePx?.width || 800} ${neonData.svgSizePx?.height || 600}" preserveAspectRatio="xMidYMid meet">`)
+      );
+    }
+    
+    // ストローク幅を保持するためにvector-effectを追加
+    modifiedSvgContent = modifiedSvgContent.replace(
+      /stroke-width="([^"]+)"/g,
+      'stroke-width="$1" vector-effect="non-scaling-stroke"'
+    );
+    
+    const svgBlob = new Blob([modifiedSvgContent], { type: 'image/svg+xml' });
     const svgUrl = URL.createObjectURL(svgBlob);
     
     const img = new Image();
@@ -2994,7 +3029,7 @@ case '3dPreview':
                     
                     <div className="product-container-vertical">
                       
-                      <img className="product-image" src={neonPreviewImageDataURL || layeredImageDataURL} alt="プレビュー" />
+                      <img className="product-image" src={customizeCanvasImageDataURL || neonPreviewImageDataURL || layeredImageDataURL} alt="プレビュー" />
                       
                       <div className="product-specs-list">
                         {(() => {
@@ -3432,17 +3467,6 @@ case '3dPreview':
                         <span className="nav-text">色・仕様のカスタマイズ</span>
                         <div className="tooltip">色・仕様のカスタマイズ</div>
                     </button>
-                    <button className={currentPage === '3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('3dPreview')}>
-                        <div className="nav-icon">
-                        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                        <path d="M20.5 7.27783L12 12.0001M12 12.0001L3.49997 7.27783M12 12.0001L12 21.5001M21 16.0586V7.94153C21 7.59889 21 7.42757 20.9495 7.27477C20.9049 7.13959
-                         20.8318 7.01551 20.7354 6.91082C20.6263 6.79248 20.4766 6.70928 20.177 6.54288L12.777 2.43177C12.4934 2.27421 12.3516 2.19543 12.2015 2.16454C12.0685 2.13721 11.9315 2.13721 11.7986 
-                         2.16454C11.6484 2.19543 11.5066 2.27421 11.223 2.43177L3.82297 6.54288C3.52345 6.70928 3.37369 6.79248 3.26463 6.91082C3.16816 7.01551 3.09515 7.13959 3.05048 7.27477C3 7.42757 3 7.59889 3 7.94153V16.0586C3 16.4013 3 16.5726 3.05048 16.7254C3.09515 16.8606 3.16816 16.9847 3.26463 17.0893C3.37369 17.2077 3.52345 17.2909 3.82297 17.4573L11.223 21.5684C11.5066 21.726 11.6484 21.8047 11.7986 21.8356C11.9315 21.863 12.0685 21.863 12.2015 21.8356C12.3516 21.8047 12.4934 21.726 12.777 21.5684L20.177 17.4573C20.4766 17.2909 20.6263 17.2077 20.7354 17.0893C20.8318 16.9847 20.9049 16.8606 20.9495 16.7254C21 16.5726 21 16.4013 21 16.0586Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                        </div>
-                        <span className="nav-text">3Dプレビュー</span>
-                        <div className="tooltip">3Dプレビュー</div>
-                    </button>
                     <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('neonSvg3dPreview')}>
                         <div className="nav-icon">
                         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
@@ -3454,17 +3478,6 @@ case '3dPreview':
                         </div>
                         <span className="nav-text">ネオンサイン3Dプレビュー</span>
                         <div className="tooltip">ネオンサイン3Dプレビュー</div>
-                    </button>
-                    <button className={currentPage === 'layerPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('layerPreview')}>
-                        <div className="nav-icon">
-                        <svg viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="10" rx="1" strokeWidth="2"/>
-                        <rect x="5" y="7" width="14" height="8" rx="1" strokeWidth="2" opacity="0.6"/>
-                        <rect x="7" y="3" width="10" height="6" rx="1" strokeWidth="2" opacity="0.3"/>
-                        </svg>
-                        </div>
-                        <span className="nav-text">レイヤープレビュー</span>
-                        <div className="tooltip">レイヤープレビュー</div>
                     </button>
                     <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('info')}>
                         <div className="nav-icon">
