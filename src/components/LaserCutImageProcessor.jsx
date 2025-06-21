@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef, createRef, memo } from 'react';
 import './LaserCutImageProcessor.css'; // 通常のCSSファイルをインポート
-import SVGTo3DExtruder from './SVGTo3DExtruder'; // SVGTo3DExtruderコンポーネントをインポート
-import ThreeDModelGenerator from './ThreeDModelGenerator';
 import Gallery3D from './Gallery3D';
 import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネントをインポート
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート
 import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
-import { lab as culoriLabConverter, differenceEuclidean } from 'culori'; // Gallery3Dコンポーネントをインポート // ThreeDModelGeneratorコンポーネントをインポート
+import { lab as culoriLabConverter, differenceEuclidean } from 'culori';
 
 // Canvasプールの実装 - メモリリーク対策
 const canvasPool = {
@@ -358,7 +356,7 @@ const MemoizedOriginalUiContent = memo(({
 
 const LaserCutImageProcessor = () => {
   // UI state variables
-  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'layerPreview', '3dPreview', 'info', 'neonDrawing', 'customize'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'info', 'neonDrawing', 'customize', 'neonSvg3dPreview'
   const [customizeSvgData, setCustomizeSvgData] = useState(null); // カスタマイズ用SVGデータ
   
   // NeonDrawingAppの状態を保存
@@ -377,9 +375,7 @@ const LaserCutImageProcessor = () => {
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [layerSvgs, setLayerSvgs] = useState([]);
-  const svgTo3DExtruderRef = useRef(null);
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
-  const threeDModelGeneratorRef = useRef(null); // ThreeDModelGeneratorへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
@@ -1227,10 +1223,6 @@ const handleLayerSelectionForMerge = (layerIndex) => {
 
   // Navigate to page
   const navigateTo = (page) => {
-    // 🔥 3Dプレビューから離れる時にカメラ状態を保存
-    if (currentPage === '3dPreview' && svgTo3DExtruderRef.current) {
-      svgTo3DExtruderRef.current.saveCameraState();
-    }
     
     // 🔥 ネオン3Dプレビューから離れる時にカメラ状態を保存
     if (currentPage === 'neonSvg3dPreview' && neonSvgTo3DExtruderRef.current) {
@@ -1243,12 +1235,6 @@ const handleLayerSelectionForMerge = (layerIndex) => {
     
     setCurrentPage(page);
     
-    // 🔥 3Dプレビューに戻る時にカメラ状態を復元
-    if (page === '3dPreview' && svgTo3DExtruderRef.current) {
-      setTimeout(() => {
-        svgTo3DExtruderRef.current.restoreCameraState();
-      }, 100);
-    }
     
     // 🔥 ネオン3Dプレビューに戻る時にカメラ状態を復元
     if (page === 'neonSvg3dPreview' && neonSvgTo3DExtruderRef.current) {
@@ -1344,7 +1330,7 @@ const processImage = async () => {
     
     // Navigate to layer preview page after processing
     setTimeout(() => {
-      setCurrentPage('layerPreview');
+      setCurrentPage('neonDrawing');
       setIsProcessing(false);
       setGenerationProgress(0);
       setProcessingMessage('');
@@ -2527,7 +2513,7 @@ const quantizeColors = (pixels, k) => {
             <div className="content-wrapper">
               
               <div className="left-column">
-                {image ? (
+                {image && (
                   <div 
                     className="image-preview-bubble"
                     onClick={triggerFileSelect}
@@ -2537,16 +2523,6 @@ const quantizeColors = (pixels, k) => {
                       src={image.src} 
                       alt="アップロードされた画像のプレビュー" 
                     />
-                  </div>
-                ) : (
-                  <div 
-                    className="upload-placeholder"
-                    onClick={triggerFileSelect}
-                    title="クリックして画像をアップロード"
-                  >
-                    <div className="upload-placeholder-text">
-                      ここをクリックして<br/>画像をアップロード
-                    </div>
                   </div>
                 )}
 
@@ -2572,11 +2548,10 @@ const quantizeColors = (pixels, k) => {
                 {/* Container for action buttons */}
                 <div className="action-buttons-container">
                   <button
-                    onClick={processImage}
-                    disabled={!image || isProcessing}
-                    className={`process-button ${isProcessing ? 'processing' : ''}`}
+                    onClick={() => setCurrentPage('neonDrawing')}
+                    className="process-button"
                   >
-                    {isProcessing ? '処理中...' : 'ネオンサイン生成'}
+                    ネオンサインを作成する
                   </button>
                 </div>
               </div>
@@ -2999,21 +2974,6 @@ const quantizeColors = (pixels, k) => {
           </div>
         );
       // ✅ 新しいコード
-case '3dPreview':
-  return (
-    <div className="main-content" style={{ 
-      overflow: 'visible', 
-      padding: 0, 
-      margin: 0, 
-      height: '100%', 
-      width: '100%', 
-      position: 'relative',
-      background: 'none'
-    }}>
-      {/* 3Dプレビューページでは何もレンダリングしない */}
-      {/* SVGTo3DExtruderが全体を制御 */}
-    </div>
-  );
         case 'info':
           return (
             <div className="main-content">
@@ -3212,23 +3172,8 @@ case '3dPreview':
   };
   
   const handleAddToCart = () => {
-    // カートに追加するロジック (既存の処理があればここに)
+    // カートに追加するロジック
     console.log(`商品ID: ${image ? image.name : 'Unknown Product'}、数量: ${productQuantity}個をカートに追加しました。`);
-
-    // SVGの一括ダウンロードを実行
-    if (threeDModelGeneratorRef.current) {
-      // SVGがまだ生成されていない場合に備えて変換をトリガーすることも検討
-      // threeDModelGeneratorRef.current.triggerConversion(); 
-      // ただし、autoStart=true であれば layers が渡った時点で変換が開始されているはず
-      
-      // 実際にダウンロードを実行
-      threeDModelGeneratorRef.current.downloadAllLayerSvgs();
-    } else {
-      console.warn('ThreeDModelGenerator ref is not available. Cannot download SVGs.');
-      // ユーザーにエラーメッセージを表示することも検討
-      // alert('SVGのエクスポート機能の準備ができていません。');
-    }
-
     // モーダルを閉じるなどの追加処理があればここに
   };
 
@@ -3332,6 +3277,11 @@ case '3dPreview':
 
   return (
     <div className={`app-container ${sidebarExpanded ? 'sidebar-open-for-preview' : ''}`}>
+      {/* Background image */}
+      <div className="background">
+        <div className="particles" id="particles"></div>
+      </div>
+      
       {/* 進捗表示オーバーレイ */}
       {isProcessing && (
         <div className="processing-overlay">
@@ -3376,34 +3326,6 @@ case '3dPreview':
           100% { transform: rotate(360deg); }
         }
       `}</style>
-      {/* Background image */}
-      <div className="background">
-        <div className="particles" id="particles"></div>
-      </div>
-      
-      {/* SVGTo3DExtruder is always rendered at root level, so hide it here */}
-      <div style={{ 
-        position: 'absolute', 
-        width: '100%', 
-        height: '100%', 
-        visibility: currentPage === '3dPreview' ? 'visible' : 'hidden',
-        zIndex: currentPage === '3dPreview' ? 1 : -1,
-        pointerEvents: currentPage === '3dPreview' ? 'auto' : 'none'
-      }}>
-        <SVGTo3DExtruder 
-          ref={svgTo3DExtruderRef} 
-          svgLayersData={[]} 
-          originalImageAspectRatio={originalImageAspectRatio}
-          onNavigateToInfo={(modelData) => {
-            if (modelData) {
-              setNeonCalculatedModelData(modelData);
-            }
-            setCurrentPage('info');
-          }}
-          hideNavigationButton={currentPage !== '3dPreview'} 
-          onDimensionsUpdate={handleDimensionsUpdate} // Added prop
-        />
-      </div>
       
       {/* NeonSVGTo3DExtruder - Always rendered but controlled by visibility */}
       <div style={{ 
@@ -3499,58 +3421,6 @@ case '3dPreview':
         </div>
       </div>
       
-      {/* Hidden original component to preserve functionality */}
-      {/* ThreeDModelGeneratorをレンダリング（非表示でも可）*/}
-        {/* ThreeDModelGeneratorをレンダリング（非表示でも可）*/}
-        <div style={{ display: 'none' }}>
-        
-{layers.length > 0 && (
-  <ThreeDModelGenerator
-    key={`svg-generator-${layers.length}-${autoStart3DGeneration}`}
-    layers={layers.map(layer => ({ ...layer, image: layer.imageDataURL }))}
-    autoStart={autoStart3DGeneration}
-    onStart={() => {
-      console.log('SVG generation officially started by the single instance.');
-    }}
-    onComplete={(generatedSvgs) => {
-      console.log('SVG generation complete by single instance:', generatedSvgs);
-      if (svgTo3DExtruderRef.current) {
-        svgTo3DExtruderRef.current.setLayerCount(generatedSvgs.length);
-        setTimeout(() => {
-          generatedSvgs.forEach((layer, index) => {
-            const internalArrayIndex = generatedSvgs.length - 1 - index;
-            svgTo3DExtruderRef.current.setLayerSvgContent(layer.svg, internalArrayIndex, `Layer ${index + 1}`);
-            svgTo3DExtruderRef.current.setLayerColor(layer.color, internalArrayIndex);
-          });
-          svgTo3DExtruderRef.current.triggerModelUpdate();
-          
-          setTimeout(() => {
-            setIsGenerating3D(false);
-            setAutoStart3DGeneration(false); // 🔥重要：フラグをリセット
-            setSvgGenerationProgress(0);
-            setSvgProcessingMessage('');
-            navigateTo('3dPreview');
-          }, 300);
-        }, 100);
-      } else {
-        console.error('svgTo3DExtruderRef is not available.');
-        setLayerSvgs(generatedSvgs);
-        setIsGenerating3D(false);
-        setAutoStart3DGeneration(false); // 🔥フラグをリセット
-        setSvgGenerationProgress(0);
-        setSvgProcessingMessage('');
-        navigateTo('3dPreview');
-      }
-    }}
-    onProgressUpdate={(progress, message) => {
-      setSvgGenerationProgress(progress);
-      if (message) {
-        setSvgProcessingMessage(message);
-      }
-    }}
-  />
-)}
-        </div>
       {renderOriginalComponent()}
       
      

@@ -9,6 +9,7 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background: transparent; /* 背景グラデーションを見えるようにする */
 }
 
 /* 既存の.backgroundに以下を追加 */
@@ -18,12 +19,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
   will-change: transform;
   background: linear-gradient(180deg, #0d0d0d,rgb(51, 51, 51));
-
 }
 
 /* 新しく追加するCSS */
@@ -70,6 +70,8 @@
   position: relative; /* これを変えると：メインレイアウト内の要素の配置方法が変わります */
   box-sizing: border-box; /* これを変えると：要素のサイズ計算方法が変わります */
   overflow: hidden; /* これを変えると：メインレイアウトがはみ出たときの表示方法が変わります（スクロールバーを非表示） */
+  background: transparent; /* 背景グラデーションを見えるようにする */
+  z-index: 1; /* 背景より前面に */
 }
 
         /* Sidebar */
@@ -174,14 +176,15 @@
 
       /* ロゴエリア */
       .logo-container {
-          padding: 24px;
-          min-height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          position: relative;
-      }
+        padding: 0 24px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+    }
+
 
       .logo {
           font-size: 20px;
@@ -451,7 +454,7 @@
 }
 /* 電光石火ボタン */
 .info-button {
-  display: border-box;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 50px;
@@ -462,13 +465,12 @@
   position: absolute;
   bottom: 90px;
   left: 50%;
-  transform: translateX(-50%) ;
+  transform: translateX(-50%);
   font-size: 28px;
   background: white;
   color: #333;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   /* 波紋電光アニメーション */
-  position: relative;
   animation: lightning-flash 1.5s infinite;
   overflow: visible;
   transition: all 0.3s ease;
@@ -480,6 +482,8 @@
   bottom:52px;  
   transform: translateX(-50%);
   width:220px;
+  color: #ffffff;
+  text-align: center;
 }
 
 .info-button:hover {
@@ -938,7 +942,7 @@
   font-weight: bold; /* これを変えると：処理ボタンの文字の太さが変わります（太字表示） */
   font-size: 23px; /* これを変えると：処理ボタンの文字の大きさが変わります（16pxの大きさ） */
   margin-top: 20px; /* これを変えると：処理ボタンの上の余白が変わります（上に20pxの余白） */
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* これを変えると：処理ボタンの影が変わります（水色の光るエフェクト） */
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* これを変えると：処理ボタンの影が変わります（水色の光るエフェクト） */
   transition: all 0.3s ease; /* これを変えると：処理ボタンの変化の速さが変わります（0.3秒の滑らかなアニメーション） */
 }
 
@@ -978,7 +982,7 @@
   color: #000; /* .process-button に合わせる */
   font-size: 23px; /* サイズ維持 */
   letter-spacing: 2px; /* 維持 */
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* .process-button に合わせる */
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* .process-button に合わせる */
   transition: all 0.3s ease; /* .process-button に合わせる */
   position: absolute; /* 配置維持 */
   bottom: 40px; /* 配置維持 */
@@ -987,8 +991,8 @@
 }
 
 .model-generate-button:hover {
-  background-color: #00ffff; /* .process-button ホバーに合わせる */
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.75); /* .process-button ホバーに合わせる */
+  background-color: #FFFF00; /* .process-button ホバーに合わせる */
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.75); /* .process-button ホバーに合わせる */
   /* transform: translateY(-2px); を削除または統一。ここでは削除して .process-button に合わせる */
   /* ホバー時の位置指定はベースから継承されるため、重複するものは削除 */
 }
@@ -1047,8 +1051,8 @@
 }
 
 .process-button:hover {
-  background-color: rgba(0, 255, 255, 1);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+  background-color: rgba(255, 255, 0, 1);
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.9);
   
 }
 
@@ -1992,7 +1996,7 @@ canvas {
 
 .product-estimate-container {
   display: grid;
-  grid-template-columns: 70% 400px;
+  grid-template-columns: 1fr auto;
   gap: 40px;
   margin-bottom: 40px;
 }
@@ -2060,6 +2064,7 @@ canvas {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 /* Custom Number Input Styles (Replaced to match .number-input look) */
@@ -2253,8 +2258,9 @@ canvas {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   position: sticky;
   top: 20px;
-  
   height: fit-content;
+  width: 400px;
+  box-sizing: border-box;
 }
 
 .price-summary h3 {
@@ -2432,6 +2438,8 @@ canvas {
 
   .product-form-section, .price-summary {
       padding: 20px;
+      max-width: 100%;
+      box-sizing: border-box;
   }
 }
 /* 進捗表示用のCSS - LaserCutImageProcessor.cssに追加 */
