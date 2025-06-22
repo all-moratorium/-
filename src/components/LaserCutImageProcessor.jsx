@@ -2567,17 +2567,19 @@ const quantizeColors = (pixels, k) => {
                 </div>
                 
                 <div className="sample-controls">
-                  <div className="sample-switch-container">
-                    <label className="sample-switch">
-                      <input 
-                        type="checkbox" 
-                        checked={sampleNeonOn}
-                        onChange={(e) => setSampleNeonOn(e.target.checked)}
-                      />
-                      <span className="sample-slider"></span>
-                    </label>
+                  <div className="sample-switch-text">発光サンプルを確認</div>
+                  <div className="home-sample-power-status">
+                    <div className={`home-sample-status-dot ${sampleNeonOn ? 'on' : 'off'}`}></div>
+                    <span className={`home-sample-status-text ${sampleNeonOn ? 'on' : 'off'}`}>
+                      {sampleNeonOn ? 'ON' : 'OFF'}
+                    </span>
                   </div>
-                  <div className="sample-switch-text">発光サンプルを確認→</div>
+                  <button
+                    onClick={() => setSampleNeonOn(!sampleNeonOn)}
+                    className={`home-sample-power-switch ${sampleNeonOn ? 'on' : 'off'}`}
+                  >
+                    <div className={`home-sample-switch-handle ${sampleNeonOn ? 'on' : 'off'}`} />
+                  </button>
                 </div>
               </div>
             </div>
