@@ -12,19 +12,19 @@ body:active {
 }
 
 #container {
-    position: relative !important; /* fixedからrelativeに変更 */
-    /* top: 0 !important; */  /* 不要になるため削除またはコメントアウト */
-    /* left: 0 !important; */ /* 不要になるため削除またはコメントアウト */
-    width: 100% !important;    /* 親要素の幅の90%にする */
-    height: 100% !important;   /* 親要素の高さに合わせる (または現在の40vhを維持も可) */
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
     overflow: hidden;
     z-index: 1;
     pointer-events: auto;
-    /* 親要素の影響を完全に無視 */
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
+    top: -7% !important;
+    left: 0 !important;
 }
 
 .navigation {

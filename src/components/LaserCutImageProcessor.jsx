@@ -2567,7 +2567,7 @@ const quantizeColors = (pixels, k) => {
                 </div>
                 
                 <div className="sample-controls">
-                  <div className="sample-switch-text">発光サンプルを確認</div>
+                  <div className="sample-switch-text">発光サンプルを確認 →</div>
                   <div className="home-sample-power-status">
                     <div className={`home-sample-status-dot ${sampleNeonOn ? 'on' : 'off'}`}></div>
                     <span className={`home-sample-status-text ${sampleNeonOn ? 'on' : 'off'}`}>

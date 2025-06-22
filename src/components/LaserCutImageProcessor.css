@@ -938,7 +938,7 @@
   box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* これを変えると：処理ボタンの影が変わります（水色の光るエフェクト） */
   transition: all 0.3s ease; /* これを変えると：処理ボタンの変化の速さが変わります（0.3秒の滑らかなアニメーション） */
   position:absolute;
-  bottom : 20%;
+  bottom : 22%;
 }
 
 
@@ -2951,7 +2951,7 @@ canvas {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.3);
-  height: 90%;
+  height: 100%;
   overflow: visible;
 }
 
@@ -2959,7 +2959,7 @@ canvas {
   flex: 0 0 20%;
   padding: 20px;
   border-radius: 10px;
-  height: 90%;
+  height: 100%;
   overflow: visible;
   text-align: center;
 }
@@ -2970,17 +2970,17 @@ canvas {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.3);
-  height: 90%;
+  height: 100%;
   overflow: visible;
 }
 
 
 .step-message {
   color: #ffffff;
-  font-size: 36px;
+  font-size: clamp(14px, 2vw, 32px);
   position: absolute;
   left: 50%;
-  bottom: calc(31% + 90px);
+  bottom: calc(35% + 90px);
   transform: translate(-50%, -50%);
   font-weight: 800;
   line-height: 1.2;
@@ -2991,18 +2991,24 @@ canvas {
   background-clip: text;
   animation: gradientShift 4s ease infinite;
   text-shadow: 0 0 30px rgba(204, 204, 204, 0.5);
+  max-width: 60%;
+  text-align: center;
+  z-index: 10;
 }
 
 .order-message {
   color: #e0e0e0;
-  font-size: 28px;
+  font-size: clamp(12px, 1.5vw, 28px);
   position: absolute;
   left: 50%;
-  bottom: 32% ;
+  bottom: 36% ;
   transform: translate(-50%, -50%);
   font-weight: 800;
   line-height: 1.2;
   opacity: 0.9;
+  max-width: 60%;
+  text-align: center;
+  z-index: 10;
 }
 
 .order-message .highlight {
@@ -3030,7 +3036,7 @@ canvas {
 }
 
 
-.sample-switch {
+.ch {
   background: #333;
   color: white;
   border: 1px solid #555;
@@ -3053,6 +3059,9 @@ canvas {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  position: absolute;
+  right: 13%;
+  bottom: 10%;
 }
 
 .sample-switch {
@@ -3128,12 +3137,13 @@ input:checked + .sample-slider:before {
 
 .home-sample-switch-handle {
     position: absolute;
-    top: 3px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 30px;
     height: 30px;
     border-radius: 50%;
     background-color: white;
-    transition: left 0.3s ease;
+    transition: left 0.3s ease, transform 0.3s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
@@ -3160,7 +3170,7 @@ input:checked + .sample-slider:before {
     vertical-align: middle;
     padding: 2px 0;
     overflow: visible;
-    width: 60px;
+    width: 30px;
     justify-content: flex-start;
 }
 
@@ -3192,7 +3202,8 @@ input:checked + .sample-slider:before {
 
 .sample-switch-text {
   color: white;
-  font-size: 12px;
+  font-size: 18px;
+  
 }
 
 /* ホーム画面のガイドボタン */
@@ -3207,7 +3218,7 @@ input:checked + .sample-slider:before {
   cursor: pointer;
   position: absolute;
   left: calc(50% - 170px);
-  bottom: 25%;
+  bottom: 27%;
   font-size: 25px;
   background: white;
   color: #333;
@@ -3221,7 +3232,7 @@ input:checked + .sample-slider:before {
   position:absolute;
   left: calc(50% - 270px);
   font-size:12px;
-  bottom:calc(25% - 30px);  
+  bottom:calc(27% - 30px);  
   width:200px;
   color: #ffffff;
   text-align: center;
