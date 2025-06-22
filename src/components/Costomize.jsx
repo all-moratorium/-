@@ -811,6 +811,25 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         }
     }, [svgData]);
 
+    // ベースプレートの透明設定を確実にする
+    useEffect(() => {
+        if (neonPaths.length > 0) {
+            const basePaths = neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill');
+            if (basePaths.length > 0) {
+                const initialColors = {};
+                basePaths.forEach((pathObj, index) => {
+                    const originalIndex = neonPaths.findIndex(p => p === pathObj);
+                    if (!pathColors[`${originalIndex}_fill`]) {
+                        initialColors[`${originalIndex}_fill`] = 'transparent';
+                    }
+                });
+                if (Object.keys(initialColors).length > 0) {
+                    setPathColors(prev => ({ ...prev, ...initialColors }));
+                }
+            }
+        }
+    }, [neonPaths]);
+
     // データ変更時に自動保存
     useEffect(() => {
         if (neonPaths.length > 0) {
@@ -1443,8 +1462,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         ctx.translate(canvasSettings.offsetX, canvasSettings.offsetY);
         ctx.scale(canvasSettings.scale, canvasSettings.scale);
 
-        // 1. 土台（fill）パスの描画
-        neonPaths.forEach((pathObj, pathIndex) => {
+        // 1. 土台（fill）パスの描画（最初の1つのみ）
+        neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').slice(0, 1).forEach((pathObj, pathIndex) => {
             if (!pathObj || !Array.isArray(pathObj.points) || pathObj.mode !== 'fill') {
                 return;
             }
@@ -1909,7 +1928,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length > 0 && (
                         <div className="base-settings">
                             <h3 className="customize-setting-title">ベースプレート設定</h3>
-                            {neonPaths.map((pathObj, index) => {
+                            {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').slice(0, 1).map((pathObj, index) => {
                                 if (!pathObj || pathObj.mode !== 'fill') return null;
                                 return (
                                     <div 

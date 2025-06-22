@@ -807,6 +807,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // 新しいパスを開始
     const startNewPath = useCallback(() => {
+        
         console.log('新しいパスボタンが押されました - ボタンを無効化します');
         setIsNewPathDisabled(true); // ボタンを無効化
         
@@ -1209,16 +1210,23 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // 描画モード (チューブ/土台) を設定
     const handleSetDrawMode = useCallback((mode) => {
-        setDrawMode(mode);
-        // 土台モードに切り替えたら、描画タイプ選択モーダルを表示
+        // 土台モードで既に土台面が存在する場合はブロック
         if (mode === 'fill') {
+            const existingFillPaths = paths.filter(pathObj => 
+                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+            );
+            if (existingFillPaths.length >= 1) {
+                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                return;
+            }
             setShowFillDrawingTypeModal(true);
         } else {
             // チューブモードの場合はモーダルを閉じ、描画タイプをデフォルトのスプラインに戻す
             setShowFillDrawingTypeModal(false);
             setDrawingType('spline'); // チューブは常にスプライン描画として扱う
         }
-
+        setDrawMode(mode);
+        
         // モード変更時は新しいパスボタンを有効化
         setIsNewPathDisabled(false);
 
@@ -1256,8 +1264,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
 
     // 描画モードボタンの無効化条件
-    // 点修正モード中、パス削除モード中、点削除モード中、または現在のパスに点が一つでも存在する場合は無効化
-    const areDrawModeButtonsDisabled = isModifyingPoints || isPathDeleteMode || isPointDeleteMode || (paths[currentPathIndex] && paths[currentPathIndex].points.length > 0);
+    // 点修正モード中、パス削除モード中、点削除モード中の場合のみ無効化
+    const areDrawModeButtonsDisabled = isModifyingPoints || isPathDeleteMode || isPointDeleteMode;
 
     // マウスイベントハンドラー
     const handleWheel = useCallback((e) => {
@@ -1478,6 +1486,19 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、または土台モードで描画タイプ選択モーダルが表示されている場合は処理しない
         if (e.button !== 0 || isPanning || didDragRef.current || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || (drawMode === 'fill' && showFillDrawingTypeModal)) {
             return;
+        }
+
+        // 土台モードで既に土台面が存在し、かつ新しい土台パスを作ろうとしている場合はキャンバスクリックをブロック
+        if (drawMode === 'fill') {
+            const existingFillPaths = paths.filter(pathObj => 
+                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+            );
+            const currentPath = paths[currentPathIndex];
+            // 既に土台面が存在し、かつ現在のパスが空（新しい土台を作ろうとしている）場合のみブロック
+            if (existingFillPaths.length >= 1 && currentPath && currentPath.points.length === 0) {
+                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                return;
+            }
         }
 
         const canvas = canvasRef.current;

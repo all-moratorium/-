@@ -62,7 +62,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [flickerEnabled, setFlickerEnabled] = useState(false);
   const [rotationEnabled, setRotationEnabled] = useState(false);
   const [wallLightsEnabled, setWallLightsEnabled] = useState(true);
-  const [rectAreaLightEnabled, setRectAreaLightEnabled] = useState(true); // 面光源オン/オフ状態
+  const [rectAreaLightEnabled, setRectAreaLightEnabled] = useState(false); // 面光源オン/オフ状態
   const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
 
   // Define layers for selective rendering

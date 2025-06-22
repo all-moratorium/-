@@ -2980,7 +2980,7 @@ canvas {
 
 .step-message {
   color: #ffffff;
-  font-size: clamp(14px, 2vw, 32px);
+  font-size: clamp(14px, 1.7vw, 35px);
   position: absolute;
   left: 50%;
   bottom: calc(35% + 110px);
@@ -3000,8 +3000,8 @@ canvas {
 }
 
 .order-message {
-  color: #e0e0e0;
-  font-size: clamp(12px, 1.5vw, 28px);
+  color:rgb(243, 243, 243);
+  font-size: clamp(12px, 1.5vw, 30px);
   position: absolute;
   left: 50%;
   bottom: 36% ;

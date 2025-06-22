@@ -3345,8 +3345,8 @@ const quantizeColors = (pixels, k) => {
                                 <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L19 6V7.5C19 8.3 18.3 9 17.5 9S16 8.3 16 7.5V6L14 7V9C14 10.1 13.1 11 12 11S10 10.1 10 9V7L8 6V7.5C8 8.3 7.3 9 6.5 9S5 8.3 5 7.5V6L3 7V9C3 10.1 3.9 11 5 11H19C20.1 11 21 10.1 21 9ZM12 13C10.9 13 10 13.9 10 15V19C10 20.1 10.9 21 12 21S14 20.1 14 19V15C14 13.9 13.1 13 12 13Z" strokeWidth="2"/>
                             </svg>
                         </div>
-                        <span className="nav-text">色・仕様のカスタマイズ</span>
-                        <div className="tooltip">色・仕様のカスタマイズ</div>
+                        <span className="nav-text">色 / 仕様のカスタマイズ</span>
+                        <div className="tooltip">色 / 仕様のカスタマイズ</div>
                     </button>
                     <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('neonSvg3dPreview')}>
                         <div className="nav-icon">
@@ -3357,8 +3357,8 @@ const quantizeColors = (pixels, k) => {
                         <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" fill="none"/>
                         </svg>
                         </div>
-                        <span className="nav-text">ネオンサイン3Dプレビュー</span>
-                        <div className="tooltip">ネオンサイン3Dプレビュー</div>
+                        <span className="nav-text">3Dプレビュー</span>
+                        <div className="tooltip">3Dプレビュー</div>
                     </button>
                     <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('info')}>
                         <div className="nav-icon">
