@@ -2505,7 +2505,7 @@ const quantizeColors = (pixels, k) => {
   </div>
 )}
             
-            <h1 className="page-title">Image To Neon Sign</h1>
+            <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
               <Gallery3D />
@@ -2532,7 +2532,7 @@ const quantizeColors = (pixels, k) => {
               {/* 真ん中下の大きなコンテナ */}
               <div className="bottom-center-container">
                 <div className="main-messages">
-                <h2 className="step-message">わずか3ステップで<br />理想のネオンサインが完成!</h2>
+                <h2 className="step-message">わずか3ステップで<br />理想のLEDネオンサインが完成!</h2>
                 <h2 className="order-message">作成したネオンサインは<br /><span className="highlight">そのまま注文可能!</span></h2>
                 </div>
                 
@@ -3182,34 +3182,7 @@ const quantizeColors = (pixels, k) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productQuantity, currentPage]); // Assuming updateEstimate is stable or memoized
 
-  // ここに追加 ↓
-  useEffect(() => {
-    const createParticles = () => {
-      const container = document.getElementById('particles');
-      if (!container) return;
-      
-      container.innerHTML = '';
-      const particleCount = 60;
-
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        const size = Math.random() * 2 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = (i * 0.3) + 's';
-        
-        container.appendChild(particle);
-      }
-    };
-
-    // 3Dプレビューページ以外でパーティクルを作成
-    if (currentPage !== 'neonSvg3dPreview') {
-      createParticles();
-    }
-  }, [currentPage]);
+  // パーティクル生成コードを削除
   
   const MIN_QUANTITY = 1;
   const MAX_QUANTITY = 100;

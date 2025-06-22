@@ -522,8 +522,8 @@
 }
 
 .button-green {
-    background-color: #16a34a;
-    border-color: #22c55e;
+    background-color: #10b981;
+    border-color:rgb(48, 223, 164);
     color: white;
 }
 
@@ -909,6 +909,7 @@
     flex: 1;
     overflow-y: auto;
     padding-bottom: 16px;
+    overflow-x: hidden;
 }
 
 .modal-setting-item {
@@ -984,6 +985,7 @@
     color: #d1d5db;
     cursor: pointer;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .file-input::file-selector-button {
@@ -1570,6 +1572,8 @@
     border: none !important;
     box-shadow: none !important;
     line-height: 1 !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
 }
 
 .project-load-btn:hover {

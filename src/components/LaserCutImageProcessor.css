@@ -939,6 +939,8 @@
   transition: all 0.3s ease; /* これを変えると：処理ボタンの変化の速さが変わります（0.3秒の滑らかなアニメーション） */
   position:absolute;
   bottom : 22%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 
@@ -2981,7 +2983,7 @@ canvas {
   font-size: clamp(14px, 2vw, 32px);
   position: absolute;
   left: 50%;
-  bottom: calc(35% + 90px);
+  bottom: calc(35% + 110px);
   transform: translate(-50%, -50%);
   font-weight: 800;
   line-height: 1.2;
