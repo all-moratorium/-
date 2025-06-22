@@ -375,6 +375,7 @@ const LaserCutImageProcessor = () => {
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [layerSvgs, setLayerSvgs] = useState([]);
+  const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
@@ -2437,7 +2438,7 @@ const quantizeColors = (pixels, k) => {
     switch (currentPage) {
       case 'home':
         return (
-          <div className="main-content">
+          <div className="main-content home-content">
          {/* Modal for instructions */}
 {console.log('レンダリング時のモーダル状態:', isModalOpen)}
 {isModalOpen && (
@@ -2510,68 +2511,75 @@ const quantizeColors = (pixels, k) => {
               <Gallery3D />
             </div>
             
-            <div className="content-wrapper">
-              
-              <div className="left-column">
-                {image && (
-                  <div 
-                    className="image-preview-bubble"
-                    onClick={triggerFileSelect}
-                    title="クリックして画像を再選択"
-                  >
-                    <img 
-                      src={image.src} 
-                      alt="アップロードされた画像のプレビュー" 
-                    />
-                  </div>
-                )}
-
-            <div className="bottom-explanation">
-              
-            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              ref={fileInputRef}
+              className="hidden-input"
+            />
+            
+            <div className="home-bottom-layout">
+              {/* 左下の大きなコンテナ */}
+              <div className="bottom-left-container">
+                <div className="guide-slides-content">
+                  ガイド動画・画像コンテナ
+                  <br />
+                  （後で動画や画像を追加予定）
+                </div>
               </div>
               
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                ref={fileInputRef}
-                className="hidden-input"
-              />
-              
-              <div className="center-column">
-              <div className="layer-selector-wrapper">
-  
-  
-</div>
+              {/* 真ん中下の大きなコンテナ */}
+              <div className="bottom-center-container">
+                <div className="main-messages">
+                <h2 className="step-message">わずか3ステップで<br />理想のネオンサインが完成!</h2>
+                <h2 className="order-message">作成したネオンサインは<br /><span className="highlight">そのまま注文可能!</span></h2>
+                </div>
                 
-                {/* Container for action buttons */}
-                <div className="action-buttons-container">
-                  <button
-                    onClick={() => setCurrentPage('neonDrawing')}
-                    className="process-button"
-                  >
-                さっそく作成する
-                  </button>
-                </div>
-              </div>
-              
-              <div className="right-column">
-                <div className="explanation-panel">
-                  
-                  
-                </div>
                 <button
                   onClick={handleOpenModal}
                   className={`info-button modal-trigger-button ${isEffectStopped ? 'stopped' : ''}`}
                 >
                 </button>
+                <div className="button-row">
+                  <button
+                    onClick={() => setCurrentPage('neonDrawing')}
+                    className="process-button"
+                  >
+                    さっそく作成する
+                  </button>
+                </div>
                 <div className="bottom-explanation">
-                  作成前に一度お読みください
+                  一度お読みください
                 </div>
               </div>
-             
+              
+              {/* 右下の大きなコンテナ */}
+              <div className="bottom-right-container">
+                <div className="sample-images">
+                  <div className="sample-image-placeholder">
+                    ネオンサンプル画像
+                    <br />
+                    {sampleNeonOn ? '（発光中）' : '（消灯中）'}
+                    <br />
+                    後で実際の画像を追加
+                  </div>
+                </div>
                 
+                <div className="sample-controls">
+                  <div className="sample-switch-container">
+                    <label className="sample-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={sampleNeonOn}
+                        onChange={(e) => setSampleNeonOn(e.target.checked)}
+                      />
+                      <span className="sample-slider"></span>
+                    </label>
+                  </div>
+                  <div className="sample-switch-text">発光サンプルを確認→</div>
+                </div>
+              </div>
             </div>
             
            

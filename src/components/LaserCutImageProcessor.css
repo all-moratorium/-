@@ -474,16 +474,7 @@
   overflow: visible;
   transition: all 0.3s ease;
 }
-.bottom-explanation{
-  position:absolute;
-  left:50%;
-  font-size:15px;
-  bottom:52px;  
-  transform: translateX(-50%);
-  width:220px;
-  color: #ffffff;
-  text-align: center;
-}
+
 
 .info-button:hover {
   transform: translateX(-50%) translateY(-2px);
@@ -946,6 +937,8 @@
   margin-top: 20px; /* これを変えると：処理ボタンの上の余白が変わります（上に20pxの余白） */
   box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* これを変えると：処理ボタンの影が変わります（水色の光るエフェクト） */
   transition: all 0.3s ease; /* これを変えると：処理ボタンの変化の速さが変わります（0.3秒の滑らかなアニメーション） */
+  position:absolute;
+  bottom : 20%;
 }
 
 
@@ -2925,15 +2918,262 @@ canvas {
   }
 }
 
-/* 3Dモデル生成ボタンのアニメーション（processing時） */
-.model-generate-button.processing {
-  background: linear-gradient(45deg, #00ffff, #0099ff);
-  animation: pulse-svg 2s infinite ease-in-out;
-  cursor: not-allowed;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-}
+
 
 @keyframes pulse-svg {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
+}
+
+/* ホーム画面下部レイアウト */
+.home-bottom-layout {
+  display: flex;
+  gap: 20px;
+  height: 35%;
+  align-items: flex-start;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* ホーム画面でのスクロール無効 */
+.main-content.home-content {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bottom-left-container {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  height: 90%;
+  overflow: visible;
+}
+
+.bottom-center-container {
+  flex: 0 0 20%;
+  padding: 20px;
+  border-radius: 10px;
+  height: 90%;
+  overflow: visible;
+  text-align: center;
+}
+
+.bottom-right-container {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  height: 90%;
+  overflow: visible;
+}
+
+
+.step-message {
+  color: #ffffff;
+  font-size: 36px;
+  position: absolute;
+  left: 50%;
+  bottom: calc(31% + 90px);
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #00f5ff, #ff00aa, #ffaa00);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+  text-shadow: 0 0 30px rgba(204, 204, 204, 0.5);
+}
+
+.order-message {
+  color: #e0e0e0;
+  font-size: 28px;
+  position: absolute;
+  left: 50%;
+  bottom: 32% ;
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+  line-height: 1.2;
+  opacity: 0.9;
+}
+
+.order-message .highlight {
+  color: #00f5ff;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.highlight {
+  color: #00f5ff;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+.button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+
+.sample-switch {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sample-image-placeholder {
+  background: #222;
+  color: #ccc;
+  padding: 40px 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.sample-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.sample-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  padding: 0;
+}
+
+.sample-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sample-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 30px;
+}
+
+.sample-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .sample-slider {
+  background-color: #ffff00;
+}
+
+input:checked + .sample-slider:before {
+  transform: translateX(30px);
+}
+
+.sample-switch-text {
+  color: white;
+  font-size: 12px;
+}
+
+/* ホーム画面のガイドボタン */
+.bottom-center-container .info-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  cursor: pointer;
+  position: absolute;
+  left: calc(50% - 170px);
+  bottom: 25%;
+  font-size: 25px;
+  background: white;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  animation: lightning-flash 1.5s infinite;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.bottom-center-container .bottom-explanation{
+  position:absolute;
+  left: calc(50% - 270px);
+  font-size:12px;
+  bottom:calc(25% - 30px);  
+  width:200px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.bottom-center-container .info-button:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.bottom-center-container .info-button::before {
+  content: 'i';
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Times New Roman', serif;
+  color: #333;
+  animation: lightning-flicker 1.5s infinite;
+}
+
+.bottom-center-container .info-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-wave 1.5s infinite;
+}
+
+.bottom-center-container .info-button.stopped {
+  animation: none;
+}
+
+.bottom-center-container .info-button.stopped::before {
+  animation: none;
+  text-shadow: 0 0 5px rgba(255,255,255,0.5);
+  color: #333;
+}
+
+.bottom-center-container .info-button.stopped::after {
+  animation: none;
+  opacity: 0;
 }
