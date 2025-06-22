@@ -2557,19 +2557,16 @@ const quantizeColors = (pixels, k) => {
               {/* 右下の大きなコンテナ */}
               <div className="bottom-right-container">
                 <div className="sample-images">
-                  <div className="sample-image-placeholder">
-                    ネオンサンプル画像
-                    <br />
-                    {sampleNeonOn ? '（発光中）' : '（消灯中）'}
-                    <br />
-                    後で実際の画像を追加
-                  </div>
+                  <img 
+                    src={sampleNeonOn ? '/sample.demo.on.png' : '/sample.demo.off.png'} 
+                    alt={sampleNeonOn ? 'ネオンサンプル（発光中）' : 'ネオンサンプル（消灯中）'}
+                    className="sample-image-placeholder"
+                  />
                 </div>
                 
                 <div className="sample-controls">
                   <div className="sample-switch-text">発光サンプルを確認 →</div>
                   <div className="home-sample-power-status">
-                    <div className={`home-sample-status-dot ${sampleNeonOn ? 'on' : 'off'}`}></div>
                     <span className={`home-sample-status-text ${sampleNeonOn ? 'on' : 'off'}`}>
                       {sampleNeonOn ? 'ON' : 'OFF'}
                     </span>
