@@ -666,6 +666,36 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         }
     }, [neonPaths, svgData]);
 
+    // 設定変更時にグローバルバックアップを更新（ファイル読み込み後の変更を保持するため）
+    useEffect(() => {
+        if (window.lastLoadedCustomizeProject && isDataLoaded) {
+            window.lastLoadedCustomizeProject = {
+                ...window.lastLoadedCustomizeProject,
+                selectedColor: selectedColor,
+                thickness: thickness,
+                blinkEffect: blinkEffect,
+                animationSpeed: animationSpeed,
+                backgroundColor: backgroundColor,
+                gridColor: gridColor,
+                showGrid: showGrid,
+                gridOpacity: gridOpacity,
+                pathColors: pathColors,
+                pathThickness: pathThickness,
+                neonPower: neonPower,
+                backgroundColorOff: backgroundColorOff,
+                gridColorOff: gridColorOff,
+                gridSize: gridSize,
+                isTubeSettingsMinimized: isTubeSettingsMinimized,
+                installationEnvironment: installationEnvironment
+            };
+        }
+    }, [
+        selectedColor, thickness, blinkEffect, animationSpeed, backgroundColor,
+        gridColor, showGrid, gridOpacity, pathColors, pathThickness, neonPower,
+        backgroundColorOff, gridColorOff, gridSize, isTubeSettingsMinimized, 
+        installationEnvironment, isDataLoaded
+    ]);
+
     // 3Dプレビューから戻った時の状態復元
     useEffect(() => {
         const handleRestoreState = (event) => {
