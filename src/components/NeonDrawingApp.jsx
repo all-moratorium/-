@@ -1870,6 +1870,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
+                            // 視点をリセット
+                            resetView();
+                            
                             // 土台（fillモード）が存在するかチェック
                             const hasFillPath = paths.some(pathObj => 
                                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
@@ -1880,16 +1883,16 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 return;
                             }
                             
-                            // カスタマイズへ進む前に現在の状態を親に保存
+                            // カスタマイズへ進む前に現在の状態を親に保存（視点は初期視点で保存）
                             if (onStateChange) {
                                 const currentState = {
                                     paths: paths,
                                     currentPathIndex: currentPathIndex,
                                     drawMode: drawMode,
                                     drawingType: drawingType,
-                                    scale: scale,
-                                    offsetX: offsetX,
-                                    offsetY: offsetY,
+                                    scale: 1,
+                                    offsetX: canvasWidth / 2,
+                                    offsetY: canvasHeight / 2,
                                     backgroundImage: backgroundImage,
                                     initialBgImageWidth: initialBgImageWidth,
                                     initialBgImageHeight: initialBgImageHeight,
@@ -1922,9 +1925,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     colors: colors,
                                     lineWidths: lineWidths,
                                     canvasData: {
-                                        scale: scale,
-                                        offsetX: offsetX,
-                                        offsetY: offsetY,
+                                        scale: 1,
+                                        offsetX: canvasWidth / 2,
+                                        offsetY: canvasHeight / 2,
                                         segmentsPerCurve: segmentsPerCurve,
                                         canvasWidth: canvasWidth,
                                         canvasHeight: canvasHeight,
