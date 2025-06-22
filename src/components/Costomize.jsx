@@ -60,6 +60,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [neonColors, setNeonColors] = useState({});
     const [neonLineWidths, setNeonLineWidths] = useState({});
     const [isDataLoaded, setIsDataLoaded] = useState(!!svgData); // svgDataがあれば初期値をtrue
+    const [isInitializing, setIsInitializing] = useState(true); // 初期化中フラグ
     const [canvasSettings, setCanvasSettings] = useState({
         scale: 1,
         offsetX: 0,
@@ -650,6 +651,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 setIsDataLoaded(true);
             }
         }
+        
+        // 初期化完了フラグを設定（ちらつき防止）
+        setIsInitializing(false);
     }, []);
 
     // svgDataの変更を即座に検知
@@ -1393,6 +1397,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // 初期化中は何も表示しない（ちらつき防止）
+        if (isInitializing) {
+            return;
+        }
+        
         // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
         if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
             // 画面の真の中央位置

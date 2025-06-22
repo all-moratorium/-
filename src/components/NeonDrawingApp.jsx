@@ -134,6 +134,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     
     // 初期化完了フラグ
     const isInitialized = useRef(false);
+    const [isInitializing, setIsInitializing] = useState(true); // 初期化中フラグ（ちらつき防止）
     
     const canvasRef = useRef(null);
     const widthInputRef = useRef(null);
@@ -234,6 +235,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         }
         
         isInitialized.current = true;
+        setIsInitializing(false); // 初期化完了フラグを設定（ちらつき防止）
         console.log('NeonDrawingApp初期化完了 - LocalStorageから最新状態を確実に復元');
     }, []);
 
@@ -392,6 +394,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // スプライン曲線を描画する関数
     const drawSpline = useCallback(() => {
+        // 初期化中は描画をスキップしてちらつきを防止
+        if (isInitializing) return;
+        
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
@@ -993,14 +998,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     created: currentTimestamp,
                     type: "neon-drawing-project"
                 },
-                // 描画状態
+                // 描画状態（履歴は保存しない - ファイルサイズ削減のため）
                 drawing: {
                     paths,
                     currentPathIndex,
                     drawMode,
-                    drawingType,
-                    history,
-                    historyIndex
+                    drawingType
                 },
                 // UI設定
                 settings: {
