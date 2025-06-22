@@ -236,7 +236,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, onStateChange]);
+    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
