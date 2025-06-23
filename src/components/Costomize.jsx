@@ -22,8 +22,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const brightness = 100; // 固定値
     const [thickness, setThickness] = useState(initialState?.thickness || 20);
     const glowIntensity = 50; // 固定値
-    const [blinkEffect, setBlinkEffect] = useState(initialState?.blinkEffect || false);
-    const [animationSpeed, setAnimationSpeed] = useState(initialState?.animationSpeed || 1);
+    // 点滅エフェクトを削除
     const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : true);
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
     const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#0d0d0d'); // RGB(13,13,13)
@@ -219,8 +218,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 brightness,
                 thickness,
                 glowIntensity,
-                blinkEffect,
-                animationSpeed,
                 sidebarVisible,
                 neonPower,
                 backgroundColor,
@@ -237,7 +234,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
@@ -265,8 +262,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             brightness,
             thickness,
             glowIntensity,
-            blinkEffect,
-            animationSpeed,
             sidebarVisible,
             neonPower,
             backgroundColor,
@@ -314,7 +309,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
 
     // プロジェクト読み込み機能
     const loadProjectFromFile = useCallback((event) => {
@@ -337,8 +332,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 // データの復元
                 if (projectData.selectedColor !== undefined) setSelectedColor(projectData.selectedColor);
                 if (projectData.thickness !== undefined) setThickness(projectData.thickness);
-                if (projectData.blinkEffect !== undefined) setBlinkEffect(projectData.blinkEffect);
-                if (projectData.animationSpeed !== undefined) setAnimationSpeed(projectData.animationSpeed);
                 if (projectData.sidebarVisible !== undefined) setSidebarVisible(projectData.sidebarVisible);
                 if (projectData.neonPower !== undefined) setNeonPower(projectData.neonPower);
                 if (projectData.backgroundColor !== undefined) setBackgroundColor(projectData.backgroundColor);
@@ -463,11 +456,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
     };
 
-    // 点滅効果の計算
-    const applyBlinkEffect = (opacity, animationSpeed) => {
-        const time = Date.now() * 0.001 * animationSpeed;
-        return opacity * (0.7 + 0.3 * Math.sin(time * Math.PI));
-    };
 
     // パス描画のヘルパー関数
     const drawPath = (ctx, pathPoints, pathType) => {
@@ -595,9 +583,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             selectedColor,
             brightness,
             thickness,
-            glowIntensity,
-            blinkEffect,
-            animationSpeed
+            glowIntensity
         };
         // localStorage は使用しない（Claude.ai制限）
         // localStorage.setItem(CUSTOMIZE_DATA_KEY, JSON.stringify(dataToSave));
@@ -628,8 +614,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             // データの復元
             if (projectData.selectedColor !== undefined) setSelectedColor(projectData.selectedColor);
             if (projectData.thickness !== undefined) setThickness(projectData.thickness);
-            if (projectData.blinkEffect !== undefined) setBlinkEffect(projectData.blinkEffect);
-            if (projectData.animationSpeed !== undefined) setAnimationSpeed(projectData.animationSpeed);
             if (projectData.sidebarVisible !== undefined) setSidebarVisible(projectData.sidebarVisible);
             if (projectData.neonPower !== undefined) setNeonPower(projectData.neonPower);
             if (projectData.backgroundColor !== undefined) setBackgroundColor(projectData.backgroundColor);
@@ -695,8 +679,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 ...window.lastLoadedCustomizeProject,
                 selectedColor: selectedColor,
                 thickness: thickness,
-                blinkEffect: blinkEffect,
-                animationSpeed: animationSpeed,
                 backgroundColor: backgroundColor,
                 gridColor: gridColor,
                 showGrid: showGrid,
@@ -712,7 +694,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             };
         }
     }, [
-        selectedColor, thickness, blinkEffect, animationSpeed, backgroundColor,
+        selectedColor, thickness, backgroundColor,
         gridColor, showGrid, gridOpacity, pathColors, pathThickness, neonPower,
         backgroundColorOff, gridColorOff, gridSize, isTubeSettingsMinimized, 
         installationEnvironment, isDataLoaded
@@ -740,8 +722,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (backupState.pathThickness) setPathThickness(backupState.pathThickness);
                 if (backupState.selectedColor) setSelectedColor(backupState.selectedColor);
                 if (backupState.thickness) setThickness(backupState.thickness);
-                if (backupState.blinkEffect !== undefined) setBlinkEffect(backupState.blinkEffect);
-                if (backupState.animationSpeed) setAnimationSpeed(backupState.animationSpeed);
                 if (backupState.neonPower !== undefined) setNeonPower(backupState.neonPower);
                 if (backupState.backgroundColor) setBackgroundColor(backupState.backgroundColor);
                 if (backupState.backgroundColorOff) setBackgroundColorOff(backupState.backgroundColorOff);
@@ -887,7 +867,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         if (neonPaths.length > 0) {
             saveCustomizeData();
         }
-    }, [pathColors, pathThickness, backgroundColor, gridColor, showGrid, gridOpacity, selectedColor, thickness, blinkEffect, animationSpeed, neonPaths.length]);
+    }, [pathColors, pathThickness, backgroundColor, gridColor, showGrid, gridOpacity, selectedColor, thickness, neonPaths.length]);
 
     // 状態変更時に親コンポーネントに通知（初期化時は除く）
     const isInitializedRef = useRef(false);
@@ -897,7 +877,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         } else {
             isInitializedRef.current = true;
         }
-    }, [selectedColor, thickness, blinkEffect, animationSpeed, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness]);
 
     const handleDownloadSVG = () => {
         if (!svgData || neonPaths.length === 0) {
@@ -1440,8 +1420,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         );
         
         if (!hasValidData) {
-            // データはあるが空の場合は、即座に背景とグリッドのみ描画
-            // メッセージは表示しない
+            // データはあるが空の場合も、メッセージを表示
+            const canvasCenterX = canvas.width / 2;
+            const canvasCenterY = canvas.height / 2;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('ネオン下絵からデータを作成するか、前回保存したデータを読み込んでください', canvasCenterX, canvasCenterY);
+            return;
         }
 
         // 背景とグリッドの描画
@@ -1628,10 +1616,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const strokeColor = pathColors[pathIndex] || neonColors.strokeLine;
             const strokeWidth = pathThickness[pathIndex] || neonLineWidths.strokeLine;
             
-            // 点滅効果の適用（ネオンON時のみ）
-            const currentBrightness = (neonPower && blinkEffect) ? 
-                brightness * applyBlinkEffect(1, animationSpeed) : 
-                brightness;
+            // ベース輝度を使用
+            const currentBrightness = brightness;
             
             // ハイライト状態をチェック
             const isHighlighted = highlightedTube === pathIndex;
@@ -1670,25 +1656,18 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
         // Canvas画像の送信は3Dモデル生成時のみに移動
 
-        // アニメーションの継続（ネオンON かつ 点滅ON時のみ）
-        if (neonPower && blinkEffect) {
-            animationRef.current = requestAnimationFrame(draw);
-        }
+        // アニメーションは使用しない（点滅効果を削除）
     };
 
-    // 描画の実行 - 即座に描画開始
+    // 描画の実行 - 重要な変更のみで再描画
     useEffect(() => {
         // データがロードされている、またはcanvasが準備できている場合は即座に描画
         if (canvasRef.current) {
-            if (neonPower && blinkEffect && isDataLoaded) {
-                animationRef.current = requestAnimationFrame(draw);
-            } else {
-                if (animationRef.current) {
-                    cancelAnimationFrame(animationRef.current);
-                }
-                // 即座に描画実行
-                requestAnimationFrame(draw);
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
             }
+            // 即座に描画実行（データ有無に関わらず、メッセージ表示のため）
+            requestAnimationFrame(draw);
         }
 
         return () => {
@@ -1696,7 +1675,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, blinkEffect, animationSpeed, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
 
     return (
         <div className="customize-app-container">
@@ -2107,8 +2086,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     if (window.confirm('すべてのカスタマイズ設定がリセットされます。本当に実行しますか？')) {
                                         setSelectedColor('#ff0080');
                                         setThickness(20);
-                                        setBlinkEffect(false);
-                                        setAnimationSpeed(1);
                                         setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
                                         setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
                                         setGridColor('#646464'); // RGB(100,100,100)
@@ -2470,8 +2447,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 pathThickness,
                                 selectedColor,
                                 thickness,
-                                blinkEffect,
-                                animationSpeed,
                                 neonPower,
                                 backgroundColor,
                                 backgroundColorOff,

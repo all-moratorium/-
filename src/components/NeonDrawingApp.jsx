@@ -1043,9 +1043,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 setDrawMode(nextState.drawMode); // Redoでモードも復元
                 setDrawingType(nextState.drawingType); // Redoで描画タイプも復元
                 
-                setIsModifyingPoints(false);
-                setIsPathDeleteMode(false); 
-                setIsPointDeleteMode(false); 
+                // UI操作モードは保持（ユーザーの操作モードを維持）
+                // setIsModifyingPoints(false);
+                // setIsPathDeleteMode(false); 
+                // setIsPointDeleteMode(false); 
                 setIsNewPathDisabled(false); 
                 
                 // Redo後のLocalStorage保存
@@ -1181,9 +1182,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 setDrawMode(prevState.drawMode); // Undoでモードも復元
                 setDrawingType(prevState.drawingType); // Undoで描画タイプも復元
                 
-                setIsModifyingPoints(false);
-                setIsPathDeleteMode(false); 
-                setIsPointDeleteMode(false); 
+                // UI操作モードは保持（ユーザーの操作モードを維持）
+                // setIsModifyingPoints(false);
+                // setIsPathDeleteMode(false); 
+                // setIsPointDeleteMode(false); 
                 setIsNewPathDisabled(false); 
                 
                 // Undo後のLocalStorage保存
