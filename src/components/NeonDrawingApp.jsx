@@ -1396,8 +1396,6 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 JSON.parse(projectData.svgData) : projectData.svgData;
                             
                             if (svgDataParsed && svgDataParsed.paths) {
-                                setPaths(svgDataParsed.paths);
-                                
                                 // カスタマイズされた色や線幅の設定も反映
                                 if (svgDataParsed.colors) setColors(svgDataParsed.colors);
                                 if (svgDataParsed.lineWidths) setLineWidths(svgDataParsed.lineWidths);
@@ -1409,6 +1407,25 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     if (svgDataParsed.canvasData.gridSize) setGridSize(svgDataParsed.canvasData.gridSize);
                                     if (svgDataParsed.canvasData.gridOpacity) setGridOpacity(svgDataParsed.canvasData.gridOpacity);
                                 }
+                                
+                                // 適切なcurrentPathIndexを設定（新しいパスを追加）
+                                const loadedPaths = svgDataParsed.paths;
+                                const newPath = { points: [], mode: drawMode, type: drawingType };
+                                const pathsWithNewPath = [...loadedPaths, newPath];
+                                const newCurrentPathIndex = pathsWithNewPath.length - 1;
+                                
+                                setPaths(pathsWithNewPath);
+                                setCurrentPathIndex(newCurrentPathIndex);
+                                
+                                // 履歴を初期化（新しいパスを含めた状態で）
+                                const initialHistory = [{
+                                    paths: JSON.parse(JSON.stringify(pathsWithNewPath)),
+                                    currentPathIndex: newCurrentPathIndex,
+                                    drawMode: drawMode,
+                                    drawingType: drawingType
+                                }];
+                                setHistory(initialHistory);
+                                setHistoryIndex(0);
                                 
                                 saveToLocalStorage();
                                 alert('色 / 仕様のカスタマイズファイルを読み込みました');
@@ -1428,10 +1445,13 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             drawingType: loadedDrawingType, history: loadedHistory, historyIndex: loadedHistoryIndex } = projectData.drawing;
                     
                     if (loadedPaths && Array.isArray(loadedPaths)) {
-                        setPaths(loadedPaths);
-                    }
-                    if (loadedIndex !== undefined) {
-                        setCurrentPathIndex(loadedIndex);
+                        // 新しい空のパスを末尾に追加して、currentPathIndexをそこに設定
+                        const newPath = { points: [], mode: drawMode, type: drawingType };
+                        const pathsWithNewPath = [...loadedPaths, newPath];
+                        const newCurrentPathIndex = pathsWithNewPath.length - 1;
+                        
+                        setPaths(pathsWithNewPath);
+                        setCurrentPathIndex(newCurrentPathIndex);
                     }
                     if (loadedDrawMode) {
                         setDrawMode(loadedDrawMode);
@@ -1439,11 +1459,25 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     if (loadedDrawingType) {
                         setDrawingType(loadedDrawingType);
                     }
-                    if (loadedHistory && Array.isArray(loadedHistory)) {
+                    
+                    // 履歴を復元または初期化
+                    if (loadedHistory && Array.isArray(loadedHistory) && loadedHistory.length > 0) {
                         setHistory(loadedHistory);
-                    }
-                    if (loadedHistoryIndex !== undefined) {
-                        setHistoryIndex(loadedHistoryIndex);
+                        setHistoryIndex(loadedHistoryIndex !== undefined ? loadedHistoryIndex : loadedHistory.length - 1);
+                    } else if (loadedPaths && Array.isArray(loadedPaths)) {
+                        // 履歴がない場合は読み込んだデータで履歴を初期化（新しいパスを含む）
+                        const newPath = { points: [], mode: drawMode, type: drawingType };
+                        const pathsWithNewPath = [...loadedPaths, newPath];
+                        const newCurrentPathIndex = pathsWithNewPath.length - 1;
+                        
+                        const initialHistory = [{
+                            paths: JSON.parse(JSON.stringify(pathsWithNewPath)),
+                            currentPathIndex: newCurrentPathIndex,
+                            drawMode: loadedDrawMode || 'stroke',
+                            drawingType: loadedDrawingType || 'spline'
+                        }];
+                        setHistory(initialHistory);
+                        setHistoryIndex(0);
                     }
                 }
                 
@@ -1552,15 +1586,14 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
         setPaths(prevPaths => {
             const newPaths = [...prevPaths];
-            // 現在のパスが空の場合のみモードを更新して履歴に保存。
+            // 現在のパスが空の場合のみモードを更新（履歴保存はしない - キャンバスに変化がないため）
             // 既に点が打たれている場合は、モード切り替えは無効（ボタンがdisabledになるためここには来ないはずだが念のため）
             if (newPaths[currentPathIndex] && newPaths[currentPathIndex].points.length === 0) {
                    newPaths[currentPathIndex] = { ...newPaths[currentPathIndex], mode: mode, type: (mode === 'stroke' ? 'spline' : drawingType) };
-                   saveToHistory(newPaths, currentPathIndex, mode, (mode === 'stroke' ? 'spline' : drawingType));
             }
             return newPaths;
         });
-    }, [currentPathIndex, drawingType, saveToHistory]);
+    }, [currentPathIndex, drawingType]);
 
     // 描画タイプ (スプライン/直線) を設定
     const handleSetDrawingType = useCallback((type) => {
@@ -1570,17 +1603,16 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
         setPaths(prevPaths => {
             const newPaths = [...prevPaths];
-            // 新しいパスまたは現在の空パスのタイプを更新
+            // 新しいパスまたは現在の空パスのタイプを更新（履歴保存はしない - キャンバスに変化がないため）
             if (!newPaths[currentPathIndex] || newPaths[currentPathIndex].points.length === 0) {
                 newPaths[currentPathIndex] = { points: [], mode: drawMode, type: type };
             } else {
                 // 既存のパスに点を追加中の場合、そのパスのタイプを更新
                 newPaths[currentPathIndex] = { ...newPaths[currentPathIndex], type: type };
             }
-            saveToHistory(newPaths, currentPathIndex, drawMode, type);
             return newPaths;
         });
-    }, [currentPathIndex, drawMode, saveToHistory]);
+    }, [currentPathIndex, drawMode]);
 
 
     // 描画モードボタンの無効化条件
