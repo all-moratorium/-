@@ -563,7 +563,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             
             // 境界線も描画
             ctx.strokeStyle = colors.fillBorder;
-            ctx.lineWidth = lineWidths.fillBorder;
+            ctx.lineWidth = lineWidths.fillBorder / scale;
             ctx.stroke();
         });
 
