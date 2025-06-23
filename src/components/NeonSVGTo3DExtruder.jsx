@@ -108,10 +108,29 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         const modelWidth = data.svgSizeCm?.width || 0;
         const modelHeight = data.svgSizeCm?.height || 0;
         
-        // Get base color (background color)
-        const baseColor = data.backgroundColor === 'transparent' ? '透明' : 
-                         data.backgroundColor === '#ffffff' ? '白' :
-                         data.backgroundColor === '#000000' ? '黒' : '透明';
+        // Get base color from path colors (find fill paths)
+        const fillPaths = data.paths.filter(pathObj => pathObj && pathObj.mode === 'fill');
+        let baseColor = '透明アクリル'; // default
+        
+        // Check all possible fill color keys instead of relying on path index
+        let fillColor = null;
+        Object.keys(data.pathColors).forEach(key => {
+          if (key.endsWith('_fill')) {
+            const color = data.pathColors[key];
+            if (color && color !== 'transparent') {
+              fillColor = color;
+            }
+          }
+        });
+        
+        console.log(`3D Preview Debug - found fillColor: ${fillColor}`);
+        if (fillColor === 'transparent' || !fillColor) {
+          baseColor = '透明アクリル';
+        } else if (fillColor === '#000000') {
+          baseColor = '黒色アクリル';
+        } else {
+          baseColor = '透明アクリル'; // fallback for other colors (white not supported)
+        }
         
         // Determine type (indoor/outdoor) - default to indoor for now
         // Determine type (indoor/outdoor) based on user selection
@@ -467,6 +486,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     baseMesh.receiveShadow = false;
     baseMesh.layers.set(ENTIRE_SCENE_LAYER);
     
+    // 土台にはクリッピングプレーンを適用しない（既にMeshPhongMaterialなので問題なし）
+    
     return baseMesh;
   }, []);
 
@@ -612,7 +633,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         if (elementData.type === 'base') {
           // 土台の処理
           if (elementData.points.length > 2) {
-            const baseMesh = createBase(elementData.points, elementData.fill);
+            // Use the correct baseColor from calculatedModelData instead of elementData.fill
+            const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
+            const baseMesh = createBase(elementData.points, correctFillColor);
             if (baseMesh) {
               neonGroupRef.current.add(baseMesh);
             }
@@ -1243,7 +1266,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
-          const fineTuneZOffset = 95.01;
+          const fineTuneZOffset = 95.013;
           model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
         } else {
           console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
@@ -1404,31 +1427,31 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">サイズ(幅x高)</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${Math.round(calculatedModelData.modelWidth)}x${Math.round(calculatedModelData.modelHeight)}mm` : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${Math.round(calculatedModelData.modelWidth)}x${Math.round(calculatedModelData.modelHeight)}mm` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">6mmチューブ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${calculatedModelData.tubeCount6mm}本` : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${calculatedModelData.tubeCount6mm}本` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">8mmチューブ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${calculatedModelData.tubeCount8mm}本` : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${calculatedModelData.tubeCount8mm}本` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">6mmチューブ長さ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${(calculatedModelData.tubeLength6mm / 10).toFixed(1)}cm` : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${(calculatedModelData.tubeLength6mm / 10).toFixed(1)}cm` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">8mmチューブ長さ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? `${(calculatedModelData.tubeLength8mm / 10).toFixed(1)}cm` : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${(calculatedModelData.tubeLength8mm / 10).toFixed(1)}cm` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">ベースプレート色</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.baseColor : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? calculatedModelData.baseColor : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">タイプ</span>
-            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated ? calculatedModelData.modelType : 'N/A'}</span>
+            <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? calculatedModelData.modelType : 'N/A'}</span>
           </div>
         </div>
 

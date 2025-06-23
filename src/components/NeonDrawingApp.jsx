@@ -14,8 +14,8 @@ const getCatmullRomPt = (p0, p1, p2, p3, t) => {
     return c0 + c1 * t + c2 * t2 + c3 * t3;
 };
 
-const POINT_HIT_RADIUS = 8; // 点のヒット判定半径
-const MIN_HIT_RADIUS = 4; // 最小ヒット判定半径（ズーム時の保証）
+const POINT_HIT_RADIUS = 12; // 点のヒット判定半径
+const MIN_HIT_RADIUS = 6; // 最小ヒット判定半径（ズーム時の保証）
 
 // モーダルコンポーネント
 const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
@@ -1388,7 +1388,6 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     return;
                 }
                 
-                // 色仕様のカスタマイズファイルの場合は変換
                 if (isCustomizeFile) {
                     if (projectData.svgData) {
                         // svgDataからパスデータを復元
@@ -1412,14 +1411,14 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 }
                                 
                                 saveToLocalStorage();
-                                alert('色仕様のカスタマイズファイルを読み込みました');
+                                alert('色 / 仕様のカスタマイズファイルを読み込みました');
                                 return;
                             }
                         } catch (parseError) {
                             console.error('svgData parsing error:', parseError);
                         }
                     }
-                    alert('色仕様のカスタマイズファイルに下絵データが含まれていません');
+                    alert('色 / 仕様のカスタマイズファイルに下絵データが含まれていません');
                     return;
                 }
                 

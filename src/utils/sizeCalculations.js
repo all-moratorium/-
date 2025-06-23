@@ -67,7 +67,8 @@ export const calculateTotalLength = (paths) => {
     let totalLength = 0;
     
     paths.forEach(path => {
-        if (path && path.points && path.points.length > 1) {
+        // ネオンチューブの長さはstrokeパスのみ計算
+        if (path && path.points && path.points.length > 1 && path.mode === 'stroke') {
             for (let i = 1; i < path.points.length; i++) {
                 const prev = path.points[i - 1];
                 const curr = path.points[i];

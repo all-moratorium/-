@@ -340,7 +340,7 @@
 }
 
 .delete-button {
-    padding: 12px 8px;
+    padding: 13px 8px;
     border-radius: 6px;
     font-weight: bold;
     border: 1px solid;
@@ -630,7 +630,7 @@
     border-color: #4b5563;
 }
 
-.button-secondary:hover {
+.button-secondary:hover:not(.scale-button) {
     background-color: #4b5563;
 }
 
@@ -1665,7 +1665,7 @@
 }
 
 .scale-button {
-    padding: 12px 8px;
+    padding: 13px 8px;
     font-size: 14px;
     font-weight: bold;
     border-radius: 6px;

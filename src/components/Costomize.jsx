@@ -2421,6 +2421,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             setProcessing3DProgress(85);
                             setProcessing3DMessage('3Dモデルのレンダリングを待っています...');
 
+                            
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
                                 detail: {
                                     paths: neonPaths,

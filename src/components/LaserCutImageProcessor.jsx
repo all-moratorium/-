@@ -376,6 +376,7 @@ const LaserCutImageProcessor = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
+  const [sampleImagesLoaded, setSampleImagesLoaded] = useState(false); // サンプル画像のロード状態
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
@@ -540,6 +541,85 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
         // ネオンサイン画像を生成
         generateNeonPreviewImage(event.detail);
         
+        // Calculate and set model data immediately when 3D preview is generated
+        const data = event.detail;
+        const strokePaths = data.paths.filter(pathObj => pathObj && pathObj.mode === 'stroke');
+        const totalLengthPx = strokePaths.reduce((total, pathObj) => {
+          if (!pathObj || !pathObj.points || pathObj.points.length < 2) return total;
+          let length = 0;
+          const points = pathObj.points;
+          for (let i = 0; i < points.length - 1; i++) {
+            const dx = points[i + 1].x - points[i].x;
+            const dy = points[i + 1].y - points[i].y;
+            length += Math.sqrt(dx * dx + dy * dy);
+          }
+          return total + length;
+        }, 0);
+        const totalLengthCm = Math.round(totalLengthPx / 25 * 10) / 10;
+        
+        // Calculate tube counts and lengths
+        let tubeLength8mm = 0;
+        let tubeLength6mm = 0;
+        let tubeCount8mm = 0;
+        let tubeCount6mm = 0;
+        
+        strokePaths.forEach(pathObj => {
+          const pathIndex = data.paths.indexOf(pathObj);
+          const thickness = data.pathThickness[pathIndex] || data.strokeWidthsPx?.strokeLine || 15;
+          if (!pathObj || !pathObj.points || pathObj.points.length < 2) return;
+          let pathLength = 0;
+          const points = pathObj.points;
+          for (let i = 0; i < points.length - 1; i++) {
+            const dx = points[i + 1].x - points[i].x;
+            const dy = points[i + 1].y - points[i].y;
+            pathLength += Math.sqrt(dx * dx + dy * dy);
+          }
+          const lengthCm = Math.round(pathLength / 25 * 10) / 10;
+          
+          if (thickness >= 20) {
+            tubeLength8mm += lengthCm;
+            tubeCount8mm += 1;
+          } else {
+            tubeLength6mm += lengthCm;
+            tubeCount6mm += 1;
+          }
+        });
+        
+        // Get base color
+        let baseColor = '透明アクリル';
+        let fillColor = null;
+        Object.keys(data.pathColors).forEach(key => {
+          if (key.endsWith('_fill')) {
+            const color = data.pathColors[key];
+            if (color && color !== 'transparent') {
+              fillColor = color;
+            }
+          }
+        });
+        
+        if (fillColor === '#000000') {
+          baseColor = '黒色アクリル';
+        }
+        
+        const modelWidth = data.svgSizeCm?.width || 0;
+        const modelHeight = data.svgSizeCm?.height || 0;
+        const modelType = data.installationEnvironment === 'outdoor' ? '屋外 - IP67防水' : '屋内 - 非防水';
+        
+        const calculatedData = {
+          tubeLength8mm: tubeLength8mm * 10,
+          tubeLength6mm: tubeLength6mm * 10,
+          totalLength: totalLengthCm * 10,
+          tubeCount8mm: tubeCount8mm,
+          tubeCount6mm: tubeCount6mm,
+          totalTubeCount: tubeCount8mm + tubeCount6mm,
+          modelWidth: modelWidth * 10,
+          modelHeight: modelHeight * 10,
+          baseColor: baseColor,
+          modelType: modelType,
+          isGenerated: true
+        };
+        
+        setNeonCalculatedModelData(calculatedData);
       }
     };
 
@@ -2557,11 +2637,17 @@ const quantizeColors = (pixels, k) => {
               {/* 右下の大きなコンテナ */}
               <div className="bottom-right-container">
                 <div className="sample-images">
-                  <img 
-                    src={sampleNeonOn ? '/sample.demo.on.png' : '/sample.demo.off.png'} 
-                    alt={sampleNeonOn ? 'ネオンサンプル（発光中）' : 'ネオンサンプル（消灯中）'}
-                    className="sample-image-placeholder"
-                  />
+                  {sampleImagesLoaded ? (
+                    <img 
+                      src={sampleNeonOn ? '/sample.demo.on.png' : '/sample.demo.off.png'} 
+                      alt={sampleNeonOn ? 'ネオンサンプル（発光中）' : 'ネオンサンプル（消灯中）'}
+                      className="sample-image-placeholder"
+                    />
+                  ) : (
+                    <div className="sample-image-placeholder loading">
+                      <div className="loading-spinner"></div>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="sample-controls">
@@ -3181,6 +3267,36 @@ const quantizeColors = (pixels, k) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productQuantity, currentPage]); // Assuming updateEstimate is stable or memoized
+
+  // サンプル画像のプリロード
+  useEffect(() => {
+    const preloadImages = async () => {
+      const imagePromises = [
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = '/sample.demo.on.png';
+        }),
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = '/sample.demo.off.png';
+        })
+      ];
+      
+      try {
+        await Promise.all(imagePromises);
+        setSampleImagesLoaded(true);
+      } catch (error) {
+        console.warn('Sample images failed to preload:', error);
+        setSampleImagesLoaded(true); // Still set to true to show fallback
+      }
+    };
+    
+    preloadImages();
+  }, []);
 
   // パーティクル生成コードを削除
   
