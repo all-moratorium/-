@@ -596,21 +596,26 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 ctx.beginPath();
                 let pointFillStyle;
                 
-                // パスのモードに応じて点の色を変更
-                if (pathMode === 'fill') {
-                    pointFillStyle = colors.fillPoint; // 土台（fill）の点の色
+                // 点修正モードの場合は全ての点を青色で表示
+                if (isModifyingPoints) {
+                    pointFillStyle = '#3b82f6'; // 点修正モード時は青
                 } else {
-                    pointFillStyle = colors.strokePoint; // チューブ（stroke）の点の色
-                }
+                    // パスのモードに応じて点の色を変更
+                    if (pathMode === 'fill') {
+                        pointFillStyle = colors.fillPoint; // 土台（fill）の点の色
+                    } else {
+                        pointFillStyle = colors.strokePoint; // チューブ（stroke）の点の色
+                    }
 
-                // アクティブな点の色
-                if (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx) {
-                    pointFillStyle = '#3b82f6'; // アクティブ時は青
-                }
-                
-                // 削除モードの場合は赤色で表示
-                if (isPathDeleteMode || isPointDeleteMode) { // 点削除モード時も赤
-                    pointFillStyle = '#ef4444'; // 削除モード時は赤
+                    // アクティブな点の色
+                    if (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx) {
+                        pointFillStyle = '#3b82f6'; // アクティブ時は青
+                    }
+                    
+                    // 削除モードの場合は赤色で表示
+                    if (isPathDeleteMode || isPointDeleteMode) { // 点削除モード時も赤
+                        pointFillStyle = '#ef4444'; // 削除モード時は赤
+                    }
                 }
                 
                 ctx.fillStyle = pointFillStyle;
@@ -621,7 +626,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         });
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -1031,12 +1036,29 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 }
             };
             
+            // 日本時間でタイムスタンプを生成
+            const japanTime = new Date().toLocaleString('ja-JP', {
+                timeZone: 'Asia/Tokyo',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).replace(/[\/\s:]/g, '-');
+            
+            // ファイル名を入力させる
+            const fileName = prompt('ファイル名を入力してください（拡張子は自動で追加されます）:', `neon-project-${japanTime}`);
+            if (!fileName) {
+                return; // キャンセルされた場合は保存しない
+            }
+            
             const jsonString = JSON.stringify(projectData, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `neon-project-${currentTimestamp}.json`;
+            a.download = `${fileName}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

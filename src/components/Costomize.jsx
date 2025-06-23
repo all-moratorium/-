@@ -287,11 +287,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             svgData
         };
 
+        // 日本時間でタイムスタンプを生成
+        const japanTime = new Date().toLocaleString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).replace(/[\/\s:]/g, '-');
+        
+        // ファイル名を入力させる
+        const defaultFileName = `neon-customize-project-${japanTime}`;
+        const fileName = prompt('ファイル名を入力してください（拡張子は自動で追加されます）:', defaultFileName);
+        if (!fileName) {
+            return; // キャンセルされた場合は保存しない
+        }
+        
         const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `neon-customize-project-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = `${fileName}.json`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

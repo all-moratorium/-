@@ -1239,7 +1239,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         // Position model
         model.position.x = -overallModelCenter.x;
-        model.position.y = -overallModelCenter.y - 480; // Y位置を30mm下げる
+        model.position.y = -overallModelCenter.y - 480; 
 
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);

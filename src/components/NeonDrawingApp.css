@@ -39,7 +39,7 @@
 }
 
 .main-canvas.cursor-delete {
-    cursor: not-allowed;
+    cursor: url('data:image/svg+xml;utf8,<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(-30 13.5 15)"><path d="M1.5,11.25 C1.5,10.421 2.171,9.75 3,9.75 L7.5,9.75 L7.5,20.25 L3,20.25 C2.171,20.25 1.5,19.579 1.5,18.75 Z" fill="%23E0E0E0"/><path d="M7.5,9.75 L18,9.75 C18.829,9.75 19.5,10.421 19.5,11.25 L19.5,18.75 C19.5,19.579 18.829,20.25 18,20.25 L7.5,20.25 Z" fill="%234A90E2"/><rect x="9" y="11.25" width="9" height="7.5" rx="0.75" ry="0.75" fill="%23357ABD"/></g></svg>') 15 15, auto;
 }
 
 .main-canvas.cursor-pan {
