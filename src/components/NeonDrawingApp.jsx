@@ -318,6 +318,26 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // 初期化完了マーカー + LocalStorageから最新状態を確実に復元
     useEffect(() => {
+        // ページリロード時にlocalStorageをクリア
+        const isPageReload = () => {
+            // performance.getEntriesByType('navigation')をサポートしているブラウザの場合
+            if (typeof performance !== 'undefined' && performance.getEntriesByType) {
+                const navEntries = performance.getEntriesByType('navigation');
+                if (navEntries.length > 0) {
+                    return navEntries[0].type === 'reload';
+                }
+            }
+            
+            // フォールバック: performance.navigation.typeを使用（非推奨だが互換性のため）
+            if (typeof performance !== 'undefined' && performance.navigation) {
+                return performance.navigation.type === 1; // TYPE_RELOAD
+            }
+            
+            return false;
+        };
+
+        // リロード時のLocalStorageクリアは削除（ユーザーの選択に委ねる）
+
         // リマウント時に最新の状態を確実に復元
         try {
             const savedData = localStorage.getItem('neonDrawingData');
