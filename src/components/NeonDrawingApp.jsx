@@ -14,6 +14,7 @@ const getCatmullRomPt = (p0, p1, p2, p3, t) => {
 };
 
 const POINT_HIT_RADIUS = 8; // 点のヒット判定半径
+const MIN_HIT_RADIUS = 4; // 最小ヒット判定半径（ズーム時の保証）
 
 // モーダルコンポーネント
 const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
@@ -204,6 +205,31 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     
     // 線の太さ設定 - 包括的な初期化
     const [lineWidths, setLineWidths] = useState(initialDrawingState.lineWidths);
+    
+    // チューブ太さプレビュー設定
+    const [tubeThickness, setTubeThickness] = useState('default');
+
+    // チューブ太さプレビューの変更を実際の線の太さに反映
+    useEffect(() => {
+        let strokeWidth;
+        switch (tubeThickness) {
+            case '6':
+                strokeWidth = 15; // 6mm = 0.6cm = 15px (25px/cm * 0.6cm)
+                break;
+            case '8':
+                strokeWidth = 20; // 8mm = 0.8cm = 20px (25px/cm * 0.8cm)
+                break;
+            case 'default':
+            default:
+                strokeWidth = 4; // 骨組み描画（現在の太さ）
+                break;
+        }
+        
+        setLineWidths(prev => ({
+            ...prev,
+            strokeLine: strokeWidth
+        }));
+    }, [tubeThickness]);
 
     // 初期化完了マーカー + LocalStorageから最新状態を確実に復元
     useEffect(() => {
@@ -537,7 +563,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             
             // 境界線も描画
             ctx.strokeStyle = colors.fillBorder;
-            ctx.lineWidth = lineWidths.fillBorder / scale;
+            ctx.lineWidth = lineWidths.fillBorder;
             ctx.stroke();
         });
 
@@ -553,7 +579,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             if (pathPoints.length < 2) return;
 
             ctx.strokeStyle = colors.strokeLine;
-            ctx.lineWidth = lineWidths.strokeLine / scale;
+            // 骨組み描画の場合はスケールで調整、チューブ表示の場合は固定
+            ctx.lineWidth = tubeThickness === 'default' ? lineWidths.strokeLine / scale : lineWidths.strokeLine;
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
 
@@ -1341,7 +1368,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
                         // 点のヒット判定
-                        if (distance < POINT_HIT_RADIUS / scale) {
+                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                        if (distance < hitRadius) {
                             setActivePoint({ pathIndex: pathIdx, pointIndex: ptIdx }); // アクティブな点を設定
                             pointFound = true;
                             break;
@@ -1360,7 +1388,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
                         // 点のヒット判定
-                        if (distance < POINT_HIT_RADIUS / scale) {
+                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                        if (distance < hitRadius) {
                             pathToDeleteIdx = pathIdx;
                             break;
                         }
@@ -1401,7 +1430,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         const distance = Math.sqrt(
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
-                        if (distance < POINT_HIT_RADIUS / scale) {
+                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                        if (distance < hitRadius) {
                             pointToDelete = { pathIndex: pathIdx, pointIndex: ptIdx };
                             break;
                         }
@@ -1777,6 +1807,22 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         >
                             パス削除
                         </button>
+                    </div>
+
+                    {/* チューブ太さプレビュー */}
+                    <div className="tube-thickness-section">
+                        <div className="tube-thickness-title">太さプレビュー</div>
+                        <div className="tube-thickness-selector">
+                            <select
+                                value={tubeThickness}
+                                onChange={(e) => setTubeThickness(e.target.value)}
+                                className="tube-thickness-select"
+                            >
+                                <option value="default">骨組み描画</option>
+                                <option value="6">6mmチューブ</option>
+                                <option value="8">8mmチューブ</option>
+                            </select>
+                        </div>
                     </div>
 
                     {/* グリッド表示・背景色 */}

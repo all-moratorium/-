@@ -46,6 +46,66 @@
     cursor: move;
 }
 
+/* チューブ太さプレビュー */
+.tube-thickness-section {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.tube-thickness-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 32px;
+    margin-top: 35px;
+    text-align: center;
+}
+
+.tube-thickness-selector {
+    display: flex;
+    justify-content: center;
+}
+
+.tube-thickness-select {
+    padding: 12px 16px;
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 160px;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="%23ffffff"><path d="M2 4l4 4 4-4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 36px;
+}
+
+.tube-thickness-select:hover {
+    background-color: #555;
+    border-color: #777;
+}
+
+.tube-thickness-select:focus {
+    background-color: #444;
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.tube-thickness-select option {
+    background-color: #333;
+    color: #ffffff;
+    padding: 8px;
+    border: none;
+}
+
 /* ネオン下絵専用サイドバー */
 .neon-sidebar {
     position: fixed;
@@ -96,6 +156,10 @@
 .neon-sidebar.collapsed .edit-mode-button,
 .neon-sidebar.collapsed .delete-buttons,
 .neon-sidebar.collapsed .delete-button,
+.neon-sidebar.collapsed .tube-thickness-section,
+.neon-sidebar.collapsed .tube-thickness-title,
+.neon-sidebar.collapsed .tube-thickness-selector,
+.neon-sidebar.collapsed .tube-thickness-select,
 .neon-sidebar.collapsed .grid-bg-controls,
 .neon-sidebar.collapsed .grid-toggle-container,
 .neon-sidebar.collapsed .grid-toggle-label,
