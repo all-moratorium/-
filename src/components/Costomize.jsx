@@ -2021,7 +2021,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         <div className="base-color-label">色の設定</div>
                                         <div className="base-color-options">
                                             <button
-                                                className={`base-color-button transparent ${pathColors[`${index}_fill`] === 'transparent' ? 'active' : ''}`}
+                                                className={`base-color-button transparent ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'active' : ''}`}
                                                 onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
                                                 title="透明"
                                             />

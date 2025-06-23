@@ -659,7 +659,7 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     
     // 高解像度対応とアンチエイリアシング設定
     const pixelRatio = window.devicePixelRatio || 1;
-    const size = 400; // 表示サイズ
+    const size = 200; // 表示サイズ
     const actualSize = size * pixelRatio; // 実際の描画サイズ
     
     canvas.width = actualSize;
