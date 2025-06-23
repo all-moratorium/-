@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './NeonDrawingApp.css';
+import { calculateSvgSizeCm, calculateTotalLength, scalePathsToSize } from '../utils/sizeCalculations';
 
 // Catmull-Rom補間関数
 const getCatmullRomPt = (p0, p1, p2, p3, t) => {
@@ -208,6 +209,35 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     
     // チューブ太さプレビュー設定
     const [tubeThickness, setTubeThickness] = useState('default');
+    
+    // 拡大縮小モーダル関連の状態
+    const [showScaleModal, setShowScaleModal] = useState(false);
+    const [scaleFactor, setScaleFactor] = useState(1.0);
+    const [originalPaths, setOriginalPaths] = useState(null);
+    
+    // モデルサイズ情報
+    const [modelSize, setModelSize] = useState({
+        width: 0,
+        height: 0,
+        totalLength: 0
+    });
+    
+    // 入力可能なモデルサイズ（ユーザーが手動で設定）
+    const [inputModelSize, setInputModelSize] = useState({
+        width: 0,
+        height: 0
+    });
+    
+    // サイズ入力フィールド用のref
+    const widthSizeInputRef = useRef(null);
+    const heightSizeInputRef = useRef(null);
+    const isUserTypingSizeRef = useRef(false);
+    
+    // オリジナルサイズ（リセット用）
+    const [originalModelSize, setOriginalModelSize] = useState({
+        width: 0,
+        height: 0
+    });
 
     // チューブ太さプレビューの変更を実際の線の太さに反映
     useEffect(() => {
@@ -230,6 +260,61 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             strokeLine: strokeWidth
         }));
     }, [tubeThickness]);
+
+    // パス変更時にモデルサイズを計算
+    useEffect(() => {
+        if (paths && paths.length > 0) {
+            const sizeInfo = calculateSvgSizeCm(paths, gridSize);
+            const totalLength = calculateTotalLength(paths);
+            
+            const newSize = {
+                width: sizeInfo.width,
+                height: sizeInfo.height,
+                totalLength: totalLength
+            };
+            
+            setModelSize(newSize);
+            
+            // 入力フィールドも同期（モーダルが開いていない時のみ）
+            if (!showScaleModal) {
+                setInputModelSize({
+                    width: newSize.width,
+                    height: newSize.height
+                });
+            }
+        } else {
+            setModelSize({
+                width: 0,
+                height: 0,
+                totalLength: 0
+            });
+            if (!showScaleModal) {
+                setInputModelSize({
+                    width: 0,
+                    height: 0
+                });
+            }
+        }
+    }, [paths, gridSize, scaleFactor, showScaleModal]);
+
+    // モデルサイズ変更時に入力フィールドを更新（ユーザーが入力中でない場合のみ）
+    useEffect(() => {
+        if (!isUserTypingSizeRef.current) {
+            if (widthSizeInputRef.current) {
+                const width = modelSize.width;
+                widthSizeInputRef.current.value = width % 1 === 0 ? width.toString() : width.toFixed(1);
+            }
+            if (heightSizeInputRef.current) {
+                const height = modelSize.height;
+                heightSizeInputRef.current.value = height % 1 === 0 ? height.toString() : height.toFixed(1);
+            }
+            // inputModelSizeも同期
+            setInputModelSize({
+                width: modelSize.width,
+                height: modelSize.height
+            });
+        }
+    }, [modelSize]);
 
     // 初期化完了マーカー + LocalStorageから最新状態を確実に復元
     useEffect(() => {
@@ -739,6 +824,190 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [historyIndex, isInitialized, onStateChange, scale, offsetX, offsetY, backgroundImage, 
         initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, 
         bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths]);
+
+    // 拡大縮小モーダルを開く
+    const openScaleModal = useCallback(() => {
+        console.log('拡大縮小ボタンがクリックされました');
+        // 現在のパス状態を保存
+        setOriginalPaths(JSON.parse(JSON.stringify(paths)));
+        // 現在のサイズをオリジナルサイズとして保存
+        setOriginalModelSize({
+            width: modelSize.width,
+            height: modelSize.height
+        });
+        setScaleFactor(1.0);
+        setShowScaleModal(true);
+        console.log('拡大縮小モーダルを開きました');
+    }, [paths, modelSize]);
+
+    // 拡大縮小をリアルタイムで適用
+    const applyScalePreview = useCallback((factor) => {
+        if (!originalPaths || factor === 1.0) {
+            // 倍率1.0の場合は元のパスに戻す
+            if (originalPaths) {
+                setPaths(originalPaths);
+            }
+            return;
+        }
+
+        // 座標系の中心点 (0, 0) を基準に拡大縮小
+        const centerX = 0;
+        const centerY = 0;
+
+        const scaledPaths = originalPaths.map(pathObj => {
+            if (!pathObj || !Array.isArray(pathObj.points)) return pathObj;
+
+            const scaledPoints = pathObj.points.map(point => {
+                const relativeX = point.x - centerX;
+                const relativeY = point.y - centerY;
+                
+                const scaledX = relativeX * factor;
+                const scaledY = relativeY * factor;
+                
+                const newX = centerX + scaledX;
+                const newY = centerY + scaledY;
+                
+                return limitCoordinates(newX, newY);
+            });
+
+            return { ...pathObj, points: scaledPoints };
+        });
+
+        setPaths(scaledPaths);
+    }, [originalPaths]);
+
+    // 拡大縮小モーダルを閉じる（履歴保存）
+    const closeScaleModal = useCallback(() => {
+        if (originalPaths && scaleFactor !== 1.0) {
+            // 履歴に保存
+            saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+        }
+        
+        // LocalStorageに保存
+        saveToLocalStorage();
+        
+        // 親コンポーネントに状態変更を通知
+        if (onStateChange) {
+            const currentState = {
+                paths: paths,
+                currentPathIndex: currentPathIndex,
+                drawMode: drawMode,
+                drawingType: drawingType,
+                scale,
+                offsetX,
+                offsetY,
+                backgroundImage,
+                initialBgImageWidth,
+                initialBgImageHeight,
+                bgImageScale,
+                bgImageX,
+                bgImageY,
+                bgImageOpacity,
+                showGrid,
+                gridSize,
+                gridOpacity,
+                colors,
+                lineWidths
+            };
+            onStateChange(currentState);
+        }
+        
+        setShowScaleModal(false);
+        setOriginalPaths(null);
+        setScaleFactor(1.0);
+        setSidebarVisible(true);
+    }, [originalPaths, scaleFactor, paths, currentPathIndex, drawMode, drawingType, saveToHistory, 
+        saveToLocalStorage, onStateChange, scale, offsetX, offsetY, backgroundImage, 
+        initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, 
+        bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths]);
+
+    // サイズ入力が変更された時にパスをスケールする
+    const applyWidthChange = useCallback((targetWidthCm) => {
+        if (!paths || paths.length === 0 || targetWidthCm <= 0) return;
+        
+        const currentSize = calculateSvgSizeCm(paths, gridSize);
+        if (currentSize.width === 0) return;
+        
+        // 比率を計算してスケールファクターを設定
+        const newScaleFactor = targetWidthCm / currentSize.width;
+        const newHeight = currentSize.height * newScaleFactor;
+        const scaledPaths = scalePathsToSize(paths, { width: targetWidthCm, height: newHeight }, gridSize);
+        
+        // 履歴に保存してからパスを更新
+        saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+        setPaths(scaledPaths);
+        
+        // 高さの入力フィールドも同期更新
+        if (heightSizeInputRef.current) {
+            heightSizeInputRef.current.value = newHeight % 1 === 0 ? newHeight.toString() : newHeight.toFixed(1);
+        }
+        // inputModelSizeも更新
+        setInputModelSize(prev => ({
+            ...prev,
+            width: targetWidthCm,
+            height: newHeight
+        }));
+        
+        // スライダーも更新（オリジナルサイズからの倍率を計算）
+        if (originalModelSize.width > 0) {
+            const scaleFromOriginal = targetWidthCm / originalModelSize.width;
+            setScaleFactor(scaleFromOriginal);
+        }
+    }, [paths, gridSize, saveToHistory, currentPathIndex, drawMode, drawingType, originalModelSize]);
+
+    const applyHeightChange = useCallback((targetHeightCm) => {
+        if (!paths || paths.length === 0 || targetHeightCm <= 0) return;
+        
+        const currentSize = calculateSvgSizeCm(paths, gridSize);
+        if (currentSize.height === 0) return;
+        
+        // 比率を計算してスケールファクターを設定
+        const newScaleFactor = targetHeightCm / currentSize.height;
+        const newWidth = currentSize.width * newScaleFactor;
+        const scaledPaths = scalePathsToSize(paths, { width: newWidth, height: targetHeightCm }, gridSize);
+        
+        // 履歴に保存してからパスを更新
+        saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+        setPaths(scaledPaths);
+        
+        // 幅の入力フィールドも同期更新
+        if (widthSizeInputRef.current) {
+            widthSizeInputRef.current.value = newWidth % 1 === 0 ? newWidth.toString() : newWidth.toFixed(1);
+        }
+        // inputModelSizeも更新
+        setInputModelSize(prev => ({
+            ...prev,
+            width: newWidth,
+            height: targetHeightCm
+        }));
+        
+        // スライダーも更新（オリジナルサイズからの倍率を計算）
+        if (originalModelSize.height > 0) {
+            const scaleFromOriginal = targetHeightCm / originalModelSize.height;
+            setScaleFactor(scaleFromOriginal);
+        }
+    }, [paths, gridSize, saveToHistory, currentPathIndex, drawMode, drawingType, originalModelSize]);
+
+    // サイズをリセットする
+    const resetModelSize = useCallback(() => {
+        if (originalModelSize.width > 0 && originalModelSize.height > 0) {
+            const scaledPaths = scalePathsToSize(paths, originalModelSize, gridSize);
+            // 履歴に保存してからパスを更新
+            saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+            setPaths(scaledPaths);
+            // スライダーも1.0にリセット
+            setScaleFactor(1.0);
+        }
+    }, [originalModelSize, paths, gridSize, saveToHistory, currentPathIndex, drawMode, drawingType]);
+
+    // スライダー変更時にリアルタイムで拡大縮小を適用
+    useEffect(() => {
+        console.log('Scale useEffect実行:', showScaleModal, scaleFactor);
+        if (showScaleModal && scaleFactor !== 1.0) {
+            console.log('applyScalePreview呼び出し');
+            applyScalePreview(scaleFactor);
+        }
+    }, [scaleFactor, showScaleModal]);
 
     // やり直し (Redo)
     const handleRedo = useCallback(() => {
@@ -1664,6 +1933,23 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     onContextMenu={(e) => e.preventDefault()} // 右クリックメニューを無効化
                     onMouseLeave={handleMouseLeave}
                 />
+                
+                {/* キャンバス右上のサイズ表示 */}
+                <div className={`canvas-size-display ${!sidebarVisible ? 'sidebar-collapsed' : ''}`}>
+                    <div className="canvas-size-title">寸法</div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">幅:</span>
+                        <span className="canvas-size-value">{modelSize.width.toFixed(1)}cm</span>
+                    </div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">高さ:</span>
+                        <span className="canvas-size-value">{modelSize.height.toFixed(1)}cm</span>
+                    </div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">チューブ長:</span>
+                        <span className="canvas-size-value">{modelSize.totalLength.toFixed(1)}cm</span>
+                    </div>
+                </div>
             </div>
 
             {/* サイドバー - オーバーレイ */}
@@ -1808,6 +2094,21 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             パス削除
                         </button>
                     </div>
+
+                    {/* 拡大縮小ツール */}
+                    {sidebarVisible && (
+                        <div className="scale-tool-container">
+                            <button
+                                onClick={() => {
+                                    openScaleModal();
+                                    setSidebarVisible(false);
+                                }}
+                                className="scale-button button-secondary"
+                            >
+                                拡大縮小
+                            </button>
+                        </div>
+                    )}
 
                     {/* チューブ太さプレビュー */}
                     <div className="tube-thickness-section">
@@ -2131,7 +2432,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     onChange={(e) => setBgImageScale(Number(e.target.value))}
                                     className="range-input"
                                 />
-                                <div className="direct-input-container">
+                                <div className="scale-input-container">
                                     <label className="direct-input-label">画像横幅:</label>
                                     <input
                                         ref={widthInputRef}
@@ -2378,6 +2679,121 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     >
                         直線
                     </button>
+                </div>
+            </Modal>
+
+            {/* 拡大縮小モーダル */}
+            <Modal isOpen={showScaleModal} onClose={closeScaleModal} title="拡大縮小" position="right">
+                <div className="modal-content-inner">
+                    <div className="scale-setting-item">
+                        <label htmlFor="scaleFactor" className="scale-label">
+                            倍率: {scaleFactor.toFixed(2)}x
+                        </label>
+                        <input
+                            id="scaleFactor"
+                            type="range"
+                            min="0.1"
+                            max="3.0"
+                            step="0.01"
+                            value={scaleFactor}
+                            onChange={(e) => setScaleFactor(Number(e.target.value))}
+                            className="scale-range-input"
+                        />
+                    </div>
+                    
+                    {/* モデルサイズ情報 */}
+                    <div className="model-size-info">
+                        <h4 className="size-info-title">モデルサイズ</h4>
+                        <div className="size-info-grid">
+                            <div className="size-info-item">
+                                <label className="direct-input-label">幅:</label>
+                                <div className="scale-input-container">
+                                    <input
+                                        ref={widthSizeInputRef}
+                                        type="number"
+                                        min="0.1"
+                                        step="0.1"
+                                        placeholder="幅を入力"
+                                        onInput={() => {
+                                            isUserTypingSizeRef.current = true;
+                                        }}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            if (inputValue === '') return;
+                                            
+                                            const targetWidthCm = parseFloat(inputValue);
+                                            if (!isNaN(targetWidthCm) && targetWidthCm >= 0.1) {
+                                                applyWidthChange(targetWidthCm);
+                                            }
+                                        }}
+                                        onFocus={(e) => {
+                                            isUserTypingSizeRef.current = true;
+                                            e.target.select();
+                                        }}
+                                        onBlur={() => {
+                                            isUserTypingSizeRef.current = false;
+                                        }}
+                                        onWheel={(e) => {
+                                            e.target.blur();
+                                        }}
+                                        className="direct-number-input"
+                                    />
+                                    <span className="input-unit">cm</span>
+                                </div>
+                            </div>
+                            <div className="size-info-item">
+                                <label className="direct-input-label">高さ:</label>
+                                <div className="scale-input-container">
+                                    <input
+                                        ref={heightSizeInputRef}
+                                        type="number"
+                                        min="0.1"
+                                        step="0.1"
+                                        placeholder="高さを入力"
+                                        onInput={() => {
+                                            isUserTypingSizeRef.current = true;
+                                        }}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            if (inputValue === '') return;
+                                            
+                                            const targetHeightCm = parseFloat(inputValue);
+                                            if (!isNaN(targetHeightCm) && targetHeightCm >= 0.1) {
+                                                applyHeightChange(targetHeightCm);
+                                            }
+                                        }}
+                                        onFocus={(e) => {
+                                            isUserTypingSizeRef.current = true;
+                                            e.target.select();
+                                        }}
+                                        onBlur={() => {
+                                            isUserTypingSizeRef.current = false;
+                                        }}
+                                        onWheel={(e) => {
+                                            e.target.blur();
+                                        }}
+                                        className="direct-number-input"
+                                    />
+                                    <span className="input-unit">cm</span>
+                                </div>
+                            </div>
+                            <div className="size-info-item">
+                                <span className="direct-input-label">チューブ長:</span>
+                                <span className="size-value">{modelSize.totalLength.toFixed(1)} cm</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    {/* リセットボタン */}
+                    <div className="modal-buttons-container">
+                        <button
+                            onClick={resetModelSize}
+                            className="clear-image-button"
+                        >
+                            サイズをリセット
+                        </button>
+                    </div>
                 </div>
             </Modal>
 

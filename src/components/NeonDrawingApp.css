@@ -58,7 +58,7 @@
     font-weight: bold;
     color: #d1d5db;
     margin-bottom: 32px;
-    margin-top: 35px;
+    margin-top: 0px;
     text-align: center;
 }
 
@@ -1116,6 +1116,7 @@
 .modal-buttons-container .clear-image-button {
     margin-top: 0;
     padding: 8px;
+    margin-top: 4px;
     border-radius: 6px;
 }
 
@@ -1166,12 +1167,23 @@
     background-color: #3b82f6;
 }
 
-/* 直接入力コントロール */
+/* 直接入力コントロール - 背景画像モーダル用 */
 .direct-input-container {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: 12px;
+    margin-top: 32px;
+    padding: 12px 16px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 直接入力コントロール - 拡大縮小モーダル用 */
+.scale-input-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 12px 16px;
     background-color: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
@@ -1189,8 +1201,8 @@
 .direct-number-input {
     flex: 1;
     padding: 10px 16px;
-    background-color: #374151;
-    border: 1px solid #4b5563;
+    background-color:rgb(80, 80, 80);
+    border: 1px solidrgb(128, 128, 128);
     border-radius: 6px;
     color: #ffffff;
     font-size: 16px;
@@ -1643,5 +1655,187 @@
 .project-load-btn:hover {
     background-color: #059669 !important;
     box-shadow: none !important;
+}
+
+/* 拡大縮小ツール関連スタイル */
+.scale-tool-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.scale-button {
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #3b82f6;
+    background-color: #2563eb;
+    color: white;
+    transform: scale(1);
+    width: 110px;
+}
+
+.scale-button:hover {
+    /* hover effect removed */
+}
+
+/* 拡大縮小スライダー専用スタイル */
+.scale-setting-item {
+    margin-bottom: 24px;
+}
+
+.scale-label {
+    display: block;
+    color: #d1d5db;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.scale-range-input {
+    width: 100%;
+    height: 8px;
+    background-color: #374151;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.scale-range-input::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffff00;
+    cursor: pointer;
+}
+
+.scale-range-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffff00;
+    cursor: pointer;
+    border: none;
+}
+
+/* モデルサイズ情報スタイル */
+.model-size-info {
+    margin-top: 10px;
+    padding: 16px;
+    background-color: rgba(128, 128, 128, 0.1);
+    border: 1px solid rgba(241, 241, 241, 0.3);
+    border-radius: 8px;
+}
+
+/* 拡大縮小モーダルのスクロールバーを非表示 */
+.modal-content:has(.modal-title:contains("拡大縮小")) {
+    overflow: hidden;
+}
+
+/* 一般的なスクロールバー非表示（モーダル内） */
+.modal-content-inner {
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.modal-content-inner::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.size-info-title {
+    margin: 0 0 16px 0;
+    color:rgb(255, 255, 255);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.size-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.size-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.size-info-item:last-child {
+    border-bottom: none;
+}
+
+.size-value {
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: bold;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    text-align: right;
+    min-width: 80px;
+    padding-left: 8px;
+}
+
+/* キャンバス右上のサイズ表示 */
+.canvas-size-display {
+    position: absolute;
+    top: 1.5%;
+    right: 410px;
+    background-color: #0a0a0a;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    min-width: 160px;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    transition: right 0.3s ease;
+}
+
+/* サイドバー非表示時の位置調整 */
+.neon-sidebar.collapsed ~ .canvas-area .canvas-size-display,
+.canvas-size-display.sidebar-collapsed {
+    right: 100px;
+}
+
+.canvas-size-title {
+    color: #f9fafb;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(107, 114, 128, 0.3);
+    padding-bottom: 4px;
+}
+
+.canvas-size-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.canvas-size-item:last-child {
+    margin-bottom: 0;
+}
+
+.canvas-size-label {
+    color: #d1d5db;
+    font-size: 12px;
+}
+
+.canvas-size-value {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    text-align: right;
+    min-width: 60px;
 }
 
