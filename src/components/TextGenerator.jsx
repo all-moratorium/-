@@ -212,13 +212,18 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const textWidth = textMetrics.width + (displayText.length - 1) * letterSpacing;
         const textHeight = fontSize;
         
+        // 改行を考慮した高さ計算
+        const lines = displayText.split('\n');
+        const lineHeight = fontSize * 1.2;
+        const totalTextHeightWithLines = (lines.length - 1) * lineHeight + textHeight;
+        
         // 一定の幅・高さを維持するためのスケール調整
         const targetWidth = canvas.width * 0.4; // キャンバス幅の40%を使用
-        const targetHeight = canvas.height * 0.25; // キャンバス高さの25%を使用
+        const targetHeight = canvas.height * 0.8; // キャンバス高さの80%を使用（改行対応）
         
         // 幅と高さの両方を考慮してスケールを計算
         const scaleByWidth = targetWidth / textWidth;
-        const scaleByHeight = targetHeight / textHeight;
+        const scaleByHeight = targetHeight / totalTextHeightWithLines;
         const scale = Math.min(scaleByWidth, scaleByHeight); // 小さい方を採用
         
         // スケールを適用したサイズを計算
@@ -246,11 +251,30 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         ctx.strokeStyle = '#333333';
         ctx.lineWidth = strokeWidth;
         
-        // スケール調整された座標でテキストを描画（塗りつぶし）
+        // 改行対応のテキスト描画
         const unscaledX = startX / scale;
         const unscaledY = startY / scale;
         ctx.fillStyle = '#333333';
-        ctx.fillText(displayText, unscaledX, unscaledY);
+        
+        // 改行対応のテキスト描画
+        const textLines = displayText.split('\n');
+        const textLineHeight = fontSize * 1.2; // 行間
+        
+        // フォントグループ全体の高さを計算
+        const totalHeight = (textLines.length - 1) * textLineHeight;
+        // フォントグループの中央がキャンバス中央に来るように開始Y位置を調整
+        const startYPos = unscaledY - (totalHeight / 2);
+        
+        // 既に定義された変数を使用してキャンバス中央位置を計算
+        const canvasCenterX = leftSidebarWidth + availableWidth / 2;
+        
+        textLines.forEach((line, index) => {
+            // 各行の幅を測定して中央揃え
+            const lineWidth = ctx.measureText(line).width;
+            const lineCenterX = (canvasCenterX - (lineWidth * scale / 2)) / scale;
+            const yPos = startYPos + (index * textLineHeight);
+            ctx.fillText(line, lineCenterX, yPos);
+        });
         ctx.restore();
         
         // 簡易的なパス生成
@@ -526,6 +550,13 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                     ref={canvasRef}
                     className="text-generator-main-canvas"
                 />
+                {/* キャンバス右下のダウンロードボタン */}
+                <button
+                    onClick={downloadFontImage}
+                    className="text-generator-canvas-download-button"
+                >
+                    画像を保存
+                </button>
             </div>
 
             {/* 右サイドバー */}
@@ -541,13 +572,16 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                         id="textInput"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="✨ネオンサインにしたいテキストを入力してください"
+                        placeholder="✨ネオンサインにしたいテキストを入力してください（Enterで改行）"
                         className="text-input"
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck="false"
                     />
+                    <div className="text-input-help">
+                        💡 Enterキーで改行できます。キャンバスにも改行が反映されます。
+                    </div>
                     {inputText.length > 30 && (
                         <div className="character-limit-warning">
                             30文字以上のカスタムネオンについては、お見積りいたしますのでお問い合わせください。
@@ -586,7 +620,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
 
 
                 <div className="text-generator-control-group">
-                    <label htmlFor="letterSpacingSlider">文字間隔: {letterSpacing}px</label>
+                    <div className="letter-spacing-label">文字間隔調整: {letterSpacing}px</div>
                     <input
                         id="letterSpacingSlider"
                         type="range"
@@ -594,23 +628,17 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                         max="50"
                         value={letterSpacing}
                         onChange={(e) => setLetterSpacing(parseInt(e.target.value))}
-                        className="slider"
+                        className="letter-spacing-slider"
                     />
                 </div>
 
 
-                <div className="action-buttons">
+                <div className="text-generator-buttons-container">
                     <button
                         onClick={exportAsImage}
-                        className="export-button"
+                        className="text-generator-export-button"
                     >
                         下絵作成へ進む
-                    </button>
-                    <button
-                        onClick={downloadFontImage}
-                        className="send-to-customize-button"
-                    >
-                        フォント画像をダウンロード
                     </button>
                 </div>
             </div>

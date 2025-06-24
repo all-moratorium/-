@@ -194,6 +194,16 @@
     text-align: center;
 }
 
+/* 文字間隔調整ツールタイトル */
+.letter-spacing-tools-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    margin-top: 35px;
+    text-align: center;
+}
+
 /* Font Preview Styles */
 .font-preview-container {
     width: 100%;
@@ -211,7 +221,7 @@
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 15px;
     max-height: 600px;
-    height: 40vh;
+    height: 38vh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 8px;
@@ -365,9 +375,9 @@
 .text-input {
     padding: 20px 24px;
     border: 2px solid #e0e0e0;
-    border-radius: 12px;
+    border-radius: 8px;
     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    color: #2c3e50;
+    color:rgb(0, 0, 0);
     font-size: 23px;
     font-weight: 500;
     height: 140px !important;
@@ -375,11 +385,12 @@
         0 2px 8px rgba(0,0,0,0.04),
         0 1px 3px rgba(0,0,0,0.08),
         inset 0 1px 0 rgba(255,255,255,0.9);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     resize: none;
-    width: 100%;
+    width: 97%;
     box-sizing: border-box;
     overflow: auto;
+    margin: 0 auto;
 }
 
 .font-select {
@@ -398,7 +409,7 @@
         inset 0 1px 0 rgba(255,255,255,0.9);
     letter-spacing: 0.5px;
     resize: none;
-    width: 100%;
+    width: 97%;
     box-sizing: border-box;
 }
 
@@ -414,6 +425,20 @@
         0 1px 3px rgba(0,0,0,0.08),
         inset 0 1px 0 rgba(255,255,255,0.9);
     transform: none;
+}
+
+/* テキスト入力ヘルプ */
+.text-input-help {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 6px;
+    color: #3b82f6;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
 }
 
 .character-limit-warning {
@@ -437,6 +462,51 @@
 .font-select option {
     background-color: #ffffff;
     color: #000000;
+}
+
+/* 文字間隔スライダー */
+.letter-spacing-slider {
+    width: 85%;
+    height: 8px;
+    border-radius: 4px;
+    background: #374151;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    align-self: center;
+    margin-bottom: 100px;
+}
+
+.letter-spacing-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffff00;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.letter-spacing-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffff00;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 文字間隔ラベル */
+.letter-spacing-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #d1d5db;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 32px;
 }
 
 .slider {
@@ -466,6 +536,99 @@
     background: #ffff00;
     cursor: pointer;
     border: 2px solid #333;
+}
+
+/* TextGenerator専用ボタン全体コンテナ */
+.text-generator-buttons-container {
+    width: 95%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+}
+
+/* キャンバス右下のダウンロードボタン */
+.text-generator-canvas-download-button {
+    position: fixed;
+    bottom: 3%;
+    left: calc(50px + (100vw - 27vw - 50px) / 2);
+    padding: 16px 24px;
+    transform: translateX(-50%);
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color:rgb(85, 85, 85);
+    color: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+
+/* TextGenerator専用ボタンコンテナ */
+.text-generator-action-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+/* 下絵作成ボタン */
+.text-generator-export-button {
+    padding: 12px 24px;
+    width: 90%;
+    height: 60px;
+    background-color: #FFFF00;
+    color: #000;
+    font-weight: bold;
+    font-size: 1em;
+    border-radius: 8px;
+    border: none;
+    box-sizing: border-box;
+    display: block;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.text-generator-export-button:hover:not(:disabled) {
+    background-color: #FFFF00;
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
+}
+
+.text-generator-export-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* フォント画像ダウンロードボタン */
+.text-generator-download-button {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #6b7280;
+    color: #ffffff;
+    width: 15%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.text-generator-download-button:hover:not(:disabled) {
+    background-color: #4b5563;
+}
+
+.text-generator-download-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .action-buttons {
