@@ -534,14 +534,14 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                     <h2 className="text-generator-title">テキストから生成</h2>
                     <div className="text-generator-guide-button"></div>
                 </div>
-                <div className="control-group">
-                    <label htmlFor="textInput">テキスト入力</label>
+                <div className="text-input-tools-title">テキスト入力</div>
+                <div className="text-generator-control-group">
                     <textarea
                         ref={textAreaRef}
                         id="textInput"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="✨ ネオンサインにしたいテキストを入力してください"
+                        placeholder="✨ネオンサインにしたいテキストを入力してください"
                         className="text-input"
                         autoComplete="off"
                         autoCorrect="off"
@@ -555,8 +555,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                     )}
                 </div>
 
+                <div className="font-preview-tools-title">フォントプレビュー</div>
                 <div className="font-preview-container">
-                    <h3>フォントプレビュー</h3>
                     <div className="font-preview-grid">
                         {allFonts.map((fontItem) => (
                             <div className="font-item-wrapper" key={fontItem.name}>
@@ -585,7 +585,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                 </div>
 
 
-                <div className="control-group">
+                <div className="text-generator-control-group">
                     <label htmlFor="letterSpacingSlider">文字間隔: {letterSpacing}px</label>
                     <input
                         id="letterSpacingSlider"

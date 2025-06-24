@@ -52,8 +52,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-top: 55px;
-    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .text-generator-title {
@@ -68,7 +67,7 @@
 /* ガイドボタン（テキスト生成専用） */
 .text-generator-guide-button {
     position: absolute;
-    right: 40px;
+    right: calc(50% - 143px);
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -175,6 +174,26 @@
     }
 }
 
+/* テキスト入力ツールタイトル */
+.text-input-tools-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    margin-top: 55px;
+    text-align: center;
+}
+
+/* フォントプレビューツールタイトル */
+.font-preview-tools-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    margin-top: 35px;
+    text-align: center;
+}
+
 /* Font Preview Styles */
 .font-preview-container {
     width: 100%;
@@ -192,7 +211,7 @@
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 15px;
     max-height: 600px;
-    height: 80vh;
+    height: 40vh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 8px;
@@ -331,13 +350,13 @@
     background: #666;
 }
 
-.control-group {
+.text-generator-control-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.control-group label {
+.text-generator-control-group label {
     font-size: 14px;
     font-weight: 500;
     color: #ffffff;
