@@ -14,7 +14,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
     z-index: 1;
 }
 
@@ -22,7 +22,7 @@
     width: 100vw;
     height: 100vh;
     display: block;
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
 }
 
 /* サイドバー（キャンバスの上層） */
@@ -30,21 +30,143 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 350px;
+    width: 600px;
     height: 100vh;
     background-color: #242424;
     border-left: 1px solid #333;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     z-index: 1000;
+    overflow-y: auto;
+}
+
+.text-generator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.text-generator-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* ガイドボタン（テキスト生成専用） */
+.text-generator-guide-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: text-generator-lightning-flash 1.5s infinite;
+    overflow: visible;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.text-generator-guide-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.text-generator-guide-button::before {
+    content: 'i';
+    font-weight: bold;
+    font-style: italic;
+    font-family: 'Times New Roman', serif;
+    color: #333;
+    animation: text-generator-lightning-flicker 1.5s infinite;
+}
+
+.text-generator-guide-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: text-generator-ripple-wave 1.5s infinite;
+    pointer-events: none;
+}
+
+/* エフェクト停止用 */
+.text-generator-guide-button.stopped {
+    animation: none;
+}
+
+.text-generator-guide-button.stopped::before {
+    animation: none;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    color: #333;
+}
+
+.text-generator-guide-button.stopped::after {
+    animation: none;
+    opacity: 0;
+}
+
+/* アニメーション定義（テキスト生成専用） */
+@keyframes text-generator-lightning-flash {
+    0%, 90%, 100% { 
+        box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+        border-color: #ffffff; 
+    }
+    5%, 10% { 
+        box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+        border-color: #ffffff; 
+        background: #ffffff; 
+    }
+}
+
+@keyframes text-generator-lightning-flicker {
+    0%, 90%, 100% { 
+        text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+        color: #333; 
+    }
+    5%, 10% { 
+        text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+        color: #ffffff; 
+    }
+}
+
+@keyframes text-generator-ripple-wave {
+    0% { 
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        border-color: rgba(255,255,255,0.7);
+    }
+    10% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+        border-color: rgba(255,255,255,0.7);
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0;
+        border-color: rgba(255,255,255,0);
+    }
 }
 
 .control-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .control-group label {
@@ -55,28 +177,29 @@
 
 .text-input,
 .font-select {
-    padding: 10px 12px;
-    border: 1px solid #555;
+    padding: 16px 20px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    background-color: #333;
-    color: #ffffff;
-    font-size: 14px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 18px;
     transition: border-color 0.2s ease;
+    min-height: 50px;
 }
 
 .text-input:focus,
 .font-select:focus {
     outline: none;
-    border-color: #ffff00;
+    border-color: #007bff;
 }
 
 .text-input::placeholder {
-    color: #888;
+    color: #999;
 }
 
 .font-select option {
-    background-color: #333;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 .slider {

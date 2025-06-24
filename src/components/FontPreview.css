@@ -1,0 +1,104 @@
+.font-preview-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.font-preview-container h3 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.font-preview-categories {
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #2a2a2a;
+}
+
+.font-category {
+    border-bottom: 1px solid #444;
+    padding: 12px;
+}
+
+.font-category:last-child {
+    border-bottom: none;
+}
+
+.category-title {
+    color: #ffff00;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+.font-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.font-preview-item {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.font-preview-item:hover {
+    border-color: #666;
+    background: #ffffff;
+}
+
+.font-preview-item.selected {
+    border-color: #ffff00;
+    background: #ffffff;
+}
+
+.font-name {
+    color: #666;
+    font-size: 10px;
+    margin-bottom: 4px;
+    font-family: Arial, sans-serif;
+}
+
+.font-preview-text {
+    color: #000;
+    font-size: 24px;
+    line-height: 1.3;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+}
+
+/* スクロールバーのスタイル */
+.font-preview-categories::-webkit-scrollbar {
+    width: 8px;
+}
+
+.font-preview-categories::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.font-preview-categories::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.font-preview-categories::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
