@@ -89,7 +89,7 @@ const getInitialDrawingState = (initialState) => {
         fillPoint: '#000000',
         fillArea: 'rgba(110, 110, 110, 0.5)',
         fillBorder: '#000000',
-        background: '#303030',
+        background: '#646464',
         grid: '#000000'
     };
     
@@ -1120,7 +1120,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     fillPoint: '#000000',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
                     fillBorder: '#000000',
-                    background: '#303030',
+                    background: '#646464',
                     grid: '#000000'
                 },
                 lineWidths: {
@@ -2704,7 +2704,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 fillPoint: '#000000',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
-                                background: '#303030',
+                                background: '#646464',
                                 grid: '#000000'
                             });
                             setLineWidths({

@@ -239,7 +239,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // 表示領域に収まるようにスケール調整
         const scaleByWidth = displayAreaWidth / maxLineWidth;
         const scaleByHeight = displayAreaHeight / totalTextHeight;
-        const scale = Math.min(scaleByWidth, scaleByHeight, 4); // 5倍まで許可
+        const scale = Math.min(scaleByWidth, scaleByHeight, 5); // 5倍まで許可
     
         // 中央位置計算
         const centerX = displayAreaLeft + displayAreaWidth / 2;
@@ -325,8 +325,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const textWidth = actualLeft + actualRight;
         const textHeight = actualTop + actualBottom;
         
-        // 高解像度対応（4倍サイズで描画）
-        const scale = 4;
+        // 高解像度対応（8倍サイズで描画）
+        const scale = 8;
         const minPadding = 2; // 最小限の余白（2px）
         exportCanvas.width = (textWidth + minPadding * 2) * scale;
         exportCanvas.height = (textHeight + minPadding * 2) * scale;
@@ -354,7 +354,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         window.dispatchEvent(new CustomEvent('navigateToNeonDrawing', {
             detail: {
                 backgroundImage: dataURL,
-                imageName: `${displayText}_text.png`
+                imageName: `${displayText}_text.png`,
+                resetView: true // 初期視点で表示
             }
         }));
         
@@ -392,8 +393,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const textWidth = actualLeft + actualRight;
         const textHeight = actualTop + actualBottom;
         
-        // 高解像度対応（4倍サイズで描画）
-        const scale = 4;
+        // 高解像度対応（8倍サイズで描画）
+        const scale = 8;
         const minPadding = 2; // 最小限の余白（2px）
         exportCanvas.width = (textWidth + minPadding * 2) * scale;
         exportCanvas.height = (textHeight + minPadding * 2) * scale;
