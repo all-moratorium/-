@@ -1,15 +1,42 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './TextGenerator.css';
 
+// LocalStorageからデータを安全に読み込む関数
+const safeGetFromLocalStorage = (key, fallback = null) => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+    } catch (error) {
+        console.error(`LocalStorage読み込みエラー (${key}):`, error);
+        return fallback;
+    }
+};
+
+// 初期状態を取得する関数
+const getInitialTextGeneratorState = () => {
+    const savedData = safeGetFromLocalStorage('textGeneratorData');
+    
+    return {
+        inputText: savedData?.inputText || '',
+        selectedFont: savedData?.selectedFont || 'cudi',
+        fontSize: savedData?.fontSize || 60,
+        letterSpacing: savedData?.letterSpacing || 0,
+        strokeWidth: savedData?.strokeWidth || 3
+    };
+};
+
 const TextGenerator = ({ onNavigateToCustomize }) => {
-    const [inputText, setInputText] = useState('');
-    const [selectedFont, setSelectedFont] = useState('cudi');
-    const [fontSize, setFontSize] = useState(60);
-    const [letterSpacing, setLetterSpacing] = useState(0);
-    const [strokeWidth, setStrokeWidth] = useState(3);
+    const initialState = getInitialTextGeneratorState();
+    
+    const [inputText, setInputText] = useState(initialState.inputText);
+    const [selectedFont, setSelectedFont] = useState(initialState.selectedFont);
+    const [fontSize, setFontSize] = useState(initialState.fontSize);
+    const [letterSpacing, setLetterSpacing] = useState(initialState.letterSpacing);
+    const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
     const canvasRef = useRef(null);
     const [generatedPaths, setGeneratedPaths] = useState([]);
     const textAreaRef = useRef(null);
+    const isInitialized = useRef(false);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -199,8 +226,13 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const scaledTextHeight = textHeight * scale;
         const scaledFontSize = fontSize * scale;
         
-        // センタリング位置を計算（左寄せ、縦中央）
-        const startX = (canvas.width - scaledTextWidth) / 2 - 210;
+        // 左右のサイドバーを考慮した真ん中の位置を計算
+        const rightSidebarWidth = window.innerWidth * 0.27; // 右サイドバー（27%）
+        const leftSidebarWidth = 50; // 左サイドバー（固定幅）
+        const availableWidth = canvas.width - rightSidebarWidth - leftSidebarWidth; // 利用可能な幅
+        const centerX = leftSidebarWidth + availableWidth / 2; // 利用可能エリアの中央
+        
+        const startX = centerX - scaledTextWidth / 2;
         const startY = canvas.height / 2 + scaledFontSize / 3;
         
         // 背景を描画
@@ -249,6 +281,167 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         setGeneratedPaths(paths);
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
 
+    // 画像出力とネオン下絵への移動
+    const exportAsImage = useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const displayText = inputText.trim() || 'Sample';
+        
+        // 新しいキャンバスを作成してテキストだけを描画
+        const exportCanvas = document.createElement('canvas');
+        const ctx = exportCanvas.getContext('2d');
+        
+        // フォント設定
+        const fontFamily = getFontFamily(selectedFont);
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        
+        // テキストサイズを正確に測定
+        ctx.letterSpacing = `${letterSpacing}px`;
+        const textMetrics = ctx.measureText(displayText);
+        
+        // より正確なバウンディングボックスを計算
+        const actualLeft = Math.abs(textMetrics.actualBoundingBoxLeft || 0);
+        const actualRight = textMetrics.actualBoundingBoxRight || textMetrics.width;
+        const actualTop = textMetrics.actualBoundingBoxAscent || fontSize * 0.8;
+        const actualBottom = textMetrics.actualBoundingBoxDescent || fontSize * 0.2;
+        
+        const textWidth = actualLeft + actualRight;
+        const textHeight = actualTop + actualBottom;
+        
+        // 高解像度対応（4倍サイズで描画）
+        const scale = 4;
+        const minPadding = 2; // 最小限の余白（2px）
+        exportCanvas.width = (textWidth + minPadding * 2) * scale;
+        exportCanvas.height = (textHeight + minPadding * 2) * scale;
+        
+        // 高DPI対応とアンチエイリアス設定
+        ctx.scale(scale, scale);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.textRenderingOptimization = 'optimizeQuality';
+        
+        // 背景を透明に（何も描画しない）
+        ctx.clearRect(0, 0, textWidth + minPadding * 2, textHeight + minPadding * 2);
+        
+        // テキストを描画（正確な位置に配置）
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = '#000000';
+        ctx.textBaseline = 'alphabetic';
+        ctx.letterSpacing = `${letterSpacing}px`;
+        ctx.fillText(displayText, actualLeft + minPadding, actualTop + minPadding);
+        
+        // 画像データを取得
+        const dataURL = exportCanvas.toDataURL('image/png');
+        
+        // ネオン下絵に画像データを渡してページ移動
+        window.dispatchEvent(new CustomEvent('navigateToNeonDrawing', {
+            detail: {
+                backgroundImage: dataURL,
+                imageName: `${displayText}_text.png`
+            }
+        }));
+        
+        // 少し待ってからモーダルを開く
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('openBgModal'));
+        }, 100);
+    }, [inputText, selectedFont, fontSize, letterSpacing]);
+
+    // フォント画像ダウンロード関数
+    const downloadFontImage = useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const displayText = inputText.trim() || 'Sample';
+        
+        // 新しいキャンバスを作成してテキストだけを描画
+        const exportCanvas = document.createElement('canvas');
+        const ctx = exportCanvas.getContext('2d');
+        
+        // フォント設定
+        const fontFamily = getFontFamily(selectedFont);
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        
+        // テキストサイズを正確に測定
+        ctx.letterSpacing = `${letterSpacing}px`;
+        const textMetrics = ctx.measureText(displayText);
+        
+        // より正確なバウンディングボックスを計算
+        const actualLeft = Math.abs(textMetrics.actualBoundingBoxLeft || 0);
+        const actualRight = textMetrics.actualBoundingBoxRight || textMetrics.width;
+        const actualTop = textMetrics.actualBoundingBoxAscent || fontSize * 0.8;
+        const actualBottom = textMetrics.actualBoundingBoxDescent || fontSize * 0.2;
+        
+        const textWidth = actualLeft + actualRight;
+        const textHeight = actualTop + actualBottom;
+        
+        // 高解像度対応（4倍サイズで描画）
+        const scale = 4;
+        const minPadding = 2; // 最小限の余白（2px）
+        exportCanvas.width = (textWidth + minPadding * 2) * scale;
+        exportCanvas.height = (textHeight + minPadding * 2) * scale;
+        
+        // 高DPI対応とアンチエイリアス設定
+        ctx.scale(scale, scale);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.textRenderingOptimization = 'optimizeQuality';
+        
+        // 背景を透明に（何も描画しない）
+        ctx.clearRect(0, 0, textWidth + minPadding * 2, textHeight + minPadding * 2);
+        
+        // テキストを描画（正確な位置に配置）
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = '#000000';
+        ctx.textBaseline = 'alphabetic';
+        ctx.letterSpacing = `${letterSpacing}px`;
+        ctx.fillText(displayText, actualLeft + minPadding, actualTop + minPadding);
+        
+        // 画像をダウンロード
+        const dataURL = exportCanvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = `${displayText}_font.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }, [inputText, selectedFont, fontSize, letterSpacing]);
+
+    // SVG出力関数
+    const exportAsSVG = useCallback(() => {
+        const displayText = inputText.trim() || 'Sample';
+        const fontFamily = getFontFamily(selectedFont);
+        
+        // 仮のキャンバスでテキストサイズを測定
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.font = `${fontSize}px ${fontFamily}`;
+        tempCtx.letterSpacing = `${letterSpacing}px`;
+        
+        const textMetrics = tempCtx.measureText(displayText);
+        const textWidth = textMetrics.width;
+        const textHeight = fontSize;
+        
+        // SVG作成
+        const svgContent = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${textWidth + 100}" height="${textHeight * 1.6}" viewBox="0 0 ${textWidth + 100} ${textHeight * 1.6}">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="50" y="${textHeight * 1.1}" font-family="${fontFamily}" font-size="${fontSize}" fill="#000000" letter-spacing="${letterSpacing}px">${displayText}</text>
+</svg>`.trim();
+        
+        // SVGをダウンロード
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${displayText}_text.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, [inputText, selectedFont, fontSize, letterSpacing]);
+
     // カスタマイズページに送る関数
     const sendToCustomize = useCallback(() => {
         if (generatedPaths.length === 0) {
@@ -286,6 +479,39 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, [updateCanvasSize, generateTextToSVG]);
 
+    // LocalStorageに状態を保存する関数
+    const saveToLocalStorage = useCallback(() => {
+        if (!isInitialized.current) return;
+        
+        try {
+            const dataToSave = {
+                inputText,
+                selectedFont,
+                fontSize,
+                letterSpacing,
+                strokeWidth
+            };
+            localStorage.setItem('textGeneratorData', JSON.stringify(dataToSave));
+        } catch (error) {
+            console.error('LocalStorage保存エラー:', error);
+        }
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
+
+    // 初期化フラグを設定
+    useEffect(() => {
+        isInitialized.current = true;
+    }, []);
+
+    // 状態変更時にLocalStorageに保存（デバウンス付き）
+    useEffect(() => {
+        if (isInitialized.current) {
+            const timeoutId = setTimeout(() => {
+                saveToLocalStorage();
+            }, 300); // 300ms デバウンス
+            return () => clearTimeout(timeoutId);
+        }
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, saveToLocalStorage]);
+
     // 入力値が変更されたら自動で再生成
     useEffect(() => {
         updateCanvasSize();
@@ -322,6 +548,11 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                         autoCapitalize="off"
                         spellCheck="false"
                     />
+                    {inputText.length > 30 && (
+                        <div className="character-limit-warning">
+                            30文字以上のカスタムネオンについては、お見積りいたしますのでお問い合わせください。
+                        </div>
+                    )}
                 </div>
 
                 <div className="font-preview-container">
@@ -370,18 +601,16 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
 
                 <div className="action-buttons">
                     <button
-                        onClick={generateTextToSVG}
-                        className="generate-button"
-                        disabled={!inputText.trim()}
+                        onClick={exportAsImage}
+                        className="export-button"
                     >
-                        プレビュー更新
+                        下絵作成へ進む
                     </button>
                     <button
-                        onClick={sendToCustomize}
+                        onClick={downloadFontImage}
                         className="send-to-customize-button"
-                        disabled={generatedPaths.length === 0}
                     >
-                        カスタマイズページに送る
+                        フォント画像をダウンロード
                     </button>
                 </div>
             </div>

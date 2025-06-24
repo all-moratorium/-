@@ -184,10 +184,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // モーダル状態
     const [showGridModal, setShowGridModal] = useState(false);
-    const [showBgModal, setShowBgModal] = useState(false);
+    const [showBgModal, setShowBgModal] = useState(initialDrawingState.showBgModal || false);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [showColorModal, setShowColorModal] = useState(false);
-    const [sidebarVisible, setSidebarVisible] = useState(true);
+    const [sidebarVisible, setSidebarVisible] = useState(initialDrawingState.sidebarVisible !== undefined ? initialDrawingState.sidebarVisible : true);
     // 土台モード時に描画タイプ選択モーダルを表示するためのステート
     const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false);
     // ガイドモーダル関連のstate
@@ -1561,6 +1561,17 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             drawSpline();
         }
     }, [canvasWidth, canvasHeight, drawSpline]);
+
+    // 背景画像設定モーダルを開くイベントリスナー
+    useEffect(() => {
+        const handleOpenBgModal = () => {
+            setShowBgModal(true);
+            setSidebarVisible(false);
+        };
+
+        window.addEventListener('openBgModal', handleOpenBgModal);
+        return () => window.removeEventListener('openBgModal', handleOpenBgModal);
+    }, []);
 
     // キャンバスのサイズを画面サイズに合わせる
     useEffect(() => {

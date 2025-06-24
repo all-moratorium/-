@@ -526,9 +526,28 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       setCurrentPage('customize');
     };
 
+    const handleNavigateToNeonDrawing = (event) => {
+      if (event.detail && event.detail.backgroundImage) {
+        // ネオン下絵の初期状態を更新（背景画像を設定）
+        setNeonDrawingState(prevState => ({
+          ...prevState,
+          backgroundImage: event.detail.backgroundImage,
+          bgImageOpacity: 1.0,
+          bgImageScale: 1.0,
+          bgImageX: 0,
+          bgImageY: 0,
+          showBgModal: true,  // 背景画像設定モーダルを開いた状態にする
+          sidebarVisible: false  // サイドバーを非表示にする
+        }));
+      }
+      setCurrentPage('neonDrawing');
+    };
+
     window.addEventListener('showCustomize', handleShowCustomize);
+    window.addEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
     return () => {
       window.removeEventListener('showCustomize', handleShowCustomize);
+      window.removeEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
     };
   }, []);
 
