@@ -221,9 +221,9 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const scaledTextHeight = textHeight * scale;
         const scaledFontSize = fontSize * scale;
         
-        // センタリング位置を計算（キャンバス全体の真ん中）
-        const startX = (canvas.width - scaledTextWidth) / 2;
-        const startY = (canvas.height + scaledTextHeight) / 2;
+        // センタリング位置を計算（左寄せ、縦中央）
+        const startX = (canvas.width - scaledTextWidth) / 2 - 190;
+        const startY = canvas.height / 2 + scaledFontSize / 4;
         
         // 背景を描画
         ctx.fillStyle = '#f5f5f5';
@@ -358,7 +358,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                                                     className="font-preview-text"
                                                     style={{ fontFamily: fontItem.font }}
                                                 >
-                                                    {inputText || 'Sample Text'}
+                                                    {inputText || 'Sample'}
                                                 </div>
                                             </div>
                                             <div className="font-name">{fontItem.name}</div>
