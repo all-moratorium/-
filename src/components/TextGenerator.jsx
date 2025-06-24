@@ -9,6 +9,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
     const [strokeWidth, setStrokeWidth] = useState(3);
     const canvasRef = useRef(null);
     const [generatedPaths, setGeneratedPaths] = useState([]);
+    const textAreaRef = useRef(null);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -161,12 +162,13 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // キャンバスを完全にクリア
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // テキストが空の場合は背景のみ描画して終了
+        // テキストが空の場合はSampleを表示
+        const displayText = inputText.trim() || 'Sample';
+        
+        // テキストが空の場合は背景のみ描画
         if (!inputText.trim()) {
             ctx.fillStyle = '#f5f5f5';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            setGeneratedPaths([]);
-            return;
         }
 
         // フォント設定 - フォント名からフォントファミリーを取得
@@ -179,8 +181,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         ctx.letterSpacing = `${letterSpacing}px`;
         
         // テキストの幅を測定
-        const textMetrics = ctx.measureText(inputText);
-        const textWidth = textMetrics.width + (inputText.length - 1) * letterSpacing;
+        const textMetrics = ctx.measureText(displayText);
+        const textWidth = textMetrics.width + (displayText.length - 1) * letterSpacing;
         const textHeight = fontSize;
         
         // 一定の幅・高さを維持するためのスケール調整
@@ -216,15 +218,15 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const unscaledX = startX / scale;
         const unscaledY = startY / scale;
         ctx.fillStyle = '#333333';
-        ctx.fillText(inputText, unscaledX, unscaledY);
+        ctx.fillText(displayText, unscaledX, unscaledY);
         ctx.restore();
         
         // 簡易的なパス生成
         const paths = [];
         let currentX = startX;
         
-        for (let i = 0; i < inputText.length; i++) {
-            const char = inputText[i];
+        for (let i = 0; i < displayText.length; i++) {
+            const char = displayText[i];
             ctx.font = `${fontSize}px ${fontFamily}`;
             const charWidth = ctx.measureText(char).width * scale;
             
@@ -254,10 +256,11 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
             return;
         }
 
+        const displayText = inputText.trim() || 'Sample';
         const svgData = {
             paths: generatedPaths,
             metadata: {
-                originalText: inputText,
+                originalText: displayText,
                 font: selectedFont,
                 fontSize: fontSize,
                 letterSpacing: letterSpacing,
@@ -307,9 +310,9 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                 </div>
                 <div className="control-group">
                     <label htmlFor="textInput">テキスト入力</label>
-                    <input
+                    <textarea
+                        ref={textAreaRef}
                         id="textInput"
-                        type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         placeholder="✨ ネオンサインにしたいテキストを入力してください"
