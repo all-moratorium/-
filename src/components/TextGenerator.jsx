@@ -212,95 +212,87 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const textWidth = textMetrics.width + (displayText.length - 1) * letterSpacing;
         const textHeight = fontSize;
         
-        // 改行を考慮した高さ計算
-        const lines = displayText.split('\n');
+        // 表示領域の定義（キャンバス内の四角形エリア）
+        const rightSidebarWidth = Math.min(window.innerWidth * 0.27, 650); // 右サイドバー（27%、最大650px）
+        const leftSidebarWidth = 250; // 左サイドバー（固定幅）
+        const availableCanvasWidth = canvas.width - rightSidebarWidth - leftSidebarWidth;
+        
+        // 表示領域を利用可能幅の70%に設定し、中央配置
+        const displayAreaWidth = availableCanvasWidth * 0.7;
+        const displayAreaHeight = canvas.height * 0.7;
+        const displayAreaLeft = leftSidebarWidth + (availableCanvasWidth - displayAreaWidth) / 2;
+        const displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+        const displayAreaRight = displayAreaLeft + displayAreaWidth;
+        const displayAreaBottom = displayAreaTop + displayAreaHeight;
+        
+        // 改行を考慮したテキスト全体のサイズ計算
+        const textLines = displayText.split('\n');
+        let maxLineWidth = 0;
+        textLines.forEach(line => {
+            const lineWidth = ctx.measureText(line).width;
+            if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+        });
+        
         const lineHeight = fontSize * 1.2;
-        const totalTextHeightWithLines = (lines.length - 1) * lineHeight + textHeight;
+        const totalTextHeight = fontSize + (textLines.length - 1) * lineHeight;
         
-        // 一定の幅・高さを維持するためのスケール調整
-        const targetWidth = canvas.width * 0.4; // キャンバス幅の40%を使用
-        const targetHeight = canvas.height * 0.8; // キャンバス高さの80%を使用（改行対応）
-        
-        // 幅と高さの両方を考慮してスケールを計算
-        const scaleByWidth = targetWidth / textWidth;
-        const scaleByHeight = targetHeight / totalTextHeightWithLines;
-        const scale = Math.min(scaleByWidth, scaleByHeight); // 小さい方を採用
-        
-        // スケールを適用したサイズを計算
-        const scaledTextWidth = textWidth * scale;
-        const scaledTextHeight = textHeight * scale;
-        const scaledFontSize = fontSize * scale;
-        
-        // 左右のサイドバーを考慮した真ん中の位置を計算
-        const rightSidebarWidth = window.innerWidth * 0.27; // 右サイドバー（27%）
-        const leftSidebarWidth = 50; // 左サイドバー（固定幅）
-        const availableWidth = canvas.width - rightSidebarWidth - leftSidebarWidth; // 利用可能な幅
-        const centerX = leftSidebarWidth + availableWidth / 2; // 利用可能エリアの中央
-        
-        const startX = centerX - scaledTextWidth / 2;
-        const startY = canvas.height / 2 + scaledFontSize / 5;
+        // 表示領域に収まるようにスケール調整
+        const scaleByWidth = displayAreaWidth / maxLineWidth;
+        const scaleByHeight = displayAreaHeight / totalTextHeight;
+        const scale = Math.min(scaleByWidth, scaleByHeight, 4); // 5倍まで許可
+    
+        // 中央位置計算
+        const centerX = displayAreaLeft + displayAreaWidth / 2;
+        const centerY = displayAreaTop + displayAreaHeight / 2;
         
         // 背景を描画
         ctx.fillStyle = '#f5f5f5';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // スケールを適用してテキスト描画
+        
+        // テキスト描画
         ctx.save();
         ctx.scale(scale, scale);
         ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.strokeStyle = '#333333';
-        ctx.lineWidth = strokeWidth;
-        
-        // 改行対応のテキスト描画
-        const unscaledX = startX / scale;
-        const unscaledY = startY / scale;
         ctx.fillStyle = '#333333';
         
         // 改行対応のテキスト描画
-        const textLines = displayText.split('\n');
-        const textLineHeight = fontSize * 1.2; // 行間
-        
-        // フォントグループ全体の高さを計算
-        const totalHeight = (textLines.length - 1) * textLineHeight;
-        // フォントグループの中央がキャンバス中央に来るように開始Y位置を調整
-        const startYPos = unscaledY - (totalHeight / 2);
-        
-        // 既に定義された変数を使用してキャンバス中央位置を計算
-        const canvasCenterX = leftSidebarWidth + availableWidth / 2;
+        const scaledLineHeight = lineHeight * scale;
+        const scaledTotalHeight = totalTextHeight * scale;
+        const startYPos = (centerY - scaledTotalHeight / 2 + fontSize * scale * 0.8) / scale;
         
         textLines.forEach((line, index) => {
             // 各行の幅を測定して中央揃え
             const lineWidth = ctx.measureText(line).width;
-            const lineCenterX = (canvasCenterX - (lineWidth * scale / 2)) / scale;
-            const yPos = startYPos + (index * textLineHeight);
+            const lineCenterX = (centerX - (lineWidth * scale / 2)) / scale;
+            const yPos = startYPos + (index * lineHeight);
             ctx.fillText(line, lineCenterX, yPos);
         });
         ctx.restore();
         
-        // 簡易的なパス生成
+        // 簡易的なパス生成（改行対応）
         const paths = [];
-        let currentX = startX;
+        const scaledFontSize = fontSize * scale;
         
-        for (let i = 0; i < displayText.length; i++) {
-            const char = displayText[i];
-            ctx.font = `${fontSize}px ${fontFamily}`;
-            const charWidth = ctx.measureText(char).width * scale;
+        textLines.forEach((line, lineIndex) => {
+            const lineWidth = ctx.measureText(line).width * scale;
+            const lineCenterX = centerX - lineWidth / 2;
+            const lineY = centerY - (scaledTotalHeight / 2) + (lineIndex * scaledLineHeight);
             
-            // 各文字を矩形パスとして近似
-            const charPath = {
+            // 各行を矩形パスとして近似
+            const linePath = {
                 points: [
-                    { x: currentX, y: startY - scaledFontSize * 0.7 },
-                    { x: currentX + charWidth, y: startY - scaledFontSize * 0.7 },
-                    { x: currentX + charWidth, y: startY + scaledFontSize * 0.3 },
-                    { x: currentX, y: startY + scaledFontSize * 0.3 }
+                    { x: lineCenterX, y: lineY - scaledFontSize * 0.7 },
+                    { x: lineCenterX + lineWidth, y: lineY - scaledFontSize * 0.7 },
+                    { x: lineCenterX + lineWidth, y: lineY + scaledFontSize * 0.3 },
+                    { x: lineCenterX, y: lineY + scaledFontSize * 0.3 }
                 ],
                 mode: 'stroke',
                 type: 'line'
             };
             
-            paths.push(charPath);
-            currentX += charWidth + (letterSpacing * scale);
-        }
+            paths.push(linePath);
+        });
         
         setGeneratedPaths(paths);
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
@@ -572,7 +564,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                         id="textInput"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="✨ネオンサインにしたいテキストを入力してください（Enterで改行）"
+                        placeholder="✨ネオンサインにしたいテキストを入力してください"
                         className="text-input"
                         autoComplete="off"
                         autoCorrect="off"
@@ -580,7 +572,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                         spellCheck="false"
                     />
                     <div className="text-input-help">
-                        💡 Enterキーで改行できます。キャンバスにも改行が反映されます。
+                        Enterキーで改行できます。キャンバスにも改行が反映されます。
                     </div>
                     {inputText.length > 30 && (
                         <div className="character-limit-warning">

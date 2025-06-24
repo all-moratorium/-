@@ -552,7 +552,7 @@
 .text-generator-canvas-download-button {
     position: fixed;
     bottom: 3%;
-    left: calc(50px + (100vw - 27vw - 50px) / 2);
+    left: calc(150px + (100vw - min(27vw, 650px) - 50px) / 2);
     padding: 16px 24px;
     transform: translateX(-50%);
     border: 2px solid #ffffff;
@@ -560,7 +560,6 @@
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s ease;
     background-color:rgb(85, 85, 85);
     color: #ffffff;
     z-index: 1000;
