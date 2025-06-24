@@ -222,8 +222,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const scaledFontSize = fontSize * scale;
         
         // センタリング位置を計算（左寄せ、縦中央）
-        const startX = (canvas.width - scaledTextWidth) / 2 - 190;
-        const startY = canvas.height / 2 + scaledFontSize / 4;
+        const startX = (canvas.width - scaledTextWidth) / 2 - 220;
+        const startY = canvas.height / 2 + scaledFontSize / 3;
         
         // 背景を描画
         ctx.fillStyle = '#f5f5f5';
@@ -298,10 +298,14 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
     // キャンバスサイズを初期化・リサイズ時に更新
     useEffect(() => {
         updateCanvasSize();
-        const handleResize = () => updateCanvasSize();
+        const handleResize = () => {
+            updateCanvasSize();
+            // リサイズ後にテキストを再描画
+            setTimeout(() => generateTextToSVG(), 10);
+        };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [updateCanvasSize]);
+    }, [updateCanvasSize, generateTextToSVG]);
 
     // 入力値が変更されたら自動で再生成
     useEffect(() => {
