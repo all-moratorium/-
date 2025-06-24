@@ -233,7 +233,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const centerX = leftSidebarWidth + availableWidth / 2; // 利用可能エリアの中央
         
         const startX = centerX - scaledTextWidth / 2;
-        const startY = canvas.height / 2 + scaledFontSize / 3;
+        const startY = canvas.height / 2 + scaledFontSize / 5;
         
         // 背景を描画
         ctx.fillStyle = '#f5f5f5';

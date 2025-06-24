@@ -182,9 +182,10 @@
 
 .font-preview-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 15px;
     max-height: 600px;
+    height: 80vh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 8px;
