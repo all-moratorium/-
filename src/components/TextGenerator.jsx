@@ -10,77 +10,67 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
     const canvasRef = useRef(null);
     const [generatedPaths, setGeneratedPaths] = useState([]);
 
-    const fontCategories = {
-        '英語フォント - 筆記体・手書き': [
-        { name: 'cudi', font: 'Dancing Script, cursive' },
-        { name: 'george', font: 'Kaushan Script, cursive' },
-        { name: 'pop', font: 'Pacifico, cursive' },
-        { name: 'offset', font: 'Sacramento, cursive' },
-        { name: 'britney', font: 'Satisfy, cursive' },
-        { name: 'jay', font: 'Yellowtail, cursive' },
-        { name: 'baby', font: 'Indie Flower, cursive' },
-        { name: 'knowles', font: 'Caveat, cursive' },
-        { name: 'lana', font: 'Amatic SC, cursive' },
-        { name: 'snoop', font: 'Shadows Into Light, cursive' },
-        { name: 'travis', font: 'Architects Daughter, cursive' },
-        { name: 'quavo', font: 'Griffy, cursive' },
-        { name: 'drizzy', font: 'Monoton, cursive' },
-        { name: 'robert', font: 'Audiowide, cursive' },
-        { name: 'script3', font: 'Courgette, cursive' },
-        { name: 'script4', font: 'Leckerli One, cursive' },
-        { name: 'script6', font: 'Cookie, cursive' },
-        { name: 'script7', font: 'Tangerine, cursive' },
-        { name: 'script8', font: 'Handlee, cursive' },
-        { name: 'script11', font: 'Nothing You Could Do, cursive' },
-        { name: 'script15', font: 'Reenie Beanie, cursive' },
-        { name: 'script16', font: 'Arizonia, cursive' },
-        { name: 'script19', font: 'Rouge Script, cursive' },
-        { name: 'script20', font: 'Marck Script, cursive' },
-        { name: 'script21', font: 'Clicker Script, cursive' },
-        { name: 'script22', font: 'Mrs Saint Delafield, cursive' },
-        { name: 'script25', font: 'Butterfly Kids, cursive' },
-        { name: 'script27', font: 'Dawning of a New Day, cursive' },
-        { name: 'script29', font: 'Amatic SC, cursive' },
-        { name: 'Weekender', font: 'Comfortaa, cursive' },
-        { name: 'Neonscript', font: 'Monoton, cursive' },
-        { name: 'Photogenic', font: 'Great Vibes, cursive' },
-        { name: 'Rocket', font: 'Faster One, cursive' },
-        { name: 'Signature', font: 'Allura, cursive' },
-        { name: 'Sorrento', font: 'Amatic SC, cursive' },
-        { name: 'ClassicType', font: 'Alex Brush, cursive' },
-        { name: 'Neo Tokyo', font: 'Orbitron, cursive' },
-        { name: 'MONACO', font: 'Sacramento, cursive' },
-        { name: 'SIMPLICITY', font: 'Satisfy, cursive' },
-        { name: 'Typewriter', font: 'Courier Prime, cursive' },
-        { name: 'Majorca', font: 'Satisfy, cursive' },
-        { name: 'Manhattan', font: 'Kaushan Script, cursive' },
-        { name: 'NEONLITE', font: 'Syncopate, cursive' },
-        { name: 'SCIFI', font: 'Audiowide, cursive' },
-        { name: 'VANCOUVER', font: 'Caveat, cursive' },
-        { name: 'WestCoast', font: 'Surfer, cursive' }
-        ],
-        '日本語フォント - ベーシック': [
-        { name: 'jp1', font: 'Noto Sans JP, sans-serif' },
-        { name: 'jp2', font: 'Noto Serif JP, serif' },
-        { name: 'jp5', font: 'Kosugi, sans-serif' },
-        { name: 'jp6', font: 'Kosugi Maru, sans-serif' }
-        ],
-        '日本語フォント - 装飾・ポップ': [
-        { name: 'jp9', font: 'Hachi Maru Pop, cursive' },
-        { name: 'jp10', font: 'Kiwi Maru, cursive' },
-        { name: 'jp12', font: 'Stick, sans-serif' },
-        { name: 'jp16', font: 'Train One, cursive' }
-        ],
-        '日本語フォント - ユニーク・伝統': [
-        { name: 'jp20', font: 'New Tegomin, serif' },
-        { name: 'jp21', font: 'Yomogi, cursive' },
-        { name: 'jp24', font: 'Kaisei Opti, serif' }
-        ],
-        '日本語フォント - ゲーム・未来': [
-        { name: 'jp47', font: 'Gamja Flower, cursive' },
-        { name: 'jp48', font: 'Shizuru, cursive' }
-        ]
-    };
+    const allFonts = [
+        { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
+        { name: 'george', font: 'Kaushan Script, cursive', tags: ['人気', '筆記体'] },
+        { name: 'pop', font: 'Pacifico, cursive', tags: ['人気', 'ポップ'] },
+        { name: 'offset', font: 'Sacramento, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'britney', font: 'Satisfy, cursive', tags: ['筆記体'] },
+        { name: 'jay', font: 'Yellowtail, cursive', tags: ['筆記体'] },
+        { name: 'baby', font: 'Indie Flower, cursive', tags: ['手書き', 'カジュアル'] },
+        { name: 'knowles', font: 'Caveat, cursive', tags: ['手書き', 'カジュアル'] },
+        { name: 'lana', font: 'Amatic SC, cursive', tags: ['シンプル', '手書き'] },
+        { name: 'snoop', font: 'Shadows Into Light, cursive', tags: ['手書き'] },
+        { name: 'travis', font: 'Architects Daughter, cursive', tags: ['手書き'] },
+        { name: 'quavo', font: 'Griffy, cursive', tags: ['ユニーク'] },
+        { name: 'drizzy', font: 'Monoton, cursive', tags: ['人気', 'ネオン'] },
+        { name: 'robert', font: 'Audiowide, cursive', tags: ['未来', 'テック'] },
+        { name: 'script3', font: 'Courgette, cursive', tags: ['筆記体'] },
+        { name: 'script4', font: 'Leckerli One, cursive', tags: ['筆記体'] },
+        { name: 'script6', font: 'Cookie, cursive', tags: ['筆記体'] },
+        { name: 'script7', font: 'Tangerine, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'script8', font: 'Handlee, cursive', tags: ['手書き'] },
+        { name: 'script11', font: 'Nothing You Could Do, cursive', tags: ['手書き'] },
+        { name: 'script15', font: 'Reenie Beanie, cursive', tags: ['手書き'] },
+        { name: 'script16', font: 'Arizonia, cursive', tags: ['筆記体'] },
+        { name: 'script19', font: 'Rouge Script, cursive', tags: ['筆記体'] },
+        { name: 'script20', font: 'Marck Script, cursive', tags: ['筆記体'] },
+        { name: 'script21', font: 'Clicker Script, cursive', tags: ['筆記体'] },
+        { name: 'script22', font: 'Mrs Saint Delafield, cursive', tags: ['筆記体'] },
+        { name: 'script25', font: 'Butterfly Kids, cursive', tags: ['装飾'] },
+        { name: 'script27', font: 'Dawning of a New Day, cursive', tags: ['筆記体'] },
+        { name: 'script29', font: 'Amatic SC, cursive', tags: ['シンプル', '手書き'] },
+        { name: 'Weekender', font: 'Comfortaa, cursive', tags: ['モダン'] },
+        { name: 'Neonscript', font: 'Monoton, cursive', tags: ['人気', 'ネオン'] },
+        { name: 'Photogenic', font: 'Great Vibes, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'Rocket', font: 'Faster One, cursive', tags: ['未来', 'テック'] },
+        { name: 'Signature', font: 'Allura, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'Sorrento', font: 'Amatic SC, cursive', tags: ['シンプル', '手書き'] },
+        { name: 'ClassicType', font: 'Alex Brush, cursive', tags: ['筆記体'] },
+        { name: 'Neo Tokyo', font: 'Orbitron, cursive', tags: ['未来', 'テック'] },
+        { name: 'MONACO', font: 'Sacramento, cursive', tags: ['筆記体'] },
+        { name: 'SIMPLICITY', font: 'Satisfy, cursive', tags: ['筆記体'] },
+        { name: 'Typewriter', font: 'Courier Prime, cursive', tags: ['レトロ'] },
+        { name: 'Majorca', font: 'Satisfy, cursive', tags: ['筆記体'] },
+        { name: 'Manhattan', font: 'Kaushan Script, cursive', tags: ['筆記体'] },
+        { name: 'NEONLITE', font: 'Syncopate, cursive', tags: ['未来', 'テック'] },
+        { name: 'SCIFI', font: 'Audiowide, cursive', tags: ['未来', 'テック'] },
+        { name: 'VANCOUVER', font: 'Caveat, cursive', tags: ['手書き'] },
+        { name: 'WestCoast', font: 'Surfer, cursive', tags: ['カジュアル'] },
+        { name: 'jp1', font: 'Noto Sans JP, sans-serif', tags: ['日本語対応', 'ベーシック', '人気'] },
+        { name: 'jp2', font: 'Noto Serif JP, serif', tags: ['日本語対応', 'ベーシック'] },
+        { name: 'jp5', font: 'Kosugi, sans-serif', tags: ['日本語対応', 'ベーシック'] },
+        { name: 'jp6', font: 'Kosugi Maru, sans-serif', tags: ['日本語対応', 'ベーシック'] },
+        { name: 'jp9', font: 'Hachi Maru Pop, cursive', tags: ['日本語対応', 'ポップ'] },
+        { name: 'jp10', font: 'Kiwi Maru, cursive', tags: ['日本語対応', 'ポップ'] },
+        { name: 'jp12', font: 'Stick, sans-serif', tags: ['日本語対応', 'ユニーク'] },
+        { name: 'jp16', font: 'Train One, cursive', tags: ['日本語対応', 'ポップ'] },
+        { name: 'jp20', font: 'New Tegomin, serif', tags: ['日本語対応', '伝統'] },
+        { name: 'jp21', font: 'Yomogi, cursive', tags: ['日本語対応', '伝統'] },
+        { name: 'jp24', font: 'Kaisei Opti, serif', tags: ['日本語対応', '伝統'] },
+        { name: 'jp47', font: 'Gamja Flower, cursive', tags: ['日本語対応', 'ゲーム'] },
+        { name: 'jp48', font: 'Shizuru, cursive', tags: ['日本語対応', 'ゲーム'] }
+    ];
 
     // フォント名からフォントファミリーを取得する関数
     const getFontFamily = (fontName) => {
@@ -149,22 +139,8 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         return fontMap[fontName] || 'Arial, sans-serif';
     };
 
-    // 利用可能なフォント一覧を更新（FontPreviewコンポーネントと同期）
-    const availableFonts = [
-        'cudi', 'george', 'pop', 'offset', 'britney', 
-        'jay', 'baby', 'knowles', 'lana', 'snoop', 'travis', 'quavo', 
-        'drizzy', 'robert', 'script3', 
-        'script4', 'script6', 'script7', 'script8', 'script11',
-        'script15', 'script16', 'script19', 'script20',
-        'script21', 'script22', 'script25', 'script27',
-        'script29', 'Weekender', 'Neonscript', 'Photogenic', 
-        'Rocket', 'Signature', 'Sorrento', 'ClassicType', 
-        'Neo Tokyo', 'MONACO', 'SIMPLICITY', 'Typewriter', 
-        'Majorca', 'Manhattan', 'NEONLITE', 
-        'SCIFI', 'VANCOUVER', 'WestCoast', 'jp1', 'jp2', 'jp5', 'jp6', 
-        'jp9', 'jp10', 'jp12', 'jp16', 'jp20', 
-        'jp21', 'jp24', 'jp47', 'jp48'
-    ];
+    // 利用可能なフォント一覧を更新
+    const availableFonts = allFonts.map(font => font.name);
 
     // キャンバスサイズを画面100%に設定
     const updateCanvasSize = useCallback(() => {
@@ -222,7 +198,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const scaledFontSize = fontSize * scale;
         
         // センタリング位置を計算（左寄せ、縦中央）
-        const startX = (canvas.width - scaledTextWidth) / 2 - 220;
+        const startX = (canvas.width - scaledTextWidth) / 2 - 210;
         const startY = canvas.height / 2 + scaledFontSize / 3;
         
         // 背景を描画
@@ -347,28 +323,28 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
 
                 <div className="font-preview-container">
                     <h3>フォントプレビュー</h3>
-                    <div className="font-preview-categories">
-                        {Object.entries(fontCategories).map(([categoryName, fonts]) => (
-                            <div key={categoryName} className="font-category">
-                                <h4 className="category-title">{categoryName}</h4>
-                                <div className="font-preview-grid">
-                                    {fonts.map((fontItem) => (
-                                        <div className="font-item-wrapper" key={fontItem.name}>
-                                            <div 
-                                                className={`font-preview-item ${selectedFont === fontItem.name ? 'selected' : ''}`}
-                                                onClick={() => setSelectedFont(fontItem.name)}
-                                            >
-                                                <div 
-                                                    className="font-preview-text"
-                                                    style={{ fontFamily: fontItem.font }}
-                                                >
-                                                    {inputText || 'Sample'}
-                                                </div>
-                                            </div>
-                                            <div className="font-name">{fontItem.name}</div>
-                                        </div>
-                                    ))}
+                    <div className="font-preview-grid">
+                        {allFonts.map((fontItem) => (
+                            <div className="font-item-wrapper" key={fontItem.name}>
+                                <div 
+                                    className={`font-preview-item ${selectedFont === fontItem.name ? 'selected' : ''}`}
+                                    onClick={() => setSelectedFont(fontItem.name)}
+                                >
+                                    <div 
+                                        className="font-preview-text"
+                                        style={{ fontFamily: fontItem.font }}
+                                    >
+                                        {inputText || 'Sample'}
+                                    </div>
+                                    <div className="font-tags">
+                                        {fontItem.tags.filter(tag => tag === '人気' || tag === '日本語対応').map((tag, index) => (
+                                            <span key={index} className={`font-tag ${tag === '人気' ? 'popular' : tag === '日本語対応' ? 'japanese' : ''}`}>
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
+                                <div className="font-name">{fontItem.name}</div>
                             </div>
                         ))}
                     </div>
