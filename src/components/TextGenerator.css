@@ -1,3 +1,6 @@
+/* Google Fonts Import - Curated Script/Cursive + Japanese Selection */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Kaushan+Script&family=Great+Vibes&family=Allura&family=Pacifico&family=Lobster&family=Permanent+Marker&family=Sacramento&family=Alex+Brush&family=Satisfy&family=Yellowtail&family=Indie+Flower&family=Caveat:wght@400;700&family=Amatic+SC:wght@400;700&family=Shadows+Into+Light&family=Architects+Daughter&family=Love+Ya+Like+A+Sister&family=Creepster&family=Griffy&family=Chewy&family=Kalam:wght@400;700&family=Luckiest+Guy&family=Monoton&family=Righteous&family=Nosifer&family=Eater&family=Metal+Mania&family=Bubblegum+Sans&family=Chonburi&family=Surfer&family=Fascinate&family=Wallpoet&family=Iceberg&family=Audiowide&family=Black+Ops+One&family=Bangers&family=Fredericka+the+Great&family=Abril+Fatface&family=Courgette&family=Leckerli+One&family=Homemade+Apple&family=Cookie&family=Tangerine:wght@400;700&family=Handlee&family=Waiting+for+the+Sunrise&family=Rock+Salt&family=Nothing+You+Could+Do&family=Bad+Script&family=Patrick+Hand&family=Reenie+Beanie&family=Arizonia&family=Damion&family=Mr+Dafoe&family=Rouge+Script&family=Marck+Script&family=Clicker+Script&family=Mrs+Saint+Delafield&family=Yesteryear&family=Euphoria+Script&family=Butterfly+Kids&family=Devonshire&family=Dawning+of+a+New+Day&family=Julee&family=Caveat+Brush&family=Comfortaa:wght@300;400;700&family=Lobster+Two:wght@400;700&family=Barrio&family=Cinzel+Decorative:wght@400;700&family=Faster+One&family=Courier+Prime:wght@400;700&family=Bungee+Shade&family=Syncopate:wght@400;700&family=Orbitron:wght@400;700&family=Noto+Sans+JP:wght@100;300;400;500;700;900&family=Noto+Serif+JP:wght@200;300;400;500;600;700;900&family=M+PLUS+1p:wght@100;300;400;500;700;800;900&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Kosugi&family=Kosugi+Maru&family=Sawarabi+Mincho&family=Sawarabi+Gothic&family=Hachi+Maru+Pop&family=Kiwi+Maru:wght@300;400;500&family=Dela+Gothic+One&family=Stick&family=Reggae+One&family=Rampart+One&family=Potta+One&family=Train+One&family=Yusei+Magic&family=RocknRoll+One&family=DotGothic16&family=New+Tegomin:wght@400&family=Yomogi&family=Shippori+Mincho:wght@400;500;600;700;800&family=Kaisei+Tokumin:wght@400;500;700;800&family=Kaisei+Opti:wght@400;500;700&family=Zen+Tokyo+Zoo&family=Zen+Dots&family=Monofett&family=Bungee+Hairline&family=Bungee+Outline&family=Kumar+One&family=Suez+One&family=Cherry+Bomb+One&family=Press+Start+2P&family=Jura:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&family=Michroma&family=Iceland&family=Klee+One:wght@400;600&family=Zen+Kurenaido&family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Mochiy+Pop+One&family=Mochiy+Pop+P+One&family=Cute+Font&family=Gamja+Flower&family=Shizuru&display=swap');
+
 /* 画面100%キャンバス、サイドバー重ね構造 */
 .text-generator-app-container {
     position: relative;
@@ -30,7 +33,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 600px;
+    width: 650px;
     height: 100vh;
     background-color: #242424;
     border-left: 1px solid #333;
@@ -163,6 +166,147 @@
     }
 }
 
+/* Font Preview Styles */
+.font-preview-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.font-preview-container h3 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.font-preview-categories {
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #2a2a2a;
+}
+
+.font-category {
+    border-bottom: 1px solid #444;
+    padding: 12px;
+}
+
+.font-category:last-child {
+    border-bottom: none;
+}
+
+.category-title {
+    color: #ffff00;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+.font-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.font-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.font-preview-item {
+    background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 2px 8px rgba(0,0,0,0.04),
+        0 1px 3px rgba(0,0,0,0.06);
+}
+
+.font-preview-item:hover {
+    border-color: #1e3a8a;
+    background: linear-gradient(145deg, #ffffff 0%, #f0f4ff 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 8px 25px rgba(30, 58, 138, 0.15),
+        0 3px 10px rgba(30, 58, 138, 0.1),
+        0 1px 4px rgba(0,0,0,0.05);
+}
+
+.font-preview-item.selected {
+    border-color: #1e3a8a;
+    background: #1e3a8a;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(30, 58, 138, 0.3),
+        0 2px 8px rgba(30, 58, 138, 0.2);
+}
+
+.font-name {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 8px;
+    margin-bottom: 0;
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.font-preview-text {
+    color: #1e293b;
+    font-size: 30px;
+    line-height: 1;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.font-preview-item:hover .font-preview-text {
+    color: #0f172a;
+    text-shadow: 0 2px 4px rgba(66, 133, 244, 0.1);
+}
+
+.font-preview-item.selected .font-preview-text {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* スクロールバーのスタイル */
+.font-preview-categories::-webkit-scrollbar {
+    width: 8px;
+}
+
+.font-preview-categories::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.font-preview-categories::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.font-preview-categories::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
 .control-group {
     display: flex;
     flex-direction: column;
@@ -177,24 +321,39 @@
 
 .text-input,
 .font-select {
-    padding: 16px 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #ffffff;
-    color: #000000;
-    font-size: 18px;
-    transition: border-color 0.2s ease;
-    min-height: 50px;
+    padding: 20px 24px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 60px;
+    box-shadow: 
+        0 2px 8px rgba(0,0,0,0.04),
+        0 1px 3px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+    letter-spacing: 0.5px;
 }
 
 .text-input:focus,
 .font-select:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #4285f4;
+    background: linear-gradient(145deg, #ffffff 0%, #f0f4ff 100%);
+    box-shadow: 
+        0 4px 20px rgba(66, 133, 244, 0.15),
+        0 2px 8px rgba(66, 133, 244, 0.1),
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        0 0 0 3px rgba(66, 133, 244, 0.1);
+    transform: translateY(-1px);
 }
 
 .text-input::placeholder {
-    color: #999;
+    color: #94a3b8;
+    font-weight: 400;
+    opacity: 0.8;
 }
 
 .font-select option {
