@@ -49,21 +49,28 @@
 
 .text-generator-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
     position: relative;
-    margin-bottom: 10px;
+    margin-top: 55px;
+    margin-bottom: 30px;
 }
 
 .text-generator-title {
-    color: #ffffff;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
-    margin: 0;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 /* ガイドボタン（テキスト生成専用） */
 .text-generator-guide-button {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,11 +86,11 @@
     animation: text-generator-lightning-flash 1.5s infinite;
     overflow: visible;
     transition: all 0.3s ease;
-    position: relative;
+    z-index: 101;
 }
 
 .text-generator-guide-button:hover {
-    transform: translateY(-1px);
+    transform: translateY(-50%) translateY(-1px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
