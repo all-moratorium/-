@@ -377,6 +377,7 @@ const LaserCutImageProcessor = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
+  const [showCreationModal, setShowCreationModal] = useState(false); // 作成方法選択モーダル
   const [sampleImagesLoaded, setSampleImagesLoaded] = useState(false); // サンプル画像のロード状態
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
@@ -529,8 +530,8 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     const handleNavigateToNeonDrawing = (event) => {
       if (event.detail && event.detail.backgroundImage) {
         // ネオン下絵の初期状態を更新（背景画像を設定）
-        setNeonDrawingState(prevState => ({
-          ...prevState,
+        const updateState = {
+          ...neonDrawingState,
           backgroundImage: event.detail.backgroundImage,
           bgImageOpacity: 1.0,
           bgImageScale: 1.0,
@@ -538,7 +539,16 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
           bgImageY: 0,
           showBgModal: true,  // 背景画像設定モーダルを開いた状態にする
           sidebarVisible: false  // サイドバーを非表示にする
-        }));
+        };
+
+        // resetViewフラグがある場合は視点も初期化
+        if (event.detail.resetView) {
+          updateState.scale = 1;
+          updateState.offsetX = 0;
+          updateState.offsetY = 0;
+        }
+
+        setNeonDrawingState(updateState);
       }
       setCurrentPage('neonDrawing');
     };
@@ -2643,7 +2653,7 @@ const quantizeColors = (pixels, k) => {
                 </button>
                 <div className="button-row">
                   <button
-                    onClick={() => setCurrentPage('neonDrawing')}
+                    onClick={() => setShowCreationModal(true)}
                     className="process-button"
                   >
                     さっそく作成する
@@ -3420,6 +3430,106 @@ const quantizeColors = (pixels, k) => {
                   <li className="tip-item">画像サイズを2000px以下に調整</li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 作成方法選択モーダル */}
+      {showCreationModal && (
+        <div className="modal-overlay show">
+          <div className="modal-content">
+            <div className="modal-content-inner">
+              <h2 style={{color: '#fff', textAlign: 'center', marginBottom: '30px'}}>
+                作成方法を選択してください
+              </h2>
+              
+              <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+                <button
+                  onClick={() => {
+                    setShowCreationModal(false);
+                    setCurrentPage('textGeneration');
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #FFFF00, #FFD700)',
+                    border: 'none',
+                    borderRadius: '10px',
+                    padding: '25px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 0 15px rgba(255, 255, 0, 0.3)',
+                    color: '#000',
+                    fontWeight: 'bold',
+                    textAlign: 'left'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #FFD700, #FFC107)';
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.5)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #FFFF00, #FFD700)';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 0 15px rgba(255, 255, 0, 0.3)';
+                  }}
+                >
+                  <div style={{fontSize: '20px', fontWeight: 'bold', marginBottom: '8px'}}>
+                    📝 テキストから下絵を生成
+                  </div>
+                  <div style={{fontSize: '14px', marginBottom: '8px', color: '#333'}}>
+                    高速テキスト生成 - フォント選択とエフェクト適用で即座にプロ仕様の文字デザインを作成
+                  </div>
+                  <div style={{fontSize: '12px', color: '#666'}}>
+                    65種類以上のフォント選択 / 作成したフォントテキストは背景画像として下絵に取込まれます
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowCreationModal(false);
+                    setCurrentPage('neonDrawing');
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #00FFFF, #00CCCC)',
+                    border: 'none',
+                    borderRadius: '10px',
+                    padding: '25px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 0 15px rgba(0, 255, 255, 0.3)',
+                    color: '#000',
+                    fontWeight: 'bold',
+                    textAlign: 'left'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #33FFFF, #00DDDD)';
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.5)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #00FFFF, #00CCCC)';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.3)';
+                  }}
+                >
+                  <div style={{fontSize: '20px', fontWeight: 'bold', marginBottom: '8px'}}>
+                    ✏️ ネオンチューブパスを描画
+                  </div>
+                  <div style={{fontSize: '14px', marginBottom: '8px', color: '#333'}}>
+                    アート・ロゴ・特注品に最適 - オリジナリティ追求システム
+                  </div>
+                  <div style={{fontSize: '12px', color: '#666'}}>
+                    手描き&画像取込みによるあなただけの自作可能な無制限カスタムデザイン制作 / テキストから生成で読み込まれた画像をチューブパス化
+                  </div>
+                </button>
+              </div>
+              
+              <button 
+                onClick={() => setShowCreationModal(false)}
+                className="modal-confirm-button"
+              >
+                キャンセル
+              </button>
             </div>
           </div>
         </div>

@@ -548,7 +548,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                     onClick={downloadFontImage}
                     className="text-generator-canvas-download-button"
                 >
-                    画像を保存
+                    テキスト画像を保存
                 </button>
             </div>
 
