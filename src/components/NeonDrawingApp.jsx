@@ -2268,7 +2268,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="grid-spacing-container">
+                    {sidebarVisible && (
+                        <div className="grid-spacing-container">
                             <label className="grid-spacing-label">間隔</label>
                             <select 
                                 value={gridSize / 25} 
@@ -2303,6 +2304,23 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                     }
                                 }}
                                 className="grid-spacing-select"
+                                onBlur={(e) => {
+                                    // ブラウザのデフォルト動作を完全に停止
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return false;
+                                }}
+                                onScroll={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return false;
+                                }}
+                                onTouchMove={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return false;
+                                }}
+                                style={{ position: 'sticky', zIndex: 9999 }}
                             >
                                 <option value={0.5}>0.5cm</option>
                                 <option value={1}>1cm</option>
@@ -2313,6 +2331,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 <option value={10}>10cm</option>
                             </select>
                         </div>
+                    )}
 
                     <div className="view-controls">
                         <h3 className="reset-tools-title">リセット操作</h3>
