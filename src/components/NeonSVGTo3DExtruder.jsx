@@ -1273,7 +1273,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
-          const fineTuneZOffset = 95.013;
+          const fineTuneZOffset = 86.5;
           model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
         } else {
           console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
