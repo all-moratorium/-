@@ -355,11 +355,17 @@ const MemoizedOriginalUiContent = memo(({
   );
 });
 
-// CreationModal コンポーネント
+// --- SVG アイコンコンポーネント ---
 const CheckIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
   </svg>
+);
+const XIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m18 6-12 12"/>
+        <path d="m6 6 12 12"/>
+    </svg>
 );
 
 const TextIcon = (props) => (
@@ -378,55 +384,55 @@ const DeliveryIcon = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
 );
 
+// --- プロセスルートコンポーネント ---
 const ProcessRoute = () => {
     const steps = [
-        { num: 'STEP 0', title: 'テキスト下絵を生成', description: null, icon: TextIcon, color: 'step-text-color' },
-        { num: '1', title: '配置を決定', description: null, icon: LayoutIcon, color: 'step-layout-color' },
-        { num: '2', title: '色 / 仕様のカスタマイズ', description: 'チューブごとに色太さを\n個別設定可能', icon: CustomizeIcon, color: 'step-customize-color' },
-        { num: '3', title: '3Dモデル確認 & 注文', description: '作成したLEDネオンサインの鮮明\nな3DCGモデルを閲覧可能', icon: Preview3DIcon, color: 'step-preview-color' },
-        { num: '製作 / お届け', title: '最短5日で出荷', description: '配線、組み立て / 品質検査\n納品', icon: DeliveryIcon, color: 'step-delivery-color' }
+        { num: 'STEP 0', title: 'テキスト下絵を生成' },
+        { num: 'STEP 1', title: '配置を決定' },
+        { num: 'STEP 2', title: '色 / 仕様のカスタマイズ' },
+        { num: 'STEP 3', title: '3Dモデル確認 & 注文' },
+        { num: '制作 / 出荷', title: '最短5日で出荷' }
     ];
 
     return (
         <div className="creation-modal-process-route">
             <h3 className="creation-modal-process-title">作成プロセス</h3>
-            <div className="creation-modal-process-steps">
+            
+            {/* ドット型プログレス */}
+            <div className="creation-modal-progress-container">
                 {steps.map((step, index) => (
-                    <React.Fragment key={index}>
-                        <div className="creation-modal-process-step">
-                            <p className={`creation-modal-step-number ${step.color}`}>{step.num}</p>
-                            <div className={`creation-modal-step-icon ${step.color}`}>
-                               <step.icon className={`creation-modal-step-icon-svg ${step.color}`} />
-                            </div>
-                            <p className="creation-modal-step-title">{step.title}</p>
-                            {step.description && (
-                                <p className="creation-modal-step-description">{step.description}</p>
-                            )}
-                        </div>
-                        {index < steps.length - 1 && (
-                            <div className="creation-modal-step-divider"></div>
-                        )}
-                    </React.Fragment>
+                    <div key={index} className={`creation-modal-progress-step ${index === 0 ? 'step-0' : index === 1 ? 'step-1' : ''}`}>
+                        <div className="creation-modal-progress-dot"></div>
+                        {index < steps.length - 1 && <div className="creation-modal-progress-connector"></div>}
+                    </div>
+                ))}
+            </div>
+            
+            {/* ステップ名 */}
+            <div className="creation-modal-steps-labels">
+                {steps.map((step, index) => (
+                    <div key={index} className="creation-modal-step-label">
+                        <span className={`creation-modal-step-num ${index === 0 ? 'step-0' : index === 1 ? 'step-1' : ''}`}>{step.num}</span>
+                        <span className="creation-modal-step-title">{step.title}</span>
+                    </div>
                 ))}
             </div>
         </div>
     );
 };
 
+// --- 新しい選択肢ボタンコンポーネント ---
 function ChoiceBox({ stepTitle, title, description, features, note, onClick, accentColor }) {
-    const colorClass = accentColor === 'yellow' ? 'creation-modal-choice-box-yellow' : 'creation-modal-choice-box-cyan';
-
     return (
         <button
             onClick={onClick}
-            className={`creation-modal-choice-box ${colorClass}`}
+            className={`creation-modal-choice-box creation-modal-choice-box-${accentColor}`}
         >
             <h3 className="creation-modal-choice-title">
-                <span className={`creation-modal-choice-step ${accentColor === 'yellow' ? 'modal-step-text-yellow' : 'modal-step-text-cyan'}`}>{stepTitle}</span>
+                <span className={`creation-modal-choice-step step-${accentColor}`}>{stepTitle}</span>
                 {title}
             </h3>
             <p className="creation-modal-choice-description">{description}</p>
-            
             <div className="creation-modal-choice-features">
                 {features.map((feature, index) => (
                     <div key={index} className="creation-modal-choice-feature">
@@ -435,7 +441,6 @@ function ChoiceBox({ stepTitle, title, description, features, note, onClick, acc
                     </div>
                 ))}
             </div>
-
             {note && (
                  <p className="creation-modal-choice-note">{note}</p>
             )}
@@ -443,50 +448,58 @@ function ChoiceBox({ stepTitle, title, description, features, note, onClick, acc
     );
 }
 
-function CreationModal({ isOpen, onSelect }) {
+// --- 作成方法選択モーダル ---
+function CreationModal({ isOpen, onSelect, onClose }) {
     if (!isOpen) return null;
 
     const step0_features = [
-        'テキストテンプレートから素早く下絵を作成。',
-        '即座にプロ仕様のテキストLEDネオンサインが完成。',
-        '65種類以上のフォント選択と、直感的な操作。'
+        'テキストテンプレートから素早く下絵を作成',
+        '即座にプロ仕様のテキストLEDネオンサインが完成',
+        '65種類以上のフォント選択と直感的な操作'
     ];
     
     const step1_features = [
         'オリジナルデザインのLEDネオンサインを作成',
-        '下絵画像読み込みで多彩な表現が可能。',
-        'リアルタイム寸法確認、デザイン保存機能搭載。',
-        'STEP0で読み込まれた画像をチューブパス化。'
+        '下絵画像読み込みで多彩な表現が可能',
+        'リアルタイム寸法確認、デザイン保存機能搭載',
+        'STEP0で読み込まれた画像をチューブパス化'
     ];
 
-    return (
-        <div className="creation-modal-overlay">
-            <div className="creation-modal-container">
-                <h2 className="creation-modal-title">
-                    作成方法を選択
-                </h2>
+    // 背景クリックでモーダルを閉じる
+    const handleOverlayClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
 
-                <ProcessRoute />
-                
-                <div className="creation-modal-choices">
-                    <ChoiceBox
-                        stepTitle="STEP0"
-                        title="テキスト下絵を生成"
-                        description="文字テキストのLEDネオンサインを作成したい方向け"
-                        features={step0_features}
-                        note="※生成したテキスト下絵は背景画像としてSTEP1の背景画像に読み込まれます"
-                        onClick={() => onSelect('textGeneration')}
-                        accentColor="yellow"
-                    />
-                    
-                    <ChoiceBox
-                        stepTitle="STEP1"
-                        title="配置を決定"
-                        description="完全オリジナルでLEDネオン作成したい方向け"
-                        features={step1_features}
-                        onClick={() => onSelect('neonDrawing')}
-                        accentColor="cyan"
-                    />
+    return (
+        <div className="creation-modal-overlay" onClick={handleOverlayClick}>
+            <div className="creation-modal-content">
+                <div className="creation-modal-inner">
+                    <button onClick={onClose} className="creation-modal-close-button">
+                        ×
+                    </button>
+                    <h2 className="creation-modal-title">作成方法を選択</h2>
+                    <ProcessRoute />
+                    <div className="creation-modal-choices">
+                        <ChoiceBox
+                            stepTitle="STEP0"
+                            title="テキスト下絵を生成"
+                            description="文字テキストのLEDネオンサインを作成したい方向け"
+                            features={step0_features}
+                            note="※生成したテキスト下絵は背景画像としてSTEP1の背景画像に読み込まれます"
+                            onClick={() => onSelect('textGeneration')}
+                            accentColor="yellow"
+                        />
+                        <ChoiceBox
+                            stepTitle="STEP1"
+                            title="配置を決定"
+                            description="完全オリジナルでLEDネオン作成したい方向け"
+                            features={step1_features}
+                            onClick={() => onSelect('neonDrawing')}
+                            accentColor="cyan"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -3574,7 +3587,7 @@ const quantizeColors = (pixels, k) => {
       )}
 
       {/* 作成方法選択モーダル */}
-      {showCreationModal && <CreationModal isOpen={showCreationModal} onSelect={(pageName) => {
+      {showCreationModal && <CreationModal isOpen={showCreationModal} onClose={() => setShowCreationModal(false)} onSelect={(pageName) => {
         setShowCreationModal(false);
         setCurrentPage(pageName);
       }} />}

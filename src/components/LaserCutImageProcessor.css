@@ -1,6 +1,6 @@
 /* LaserCutImageProcessor.css */
 
-/* CreationModal スタイル */
+/* --- CreationModal スタイル（neon-guide-modal参考） --- */
 .creation-modal-overlay {
   position: fixed;
   top: 0;
@@ -10,38 +10,86 @@
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 16px;
-  z-index: 2334;
+  align-items: center;
+  z-index: 2147483647;
   animation: fadeIn 0.3s ease-out;
   isolation: isolate;
 }
 
-.creation-modal-container {
-  background: linear-gradient(145deg, #0a0a0a, #141414);
-    border: 1px solid #222;
-    border-radius: 16px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
-                0 0 0 1px rgba(255, 255, 255, 0.05);
-    margin: 0;
-    padding: 40px;
-    width: 1100px;
-    height: 800px;
-    overflow-y: auto;
-    position: relative;
-    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.creation-modal-content {
+  background: linear-gradient(145deg,rgb(5, 5, 5), #141414);
+  border: 1px solid #222;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+  margin: 0;
+  padding: 0;
+  width: 1100px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.creation-modal-inner {
+  padding: 40px;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.creation-modal-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.creation-modal-close-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .creation-modal-title {
   font-size: 30px;
   font-weight: bold;
   text-align: center;
-  color:rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
   margin-bottom: 48px;
   margin-top: 0px;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- プロセスルート --- */
 .creation-modal-process-route {
   margin-bottom: 48px;
 }
@@ -50,91 +98,111 @@
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 32px;
-  color:rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
   letter-spacing: 0.05em;
-  margin-right: 880px;
 }
 
-.creation-modal-process-steps {
+/* ドット型プログレス */
+.creation-modal-progress-container {
+  position: relative;
+  margin-bottom: 2.5rem;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.creation-modal-progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.creation-modal-progress-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #374151;
+  border: 2px solid #374151;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0.75rem;
+}
+
+.creation-modal-progress-step.step-0 .creation-modal-progress-dot {
+  background-color: #fde047;
+  border-color: #fde047;
+  box-shadow: 0 0 15px rgba(253, 224, 71, 0.4);
+}
+
+.creation-modal-progress-step.step-1 .creation-modal-progress-dot {
+  background-color: #22d3ee;
+  border-color: #22d3ee;
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+}
+
+.creation-modal-progress-connector {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background-color: #374151;
+  z-index: 1;
+}
+
+.creation-modal-progress-step:last-child .creation-modal-progress-connector {
+  display: none;
+}
+
+.creation-modal-progress-step.step-0 .creation-modal-progress-connector {
+  background: linear-gradient(90deg, #fde047 0%, #374151 100%);
+}
+
+.creation-modal-progress-step.step-1 .creation-modal-progress-connector {
+  background: linear-gradient(90deg, #22d3ee 0%, #374151 100%);
+}
+
+/* ステップラベル */
+.creation-modal-steps-labels {
+  display: flex;
   justify-content: space-between;
   text-align: center;
 }
 
-.creation-modal-process-step {
+.creation-modal-step-label {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 160px;
+  gap: 0.25rem;
 }
 
-.creation-modal-step-number {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 22px;
-  height: 16px;
-  transition: all 0.3s;
-  opacity: 0.7;
+.creation-modal-step-num {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
 }
 
-.creation-modal-process-step:hover .creation-modal-step-number {
-  opacity: 1;
+.creation-modal-step-num.step-0 {
+  color: #fde047;
 }
 
-.creation-modal-step-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(31, 41, 55, 0.8);
-  border: 2px solid #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s;
-}
-
-.creation-modal-process-step:hover .creation-modal-step-icon {
-  border-color: currentColor;
-}
-
-.creation-modal-step-icon-svg {
-  width: 32px;
-  height: 32px;
-  transition: all 0.3s;
-  opacity: 0.9;
-}
-
-.creation-modal-process-step:hover .creation-modal-step-icon-svg {
-  opacity: 1;
+.creation-modal-step-num.step-1 {
+  color: #22d3ee;
 }
 
 .creation-modal-step-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  height: 16px;
-  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #d1d5db;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
-.creation-modal-step-description {
-  font-size: 13px;
-  color: #ccc;
-  white-space: pre-line;
-  margin-top: 22px;
-  width: 260px;
-}
-
-.creation-modal-step-divider {
-  flex: 1;
-  height: 1px;
-  background: rgba(75, 85, 99, 1);
-  margin-top: 85px;
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
+/* --- 選択肢ボックス --- */
 .creation-modal-choices {
   display: flex;
   flex-direction: column;
@@ -158,6 +226,9 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
 }
 
 .creation-modal-choice-box:hover {
@@ -166,6 +237,15 @@
   transform: translateY(-4px);
 }
 
+.creation-modal-choice-box-yellow:hover {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 30px 0px rgba(251, 191, 36, 0.2);
+}
+
+.creation-modal-choice-box-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 30px 0px rgba(34, 211, 238, 0.2);
+}
 
 .creation-modal-choice-title {
   font-size: 1.5rem;
@@ -179,32 +259,12 @@
   margin-right: 12px;
 }
 
-.step-text-color {
-  color: rgb(226, 226, 226);
+.creation-modal-choice-step.step-yellow { 
+  color: #fde047; 
 }
 
-.modal-step-text-yellow {
-  color: #6b7280 ;
-}
-
-.step-layout-color {
-  color: rgba(255, 255, 255, 1);
-}
-
-.step-customize-color {
-  color: rgba(255, 255, 255, 1);
-}
-
-.step-preview-color {
-  color: rgba(255, 255, 255, 1);
-}
-
-.step-delivery-color {
-  color: rgba(255, 255, 255, 1);
-}
-
-.modal-step-text-cyan {
-  color: #6b7280 ;
+.creation-modal-choice-step.step-cyan { 
+  color: #22d3ee; 
 }
 
 .creation-modal-choice-description {
@@ -221,15 +281,13 @@
   gap: 20px;
   flex: 1;
   margin-bottom: 24px;
-  white-space: nowrap;
+  justify-content: flex-start;
 }
 
 .creation-modal-choice-feature {
   display: flex;
   align-items: flex-start;
   min-height: 32px;
-  
-  
 }
 
 .creation-modal-choice-check-icon {
