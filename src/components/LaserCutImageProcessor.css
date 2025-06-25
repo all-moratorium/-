@@ -1,5 +1,248 @@
 /* LaserCutImageProcessor.css */
 
+/* CreationModal スタイル */
+.creation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 2334;
+  animation: fadeIn 0.3s ease-out;
+  isolation: isolate;
+}
+
+.creation-modal-container {
+  background: linear-gradient(145deg, #0a0a0a, #141414);
+    border: 1px solid #222;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+    margin: 0;
+    padding: 40px;
+    width: 1000px;
+    height: 1000px;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.creation-modal-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  text-align: center;
+  color: rgba(243, 244, 246, 1);
+  margin-bottom: 48px;
+  letter-spacing: 0.025em;
+}
+
+.creation-modal-process-route {
+  margin-bottom: 48px;
+}
+
+.creation-modal-process-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: rgba(209, 213, 219, 1);
+  letter-spacing: 0.05em;
+}
+
+.creation-modal-process-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.creation-modal-process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px;
+}
+
+.creation-modal-step-number {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  height: 16px;
+  transition: all 0.3s;
+  opacity: 0.7;
+}
+
+.creation-modal-process-step:hover .creation-modal-step-number {
+  opacity: 1;
+}
+
+.creation-modal-step-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(31, 41, 55, 0.5);
+  border: 2px solid rgba(75, 85, 99, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.creation-modal-process-step:hover .creation-modal-step-icon {
+  border-color: currentColor;
+}
+
+.creation-modal-step-icon-svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  opacity: 0.8;
+}
+
+.creation-modal-process-step:hover .creation-modal-step-icon-svg {
+  opacity: 1;
+}
+
+.creation-modal-step-title {
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: rgba(243, 244, 246, 1);
+  height: 40px;
+}
+
+.creation-modal-step-description {
+  font-size: 0.75rem;
+  color: rgba(156, 163, 175, 1);
+  white-space: pre-line;
+  margin-top: 8px;
+}
+
+.creation-modal-step-divider {
+  flex: 1;
+  height: 1px;
+  background: rgba(75, 85, 99, 1);
+  margin-top: 58px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.creation-modal-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .creation-modal-choices {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+  }
+}
+
+.creation-modal-choice-box {
+  flex: 1;
+  background: rgba(17, 24, 39, 0.4);
+  padding: 32px;
+  border-radius: 12px;
+  text-align: left;
+  border: 1px solid rgba(31, 41, 55, 1);
+  transform: scale(1);
+  transition: all 0.3s;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.creation-modal-choice-box:hover {
+  background: rgba(17, 24, 39, 0.6);
+  transform: translateY(-8px);
+}
+
+.creation-modal-choice-box-yellow:hover {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 30px 0px rgba(255, 215, 0, 0.2);
+}
+
+.creation-modal-choice-box-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 30px 0px rgba(0, 200, 255, 0.2);
+}
+
+.creation-modal-choice-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: rgba(243, 244, 246, 1);
+}
+
+.creation-modal-choice-step {
+  margin-right: 12px;
+}
+
+.text-yellow-400 {
+  color: rgba(251, 191, 36, 1);
+}
+
+.text-cyan-400 {
+  color: rgba(34, 211, 238, 1);
+}
+
+.text-pink-400 {
+  color: rgba(244, 114, 182, 1);
+}
+
+.text-green-400 {
+  color: rgba(74, 222, 128, 1);
+}
+
+.text-gray-400 {
+  color: rgba(156, 163, 175, 1);
+}
+
+.creation-modal-choice-description {
+  font-size: 0.875rem;
+  color: rgba(156, 163, 175, 1);
+  margin-bottom: 24px;
+}
+
+.creation-modal-choice-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.creation-modal-choice-feature {
+  display: flex;
+  align-items: flex-start;
+}
+
+.creation-modal-choice-check-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  margin-top: 4px;
+  flex-shrink: 0;
+  color: rgba(74, 222, 128, 1);
+}
+
+.creation-modal-choice-feature-text {
+  font-size: 1rem;
+  color: rgba(209, 213, 219, 1);
+}
+
+.creation-modal-choice-note {
+  font-size: 0.75rem;
+  color: rgba(107, 114, 128, 1);
+  margin-top: 24px;
+}
+
 /* モーダル関連のスタイル */
 
 

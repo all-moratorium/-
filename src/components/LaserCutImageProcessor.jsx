@@ -355,6 +355,144 @@ const MemoizedOriginalUiContent = memo(({
   );
 });
 
+// CreationModal コンポーネント
+const CheckIcon = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const TextIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18H3"/><path d="M4 7V5h16v2"/></svg>
+);
+const LayoutIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+);
+const CustomizeIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.22 4.22 1.42 1.42"/><path d="m18.36 18.36 1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.22 19.78 1.42-1.42"/><path d="m18.36 5.64 1.42-1.42"/></svg>
+);
+const Preview3DIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21 17-8-4-8 4"/><path d="m21 9-8-4-8 4"/><path d="M3 13v6l8 4 8-4v-6"/><path d="M3 5v6l8 4 8-4V5"/></svg>
+);
+const DeliveryIcon = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+);
+
+const ProcessRoute = () => {
+    const steps = [
+        { num: 'STEP 0', title: 'テキスト下絵を生成', description: null, icon: TextIcon, color: 'text-yellow-400' },
+        { num: '1', title: '配置を決定', description: null, icon: LayoutIcon, color: 'text-cyan-400' },
+        { num: '2', title: '色 / 仕様のカスタマイズ', description: 'チューブごとに色太さを\n個別設定可能', icon: CustomizeIcon, color: 'text-pink-400' },
+        { num: '3', title: '3Dモデル確認 & 注文', description: '作成したLEDネオンサインの鮮明\nな3DCGモデルを閲覧可能', icon: Preview3DIcon, color: 'text-green-400' },
+        { num: '製作 / お届け', title: '最短5日で出荷', description: '配線、組み立て / 品質検査\n納品', icon: DeliveryIcon, color: 'text-gray-400' }
+    ];
+
+    return (
+        <div className="creation-modal-process-route">
+            <h3 className="creation-modal-process-title">作成プロセス</h3>
+            <div className="creation-modal-process-steps">
+                {steps.map((step, index) => (
+                    <React.Fragment key={index}>
+                        <div className="creation-modal-process-step">
+                            <p className={`creation-modal-step-number ${step.color}`}>{step.num}</p>
+                            <div className={`creation-modal-step-icon ${step.color}`}>
+                               <step.icon className={`creation-modal-step-icon-svg ${step.color}`} />
+                            </div>
+                            <p className="creation-modal-step-title">{step.title}</p>
+                            {step.description && (
+                                <p className="creation-modal-step-description">{step.description}</p>
+                            )}
+                        </div>
+                        {index < steps.length - 1 && (
+                            <div className="creation-modal-step-divider"></div>
+                        )}
+                    </React.Fragment>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+function ChoiceBox({ stepTitle, title, description, features, note, onClick, accentColor }) {
+    const colorClass = accentColor === 'yellow' ? 'creation-modal-choice-box-yellow' : 'creation-modal-choice-box-cyan';
+
+    return (
+        <button
+            onClick={onClick}
+            className={`creation-modal-choice-box ${colorClass}`}
+        >
+            <h3 className="creation-modal-choice-title">
+                <span className={`creation-modal-choice-step ${accentColor === 'yellow' ? 'text-yellow-400' : 'text-cyan-400'}`}>{stepTitle}</span>
+                {title}
+            </h3>
+            <p className="creation-modal-choice-description">{description}</p>
+            
+            <div className="creation-modal-choice-features">
+                {features.map((feature, index) => (
+                    <div key={index} className="creation-modal-choice-feature">
+                        <CheckIcon className="creation-modal-choice-check-icon" />
+                        <span className="creation-modal-choice-feature-text">{feature}</span>
+                    </div>
+                ))}
+            </div>
+
+            {note && (
+                 <p className="creation-modal-choice-note">{note}</p>
+            )}
+        </button>
+    );
+}
+
+function CreationModal({ isOpen, onSelect }) {
+    if (!isOpen) return null;
+
+    const step0_features = [
+        'テキストテンプレートから素早く下絵を作成。',
+        '即座にプロ仕様のテキストLEDネオンサインが完成。',
+        '65種類以上のフォント選択と、直感的な操作。'
+    ];
+    
+    const step1_features = [
+        'オリジナルデザインのLEDネオンサインを作成',
+        '下絵画像読み込みで多彩な表現が可能。',
+        'リアルタイム寸法確認、デザイン保存機能搭載。',
+        'STEP0で読み込まれた画像をチューブパス化。'
+    ];
+
+    return (
+        <div className="creation-modal-overlay">
+            <div className="creation-modal-container">
+                <h2 className="creation-modal-title">
+                    作成方法を選択
+                </h2>
+
+                <ProcessRoute />
+                
+                <div className="creation-modal-choices">
+                    <ChoiceBox
+                        stepTitle="STEP0"
+                        title="テキスト下絵を生成"
+                        description="文字テキストのLEDネオンサインを作成したい方向け"
+                        features={step0_features}
+                        note="※生成したテキスト下絵は背景画像としてSTEP1の背景画像に読み込まれます"
+                        onClick={() => onSelect('textGeneration')}
+                        accentColor="yellow"
+                    />
+                    
+                    <ChoiceBox
+                        stepTitle="STEP1"
+                        title="配置を決定"
+                        description="完全オリジナルでLEDネオン作成したい方向け"
+                        features={step1_features}
+                        onClick={() => onSelect('neonDrawing')}
+                        accentColor="cyan"
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const LaserCutImageProcessor = () => {
   // UI state variables
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'textGeneration', 'info', 'neonDrawing', 'customize', 'neonSvg3dPreview'
@@ -3436,104 +3574,10 @@ const quantizeColors = (pixels, k) => {
       )}
 
       {/* 作成方法選択モーダル */}
-      {showCreationModal && (
-        <div className="modal-overlay show">
-          <div className="modal-content">
-            <div className="modal-content-inner">
-              <h2 style={{color: '#fff', textAlign: 'center', marginBottom: '30px'}}>
-                作成方法を選択してください
-              </h2>
-              
-              <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
-                <button
-                  onClick={() => {
-                    setShowCreationModal(false);
-                    setCurrentPage('textGeneration');
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #FFFF00, #FFD700)',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '25px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 0 15px rgba(255, 255, 0, 0.3)',
-                    color: '#000',
-                    fontWeight: 'bold',
-                    textAlign: 'left'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #FFD700, #FFC107)';
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.5)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #FFFF00, #FFD700)';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 0 15px rgba(255, 255, 0, 0.3)';
-                  }}
-                >
-                  <div style={{fontSize: '20px', fontWeight: 'bold', marginBottom: '8px'}}>
-                    📝 テキストから下絵を生成
-                  </div>
-                  <div style={{fontSize: '14px', marginBottom: '8px', color: '#333'}}>
-                    高速テキスト生成 - フォント選択とエフェクト適用で即座にプロ仕様の文字デザインを作成
-                  </div>
-                  <div style={{fontSize: '12px', color: '#666'}}>
-                    65種類以上のフォント選択 / 作成したフォントテキストは背景画像として下絵に取込まれます
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setShowCreationModal(false);
-                    setCurrentPage('neonDrawing');
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #00FFFF, #00CCCC)',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '25px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 0 15px rgba(0, 255, 255, 0.3)',
-                    color: '#000',
-                    fontWeight: 'bold',
-                    textAlign: 'left'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #33FFFF, #00DDDD)';
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.5)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #00FFFF, #00CCCC)';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.3)';
-                  }}
-                >
-                  <div style={{fontSize: '20px', fontWeight: 'bold', marginBottom: '8px'}}>
-                    ✏️ ネオンチューブパスを描画
-                  </div>
-                  <div style={{fontSize: '14px', marginBottom: '8px', color: '#333'}}>
-                    アート・ロゴ・特注品に最適 - オリジナリティ追求システム
-                  </div>
-                  <div style={{fontSize: '12px', color: '#666'}}>
-                    手描き&画像取込みによるあなただけの自作可能な無制限カスタムデザイン制作 / テキストから生成で読み込まれた画像をチューブパス化
-                  </div>
-                </button>
-              </div>
-              
-              <button 
-                onClick={() => setShowCreationModal(false)}
-                className="modal-confirm-button"
-              >
-                キャンセル
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {showCreationModal && <CreationModal isOpen={showCreationModal} onSelect={(pageName) => {
+        setShowCreationModal(false);
+        setCurrentPage(pageName);
+      }} />}
   
       <style>{`
         @keyframes spin {
