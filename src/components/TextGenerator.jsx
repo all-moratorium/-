@@ -213,7 +213,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         const textHeight = fontSize;
         
         // 表示領域の定義（キャンバス内の四角形エリア）
-        const rightSidebarWidth = Math.min(window.innerWidth * 0.27, 650); // 右サイドバー（27%、最大650px）
+        const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
         const leftSidebarWidth = 250; // 左サイドバー（固定幅）
         const availableCanvasWidth = canvas.width - rightSidebarWidth - leftSidebarWidth;
         
@@ -239,7 +239,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // 表示領域に収まるようにスケール調整
         const scaleByWidth = displayAreaWidth / maxLineWidth;
         const scaleByHeight = displayAreaHeight / totalTextHeight;
-        const scale = Math.min(scaleByWidth, scaleByHeight, 5); // 5倍まで許可
+        const scale = Math.min(scaleByWidth, scaleByHeight, 4); // 5倍まで許可
     
         // 中央位置計算
         const centerX = displayAreaLeft + displayAreaWidth / 2;

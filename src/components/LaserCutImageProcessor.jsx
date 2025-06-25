@@ -387,8 +387,8 @@ const DeliveryIcon = (props) => (
 // --- プロセスルートコンポーネント ---
 const ProcessRoute = () => {
     const steps = [
-        { num: 'STEP 0', title: 'テキスト下絵を生成' },
-        { num: 'STEP 1', title: '配置を決定' },
+        { num: 'STEP 0', title: 'テキストから生成' },
+        { num: 'STEP 1', title: '画像 / 下絵から生成' },
         { num: 'STEP 2', title: '色 / 仕様のカスタマイズ' },
         { num: 'STEP 3', title: '3Dモデル確認 & 注文' },
         { num: '制作 / 出荷', title: '最短5日で出荷' }
@@ -484,7 +484,7 @@ function CreationModal({ isOpen, onSelect, onClose }) {
                     <div className="creation-modal-choices">
                         <ChoiceBox
                             stepTitle="STEP0"
-                            title="テキスト下絵を生成"
+                            title="テキストから生成"
                             description="文字テキストのLEDネオンサインを作成したい方向け"
                             features={step0_features}
                             note="※生成したテキスト下絵は背景画像としてSTEP1の背景画像に読み込まれます"
@@ -493,7 +493,7 @@ function CreationModal({ isOpen, onSelect, onClose }) {
                         />
                         <ChoiceBox
                             stepTitle="STEP1"
-                            title="配置を決定"
+                            title="画像 / 下絵から生成"
                             description="完全オリジナルでLEDネオン作成したい方向け"
                             features={step1_features}
                             onClick={() => onSelect('neonDrawing')}

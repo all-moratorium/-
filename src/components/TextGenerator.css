@@ -34,15 +34,15 @@
     top: 0;
     right: 0;
     box-sizing: border-box;
-    width: 27%;
-    max-width: 650px;
+    width: 24%;
+    max-width: 500px;
     height: 100vh;
     background-color: #242424;
     border-left: 1px solid #333;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 9px;
     z-index: 1000;
     overflow-y: auto;
 }
@@ -176,57 +176,50 @@
 
 /* テキスト入力ツールタイトル */
 .text-input-tools-title {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     color: #d1d5db;
-    margin-bottom: 16px;
-    margin-top: 55px;
+    margin-bottom: 12px;
+    margin-top: 36px;
     text-align: center;
 }
 
 /* フォントプレビューツールタイトル */
 .font-preview-tools-title {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     color: #d1d5db;
-    margin-bottom: 16px;
-    margin-top: 35px;
+    margin-bottom: 12px;
+    margin-top: 30px;
     text-align: center;
 }
 
 /* 文字間隔調整ツールタイトル */
-.letter-spacing-tools-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #d1d5db;
-    margin-bottom: 16px;
-    margin-top: 35px;
-    text-align: center;
-}
+
 
 /* Font Preview Styles */
 .font-preview-container {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .font-preview-container h3 {
     color: #fff;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .font-preview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 9px;
     max-height: 600px;
     height: 35vh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 8px;
     background: #2a2a2a;
-    padding: 12px;
+    padding: 9px;
 }
 
 .font-item-wrapper {
@@ -237,12 +230,12 @@
 
 .font-preview-item {
     background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
     box-sizing: border-box;
-    height: 85px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -283,7 +276,7 @@
 
 .font-preview-text {
     color:rgb(0, 0, 0);
-    font-size: 36px;
+    font-size: 26px;
     line-height: 1.9;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -291,7 +284,7 @@
     transition: all 0.2s ease;
     text-align: center;
     overflow: hidden;
-    width: 180px;
+    width: 113px;
    
     
 }
@@ -318,9 +311,9 @@
 }
 
 .font-tag {
-    font-size: 11px;
-    padding: 4px 6px;
-    border-radius: 6px;
+    font-size: 8px;
+    padding: 2px 3px;
+    border-radius: 4px;
     background: rgba(0, 0, 0, 0.8);
     color: #ffffff;
     font-weight: 600;
@@ -373,14 +366,15 @@
 }
 
 .text-input {
-    padding: 20px 24px;
+    padding: 8px 8px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
+   
     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     color:rgb(0, 0, 0);
-    font-size: 23px;
+    font-size: 18px;
     font-weight: 500;
-    height: 140px !important;
+    height: 80px !important;
     box-shadow: 
         0 2px 8px rgba(0,0,0,0.04),
         0 1px 3px rgba(0,0,0,0.08),
@@ -391,27 +385,9 @@
     box-sizing: border-box;
     overflow: auto;
     margin: 0 auto;
+    margin-bottom: 1px;
 }
 
-.font-select {
-    padding: 20px 24px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    color: #2c3e50;
-    font-size: 25px;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 60px;
-    box-shadow: 
-        0 2px 8px rgba(0,0,0,0.04),
-        0 1px 3px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.9);
-    letter-spacing: 0.5px;
-    resize: none;
-    width: 97%;
-    box-sizing: border-box;
-}
 
 .text-input:focus,
 .text-input:hover,
@@ -429,28 +405,31 @@
 
 /* テキスト入力ヘルプ */
 .text-input-help {
-    margin-top: 8px;
-    padding: 8px 12px;
+    padding: 4px 10px;
     background-color: rgba(59, 130, 246, 0.1);
     border: 1px solid rgba(59, 130, 246, 0.3);
     border-radius: 6px;
     color: #3b82f6;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 500;
     line-height: 1.4;
+    width: 93%;
+    margin: 0 auto;
     text-align: center;
 }
 
 .character-limit-warning {
-    margin-top: 8px;
-    padding: 12px 16px;
+    padding: 6px 10px;
     background-color: #fff3cd;
     border: 1px solid #ffeaa7;
-    border-radius: 8px;
+    border-radius: 6px;
     color: #856404;
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 500;
     line-height: 1.4;
+    width: 93%;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .text-input::placeholder {
@@ -467,21 +446,21 @@
 /* 文字間隔スライダー */
 .letter-spacing-slider {
     width: 85%;
-    height: 8px;
-    border-radius: 4px;
+    height: 6px;
+    border-radius: 3px;
     background: #374151;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
     cursor: pointer;
     align-self: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .letter-spacing-slider::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: #ffff00;
     cursor: pointer;
@@ -490,8 +469,8 @@
 }
 
 .letter-spacing-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: #ffff00;
     cursor: pointer;
@@ -501,12 +480,12 @@
 
 /* 文字間隔ラベル */
 .letter-spacing-label {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: #d1d5db;
     text-align: center;
     margin-bottom: 10px;
-    margin-top: 32px;
+    margin-top: 22px;
 }
 
 .slider {
@@ -521,8 +500,8 @@
 
 .slider::-webkit-slider-thumb {
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: #ffff00;
     cursor: pointer;
@@ -552,12 +531,12 @@
 .text-generator-canvas-download-button {
     position: fixed;
     bottom: 3%;
-    left: calc(150px + (100vw - min(27vw, 650px) - 50px) / 2);
-    padding: 16px 24px;
+    left: calc(150px + (100vw - min(24vw, 500px) - 50px) / 2);
+    padding: 10px 16px;
     transform: translateX(-50%);
     border: 2px solid #ffffff;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 10px;
     font-weight: bold;
     cursor: pointer;
     background-color:rgb(85, 85, 85);
@@ -579,14 +558,15 @@
 /* 下絵作成ボタン */
 .text-generator-export-button {
     padding: 12px 24px;
+    margin-top: 20px;
     width: 90%;
-    height: 60px;
+    height: 47.2px;
     background-color: #FFFF00;
     color: #000;
     font-weight: bold;
     font-size: 1em;
     border-radius: 8px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     border: none;
     box-sizing: border-box;
     display: block;
