@@ -179,24 +179,32 @@
   margin-right: 12px;
 }
 
-.text-yellow-400 {
+.step-text-color {
+  color: rgb(226, 226, 226);
+}
+
+.modal-step-text-yellow {
+  color: #6b7280 ;
+}
+
+.step-layout-color {
   color: rgba(255, 255, 255, 1);
 }
 
-.text-cyan-400 {
+.step-customize-color {
   color: rgba(255, 255, 255, 1);
 }
 
-.text-pink-400 {
+.step-preview-color {
   color: rgba(255, 255, 255, 1);
 }
 
-.text-green-400 {
+.step-delivery-color {
   color: rgba(255, 255, 255, 1);
 }
 
-.text-gray-400 {
-  color: rgba(255, 255, 255, 1);
+.modal-step-text-cyan {
+  color: #6b7280 ;
 }
 
 .creation-modal-choice-description {

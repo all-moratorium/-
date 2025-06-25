@@ -380,11 +380,11 @@ const DeliveryIcon = (props) => (
 
 const ProcessRoute = () => {
     const steps = [
-        { num: 'STEP 0', title: 'テキスト下絵を生成', description: null, icon: TextIcon, color: 'text-yellow-400' },
-        { num: '1', title: '配置を決定', description: null, icon: LayoutIcon, color: 'text-cyan-400' },
-        { num: '2', title: '色 / 仕様のカスタマイズ', description: 'チューブごとに色太さを\n個別設定可能', icon: CustomizeIcon, color: 'text-pink-400' },
-        { num: '3', title: '3Dモデル確認 & 注文', description: '作成したLEDネオンサインの鮮明\nな3DCGモデルを閲覧可能', icon: Preview3DIcon, color: 'text-green-400' },
-        { num: '製作 / お届け', title: '最短5日で出荷', description: '配線、組み立て / 品質検査\n納品', icon: DeliveryIcon, color: 'text-gray-400' }
+        { num: 'STEP 0', title: 'テキスト下絵を生成', description: null, icon: TextIcon, color: 'step-text-color' },
+        { num: '1', title: '配置を決定', description: null, icon: LayoutIcon, color: 'step-layout-color' },
+        { num: '2', title: '色 / 仕様のカスタマイズ', description: 'チューブごとに色太さを\n個別設定可能', icon: CustomizeIcon, color: 'step-customize-color' },
+        { num: '3', title: '3Dモデル確認 & 注文', description: '作成したLEDネオンサインの鮮明\nな3DCGモデルを閲覧可能', icon: Preview3DIcon, color: 'step-preview-color' },
+        { num: '製作 / お届け', title: '最短5日で出荷', description: '配線、組み立て / 品質検査\n納品', icon: DeliveryIcon, color: 'step-delivery-color' }
     ];
 
     return (
@@ -422,7 +422,7 @@ function ChoiceBox({ stepTitle, title, description, features, note, onClick, acc
             className={`creation-modal-choice-box ${colorClass}`}
         >
             <h3 className="creation-modal-choice-title">
-                <span className={`creation-modal-choice-step ${accentColor === 'yellow' ? 'text-yellow-400' : 'text-cyan-400'}`}>{stepTitle}</span>
+                <span className={`creation-modal-choice-step ${accentColor === 'yellow' ? 'modal-step-text-yellow' : 'modal-step-text-cyan'}`}>{stepTitle}</span>
                 {title}
             </h3>
             <p className="creation-modal-choice-description">{description}</p>
