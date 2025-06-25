@@ -1691,8 +1691,11 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             setLastPanY(e.clientY);
         } else if (e.button === 0) { // 左クリック
             if (isModifyingPoints) {
-                let pointFound = false;
-                // 全てのパスの点をチェック
+                let closestPoint = null;
+                let closestDistance = Infinity;
+                const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                
+                // 全てのパスの点をチェックして最も近い点を見つける
                 for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
                     if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
                     for (let ptIdx = 0; ptIdx < paths[pathIdx].points.length; ptIdx++) {
@@ -1700,19 +1703,24 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         const distance = Math.sqrt(
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
-                        // 点のヒット判定
-                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
-                        if (distance < hitRadius) {
-                            setActivePoint({ pathIndex: pathIdx, pointIndex: ptIdx }); // アクティブな点を設定
-                            pointFound = true;
-                            break;
+                        // ヒット判定内で最も近い点を記録
+                        if (distance < hitRadius && distance < closestDistance) {
+                            closestDistance = distance;
+                            closestPoint = { pathIndex: pathIdx, pointIndex: ptIdx };
                         }
                     }
-                    if (pointFound) break;
+                }
+                
+                // 最も近い点があれば選択
+                if (closestPoint) {
+                    setActivePoint(closestPoint);
                 }
             } else if (isPathDeleteMode) { // パス削除モード
                 let pathToDeleteIdx = -1;
-                // 削除モード：パスの点をクリックしたらそのパス全体を削除
+                let closestDistance = Infinity;
+                const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                
+                // 削除モード：最も近い点が所属するパス全体を削除
                 for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
                     if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
                     for (let ptIdx = 0; ptIdx < paths[pathIdx].points.length; ptIdx++) {
@@ -1720,14 +1728,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         const distance = Math.sqrt(
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
-                        // 点のヒット判定
-                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
-                        if (distance < hitRadius) {
+                        // ヒット判定内で最も近い点を記録
+                        if (distance < hitRadius && distance < closestDistance) {
+                            closestDistance = distance;
                             pathToDeleteIdx = pathIdx;
-                            break;
                         }
                     }
-                    if (pathToDeleteIdx !== -1) break;
                 }
 
                 if (pathToDeleteIdx !== -1) {
@@ -1756,6 +1762,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 }
             } else if (isPointDeleteMode) { // 点削除モード
                 let pointToDelete = null;
+                let closestDistance = Infinity;
+                const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+                
+                // 最も近い点を見つけて削除
                 for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
                     if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
                     for (let ptIdx = 0; ptIdx < paths[pathIdx].points.length; ptIdx++) {
@@ -1763,13 +1773,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                         const distance = Math.sqrt(
                             Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
                         );
-                        const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
-                        if (distance < hitRadius) {
+                        // ヒット判定内で最も近い点を記録
+                        if (distance < hitRadius && distance < closestDistance) {
+                            closestDistance = distance;
                             pointToDelete = { pathIndex: pathIdx, pointIndex: ptIdx };
-                            break;
                         }
                     }
-                    if (pointToDelete) break;
                 }
 
                 if (pointToDelete) {

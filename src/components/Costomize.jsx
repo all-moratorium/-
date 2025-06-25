@@ -103,9 +103,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         cleanCanvas.width = maxDimension;
                         cleanCanvas.height = maxDimension;
                         
-                        // 背景色を設定（現在の背景色を使用）
-                        const currentBgColor = neonPower ? backgroundColor : backgroundColorOff;
-                        cleanCtx.fillStyle = currentBgColor;
+                        // 背景色を設定（商品情報用は常に黒背景）
+                        cleanCtx.fillStyle = '#000000';
                         cleanCtx.fillRect(0, 0, maxDimension, maxDimension);
                         
                         // キャンバス設定を適用
