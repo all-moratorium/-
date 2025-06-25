@@ -124,7 +124,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             const fillColor = pathColors[`${pathIndex}_fill`] || 'transparent';
                             console.log(`PNG生成 fillパス${pathIndex}: fillColor=${fillColor}`);
                             if (fillColor && fillColor !== 'transparent') {
-                                const opacity = neonPower ? 1.0 : 0.3;
+                                const opacity = 1.0; // プレビュー画像では常にグロー効果オン
                                 cleanCtx.save();
                                 cleanCtx.fillStyle = fillColor;
                                 cleanCtx.globalAlpha = opacity;
@@ -145,13 +145,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         // 2. ネオンチューブ（stroke）パスを後に描画
                         neonPaths.forEach((pathObj, pathIndex) => {
                             if (!pathObj || !pathObj.points || pathObj.points.length < 2 || pathObj.mode !== 'stroke') return;
+                            // 0.7cm以下の短いチューブは除外
+                            if (calculatePathLength(pathObj) / 25 * 10 <= 7) return;
                             
                             const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffff00';
                             const thickness = pathThickness[pathIndex] || 15;
-                            const opacity = neonPower ? 1.0 : 0.3;
+                            const opacity = 1.0; // プレビュー画像では常にグロー効果オン
                             console.log(`PNG生成 strokeパス${pathIndex}: color=${color} thickness=${thickness}`);
                             
-                            const currentBrightness = neonPower ? 100 : 30;
+                            const currentBrightness = 100; // プレビュー画像では常に最大輝度
                             drawNeonTube(
                                 cleanCtx, 
                                 pathObj.points, 
@@ -900,6 +902,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             console.log(`パス${pathIndex}: mode=${pathMode}, customThickness=${customThickness}, pathThickness=`, pathThickness);
 
             if (pathPoints.length < 2) return;
+            
+            // 0.7cm以下の短いstrokeパスは描画しない
+            if (pathMode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 <= 7) return;
 
             if (pathMode === 'stroke') {
                 let currentStrokeSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
@@ -1611,6 +1616,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const pathType = pathObj.type;
 
             if (pathPoints.length < 2) return;
+            
+            // 0.7cm以下の短いパスは描画しない
+            if (calculatePathLength(pathObj) / 25 * 10 <= 7) return;
 
             const strokeColor = pathColors[pathIndex] || neonColors.strokeLine;
             const strokeWidth = pathThickness[pathIndex] || neonLineWidths.strokeLine;
@@ -1830,17 +1838,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </div>
 
                     {/* ネオンチューブ設定 */}
-                    {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length > 0 && (
+                    {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7).length > 0 && (
                         <div className="neon-tube-settings">
                             <div className="neon-tube-header">
                                 <div className="neon-tube-title-container">
                                     <h3 className="neon-tube-title">
-                                        ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke').length}本)
+                                        ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7).length}本)
                                     </h3>
                                     <span className="tube-total-length-subtitle">
                                         合計長さ: {(Math.round(
                                             neonPaths
-                                                .filter(pathObj => pathObj && pathObj.mode === 'stroke')
+                                                .filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7)
                                                 .reduce((total, pathObj) => total + calculatePathLength(pathObj), 0) / 25 * 10
                                         ) / 10).toFixed(1)}cm
                                     </span>
@@ -1866,7 +1874,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             </div>
                             {!isTubeSettingsMinimized && neonPaths
                                 .map((pathObj, index) => ({ pathObj, originalIndex: index }))
-                                .filter(({ pathObj }) => pathObj && pathObj.mode === 'stroke')
+                                .filter(({ pathObj }) => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7)
                                 .sort((a, b) => calculatePathLength(b.pathObj) - calculatePathLength(a.pathObj))
                                 .map(({ pathObj, originalIndex }, sortedIndex) => (
                                     <div 

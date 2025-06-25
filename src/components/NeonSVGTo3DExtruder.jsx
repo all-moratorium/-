@@ -79,7 +79,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       const data = event.detail;
       if (data && data.paths) {
         // Calculate model data
-        const strokePaths = data.paths.filter(pathObj => pathObj && pathObj.mode === 'stroke');
+        const strokePaths = data.paths.filter(pathObj => {
+          if (!pathObj || pathObj.mode !== 'stroke') return false;
+          const lengthCm = calculatePathLength(pathObj) / 25 * 10;
+          return lengthCm > 0.7; // 0.7cm以下は除外
+        });
         const totalLengthPx = strokePaths.reduce((total, pathObj) => total + calculatePathLength(pathObj), 0);
         const totalLengthCm = Math.round(totalLengthPx / 25 * 10) / 10; // Convert px to cm
         
@@ -94,6 +98,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const thickness = data.pathThickness[pathIndex] || data.strokeWidthsPx?.strokeLine || 15;
           const lengthPx = calculatePathLength(pathObj);
           const lengthCm = Math.round(lengthPx / 25 * 10) / 10;
+          
+          // 0.7cm以下の短いパスはスキップ
+          if (lengthCm <= 0.7) return;
           
           if (thickness >= 20) {
             tubeLength8mm += lengthCm;
