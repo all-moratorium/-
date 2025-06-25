@@ -1667,7 +1667,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             newScale = scale / (1 + scaleAmount);
         }
 
-        newScale = Math.max(0.1, Math.min(newScale, 10)); // 最小0.1倍、最大10倍に制限
+        newScale = Math.max(0.3, Math.min(newScale, 20)); // 最小0.3倍、最大20倍に制限
 
         // ズームの中心をマウスカーソルに合わせる
         setOffsetX(mouseX - (mouseX - offsetX) * (newScale / scale));
@@ -1869,6 +1869,14 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setOffsetX(canvasWidth / 2); // 原点(0,0)を画面中央に表示
         setOffsetY(canvasHeight / 2);
     }, [canvasWidth, canvasHeight]);
+
+    // コンポーネント初期化時に視点をリセット（ページ戻り時のズレ防止）
+    useEffect(() => {
+        if (canvasWidth > 0 && canvasHeight > 0) {
+            // 初回マウント時のみ視点をリセット
+            resetView();
+        }
+    }, [canvasWidth, canvasHeight, resetView]);
 
     const handleMouseClick = useCallback((e) => {
         // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、または土台モードで描画タイプ選択モーダルが表示されている場合は処理しない

@@ -3645,9 +3645,7 @@ const quantizeColors = (pixels, k) => {
                     </button>
                     <button className={currentPage === 'textGeneration' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('textGeneration')}>
                         <div className="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M7 17H2v-2h5v2zm0-8H2V7h5v2zm3-5V2H8v2h2zm0 2H8v2h2V6zm0 8H8v2h2v-2zm0 6H8v2h2v-2zm2-12V2h-2v2h2zm0 2h-2v2h2V6zm0 8h-2v2h2v-2zm0 6h-2v2h2v-2zm2-16V2h-2v2h2zm0 2h-2v2h2V6zm0 8h-2v2h2v-2zm0 6h-2v2h2v-2zm2-16V2h2v2h-2zm0 2h2v2h-2V6zm0 8h2v2h-2v-2zm0 6h2v2h-2v-2zm2-12V2h2v2h-2zm0 2h2v2h-2V6zm0 8h2v2h-2v-2zm0 6h2v2h-2v-2z"/>
-                            </svg>
+                            A
                         </div>
                         <span className="nav-text">テキストから生成</span>
                         <div className="tooltip">テキストから生成</div>
