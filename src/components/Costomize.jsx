@@ -95,8 +95,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         
                         // パディングを追加
                         const padding = 40;
-                        const modelWidth = (maxX - minX) * canvasSettings.scale + padding * 2;
-                        const modelHeight = (maxY - minY) * canvasSettings.scale + padding * 2;
+                        const modelWidth = (maxX - minX) + padding * 2;
+                        const modelHeight = (maxY - minY) + padding * 2;
                         
                         // アスペクト比を維持して正方形にする
                         const maxDimension = Math.max(modelWidth, modelHeight, 300); // 最小サイズ300px
@@ -114,8 +114,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         const modelCenterY = (minY + maxY) / 2;
                         
                         cleanCtx.save();
-                        cleanCtx.translate(centerX - modelCenterX * canvasSettings.scale, centerY - modelCenterY * canvasSettings.scale);
-                        cleanCtx.scale(canvasSettings.scale, canvasSettings.scale);
+                        cleanCtx.translate(centerX - modelCenterX, centerY - modelCenterY);
                         
                         // 1. 土台（fill）パスを先に描画
                         neonPaths.forEach((pathObj, pathIndex) => {
@@ -235,7 +234,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
@@ -310,7 +309,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
 
     // プロジェクト読み込み機能
     const loadProjectFromFile = useCallback((event) => {
@@ -878,7 +877,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         } else {
             isInitializedRef.current = true;
         }
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, pathColors, pathThickness]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness]);
 
     const handleDownloadSVG = () => {
         if (!svgData || neonPaths.length === 0) {
@@ -1452,7 +1451,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         ctx.fillRect(visibleLeft - 1000, visibleTop - 1000, 
                      (visibleRight - visibleLeft) + 2000, (visibleBottom - visibleTop) + 2000);
 
-        // 無限グリッドを描画（ネオン下絵と全く同じコード）
+        // 無限グリッドを描画（グリッド間隔に応じて）
         if (showGrid) {
             const currentGridColor = neonPower ? gridColor : gridColorOff;
             ctx.strokeStyle = currentGridColor;
@@ -1502,7 +1501,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('1マス = 4cm', textX, textY);
+            ctx.fillText(`1マス = ${gridSize / 25}cm`, textX, textY);
             ctx.restore();
         }
 
@@ -1682,7 +1681,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, gridSize, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
 
     return (
         <div className="customize-app-container">
@@ -1773,6 +1772,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 {showGrid ? 'ON' : 'OFF'}
                             </button>
                         </div>
+                        
                        
                     </div>
 
@@ -2204,8 +2204,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             
                             const svgWidth = maxX - minX;
                             const svgHeight = maxY - minY;
-                            const svgWidthCm = (svgWidth / gridSize) * 4; // 100px = 4cm
-                            const svgHeightCm = (svgHeight / gridSize) * 4;
+                            const svgWidthCm = (svgWidth / 100) * 4; // 固定: 100px = 4cm (25px = 1cm)
+                            const svgHeightCm = (svgHeight / 100) * 4;
                             
                             setProcessing3DProgress(20);
                             setProcessing3DMessage('サイズ計算完了...');

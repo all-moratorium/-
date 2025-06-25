@@ -44,9 +44,9 @@ export const calculateSvgSizeCm = (paths, gridSize = 100) => {
     const svgWidth = maxX - minX;
     const svgHeight = maxY - minY;
     
-    // 100px = 4cm の比率で計算
-    const svgWidthCm = (svgWidth / gridSize) * 4;
-    const svgHeightCm = (svgHeight / gridSize) * 4;
+    // 100px = 4cm の比率で計算（固定）
+    const svgWidthCm = (svgWidth / 100) * 4;
+    const svgHeightCm = (svgHeight / 100) * 4;
     
     return { 
         width: Math.max(0, svgWidthCm), 

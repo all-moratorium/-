@@ -609,7 +609,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('1マス = 4cm', textX, textY);
+            ctx.fillText(`1マス = ${gridSize / 25}cm`, textX, textY);
             ctx.restore();
         }
 
@@ -2246,6 +2246,10 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 {showGrid ? 'ON' : 'OFF'}
                             </button>
                         </div>
+                        
+                        {/* グリッド間隔セレクタ */}
+                        
+                        
                         <div className="background-controls">
                             <span className="background-label">背景色</span>
                             <div className="background-color-picker-wrapper">
@@ -2264,6 +2268,51 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                             </div>
                         </div>
                     </div>
+                    <div className="grid-spacing-container">
+                            <label className="grid-spacing-label">間隔</label>
+                            <select 
+                                value={gridSize / 25} 
+                                onChange={(e) => {
+                                    const newGridSize = parseFloat(e.target.value) * 25;
+                                    setGridSize(newGridSize);
+                                    // グリッド設定変更時に保存
+                                    saveToLocalStorage();
+                                    if (onStateChange) {
+                                        const currentState = {
+                                            paths: paths,
+                                            currentPathIndex: currentPathIndex,
+                                            drawMode: drawMode,
+                                            drawingType: drawingType,
+                                            scale: scale,
+                                            offsetX: offsetX,
+                                            offsetY: offsetY,
+                                            backgroundImage: backgroundImage,
+                                            initialBgImageWidth: initialBgImageWidth,
+                                            initialBgImageHeight: initialBgImageHeight,
+                                            bgImageScale: bgImageScale,
+                                            bgImageX: bgImageX,
+                                            bgImageY: bgImageY,
+                                            bgImageOpacity: bgImageOpacity,
+                                            showGrid: showGrid,
+                                            gridSize: newGridSize,
+                                            gridOpacity: gridOpacity,
+                                            colors: colors,
+                                            lineWidths: lineWidths
+                                        };
+                                        onStateChange(currentState);
+                                    }
+                                }}
+                                className="grid-spacing-select"
+                            >
+                                <option value={0.5}>0.5cm</option>
+                                <option value={1}>1cm</option>
+                                <option value={2}>2cm</option>
+                                <option value={3}>3cm</option>
+                                <option value={4}>4cm</option>
+                                <option value={5}>5cm</option>
+                                <option value={10}>10cm</option>
+                            </select>
+                        </div>
 
                     <div className="view-controls">
                         <h3 className="reset-tools-title">リセット操作</h3>

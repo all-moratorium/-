@@ -378,7 +378,6 @@
     padding: 0px;
     padding-right: 46px;
     margin-top: 35px;
-    margin-bottom: 16px;
 }
 
 .background-controls {
@@ -1839,3 +1838,53 @@
     min-width: 60px;
 }
 
+.grid-spacing-select {
+    padding: 6px 8px;
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 85px;
+    outline: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="%23ffffff"><path d="M2 4l4 4 4-4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 36px;
+   
+}
+.grid-spacing-select:hover {
+    background-color: #555;
+    border-color: #777;
+}
+
+.grid-spacing-select:focus {
+    background-color: #444;
+    border-color: #777;
+    box-shadow: none;
+}
+
+.grid-spacing-select option {
+    background-color: #333;
+    color: #ffffff;
+    padding: 8px;
+    border: none;
+}
+.grid-spacing-label {
+    font-size: 14px;
+    color: #d1d5db;
+    margin-right: 6px;
+    font-weight: bold;
+}
+.grid-spacing-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 50px;
+    margin-bottom: 16px;
+}
