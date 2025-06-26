@@ -311,19 +311,27 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // フォント設定
         const fontFamily = getFontFamily(selectedFont);
         ctx.font = `${fontSize}px ${fontFamily}`;
-        
-        // テキストサイズを正確に測定
         ctx.letterSpacing = `${letterSpacing}px`;
-        const textMetrics = ctx.measureText(displayText);
+        
+        // 改行を考慮したテキスト全体のサイズ計算
+        const textLines = displayText.split('\n');
+        let maxLineWidth = 0;
+        textLines.forEach(line => {
+            const lineWidth = ctx.measureText(line).width;
+            if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+        });
+        
+        const lineHeight = fontSize * 1.2;
+        const totalTextHeight = fontSize + (textLines.length - 1) * lineHeight;
         
         // より正確なバウンディングボックスを計算
+        const textMetrics = ctx.measureText(displayText);
         const actualLeft = Math.abs(textMetrics.actualBoundingBoxLeft || 0);
-        const actualRight = textMetrics.actualBoundingBoxRight || textMetrics.width;
         const actualTop = textMetrics.actualBoundingBoxAscent || fontSize * 0.8;
         const actualBottom = textMetrics.actualBoundingBoxDescent || fontSize * 0.2;
         
-        const textWidth = actualLeft + actualRight;
-        const textHeight = actualTop + actualBottom;
+        const textWidth = maxLineWidth + actualLeft;
+        const textHeight = totalTextHeight + actualBottom;
         
         // 高解像度対応（8倍サイズで描画）
         const scale = 8;
@@ -340,12 +348,19 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // 背景を透明に（何も描画しない）
         ctx.clearRect(0, 0, textWidth + minPadding * 2, textHeight + minPadding * 2);
         
-        // テキストを描画（正確な位置に配置）
+        // 改行対応のテキスト描画
         ctx.font = `${fontSize}px ${fontFamily}`;
         ctx.fillStyle = '#000000';
         ctx.textBaseline = 'alphabetic';
         ctx.letterSpacing = `${letterSpacing}px`;
-        ctx.fillText(displayText, actualLeft + minPadding, actualTop + minPadding);
+        
+        textLines.forEach((line, index) => {
+            // 各行の幅を測定して中央揃え
+            const lineWidth = ctx.measureText(line).width;
+            const centerX = (textWidth + minPadding * 2) / 2 - lineWidth / 2;
+            const yPos = actualTop + minPadding + (index * lineHeight);
+            ctx.fillText(line, centerX, yPos);
+        });
         
         // 画像データを取得
         const dataURL = exportCanvas.toDataURL('image/png');
@@ -354,7 +369,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         window.dispatchEvent(new CustomEvent('navigateToNeonDrawing', {
             detail: {
                 backgroundImage: dataURL,
-                imageName: `${displayText}_text.png`,
+                imageName: `${displayText.replace(/\n/g, '_')}_text.png`,
                 resetView: true // 初期視点で表示
             }
         }));
@@ -379,19 +394,27 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // フォント設定
         const fontFamily = getFontFamily(selectedFont);
         ctx.font = `${fontSize}px ${fontFamily}`;
-        
-        // テキストサイズを正確に測定
         ctx.letterSpacing = `${letterSpacing}px`;
-        const textMetrics = ctx.measureText(displayText);
+        
+        // 改行を考慮したテキスト全体のサイズ計算
+        const textLines = displayText.split('\n');
+        let maxLineWidth = 0;
+        textLines.forEach(line => {
+            const lineWidth = ctx.measureText(line).width;
+            if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+        });
+        
+        const lineHeight = fontSize * 1.2;
+        const totalTextHeight = fontSize + (textLines.length - 1) * lineHeight;
         
         // より正確なバウンディングボックスを計算
+        const textMetrics = ctx.measureText(displayText);
         const actualLeft = Math.abs(textMetrics.actualBoundingBoxLeft || 0);
-        const actualRight = textMetrics.actualBoundingBoxRight || textMetrics.width;
         const actualTop = textMetrics.actualBoundingBoxAscent || fontSize * 0.8;
         const actualBottom = textMetrics.actualBoundingBoxDescent || fontSize * 0.2;
         
-        const textWidth = actualLeft + actualRight;
-        const textHeight = actualTop + actualBottom;
+        const textWidth = maxLineWidth + actualLeft;
+        const textHeight = totalTextHeight + actualBottom;
         
         // 高解像度対応（8倍サイズで描画）
         const scale = 8;
@@ -408,18 +431,25 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
         // 背景を透明に（何も描画しない）
         ctx.clearRect(0, 0, textWidth + minPadding * 2, textHeight + minPadding * 2);
         
-        // テキストを描画（正確な位置に配置）
+        // 改行対応のテキスト描画
         ctx.font = `${fontSize}px ${fontFamily}`;
         ctx.fillStyle = '#000000';
         ctx.textBaseline = 'alphabetic';
         ctx.letterSpacing = `${letterSpacing}px`;
-        ctx.fillText(displayText, actualLeft + minPadding, actualTop + minPadding);
+        
+        textLines.forEach((line, index) => {
+            // 各行の幅を測定して中央揃え
+            const lineWidth = ctx.measureText(line).width;
+            const centerX = (textWidth + minPadding * 2) / 2 - lineWidth / 2;
+            const yPos = actualTop + minPadding + (index * lineHeight);
+            ctx.fillText(line, centerX, yPos);
+        });
         
         // 画像をダウンロード
         const dataURL = exportCanvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = dataURL;
-        link.download = `${displayText}_font.png`;
+        link.download = `${displayText.replace(/\n/g, '_')}_font.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
