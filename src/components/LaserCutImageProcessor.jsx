@@ -455,7 +455,7 @@ function CreationModal({ isOpen, onSelect, onClose }) {
     const step0_features = [
         'テキストテンプレートから素早く下絵を作成',
         '即座にプロ仕様のテキストLEDネオンサインが完成',
-        '65種類以上のフォント選択と直感的な操作'
+        '60種類以上のフォント選択と直感的な操作'
     ];
     
     const step1_features = [
@@ -660,14 +660,14 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       }
       
       // 新しいデータURLを作成して追跡
-      const newDataURL = layeredCanvas.toDataURL();
+      const newDataURL = layeredCanvas.toDataURL('image/jpeg', 0.85);
       const trackedURL = dataURLManager.trackDataURL(newDataURL);
       setLayeredImageDataURL(trackedURL);
       
       // 使用済みのCanvasをプールに返却
       canvasPool.releaseCanvas(layeredCanvas);
     });
-  }, [layeredImageDataURL]);
+  }, []); // 🔥 循環依存を修正 - 依存関係から削除
   
   // カスタマイズページへの遷移イベントリスナー
   useEffect(() => {
@@ -1209,7 +1209,7 @@ const handleLayerSelectionForMerge = (layerIndex) => {
     };
     
     setLayers(updatedLayers);
-    createLayeredImageFromLayers(updatedLayers, width, height);
+    // 🔥 画像処理は3Dモデル生成時のみ実行
   };
   
   // Recalculate layer stacking after reordering
@@ -1311,8 +1311,7 @@ const handleLayerSelectionForMerge = (layerIndex) => {
     }
     
     setLayers(regeneratedLayersData);
-    createLayeredImageFromLayers(regeneratedLayersData, width, height);
-    // 🔥 createLayeredImageFromLayers は呼ばない - ボタン押下時のみ更新
+    // 🔥 画像処理は3Dモデル生成時のみ実行
   };
 
   // ドラッグ開始
@@ -1467,7 +1466,7 @@ const handleLayerSelectionForMerge = (layerIndex) => {
     };
     
     setLayers(updatedLayers);
-    createLayeredImageFromLayers(updatedLayers, width, height);
+    // 🔥 画像処理は3Dモデル生成時のみ実行
     
   };
   
@@ -2648,8 +2647,7 @@ const quantizeColors = (pixels, k) => {
       // when currentLayerIndex or layers change, including initialization to index 0.
     }
     
-    // Create and set layered image
-    createLayeredImageFromLayers(newLayers, width, height);
+    // 🔥 画像処理は3Dモデル生成時のみ実行
   };
   
   // メインモーダルを開く関数
@@ -3204,6 +3202,7 @@ const quantizeColors = (pixels, k) => {
           setAutoStart3DGeneration(true);
         }, 100);
         // 🔥 即座に最新のレイヤーデータでlayeredImageを更新
+        // 🔥 3Dモデル生成時に画像処理を実行
         if (layers.length > 0 && processCanvasRef.current) {
           const width = processCanvasRef.current.width;
           const height = processCanvasRef.current.height;

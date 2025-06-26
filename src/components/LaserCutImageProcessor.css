@@ -2478,6 +2478,7 @@ canvas {
   margin-bottom: 25px;
   width: 70%;
   height: auto;
+  object-fit: contain;
 }
 
 .image-caption {
