@@ -3351,6 +3351,7 @@ const quantizeColors = (pixels, k) => {
                           onChange={handleQuantityInputChange}
                           onBlur={handleQuantityInputBlur}
                           inputMode="numeric" // Helps mobile keyboards
+                          autocomplete="off"
                         />
                         <button type="button" onClick={incrementQuantity} className="quantity-modifier plus" aria-label="数量を増やす">+</button>
                       </div>
