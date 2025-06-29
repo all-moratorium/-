@@ -1920,11 +1920,23 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setPaths((prevPaths) => {
             const newPaths = [...prevPaths];
             let targetPath = newPaths[currentPathIndex];
+            let actualPathIndex = currentPathIndex;
 
-            // 現在のパスが存在しない、または空である場合、またはモード/タイプが現在の設定と異なる場合、初期化/再初期化する
-            if (!targetPath || targetPath.points.length === 0 || targetPath.mode !== drawMode || targetPath.type !== drawingType) {
+            // 現在のパスが存在しない、または空である場合は初期化
+            if (!targetPath || targetPath.points.length === 0) {
                 newPaths[currentPathIndex] = { points: [], mode: drawMode, type: drawingType };
-                targetPath = newPaths[currentPathIndex]; // 再代入して最新のパスを参照
+                targetPath = newPaths[currentPathIndex];
+            }
+            // 既存のパスがあるが、モード/タイプが異なる場合は新しいパスを作成
+            else if (targetPath.mode !== drawMode || targetPath.type !== drawingType) {
+                // 新しいパスを配列の最後に追加
+                const newPath = { points: [], mode: drawMode, type: drawingType };
+                newPaths.push(newPath);
+                actualPathIndex = newPaths.length - 1;
+                targetPath = newPaths[actualPathIndex];
+                
+                // currentPathIndexを新しいパスに更新
+                setCurrentPathIndex(actualPathIndex);
             }
 
             // 新しい点を追加
@@ -1936,8 +1948,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 setIsNewPathDisabled(false);
             }
             
-            // 点追加後の状態を履歴に保存
-            saveToHistory(newPaths, currentPathIndex, drawMode, drawingType); 
+            // 点追加後の状態を履歴に保存（実際のパスインデックスを使用）
+            saveToHistory(newPaths, actualPathIndex, drawMode, drawingType); 
             return newPaths;
         });
     }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal]); 
