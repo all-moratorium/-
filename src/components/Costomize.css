@@ -1408,6 +1408,25 @@ html, body {
     }
 }
 
+/* 色選択ボタンと色名のコンテナ */
+.color-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 色名テキストのスタイル */
+.color-name-text {
+    font-size: 10px;
+    color: #d1d5db;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 60px;
+    word-wrap: break-word;
+    font-weight: 500;
+}
+
 /* 3D処理進捗モーダル - LaserCutImageProcessorから完全コピー */
 .processing-overlay {
     position: fixed;
@@ -1694,4 +1713,192 @@ html, body {
 .project-load-btn:hover {
     background-color: #059669 !important;
     box-shadow: none !important;
+}
+
+/* ===== 太さ選択セクション（一括設定用） ===== */
+
+/* 太さ選択全体のコンテナ */
+.thickness-selection-container {
+    margin-bottom: 16px;
+}
+
+/* 「適用する太さを選択」タイトル部分 */
+.thickness-selection-title {
+    color: #d1d5db;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+}
+
+
+/* 太さ選択ボタン（6mm/8mm）*/
+.thickness-selection-button {
+    background-color: #6b7280;
+    color: white;
+    border: 1px solid #6b7280;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 80px;
+    transition: all 0.2s ease;
+}
+
+/* アクティブ状態の太さ選択ボタン */
+.thickness-selection-button.active {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* ホバー状態の太さ選択ボタン */
+.thickness-selection-button:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+}
+
+/* アクティブ状態のホバー */
+.thickness-selection-button.active:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+/* 色サンプルを見るボタン（個別チューブ色選択モーダル用） */
+.tube-color-sample-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+
+
+/* 個別チューブ色選択モーダルのキャンセルボタン */
+.tube-color-modal-cancel-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #dc2626;
+    border-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+
+
+/* 色サンプルを見るボタン（一括設定モーダル用） */
+.bulk-color-sample-button {
+    width: 100%;
+    padding: 6px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 12px;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+/* 一括設定モーダルの完了・キャンセルボタン */
+.bulk-modal-complete-button {
+    flex: 1;
+    padding: 10px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bulk-modal-complete-button:hover {
+    background-color:rgb(46, 197, 147);
+}
+
+.bulk-modal-cancel-button {
+    flex: 1;
+    padding: 10px;
+    background-color: #dc2626;
+    border-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bulk-modal-cancel-button:hover {
+    background-color: #ef4444;
+}
+
+/* 太さ選択セクション */
+.thickness-selection-container {
+    margin-bottom: 16px;
+}
+
+.thickness-selection-title {
+    color: #d1d5db;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.thickness-buttons-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+/* 太さ選択ボタンの基本スタイル */
+.thickness-selection-button {
+    background-color: #6b7280;
+    color: white;
+    border: 1px solid #6b7280;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 70px;
+    transition: all 0.2s ease;
+}
+
+/* ホバー状態 */
+.thickness-selection-button:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+}
+
+/* アクティブ状態（選択済み） */
+.thickness-selection-button.active {
+    background-color: #10b981;
+    border-color: #10b981;
+}
+
+/* アクティブ状態のホバー */
+.thickness-selection-button.active:hover {
+    background-color: #059669;
+    border-color: #059669;
 }

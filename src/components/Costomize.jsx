@@ -242,10 +242,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     }, [isTubeSettingsMinimized, saveCurrentState]);
 
     const neonPresetColors = [
-        '#ff0080', '#00ff80', '#8000ff', '#ff8000',
-        '#0080ff', '#ffff00', '#ff0040', '#40ff00',
-        '#00ffff', '#ff00ff', '#ffffff', '#ff4080'
+        '#ff0000', '#ffa500', '#ffff00', '#ffff80',
+        '#8cedae', '#87ceeb', '#0080ff', '#8000ff',
+        '#ff69b4', '#ffffff', '#f5f5dc', '#fff5e6'
     ];
+
+    // 色名のマッピング
+    const colorNameMap = {
+        '#fff5e6': 'ワームホワイト',
+        '#f5f5dc': 'ナチュラルホワイト',
+        '#ffffff': 'ホワイト',
+        '#ff0000': 'レッド',
+        '#ff69b4': 'ピンク',
+        '#ffa500': 'オレンジ',
+        '#ffff00': 'イエロー',
+        '#ffff80': 'レモンイエロー',
+        '#8cedae': 'グリーン',
+        '#87ceeb': 'アイスブルー',
+        '#0080ff': 'ブルー',
+        '#8000ff': 'パープル'
+    };
 
     // プロジェクト保存機能
     const saveProjectToFile = useCallback(() => {
@@ -1786,6 +1802,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 onClick={() => {
                                     setSelectedTubes(new Set());
                                     setIsCanvasSelectionMode(true);
+                                    setSidebarVisible(false); // サイドバーを閉じる
+                                    setShowBulkColorModal(true); // 直接モーダルを開く
                                 }}
                                 className="bulk-select-button"
                             >
@@ -2006,16 +2024,22 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         {/* ベースプレートの色設定 */}
                                         <div className="base-color-label">色の設定</div>
                                         <div className="base-color-options">
-                                            <button
-                                                className={`base-color-button transparent ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'active' : ''}`}
-                                                onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
-                                                title="透明"
-                                            />
-                                            <button
-                                                className={`base-color-button black ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
-                                                onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
-                                                title="黒"
-                                            />
+                                            <div className="color-button-container">
+                                                <button
+                                                    className={`base-color-button transparent ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'active' : ''}`}
+                                                    onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
+                                                    title="透明"
+                                                />
+                                                <span className="color-name-text">クリア</span>
+                                            </div>
+                                            <div className="color-button-container">
+                                                <button
+                                                    className={`base-color-button black ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
+                                                    onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
+                                                    title="黒"
+                                                />
+                                                <span className="color-name-text">ブラック</span>
+                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -2508,7 +2532,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         padding: '24px',
                         borderRadius: '12px',
                         border: 'none',
-                        minWidth: '320px',
+                        minWidth: '380px',
+                        maxWidth: '420px',
                         position: 'fixed',
                         right: '430px',
                         top: '20px',
@@ -2521,43 +2546,60 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(4, 1fr)',
-                            gap: '8px',
+                            gap: '12px',
                             marginBottom: '16px'
                         }}>
                             {neonPresetColors.map((color) => (
-                                <button
-                                    key={color}
-                                    style={{
-                                        width: '48px',
-                                        height: '48px',
-                                        backgroundColor: color,
-                                        border: pathColors[selectedPathIndex] === color ? '3px solid #ffffff' : '2px solid #6b7280',
-                                        borderRadius: '8px',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease',
-                                        transform: pathColors[selectedPathIndex] === color ? 'scale(1.1)' : 'scale(1)'
-                                    }}
-                                    onClick={() => {
-                                        handlePathColorChange(selectedPathIndex, color);
-                                        setShowColorModal(false);
-                                        setSelectedPathIndex(null);
-                                    }}
-                                />
+                                <div key={color} style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                }}>
+                                    <button
+                                        style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            backgroundColor: color,
+                                            border: pathColors[selectedPathIndex] === color ? '3px solid #ffffff' : '2px solid #6b7280',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease',
+                                            transform: pathColors[selectedPathIndex] === color ? 'scale(1.1)' : 'scale(1)'
+                                        }}
+                                        onClick={() => {
+                                            handlePathColorChange(selectedPathIndex, color);
+                                            setShowColorModal(false);
+                                            setSelectedPathIndex(null);
+                                        }}
+                                    />
+                                    <span style={{
+                                        fontSize: '10px',
+                                        color: '#d1d5db',
+                                        textAlign: 'center',
+                                        lineHeight: 1.2,
+                                        maxWidth: '60px',
+                                        wordWrap: 'break-word'
+                                    }}>
+                                        {colorNameMap[color]}
+                                    </span>
+                                </div>
                             ))}
                         </div>
                         <button
+                            className="tube-color-sample-button"
+                            onClick={() => {
+                                // 色サンプル表示の処理をここに追加予定
+                                console.log('色サンプルを見るボタンがクリックされました');
+                            }}
+                        >
+                            色サンプルを見る
+                        </button>
+                        <button
+                            className="tube-color-modal-cancel-button"
                             onClick={() => {
                                 setShowColorModal(false);
                                 setSelectedPathIndex(null);
-                            }}
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                backgroundColor: '#6b7280',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                cursor: 'pointer'
                             }}
                         >
                             キャンセル
@@ -2584,7 +2626,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             padding: '24px',
                             borderRadius: '12px',
                             border: 'none',
-                            width: '500px',
+                            width: '520px',
                             maxHeight: '80vh',
                             overflowY: 'auto',
                             position: 'fixed',
@@ -2600,7 +2642,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         {/* 選択されたチューブの表示 */}
                         <div style={{ marginBottom: '16px' }}>
                             <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
-                                選択中のチューブ ({selectedTubes.size}個)
+                                キャンバスをクリックしてチューブを選択 ({selectedTubes.size}本)
                             </h4>
                             <div style={{ 
                                 display: 'grid',
@@ -2650,7 +2692,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </div>
                         
                         {/* 色選択 */}
-                        {selectedTubes.size > 0 && (
+                        {(
                             <div style={{ marginBottom: '16px' }}>
                                 <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
                                     適用する色を選択
@@ -2658,42 +2700,74 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 <div style={{
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(4, 1fr)',
-                                    gap: '8px'
+                                    gap: '12px'
                                 }}>
                                     {neonPresetColors.map((color) => (
-                                        <button
-                                            key={color}
-                                            style={{
-                                                width: '48px',
-                                                height: '48px',
-                                                backgroundColor: color,
-                                                border: '2px solid #6b7280',
-                                                borderRadius: '8px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s ease'
-                                            }}
-                                            onClick={() => {
-                                                setSelectedBulkColor(color);
-                                                // 現在選択中の全チューブに色を適用
-                                                const newColors = {};
-                                                selectedTubes.forEach(index => {
-                                                    newColors[index] = color;
-                                                });
-                                                setPathColors(prev => ({ ...prev, ...newColors }));
-                                            }}
-                                        />
+                                        <div key={color} style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}>
+                                            <button
+                                                style={{
+                                                    width: '48px',
+                                                    height: '48px',
+                                                    backgroundColor: color,
+                                                    border: selectedBulkColor === color ? '3px solid #ffffff' : '2px solid #6b7280',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    transform: selectedBulkColor === color ? 'scale(1.1)' : 'scale(1)'
+                                                }}
+                                                onClick={() => {
+                                                    setSelectedBulkColor(color);
+                                                    // 現在選択中の全チューブに色を適用
+                                                    const newColors = {};
+                                                    selectedTubes.forEach(index => {
+                                                        newColors[index] = color;
+                                                    });
+                                                    setPathColors(prev => ({ ...prev, ...newColors }));
+                                                }}
+                                            />
+                                            <span style={{
+                                                fontSize: '10px',
+                                                color: '#d1d5db',
+                                                textAlign: 'center',
+                                                lineHeight: 1.2,
+                                                maxWidth: '60px',
+                                                wordWrap: 'break-word'
+                                            }}>
+                                                {colorNameMap[color]}
+                                            </span>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {/* 太さ選択 */}
-                        {selectedTubes.size > 0 && (
+                        {/* 色サンプルを見るボタン */}
+                        {(
                             <div style={{ marginBottom: '16px' }}>
-                                <h4 style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
+                                <button
+                                    className="bulk-color-sample-button"
+                                    onClick={() => {
+                                        // 色サンプル表示の処理をここに追加予定
+                                        console.log('一括設定モーダル: 色サンプルを見るボタンがクリックされました');
+                                    }}
+                                >
+                                    色サンプルを見る
+                                </button>
+                            </div>
+                        )}
+
+                        {/* 太さ選択 */}
+                        {(
+                            <div className="thickness-selection-container" style={{ marginBottom: '16px' }}>
+                                <h4 className="thickness-selection-title" style={{ color: '#d1d5db', marginBottom: '8px', fontSize: '14px' }}>
                                     適用する太さを選択
                                 </h4>
-                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                <div className="thickness-buttons-container" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
                                     <button
                                         onClick={() => {
                                             setSelectedBulkThickness(15);
@@ -2708,11 +2782,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             backgroundColor: selectedBulkThickness === 15 ? '#10b981' : '#6b7280',
                                             color: 'white',
                                             border: `1px solid ${selectedBulkThickness === 15 ? '#10b981' : '#6b7280'}`,
-                                            borderRadius: '4px',
-                                            padding: '8px 16px',
-                                            fontSize: '12px',
+                                            borderRadius: '6px',
+                                            padding: '10px 20px',
+                                            fontSize: '13px',
                                             cursor: 'pointer',
-                                            fontWeight: 'bold'
+                                            fontWeight: 'bold',
+                                            minWidth: '70px'
                                         }}
                                     >
                                         6mm
@@ -2731,11 +2806,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                             backgroundColor: selectedBulkThickness === 20 ? '#10b981' : '#6b7280',
                                             color: 'white',
                                             border: `1px solid ${selectedBulkThickness === 20 ? '#10b981' : '#6b7280'}`,
-                                            borderRadius: '4px',
-                                            padding: '8px 16px',
-                                            fontSize: '12px',
+                                            borderRadius: '6px',
+                                            padding: '10px 20px',
+                                            fontSize: '13px',
                                             cursor: 'pointer',
-                                            fontWeight: 'bold'
+                                            fontWeight: 'bold',
+                                            minWidth: '70px'
                                         }}
                                     >
                                         8mm
@@ -2744,9 +2820,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             </div>
                         )}
 
+
                         {/* 完了・キャンセルボタン */}
-                        <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
                             <button
+                                className="bulk-modal-complete-button"
                                 onClick={() => {
                                     // 完了: 現在の設定で確定
                                     setShowBulkColorModal(false);
@@ -2757,21 +2835,11 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     setOriginalPathSettings({}); // 元の設定データをクリア
                                     setSidebarVisible(true); // サイドバーを復活
                                 }}
-                                style={{
-                                    flex: 1,
-                                    padding: '10px',
-                                    backgroundColor: '#10b981',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '6px',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer'
-                                }}
                             >
                                 完了
                             </button>
                             <button
+                                className="bulk-modal-cancel-button"
                                 onClick={() => {
                                     // キャンセル: 全ての選択中チューブを元の設定に戻す
                                     selectedTubes.forEach(index => {
@@ -2794,17 +2862,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     setSelectedBulkColor(null);
                                     setOriginalPathSettings({}); // 元の設定データをクリア
                                     setSidebarVisible(true); // サイドバーを復活
-                                }}
-                                style={{
-                                    flex: 1,
-                                    padding: '10px',
-                                    backgroundColor: '#6b7280',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '6px',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer'
                                 }}
                             >
                                 キャンセル
