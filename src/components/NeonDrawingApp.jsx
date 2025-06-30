@@ -645,11 +645,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
 
             if (pathType === 'spline') { // スプライン描画
-                for (let i = 0; i < pathPoints.length - 1; i++) {
-                    const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                // 閉じたパスのスプライン補間のため、最後の点から最初の点への曲線も描画
+                for (let i = 0; i < pathPoints.length; i++) {
+                    const p0 = pathPoints[(i - 1 + pathPoints.length) % pathPoints.length];
                     const p1 = pathPoints[i];
-                    const p2 = pathPoints[i + 1];
-                    const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+                    const p2 = pathPoints[(i + 1) % pathPoints.length];
+                    const p3 = pathPoints[(i + 2) % pathPoints.length];
 
                     for (let t = 0; t <= segmentsPerCurve; t++) {
                         const step = t / segmentsPerCurve;
@@ -662,8 +663,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                 for (let i = 1; i < pathPoints.length; i++) {
                     ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
                 }
+                ctx.closePath();
             }
-            ctx.closePath();
             ctx.fill();
             
             // 境界線も描画
