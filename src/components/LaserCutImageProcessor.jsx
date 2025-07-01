@@ -833,6 +833,13 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       }
     };
     window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
+    
+    // カスタマイズで新しいファイルが読み込まれたときにcustomizeStateとcustomizeSvgDataをクリア
+    const handleClearCustomizeState = () => {
+      setCustomizeState(null);
+      setCustomizeSvgData(null); // ネオン下絵からのデータもクリア
+    };
+    window.addEventListener('clearCustomizeState', handleClearCustomizeState);
 
     return () => {
       window.removeEventListener('show3DPreview', handleShow3DPreview);
@@ -840,6 +847,7 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
       window.removeEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
       window.removeEventListener('sharedFileDataLoaded', handleSharedFileData);
+      window.removeEventListener('clearCustomizeState', handleClearCustomizeState);
     };
   }, []);
   

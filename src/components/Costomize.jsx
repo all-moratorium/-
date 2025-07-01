@@ -450,6 +450,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 // ファイルが読み込まれたことを記録
                 window.customizeFileWasLoaded = true;
 
+                // 新しいファイルが読み込まれたことをLaserCutImageProcessorに通知（customizeStateをクリアするため）
+                const clearStateEvent = new CustomEvent('clearCustomizeState');
+                window.dispatchEvent(clearStateEvent);
+
                 // ネオン下絵コンポーネントで共有するためのファイルデータをイベントで送信
                 if (projectData.neonPaths && projectData.neonPaths.length > 0) {
                     const sharedData = {
@@ -694,8 +698,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     useEffect(() => {
         loadCustomizeData();
         
-        // グローバルバックアップからの復元を試行（ファイルが読み込まれた場合はinitialStateより優先）
-        if (window.lastLoadedCustomizeProject && window.customizeFileWasLoaded && !svgData && neonPaths.length === 0) {
+        // グローバルバックアップからの復元を試行（ファイルが読み込まれた場合のみ）
+        if (window.lastLoadedCustomizeProject && window.customizeFileWasLoaded && neonPaths.length === 0) {
             const projectData = window.lastLoadedCustomizeProject;
             
             // データの復元
@@ -897,8 +901,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             if (svgData.canvasData) {
                 setCanvasSettings(svgData.canvasData);
                 
-                // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
-                const shouldUseInitialState = !window.customizeFileWasLoaded && initialState;
+                // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
+                const shouldUseInitialState = initialState;
                 if (svgData.canvasData.gridSize !== undefined && (!shouldUseInitialState || !initialState.gridSize)) {
                     setGridSize(svgData.canvasData.gridSize);
                 }
@@ -913,8 +917,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 }
             }
             
-            // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
-            const shouldUseInitialState = !window.customizeFileWasLoaded && initialState;
+            // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合のみ）
+            const shouldUseInitialState = initialState;
             if (svgData.colors && svgData.colors.background !== undefined && (!shouldUseInitialState || !initialState.backgroundColorOff)) {
                 setBackgroundColorOff(svgData.colors.background);
             }
@@ -924,7 +928,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 setGridColorOff(svgData.colors.grid);
             }
             
-            // パス別の初期色設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ設定）
+            // パス別の初期色設定（initialStateが無い場合のみ設定）
             if (!shouldUseInitialState || !initialState.pathColors || Object.keys(initialState.pathColors).length === 0) {
                 const initialColors = {};
                 const initialThickness = {};

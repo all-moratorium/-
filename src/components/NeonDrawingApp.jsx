@@ -1603,6 +1603,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 saveToLocalStorage();
                 
                 console.log('プロジェクト復元完了');
+                
+                // ネオン下絵でファイルが読み込まれたことをLaserCutImageProcessorに通知（カスタマイズの状態をクリアするため）
+                const clearStateEvent = new CustomEvent('clearCustomizeState');
+                window.dispatchEvent(clearStateEvent);
+                
                 alert('ネオンプロジェクトを読み込みました');
                 
             } catch (error) {
