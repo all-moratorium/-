@@ -1817,6 +1817,42 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         };
     }, [calculatePathsBounds]);
 
+    // 長方形の辺上に密に点を追加する関数
+    const subdivideRectangleEdges = useCallback((rectangleBase, spacing = 10) => {
+        const points = [];
+        const { x, y, width, height } = rectangleBase;
+        
+        // 上辺（左から右へ）
+        const topPoints = Math.max(2, Math.ceil(width / spacing));
+        for (let i = 0; i < topPoints; i++) {
+            const ratio = i / (topPoints - 1);
+            points.push({ x: x + (width * ratio), y: y });
+        }
+        
+        // 右辺（上から下へ、角を除く）
+        const rightPoints = Math.max(2, Math.ceil(height / spacing));
+        for (let i = 1; i < rightPoints; i++) {
+            const ratio = i / (rightPoints - 1);
+            points.push({ x: x + width, y: y + (height * ratio) });
+        }
+        
+        // 下辺（右から左へ、角を除く）
+        const bottomPoints = Math.max(2, Math.ceil(width / spacing));
+        for (let i = 1; i < bottomPoints; i++) {
+            const ratio = i / (bottomPoints - 1);
+            points.push({ x: x + width - (width * ratio), y: y + height });
+        }
+        
+        // 左辺（下から上へ、角を除く）
+        const leftPoints = Math.max(2, Math.ceil(height / spacing));
+        for (let i = 1; i < leftPoints - 1; i++) {
+            const ratio = i / (leftPoints - 1);
+            points.push({ x: x, y: y + height - (height * ratio) });
+        }
+        
+        return points;
+    }, []);
+
     // 外積計算（左折判定用）
     const crossProduct = useCallback((o, a, b) => {
         return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
@@ -3495,13 +3531,8 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 // 長方形土台を生成
                                 const rectangleBase = calculateRectangleBase(rectangleSize);
                                 if (rectangleBase) {
-                                    // 長方形の4つの角の座標を計算
-                                    const rectanglePoints = [
-                                        { x: rectangleBase.x, y: rectangleBase.y },
-                                        { x: rectangleBase.x + rectangleBase.width, y: rectangleBase.y },
-                                        { x: rectangleBase.x + rectangleBase.width, y: rectangleBase.y + rectangleBase.height },
-                                        { x: rectangleBase.x, y: rectangleBase.y + rectangleBase.height }
-                                    ];
+                                    // 長方形の辺上に点を配置（250px間隔）
+                                    const rectanglePoints = subdivideRectangleEdges(rectangleBase, 250);
                                     
                                     // 新しい土台パスを作成
                                     const newPath = {
