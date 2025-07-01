@@ -907,6 +907,11 @@
     border: none;
 }
 
+/* 土台自動生成モーダル専用スタイル */
+.rectangle-generation-modal .modal-content-right {
+    height: 300px;
+}
+
 /* 背景画像モーダル専用スタイル */
 .bg-modal-content-right {
     border-top-left-radius: 12px;
@@ -1069,7 +1074,7 @@
 
 .clear-image-button {
     width: 100%;
-    padding: 12px;
+    padding: 8px;
     background-color: #dc2626;
     color: white;
     border-radius: 8px;
@@ -1895,6 +1900,43 @@
     flex-direction: column;
     gap: 12px;
     margin-top: 24px;
+}
+
+/* 土台生成ボタン専用スタイル */
+.rectangle-generate-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.rectangle-generate-button:hover {
+    background-color: #3b82f6;
+}
+
+/* 土台モーダル専用キャンセルボタン */
+.rectangle-cancel-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #dc2626;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    margin-top: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.rectangle-cancel-button:hover {
+    background-color: #ef4444;
 }
 
 .rectangle-size-marks {

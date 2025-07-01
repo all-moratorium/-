@@ -18,12 +18,12 @@ const POINT_HIT_RADIUS = 12; // 点のヒット判定半径
 const MIN_HIT_RADIUS = 6; // 最小ヒット判定半径（ズーム時の保証）
 
 // モーダルコンポーネント
-const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
+const Modal = ({ isOpen, onClose, title, children, position = 'center', className = '' }) => {
     if (!isOpen) return null;
     
     const modalClass = position === 'right' 
-        ? "modal-overlay"
-        : "modal-overlay modal-center";
+        ? `modal-overlay ${className}`.trim()
+        : `modal-overlay modal-center ${className}`.trim();
     
     const contentClass = position === 'right'
         ? "modal-content modal-content-right"
@@ -3541,7 +3541,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             </Modal>
 
             {/* 自動長方形生成モーダル */}
-            <Modal isOpen={showRectangleModal} title="土台自動生成(長方形)" position="right">
+            <Modal isOpen={showRectangleModal} title="土台自動生成(長方形)" position="right" className="rectangle-generation-modal">
                 <div className="modal-content-inner">
                 <label htmlFor="rectangleSize" className="modal-label">
                             余白: {rectangleSize}cm
@@ -3599,7 +3599,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 setShowRectangleModal(false);
                                 setSidebarVisible(true);
                             }}
-                            className="reset-size-button"
+                            className="rectangle-generate-button"
                         >
                             土台を生成
                         </button>
@@ -3608,7 +3608,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                 setShowRectangleModal(false);
                                 setSidebarVisible(true);
                             }}
-                            className="clear-image-button"
+                            className="rectangle-cancel-button"
                         >
                             キャンセル
                         </button>
