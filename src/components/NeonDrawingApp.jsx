@@ -195,6 +195,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     // 自動長方形生成モーダル状態
     const [showRectangleModal, setShowRectangleModal] = useState(false);
     const [rectangleSize, setRectangleSize] = useState(5); // デフォルト5cm
+    // 自動形状生成モーダル状態
+    const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
+    const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
     // ガイドモーダル関連のstate
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false); 
@@ -801,6 +804,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     ctx.setLineDash([]); // 実線
                     ctx.globalAlpha = 0.8;
                     
+                    // 長方形プレビュー
                     ctx.beginPath();
                     ctx.rect(rectangleBase.x, rectangleBase.y, rectangleBase.width, rectangleBase.height);
                     ctx.stroke();
@@ -1679,7 +1683,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             }
             return newPaths;
         });
-    }, [currentPathIndex, drawingType]);
+    }, [currentPathIndex, drawingType, paths]);
 
     // 描画タイプ (スプライン/直線/自動長方形) を設定
     const handleSetDrawingType = useCallback((type) => {
@@ -1700,6 +1704,60 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             return;
         }
         
+        if (type === 'auto-shape') {
+            // 自動形状の場合は先に土台の重複チェック
+            const existingFillPaths = paths.filter(pathObj => 
+                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+            );
+            if (existingFillPaths.length >= 1) {
+                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                return;
+            }
+            
+            // ネオンパス（strokeモード）が存在するかチェック
+            const strokePaths = paths.filter(pathObj => 
+                pathObj && pathObj.mode === 'stroke' && pathObj.points && pathObj.points.length >= 2
+            );
+            if (strokePaths.length === 0) {
+                alert('ネオンパス（チューブ）を先に描画してください。');
+                return;
+            }
+            
+            // 自動形状土台を生成
+            const autoShapeBase = generateAutoShapeBase(strokePaths, 3); // デフォルト3cm余白
+            if (autoShapeBase) {
+                // 新しい土台パスを作成
+                const newPath = {
+                    points: autoShapeBase,
+                    mode: 'fill',
+                    type: 'straight'
+                };
+                
+                // パスを追加
+                setPaths(prevPaths => {
+                    const newPaths = [...prevPaths];
+                    // 既存の土台パスを削除（1つの土台のみ許可）
+                    const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
+                    // 新しい土台パスを追加
+                    filteredPaths.push(newPath);
+                    
+                    // 履歴に保存（新しいパス状態で）
+                    setTimeout(() => {
+                        saveToHistory(filteredPaths, currentPathIndex, drawMode, drawingType);
+                    }, 0);
+                    
+                    return filteredPaths;
+                });
+                
+                // 土台生成後はチューブモードに切り替え
+                setDrawMode('stroke');
+                setDrawingType('spline');
+            }
+            
+            setShowFillDrawingTypeModal(false);
+            return;
+        }
+        
         setDrawingType(type);
         // 描画タイプを選択したらモーダルを閉じる
         setShowFillDrawingTypeModal(false);
@@ -1715,7 +1773,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             }
             return newPaths;
         });
-    }, [currentPathIndex, drawMode]);
+    }, [currentPathIndex, drawMode, paths]);
 
     // すべてのネオンパスの境界を計算する関数
     const calculatePathsBounds = useCallback(() => {
@@ -1759,14 +1817,434 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         };
     }, [calculatePathsBounds]);
 
+    // 外積計算（左折判定用）
+    const crossProduct = useCallback((o, a, b) => {
+        return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+    }, []);
+    
+    // 凸包計算（Graham scan アルゴリズム）
+    const calculateConvexHull = useCallback((points) => {
+        if (points.length < 3) return points;
+        
+        // 重複点を除去
+        const uniquePoints = [];
+        const seen = new Set();
+        for (const point of points) {
+            const key = `${Math.round(point.x)},${Math.round(point.y)}`;
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniquePoints.push(point);
+            }
+        }
+        
+        if (uniquePoints.length < 3) return uniquePoints;
+        
+        // 最下点（Y座標最小、同じならX座標最小）を探す
+        let start = uniquePoints[0];
+        for (let i = 1; i < uniquePoints.length; i++) {
+            const p = uniquePoints[i];
+            if (p.y < start.y || (p.y === start.y && p.x < start.x)) {
+                start = p;
+            }
+        }
+        
+        // 極角でソート
+        const sortedPoints = uniquePoints
+            .filter(p => p !== start)
+            .sort((a, b) => {
+                const angleA = Math.atan2(a.y - start.y, a.x - start.x);
+                const angleB = Math.atan2(b.y - start.y, b.x - start.x);
+                if (angleA !== angleB) return angleA - angleB;
+                // 同じ角度の場合は距離で比較
+                const distA = (a.x - start.x) ** 2 + (a.y - start.y) ** 2;
+                const distB = (b.x - start.x) ** 2 + (b.y - start.y) ** 2;
+                return distA - distB;
+            });
+        
+        // Graham scan
+        const hull = [start];
+        
+        for (const point of sortedPoints) {
+            // 左折するまで最後の点を除去
+            while (hull.length > 1 && crossProduct(hull[hull.length - 2], hull[hull.length - 1], point) <= 0) {
+                hull.pop();
+            }
+            hull.push(point);
+        }
+        
+        return hull;
+    }, [crossProduct]);
+
+    // 自動形状土台生成アルゴリズム（完全一定距離オフセット方式）
+    const generateAutoShapeBase = useCallback((strokePaths, marginCm) => {
+        try {
+            // cmをピクセルに変換 (100px = 4cm基準)
+            const marginPx = (marginCm * 100) / 4;
+            
+            // 全てのネオンパスの点を収集
+            const allNeonPoints = [];
+            strokePaths.forEach(pathObj => {
+                if (pathObj && pathObj.points && pathObj.points.length >= 1) {
+                    pathObj.points.forEach(point => {
+                        allNeonPoints.push({ x: point.x, y: point.y });
+                    });
+                }
+            });
+            
+            if (allNeonPoints.length === 0) return null;
+            
+            // 各ネオン点から指定距離の円を描き、すべての円の外包を計算
+            const offsetPoints = [];
+            
+            // 各ネオン点について、360度方向にオフセット点を生成
+            allNeonPoints.forEach(neonPoint => {
+                for (let angle = 0; angle < 360; angle += 5) { // 5度刻み
+                    const rad = (angle * Math.PI) / 180;
+                    const offsetPoint = {
+                        x: neonPoint.x + Math.cos(rad) * marginPx,
+                        y: neonPoint.y + Math.sin(rad) * marginPx
+                    };
+                    offsetPoints.push(offsetPoint);
+                }
+            });
+            
+            // 凸包を計算して最終的な境界を取得
+            const boundary = calculateConvexHull(offsetPoints);
+            
+            return boundary;
+            
+        } catch (error) {
+            console.error('自動形状土台生成エラー:', error);
+            alert('形状が複雑すぎて土台を生成できませんでした。長方形土台をお試しください。');
+            return null;
+        }
+    }, [calculateConvexHull]);
+
+    // 真のオフセット曲線生成（完全一定距離保証）
+    const generateOffsetCurve = useCallback((pathObj, offsetDistance) => {
+        if (!pathObj || !pathObj.points || pathObj.points.length < 2) return [];
+        
+        const points = pathObj.points;
+        const offsetPoints = [];
+        
+        // 各点で垂直オフセットを計算（角度補正なし）
+        for (let i = 0; i < points.length; i++) {
+            const curr = points[i];
+            
+            // 前後の点のインデックス
+            const prevIdx = i === 0 ? points.length - 1 : i - 1;
+            const nextIdx = i === points.length - 1 ? 0 : i + 1;
+            
+            const prev = points[prevIdx];
+            const next = points[nextIdx];
+            
+            // 接線ベクトルを計算（前後の点から）
+            let tangent;
+            if (i === 0 || i === points.length - 1) {
+                // 端点では隣の点への方向を使用
+                const neighbor = i === 0 ? next : prev;
+                tangent = {
+                    x: neighbor.x - curr.x,
+                    y: neighbor.y - curr.y
+                };
+            } else {
+                // 中間点では前後の点を結ぶ方向を使用
+                tangent = {
+                    x: next.x - prev.x,
+                    y: next.y - prev.y
+                };
+            }
+            
+            // 接線ベクトルを正規化
+            const tangentLen = Math.sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
+            if (tangentLen > 0) {
+                tangent.x /= tangentLen;
+                tangent.y /= tangentLen;
+            }
+            
+            // 法線ベクトル（左に90度回転）
+            const normal = { x: -tangent.y, y: tangent.x };
+            
+            // オフセット点を計算（常に一定距離）
+            const offsetPoint = {
+                x: curr.x + normal.x * offsetDistance,
+                y: curr.y + normal.y * offsetDistance
+            };
+            
+            offsetPoints.push(offsetPoint);
+        }
+        
+        return offsetPoints;
+    }, []);
+
+    // 複数のオフセットパスを統合（凸包ベース）
+    const mergeOffsetPaths = useCallback((offsetPaths) => {
+        if (offsetPaths.length === 0) return [];
+        if (offsetPaths.length === 1) return offsetPaths[0];
+        
+        // 全ての点を収集
+        let allPoints = [];
+        offsetPaths.forEach(path => {
+            allPoints = allPoints.concat(path);
+        });
+        
+        if (allPoints.length === 0) return [];
+        
+        // 凸包を計算（Graham scan）
+        const convexHull = calculateConvexHull(allPoints);
+        
+        return convexHull;
+    }, []);
+    
+    // 重複する関数定義を削除
+
+    // スプライン補間で密な点列を生成
+    const interpolateSplinePath = useCallback((points) => {
+        if (points.length < 2) return points;
+        
+        let interpolatedPoints = [];
+        const segmentsPerCurve = 20; // 密度
+        
+        for (let i = 0; i < points.length; i++) {
+            const p0 = points[(i - 1 + points.length) % points.length];
+            const p1 = points[i];
+            const p2 = points[(i + 1) % points.length];
+            const p3 = points[(i + 2) % points.length];
+            
+            for (let t = 0; t < segmentsPerCurve; t++) {
+                const step = t / segmentsPerCurve;
+                const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
+                const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
+                interpolatedPoints.push({ x, y });
+            }
+        }
+        
+        return interpolatedPoints;
+    }, []);
+
+    // Alpha Shape アルゴリズム（へこみ対応）
+    const calculateImprovedEnvelope = useCallback((points, radius) => {
+        if (points.length === 0) return [];
+        if (points.length === 1) {
+            return generateCirclePoints(points[0], radius);
+        }
+        
+        // Alpha Shape でへこみを保持した境界を計算
+        const alphaShapePoints = calculateAlphaShape(points, radius);
+        
+        if (alphaShapePoints.length > 0) {
+            return alphaShapePoints;
+        }
+        
+        // Alpha Shape が失敗した場合は従来の包絡線計算
+        return calculateFallbackEnvelope(points, radius);
+    }, []);
+
+    // Alpha Shape アルゴリズム実装
+    const calculateAlphaShape = useCallback((points, radius) => {
+        try {
+            // デローネ三角分割を簡略化した手法
+            const alpha = radius * 1.5; // Alpha値（調整可能）
+            const boundaryEdges = [];
+            
+            // 格子ベースでのエッジ検出
+            const gridSize = radius / 2;
+            const gridMap = new Map();
+            
+            // 各点を円で拡張してグリッドに配置
+            points.forEach((point, idx) => {
+                const angleStep = Math.PI / 18; // 10度刻み
+                for (let angle = 0; angle < 2 * Math.PI; angle += angleStep) {
+                    const x = point.x + Math.cos(angle) * radius;
+                    const y = point.y + Math.sin(angle) * radius;
+                    
+                    const gridX = Math.floor(x / gridSize);
+                    const gridY = Math.floor(y / gridSize);
+                    const key = `${gridX},${gridY}`;
+                    
+                    if (!gridMap.has(key)) {
+                        gridMap.set(key, { x, y, sourceIdx: idx });
+                    }
+                }
+            });
+            
+            // 境界エッジを検出
+            const gridPoints = Array.from(gridMap.values());
+            const boundary = extractBoundaryFromGrid(gridPoints, gridSize);
+            
+            return boundary;
+            
+        } catch (error) {
+            console.log('Alpha Shape計算失敗、フォールバックに切り替え');
+            return [];
+        }
+    }, []);
+
+    // グリッドから境界を抽出
+    const extractBoundaryFromGrid = useCallback((gridPoints, gridSize) => {
+        if (gridPoints.length === 0) return [];
+        
+        // 各グリッド点について8方向の隣接をチェック
+        const directions = [
+            [-1, -1], [-1, 0], [-1, 1],
+            [0, -1],           [0, 1],
+            [1, -1],  [1, 0],  [1, 1]
+        ];
+        
+        const occupiedCells = new Set();
+        const cellToPoint = new Map();
+        
+        gridPoints.forEach(point => {
+            const cellX = Math.floor(point.x / gridSize);
+            const cellY = Math.floor(point.y / gridSize);
+            const key = `${cellX},${cellY}`;
+            
+            occupiedCells.add(key);
+            if (!cellToPoint.has(key)) {
+                cellToPoint.set(key, point);
+            }
+        });
+        
+        // 境界セルを特定（隣接セルが全て埋まっていない）
+        const boundaryCells = [];
+        for (const cellKey of occupiedCells) {
+            const [cellX, cellY] = cellKey.split(',').map(Number);
+            
+            let hasEmptyNeighbor = false;
+            for (const [dx, dy] of directions) {
+                const neighborKey = `${cellX + dx},${cellY + dy}`;
+                if (!occupiedCells.has(neighborKey)) {
+                    hasEmptyNeighbor = true;
+                    break;
+                }
+            }
+            
+            if (hasEmptyNeighbor) {
+                boundaryCells.push(cellKey);
+            }
+        }
+        
+        // 境界点を座標順に並べ替え
+        const boundaryPoints = boundaryCells
+            .map(key => cellToPoint.get(key))
+            .filter(Boolean);
+        
+        if (boundaryPoints.length < 3) return boundaryPoints;
+        
+        // 角度でソートして境界を形成
+        const center = {
+            x: boundaryPoints.reduce((sum, p) => sum + p.x, 0) / boundaryPoints.length,
+            y: boundaryPoints.reduce((sum, p) => sum + p.y, 0) / boundaryPoints.length
+        };
+        
+        boundaryPoints.sort((a, b) => {
+            const angleA = Math.atan2(a.y - center.y, a.x - center.x);
+            const angleB = Math.atan2(b.y - center.y, b.x - center.x);
+            return angleA - angleB;
+        });
+        
+        return boundaryPoints;
+    }, []);
+
+    // フォールバック用の従来包絡線計算
+    const calculateFallbackEnvelope = useCallback((points, radius) => {
+        const envelopePoints = [];
+        const angleStep = Math.PI / 90; // 2度刻み
+        const centerPoint = {
+            x: points.reduce((sum, p) => sum + p.x, 0) / points.length,
+            y: points.reduce((sum, p) => sum + p.y, 0) / points.length
+        };
+        
+        for (let angle = 0; angle < 2 * Math.PI; angle += angleStep) {
+            const direction = { x: Math.cos(angle), y: Math.sin(angle) };
+            
+            let maxDistance = -Infinity;
+            let bestPoint = null;
+            
+            points.forEach(center => {
+                const circlePoint = {
+                    x: center.x + direction.x * radius,
+                    y: center.y + direction.y * radius
+                };
+                
+                const distance = (circlePoint.x - centerPoint.x) * direction.x + 
+                               (circlePoint.y - centerPoint.y) * direction.y;
+                
+                if (distance > maxDistance) {
+                    maxDistance = distance;
+                    bestPoint = circlePoint;
+                }
+            });
+            
+            if (bestPoint) {
+                envelopePoints.push(bestPoint);
+            }
+        }
+        
+        return envelopePoints;
+    }, []);
+
+    // 不要な突起を除去
+    const removeExcessiveBulges = useCallback((points, radius) => {
+        if (points.length < 3) return points;
+        
+        const smoothedPoints = [];
+        const windowSize = Math.max(3, Math.ceil(radius / 20)); // 適応的なウィンドウサイズ
+        
+        for (let i = 0; i < points.length; i++) {
+            const current = points[i];
+            let sumX = current.x;
+            let sumY = current.y;
+            let count = 1;
+            
+            // 前後の点で平均化（ローパスフィルタ）
+            for (let j = 1; j <= windowSize; j++) {
+                const prevIdx = (i - j + points.length) % points.length;
+                const nextIdx = (i + j) % points.length;
+                
+                sumX += points[prevIdx].x + points[nextIdx].x;
+                sumY += points[prevIdx].y + points[nextIdx].y;
+                count += 2;
+            }
+            
+            smoothedPoints.push({
+                x: sumX / count,
+                y: sumY / count
+            });
+        }
+        
+        // 曲率が急激に変化する点を間引き
+        const finalPoints = [];
+        for (let i = 0; i < smoothedPoints.length; i += 2) { // 2点おきにサンプリング
+            finalPoints.push(smoothedPoints[i]);
+        }
+        
+        return finalPoints.length > 6 ? finalPoints : smoothedPoints;
+    }, []);
+
+    // 円周上の点を生成
+    const generateCirclePoints = useCallback((center, radius) => {
+        const points = [];
+        const numPoints = 36; // 10度刻み
+        
+        for (let i = 0; i < numPoints; i++) {
+            const angle = (i * 2 * Math.PI) / numPoints;
+            points.push({
+                x: center.x + Math.cos(angle) * radius,
+                y: center.y + Math.sin(angle) * radius
+            });
+        }
+        
+        return points;
+    }, []);
+
     // 描画モードボタンの無効化条件
     // 点修正モード中、パス削除モード中、点削除モード中の場合のみ無効化
     const areDrawModeButtonsDisabled = isModifyingPoints || isPathDeleteMode || isPointDeleteMode;
 
     // マウスイベントハンドラー
     const handleWheel = useCallback((e) => {
-        // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        // 長方形モーダル表示中はズーム可能、自動形状は除外
         
         e.preventDefault();
         const scaleAmount = 0.1;
@@ -2979,16 +3457,26 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     >
                         自動(長方形)
                     </button>
+                    <button
+                        onClick={() => handleSetDrawingType('auto-shape')}
+                        className={`drawing-type-button ${
+                            drawingType === 'auto-shape' 
+                                ? 'button-active button-purple' 
+                                : 'button-secondary'
+                        }`}
+                    >
+                        自動(形状)
+                    </button>
                 </div>
             </Modal>
 
             {/* 自動長方形生成モーダル */}
-            <Modal isOpen={showRectangleModal} title="自動長方形生成" position="right">
+            <Modal isOpen={showRectangleModal} title="土台自動生成(長方形)" position="right">
                 <div className="modal-content-inner">
-                    <div className="modal-setting-item">
-                        <label htmlFor="rectangleSize" className="modal-label">
-                            サイズ: {rectangleSize}cm
+                <label htmlFor="rectangleSize" className="modal-label">
+                            余白: {rectangleSize}cm
                         </label>
+                    <div className="modal-setting-item">
                         <input
                             id="rectangleSize"
                             type="range"
@@ -3029,11 +3517,18 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                                         const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
                                         // 新しい土台パスを追加
                                         filteredPaths.push(newPath);
+                                        
+                                        // 履歴に保存（新しいパス状態で）
+                                        setTimeout(() => {
+                                            saveToHistory(filteredPaths, currentPathIndex, drawMode, drawingType);
+                                        }, 0);
+                                        
                                         return filteredPaths;
                                     });
                                     
-                                    // 履歴に保存
-                                    saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+                                    // 土台生成後はチューブモードに切り替え
+                                    setDrawMode('stroke');
+                                    setDrawingType('spline'); // チューブはスプライン描画
                                 }
                                 
                                 setShowRectangleModal(false);
@@ -3055,6 +3550,7 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     </div>
                 </div>
             </Modal>
+
 
             {/* 拡大縮小モーダル */}
             <Modal isOpen={showScaleModal} onClose={closeScaleModal} title="拡大縮小" position="right">

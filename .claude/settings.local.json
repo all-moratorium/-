@@ -15,7 +15,8 @@
       "Bash(npm start)",
       "Bash(git restore:*)",
       "Bash(find:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
