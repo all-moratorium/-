@@ -763,8 +763,55 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
             });
         });
 
+        // 長方形土台プレビューの描画
+        if (showRectangleModal) {
+            // 境界計算をインライン実行
+            if (paths && paths.length > 0) {
+                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                let hasValidPoints = false;
+                
+                paths.forEach(path => {
+                    if (path && path.points && path.points.length > 0) {
+                        path.points.forEach(point => {
+                            if (point && typeof point.x === 'number' && typeof point.y === 'number') {
+                                minX = Math.min(minX, point.x);
+                                minY = Math.min(minY, point.y);
+                                maxX = Math.max(maxX, point.x);
+                                maxY = Math.max(maxY, point.y);
+                                hasValidPoints = true;
+                            }
+                        });
+                    }
+                });
+                
+                if (hasValidPoints) {
+                    // cmをピクセルに変換 (100px = 4cm基準)
+                    const marginPx = (rectangleSize * 100) / 4;
+                    
+                    const rectangleBase = {
+                        x: minX - marginPx,
+                        y: minY - marginPx,
+                        width: (maxX - minX) + (marginPx * 2),
+                        height: (maxY - minY) + (marginPx * 2)
+                    };
+                    
+                    ctx.save();
+                    ctx.strokeStyle = colors.fillBorder; // 土台と同じ境界線色
+                    ctx.lineWidth = lineWidths.fillBorder / scale; // 土台と同じ線の太さ
+                    ctx.setLineDash([]); // 実線
+                    ctx.globalAlpha = 0.8;
+                    
+                    ctx.beginPath();
+                    ctx.rect(rectangleBase.x, rectangleBase.y, rectangleBase.width, rectangleBase.height);
+                    ctx.stroke();
+                    
+                    ctx.restore();
+                }
+            }
+        }
+
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, showRectangleModal, rectangleSize]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -1661,6 +1708,47 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         });
     }, [currentPathIndex, drawMode]);
 
+    // すべてのネオンパスの境界を計算する関数
+    const calculatePathsBounds = useCallback(() => {
+        if (!paths || paths.length === 0) return null;
+        
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let hasValidPoints = false;
+        
+        paths.forEach(path => {
+            if (path && path.points && path.points.length > 0) {
+                path.points.forEach(point => {
+                    if (point && typeof point.x === 'number' && typeof point.y === 'number') {
+                        minX = Math.min(minX, point.x);
+                        minY = Math.min(minY, point.y);
+                        maxX = Math.max(maxX, point.x);
+                        maxY = Math.max(maxY, point.y);
+                        hasValidPoints = true;
+                    }
+                });
+            }
+        });
+        
+        if (!hasValidPoints) return null;
+        
+        return { minX, minY, maxX, maxY };
+    }, [paths]);
+
+    // 長方形土台の座標を計算する関数
+    const calculateRectangleBase = useCallback((marginCm) => {
+        const bounds = calculatePathsBounds();
+        if (!bounds) return null;
+        
+        // cmをピクセルに変換 (100px = 4cm基準)
+        const marginPx = (marginCm * 100) / 4;
+        
+        return {
+            x: bounds.minX - marginPx,
+            y: bounds.minY - marginPx,
+            width: (bounds.maxX - bounds.minX) + (marginPx * 2),
+            height: (bounds.maxY - bounds.minY) + (marginPx * 2)
+        };
+    }, [calculatePathsBounds]);
 
     // 描画モードボタンの無効化条件
     // 点修正モード中、パス削除モード中、点削除モード中の場合のみ無効化
@@ -1668,6 +1756,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
     // マウスイベントハンドラー
     const handleWheel = useCallback((e) => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         e.preventDefault();
         const scaleAmount = 0.1;
         const rect = e.target.getBoundingClientRect();
@@ -1690,6 +1781,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [scale, offsetX, offsetY]);
 
     const handleMouseDown = useCallback((e) => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         e.preventDefault();
         didDragRef.current = false; // ドラッグ開始時にリセット
 
@@ -1834,6 +1928,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [offsetX, offsetY, scale, paths, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory]);
 
     const handleMouseMove = useCallback((e) => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         const canvas = canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
@@ -1872,6 +1969,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale]);
 
     const handleMouseUp = useCallback(() => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         // 点をドラッグした場合は履歴に保存
         if (activePoint !== null && didDragRef.current) {
             // ここでpathsはuseCallbackの依存配列に含まれているため、最新の値が取得できるはず
@@ -1882,9 +1982,12 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [activePoint, paths, currentPathIndex, drawMode, drawingType, saveToHistory]);
 
     const handleMouseLeave = useCallback(() => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         setIsPanning(false);
         setActivePoint(null);
-    }, []);
+    }, [showRectangleModal]);
 
     // ビューをリセット（ズームとパンを初期値に戻す）
     const resetView = useCallback(() => {
@@ -1902,6 +2005,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     }, [canvasWidth, canvasHeight, resetView]);
 
     const handleMouseClick = useCallback((e) => {
+        // モーダル表示中はキャンバス操作を無効化
+        if (showRectangleModal) return;
+        
         // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、または土台モードで描画タイプ選択モーダルが表示されている場合は処理しない
         if (e.button !== 0 || isPanning || didDragRef.current || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || (drawMode === 'fill' && showFillDrawingTypeModal)) {
             return;
@@ -2889,8 +2995,38 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // TODO: ここで長方形生成処理を実装
-                                console.log('Generate rectangle:', rectangleSize);
+                                // 長方形土台を生成
+                                const rectangleBase = calculateRectangleBase(rectangleSize);
+                                if (rectangleBase) {
+                                    // 長方形の4つの角の座標を計算
+                                    const rectanglePoints = [
+                                        { x: rectangleBase.x, y: rectangleBase.y },
+                                        { x: rectangleBase.x + rectangleBase.width, y: rectangleBase.y },
+                                        { x: rectangleBase.x + rectangleBase.width, y: rectangleBase.y + rectangleBase.height },
+                                        { x: rectangleBase.x, y: rectangleBase.y + rectangleBase.height }
+                                    ];
+                                    
+                                    // 新しい土台パスを作成
+                                    const newPath = {
+                                        points: rectanglePoints,
+                                        mode: 'fill',
+                                        type: 'straight'
+                                    };
+                                    
+                                    // パスを追加
+                                    setPaths(prevPaths => {
+                                        const newPaths = [...prevPaths];
+                                        // 既存の土台パスを削除（1つの土台のみ許可）
+                                        const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
+                                        // 新しい土台パスを追加
+                                        filteredPaths.push(newPath);
+                                        return filteredPaths;
+                                    });
+                                    
+                                    // 履歴に保存
+                                    saveToHistory(paths, currentPathIndex, drawMode, drawingType);
+                                }
+                                
                                 setShowRectangleModal(false);
                                 setSidebarVisible(true);
                             }}
