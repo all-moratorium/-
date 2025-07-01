@@ -132,7 +132,7 @@ const getInitialDrawingState = (initialState) => {
     };
 };
 
-const NeonDrawingApp = ({ initialState, onStateChange }) => {
+const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedFileDataProcessed }) => {
     // 包括的な初期状態を取得
     const initialDrawingState = useMemo(() => getInitialDrawingState(initialState), [initialState]);
     
@@ -1613,6 +1613,79 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         
         reader.readAsText(file);
     }, [saveToLocalStorage]);
+
+    // カスタマイズコンポーネントからの共有ファイルデータを処理
+    useEffect(() => {
+        if (sharedFileData && onSharedFileDataProcessed) {
+            try {
+                console.log('カスタマイズからの共有ファイルデータを受信:', sharedFileData);
+                
+                // ネオンパスデータを読み込み
+                if (sharedFileData.neonPaths && sharedFileData.neonPaths.length > 0) {
+                    const loadedPaths = sharedFileData.neonPaths;
+                    
+                    // 新しいパスを追加（現在の描画モードで）
+                    const newPath = { points: [], mode: drawMode, type: drawingType };
+                    const pathsWithNewPath = [...loadedPaths, newPath];
+                    const newCurrentPathIndex = pathsWithNewPath.length - 1;
+                    
+                    setPaths(pathsWithNewPath);
+                    setCurrentPathIndex(newCurrentPathIndex);
+                    
+                    // 履歴を初期化
+                    const initialHistory = [{
+                        paths: pathsWithNewPath,
+                        currentPathIndex: newCurrentPathIndex
+                    }];
+                    setHistory(initialHistory);
+                    setHistoryIndex(0);
+                }
+                
+                // 色設定を復元
+                if (sharedFileData.neonColors) {
+                    setColors(sharedFileData.neonColors);
+                }
+                
+                // 線幅設定を復元（ただし骨組み描画用の太さに調整）
+                if (sharedFileData.neonLineWidths) {
+                    const adjustedLineWidths = {
+                        ...sharedFileData.neonLineWidths,
+                        strokeLine: 4 // 骨組み描画用の太さに固定
+                    };
+                    setLineWidths(adjustedLineWidths);
+                } else {
+                    // デフォルトの骨組み描画の線幅を設定
+                    setLineWidths(prev => ({
+                        ...prev,
+                        strokeLine: 4
+                    }));
+                }
+                
+                // キャンバス設定を復元
+                if (sharedFileData.canvasSettings) {
+                    const settings = sharedFileData.canvasSettings;
+                    if (settings.scale !== undefined) setScale(settings.scale);
+                    if (settings.offsetX !== undefined) setOffsetX(settings.offsetX);
+                    if (settings.offsetY !== undefined) setOffsetY(settings.offsetY);
+                    if (settings.showGrid !== undefined) setShowGrid(settings.showGrid);
+                    if (settings.gridSize !== undefined) setGridSize(settings.gridSize);
+                    if (settings.gridOpacity !== undefined) setGridOpacity(settings.gridOpacity);
+                }
+                
+                // LocalStorageに保存
+                saveToLocalStorage();
+                
+                console.log('カスタマイズからの共有ファイルデータの処理完了');
+                
+                // 処理完了を通知（親コンポーネントで状態をクリア）
+                onSharedFileDataProcessed();
+                
+            } catch (error) {
+                console.error('共有ファイルデータの処理に失敗:', error);
+                onSharedFileDataProcessed(); // エラーでも状態をクリア
+            }
+        }
+    }, [sharedFileData, onSharedFileDataProcessed, drawMode, drawingType, saveToLocalStorage]);
 
     // 初期描画（またはpaths変更時）にスプラインを描画
     useEffect(() => {

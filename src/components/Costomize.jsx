@@ -447,6 +447,23 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
                 // 読み込んだプロジェクトデータをグローバルにバックアップ
                 window.lastLoadedCustomizeProject = projectData;
+                // ファイルが読み込まれたことを記録
+                window.customizeFileWasLoaded = true;
+
+                // ネオン下絵コンポーネントで共有するためのファイルデータをイベントで送信
+                if (projectData.neonPaths && projectData.neonPaths.length > 0) {
+                    const sharedData = {
+                        neonPaths: projectData.neonPaths,
+                        neonColors: projectData.neonColors,
+                        neonLineWidths: projectData.neonLineWidths,
+                        canvasSettings: projectData.canvasSettings
+                    };
+                    
+                    const event = new CustomEvent('sharedFileDataLoaded', {
+                        detail: { fileData: sharedData }
+                    });
+                    window.dispatchEvent(event);
+                }
 
                 alert('プロジェクトが正常に読み込まれました！');
             } catch (error) {
@@ -677,8 +694,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     useEffect(() => {
         loadCustomizeData();
         
-        // グローバルバックアップからの復元を試行
-        if (window.lastLoadedCustomizeProject && !svgData && neonPaths.length === 0) {
+        // グローバルバックアップからの復元を試行（ファイルが読み込まれた場合はinitialStateより優先）
+        if (window.lastLoadedCustomizeProject && window.customizeFileWasLoaded && !svgData && neonPaths.length === 0) {
             const projectData = window.lastLoadedCustomizeProject;
             
             // データの復元
@@ -726,6 +743,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         
         // 初期化完了フラグを設定（ちらつき防止）
         setIsInitializing(false);
+    }, []);
+    
+    // コンポーネントアンマウント時にファイル読み込みフラグをクリア
+    useEffect(() => {
+        return () => {
+            // 他のページに移動する際はフラグをクリアしない（戻ってきたときに復元したいため）
+            // ホームページに戻ったときのみクリアは別途LaserCutImageProcessorで行う
+        };
     }, []);
 
     // svgDataの変更を即座に検知
@@ -872,33 +897,35 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             if (svgData.canvasData) {
                 setCanvasSettings(svgData.canvasData);
                 
-                // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
-                if (svgData.canvasData.gridSize !== undefined && (!initialState || !initialState.gridSize)) {
+                // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
+                const shouldUseInitialState = !window.customizeFileWasLoaded && initialState;
+                if (svgData.canvasData.gridSize !== undefined && (!shouldUseInitialState || !initialState.gridSize)) {
                     setGridSize(svgData.canvasData.gridSize);
                 }
-                if (svgData.canvasData.gridOpacity !== undefined && (!initialState || !initialState.gridOpacity)) {
+                if (svgData.canvasData.gridOpacity !== undefined && (!shouldUseInitialState || !initialState.gridOpacity)) {
                     setGridOpacity(svgData.canvasData.gridOpacity);
                 }
-                if (svgData.canvasData.showGrid !== undefined && (!initialState || initialState.showGrid === undefined)) {
+                if (svgData.canvasData.showGrid !== undefined && (!shouldUseInitialState || initialState.showGrid === undefined)) {
                     setShowGrid(svgData.canvasData.showGrid);
                 }
-                if (svgData.canvasData.gridColor !== undefined && (!initialState || !initialState.gridColorOff)) {
+                if (svgData.canvasData.gridColor !== undefined && (!shouldUseInitialState || !initialState.gridColorOff)) {
                     setGridColorOff(svgData.canvasData.gridColor);
                 }
             }
             
-            // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合のみ）
-            if (svgData.colors && svgData.colors.background !== undefined && (!initialState || !initialState.backgroundColorOff)) {
+            // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
+            const shouldUseInitialState = !window.customizeFileWasLoaded && initialState;
+            if (svgData.colors && svgData.colors.background !== undefined && (!shouldUseInitialState || !initialState.backgroundColorOff)) {
                 setBackgroundColorOff(svgData.colors.background);
             }
             
-            // ネオン下絵のグリッド色を消灯時のグリッド色として設定（initialStateが無い場合のみ）
-            if (svgData.colors && svgData.colors.grid !== undefined && (!initialState || !initialState.gridColorOff)) {
+            // ネオン下絵のグリッド色を消灯時のグリッド色として設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
+            if (svgData.colors && svgData.colors.grid !== undefined && (!shouldUseInitialState || !initialState.gridColorOff)) {
                 setGridColorOff(svgData.colors.grid);
             }
             
-            // パス別の初期色設定（initialStateが無い場合のみ設定）
-            if (!initialState || !initialState.pathColors || Object.keys(initialState.pathColors).length === 0) {
+            // パス別の初期色設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ設定）
+            if (!shouldUseInitialState || !initialState.pathColors || Object.keys(initialState.pathColors).length === 0) {
                 const initialColors = {};
                 const initialThickness = {};
                 svgData.paths.forEach((pathObj, pathIndex) => {

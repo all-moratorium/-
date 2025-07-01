@@ -517,6 +517,9 @@ const LaserCutImageProcessor = () => {
   // Costomizeコンポーネントの状態を保存
   const [customizeState, setCustomizeState] = useState(null);
   
+  // カスタマイズで読み込まれたファイルデータをネオン下絵で共有するための状態
+  const [sharedFileData, setSharedFileData] = useState(null);
+  
   // NeonSVGTo3DExtruderの状態を保存
   const [neonSvgData, setNeonSvgData] = useState(null);
   const [neonCameraState, setNeonCameraState] = useState(null);
@@ -822,14 +825,31 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
       }
     };
     window.addEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
+    
+    // カスタマイズコンポーネントからのファイル読み込みデータを受け取る
+    const handleSharedFileData = (event) => {
+      if (event.detail && event.detail.fileData) {
+        setSharedFileData(event.detail.fileData);
+      }
+    };
+    window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
 
     return () => {
       window.removeEventListener('show3DPreview', handleShow3DPreview);
       window.removeEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
       window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
       window.removeEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
+      window.removeEventListener('sharedFileDataLoaded', handleSharedFileData);
     };
   }, []);
+  
+  // ホームページに戻ったときにカスタマイズファイル読み込みフラグをクリア
+  useEffect(() => {
+    if (currentPage === 'home') {
+      window.customizeFileWasLoaded = false;
+      window.lastLoadedCustomizeProject = null;
+    }
+  }, [currentPage]);
 
   // ネオンサイン画像を生成する関数
   const generateNeonPreviewImage = (neonData) => {
@@ -2863,6 +2883,8 @@ const quantizeColors = (pixels, k) => {
         return <NeonDrawingApp 
           initialState={neonDrawingState} 
           onStateChange={setNeonDrawingState}
+          sharedFileData={sharedFileData}
+          onSharedFileDataProcessed={() => setSharedFileData(null)}
         />;
       case 'customize':
         return <Costomize 
