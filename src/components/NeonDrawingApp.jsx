@@ -34,12 +34,14 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center' }) => {
             <div className={contentClass}>
                 <div className="modal-header">
                     <h3 className="modal-title">{title}</h3>
-                    <button 
-                        onClick={onClose}
-                        className="modal-close-btn"
-                    >
-                        ×
-                    </button>
+                    {onClose && (
+                        <button 
+                            onClick={onClose}
+                            className="modal-close-btn"
+                        >
+                            ×
+                        </button>
+                    )}
                 </div>
                 {children}
             </div>
@@ -190,6 +192,9 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     const [sidebarVisible, setSidebarVisible] = useState(initialDrawingState.sidebarVisible !== undefined ? initialDrawingState.sidebarVisible : true);
     // 土台モード時に描画タイプ選択モーダルを表示するためのステート
     const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false);
+    // 自動長方形生成モーダル状態
+    const [showRectangleModal, setShowRectangleModal] = useState(false);
+    const [rectangleSize, setRectangleSize] = useState(5); // デフォルト5cm
     // ガイドモーダル関連のstate
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false); 
@@ -1629,8 +1634,16 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         });
     }, [currentPathIndex, drawingType]);
 
-    // 描画タイプ (スプライン/直線) を設定
+    // 描画タイプ (スプライン/直線/自動長方形) を設定
     const handleSetDrawingType = useCallback((type) => {
+        if (type === 'rectangle') {
+            // 自動長方形の場合はモーダルを開く
+            setShowRectangleModal(true);
+            setSidebarVisible(false);
+            setShowFillDrawingTypeModal(false);
+            return;
+        }
+        
         setDrawingType(type);
         // 描画タイプを選択したらモーダルを閉じる
         setShowFillDrawingTypeModal(false);
@@ -2841,6 +2854,60 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
                     >
                         直線
                     </button>
+                    <button
+                        onClick={() => handleSetDrawingType('rectangle')}
+                        className={`drawing-type-button ${
+                            drawingType === 'rectangle' 
+                                ? 'button-active button-purple' 
+                                : 'button-secondary'
+                        }`}
+                    >
+                        自動(長方形)
+                    </button>
+                </div>
+            </Modal>
+
+            {/* 自動長方形生成モーダル */}
+            <Modal isOpen={showRectangleModal} title="自動長方形生成" position="right">
+                <div className="modal-content-inner">
+                    <div className="modal-setting-item">
+                        <label htmlFor="rectangleSize" className="modal-label">
+                            サイズ: {rectangleSize}cm
+                        </label>
+                        <input
+                            id="rectangleSize"
+                            type="range"
+                            min="3"
+                            max="10"
+                            step="1"
+                            value={rectangleSize}
+                            onChange={(e) => setRectangleSize(Number(e.target.value))}
+                            className="scale-range-input"
+                        />
+                    </div>
+                    
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // TODO: ここで長方形生成処理を実装
+                                console.log('Generate rectangle:', rectangleSize);
+                                setShowRectangleModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="reset-size-button"
+                        >
+                            土台を生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowRectangleModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="clear-image-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
                 </div>
             </Modal>
 
