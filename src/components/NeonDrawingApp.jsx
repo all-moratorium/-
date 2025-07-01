@@ -1684,6 +1684,15 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
     // 描画タイプ (スプライン/直線/自動長方形) を設定
     const handleSetDrawingType = useCallback((type) => {
         if (type === 'rectangle') {
+            // 自動長方形の場合は先に土台の重複チェック
+            const existingFillPaths = paths.filter(pathObj => 
+                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+            );
+            if (existingFillPaths.length >= 1) {
+                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                return;
+            }
+            
             // 自動長方形の場合はモーダルを開く
             setShowRectangleModal(true);
             setSidebarVisible(false);
