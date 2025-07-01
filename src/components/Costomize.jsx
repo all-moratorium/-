@@ -67,6 +67,60 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         segmentsPerCurve: 30
     });
     const [installationEnvironment, setInstallationEnvironment] = useState(initialState?.installationEnvironment || 'indoor'); // 'indoor' or 'outdoor'
+    
+    // 寸法モーダル関連の状態
+    const [showScaleModal, setShowScaleModal] = useState(false);
+    const [modelSize, setModelSize] = useState({
+        width: 0,
+        height: 0,
+        totalLength: 0
+    });
+
+    // モデルサイズを計算する関数
+    const calculateModelSize = useCallback(() => {
+        if (neonPaths.length === 0) {
+            return { width: 0, height: 0, totalLength: 0 };
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let totalLength = 0;
+
+        neonPaths.forEach(pathObj => {
+            if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                // 境界計算
+                pathObj.points.forEach(point => {
+                    minX = Math.min(minX, point.x);
+                    minY = Math.min(minY, point.y);
+                    maxX = Math.max(maxX, point.x);
+                    maxY = Math.max(maxY, point.y);
+                });
+
+                // パス長計算（strokeパスのみ）
+                if (pathObj.mode === 'stroke' && pathObj.points.length > 1) {
+                    for (let i = 0; i < pathObj.points.length - 1; i++) {
+                        const dx = pathObj.points[i + 1].x - pathObj.points[i].x;
+                        const dy = pathObj.points[i + 1].y - pathObj.points[i].y;
+                        totalLength += Math.sqrt(dx * dx + dy * dy);
+                    }
+                }
+            }
+        });
+
+        if (minX === Infinity) {
+            return { width: 0, height: 0, totalLength: 0 };
+        }
+
+        // 25px = 1cm の基準で変換
+        const widthCm = (maxX - minX) / 25;
+        const heightCm = (maxY - minY) / 25;
+        const totalLengthCm = totalLength / 25;
+
+        return {
+            width: widthCm,
+            height: heightCm,
+            totalLength: totalLengthCm
+        };
+    }, [neonPaths]);
 
     // Canvas画像を商品情報に送信する関数
     const sendCanvasImageToProductInfo = useCallback(() => {
@@ -687,6 +741,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             setIsDataLoaded(false);
         }
     }, [neonPaths, svgData]);
+
+    // neonPathsが変更された時にmodelSizeを更新
+    useEffect(() => {
+        const newModelSize = calculateModelSize();
+        setModelSize(newModelSize);
+    }, [neonPaths, calculateModelSize]);
 
     // 設定変更時にグローバルバックアップを更新（ファイル読み込み後の変更を保持するため）
     useEffect(() => {
@@ -1715,6 +1775,27 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     onContextMenu={(e) => e.preventDefault()}
                     onMouseLeave={handleMouseLeave}
                 />
+                
+                {/* キャンバス右上のサイズ表示 */}
+                <div 
+                    className={`canvas-size-display ${!sidebarVisible ? 'sidebar-collapsed' : ''}`}
+                    onClick={() => setShowScaleModal(true)}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <div className="canvas-size-title">寸法</div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">幅:</span>
+                        <span className="canvas-size-value">{modelSize.width.toFixed(1)}cm</span>
+                    </div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">高さ:</span>
+                        <span className="canvas-size-value">{modelSize.height.toFixed(1)}cm</span>
+                    </div>
+                    <div className="canvas-size-item">
+                        <span className="canvas-size-label">チューブ長:</span>
+                        <span className="canvas-size-value">{modelSize.totalLength.toFixed(1)}cm</span>
+                    </div>
+                </div>
             </div>
 
             {/* サイドバー */}
@@ -2959,6 +3040,45 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     <li className="tip-item">適切なレイヤー数</li>
                                     <li className="tip-item">画像サイズを2000px以下に調整</li>
                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 寸法詳細モーダル */}
+            {showScaleModal && (
+                <div className="modal-overlay" onClick={() => setShowScaleModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-inner">
+                            <div className="modal-header">
+                                <h3>寸法詳細</h3>
+                                <button 
+                                    onClick={() => setShowScaleModal(false)}
+                                    className="modal-close-button"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="size-detail-grid">
+                                    <div className="size-detail-item">
+                                        <span className="size-detail-label">幅:</span>
+                                        <span className="size-detail-value">{modelSize.width.toFixed(2)} cm</span>
+                                    </div>
+                                    <div className="size-detail-item">
+                                        <span className="size-detail-label">高さ:</span>
+                                        <span className="size-detail-value">{modelSize.height.toFixed(2)} cm</span>
+                                    </div>
+                                    <div className="size-detail-item">
+                                        <span className="size-detail-label">チューブ長:</span>
+                                        <span className="size-detail-value">{modelSize.totalLength.toFixed(2)} cm</span>
+                                    </div>
+                                    <div className="size-detail-item">
+                                        <span className="size-detail-label">設置環境:</span>
+                                        <span className="size-detail-value">{installationEnvironment === 'indoor' ? '屋内' : '屋外'}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
