@@ -1198,6 +1198,18 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
         setPaths(prevPaths => {
             const currentPath = prevPaths[currentPathIndex];
             if (currentPath && currentPath.points.length > 0) {
+                // 土台の重複チェック
+                if (drawMode === 'fill') {
+                    const existingFillPaths = prevPaths.filter(pathObj => 
+                        pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+                    );
+                    if (existingFillPaths.length >= 1) {
+                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        setIsNewPathDisabled(false);
+                        return prevPaths;
+                    }
+                }
+                
                 const newPath = { points: [], mode: drawMode, type: drawingType };
                 const updatedPaths = [...prevPaths, newPath];
                 const newPathIdx = updatedPaths.length - 1; 
@@ -2567,11 +2579,33 @@ const NeonDrawingApp = ({ initialState, onStateChange }) => {
 
             // 現在のパスが存在しない、または空である場合は初期化
             if (!targetPath || targetPath.points.length === 0) {
+                // 土台の重複チェック（新しい土台パスを初期化する場合）
+                if (drawMode === 'fill') {
+                    const existingFillPaths = newPaths.filter(pathObj => 
+                        pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+                    );
+                    if (existingFillPaths.length >= 1) {
+                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        return prevPaths; // 変更せずに元の配列を返す
+                    }
+                }
+                
                 newPaths[currentPathIndex] = { points: [], mode: drawMode, type: drawingType };
                 targetPath = newPaths[currentPathIndex];
             }
             // 既存のパスがあるが、モード/タイプが異なる場合は新しいパスを作成
             else if (targetPath.mode !== drawMode || targetPath.type !== drawingType) {
+                // 土台の重複チェック（新しい土台パスを作成する場合）
+                if (drawMode === 'fill') {
+                    const existingFillPaths = newPaths.filter(pathObj => 
+                        pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+                    );
+                    if (existingFillPaths.length >= 1) {
+                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        return prevPaths; // 変更せずに元の配列を返す
+                    }
+                }
+                
                 // 新しいパスを配列の最後に追加
                 const newPath = { points: [], mode: drawMode, type: drawingType };
                 newPaths.push(newPath);
