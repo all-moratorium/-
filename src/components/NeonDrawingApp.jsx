@@ -1295,13 +1295,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         const p2 = pathPoints[i + 1];
                         const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                        const svgSegments = 5; // SVG出力用に固定で5セグメント
-                        for (let t = 0; t <= svgSegments; t++) {
-                            const step = t / svgSegments;
-                            const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                            const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                            currentStrokeSegment += ` L ${x},${y}`;
-                        }
+                        // Catmull-RomからBezier制御点を計算（より滑らか）
+                        const cp1x = p1.x + (p2.x - p0.x) / 8;
+                        const cp1y = p1.y + (p2.y - p0.y) / 8;
+                        const cp2x = p2.x - (p3.x - p1.x) / 8;
+                        const cp2y = p2.y - (p3.y - p1.y) / 8;
+                        
+                        currentStrokeSegment += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
                     }
                 } else { // 直線のSVG生成
                     for (let i = 1; i < pathPoints.length; i++) {
@@ -1320,13 +1320,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         const p2 = pathPoints[i + 1];
                         const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                        const svgSegments = 5; // SVG出力用に固定で5セグメント
-                        for (let t = 0; t <= svgSegments; t++) {
-                            const step = t / svgSegments;
-                            const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                            const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                            currentFillSegment += ` L ${x},${y}`;
-                        }
+                        // Catmull-RomからBezier制御点を計算（より滑らか）
+                        const cp1x = p1.x + (p2.x - p0.x) / 8;
+                        const cp1y = p1.y + (p2.y - p0.y) / 8;
+                        const cp2x = p2.x - (p3.x - p1.x) / 8;
+                        const cp2y = p2.y - (p3.y - p1.y) / 8;
+                        
+                        currentFillSegment += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
                     }
                 } else { // 直線のSVG生成
                     for (let i = 1; i < pathPoints.length; i++) {
