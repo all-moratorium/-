@@ -296,9 +296,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     }, [isTubeSettingsMinimized, saveCurrentState]);
 
     const neonPresetColors = [
-        '#ff0000', '#ffa500', '#ffff00', '#ffff80',
-        '#8cedae', '#87ceeb', '#0080ff', '#8000ff',
-        '#ff69b4', '#ffffff', '#f5f5dc', '#fff5e6'
+        '#ff0000', '#ff8000', '#ffee00', '#ffff40',
+        '#00ff00', '#00ffff', '#0080ff', '#cc60ff',
+        '#ff00ff', '#ffffff', '#f5f5dc', '#fff5e6'
     ];
 
     // 色名のマッピング
@@ -307,14 +307,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         '#f5f5dc': 'ナチュラルホワイト',
         '#ffffff': 'ホワイト',
         '#ff0000': 'レッド',
-        '#ff69b4': 'ピンク',
-        '#ffa500': 'オレンジ',
-        '#ffff00': 'イエロー',
-        '#ffff80': 'レモンイエロー',
-        '#8cedae': 'グリーン',
-        '#87ceeb': 'アイスブルー',
+        '#ff00ff': 'ピンク',
+        '#ff8000': 'オレンジ',
+        '#ffee00': 'イエロー',
+        '#ffff40': 'レモンイエロー',
+        '#00ff00': 'グリーン',
+        '#00ffff': 'アイスブルー',
         '#0080ff': 'ブルー',
-        '#8000ff': 'パープル'
+        '#cc60ff': 'パープル'
     };
 
     // プロジェクト保存機能
