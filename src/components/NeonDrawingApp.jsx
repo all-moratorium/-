@@ -1295,8 +1295,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         const p2 = pathPoints[i + 1];
                         const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                        for (let t = 0; t <= segmentsPerCurve; t++) {
-                            const step = t / segmentsPerCurve;
+                        const svgSegments = 5; // SVG出力用に固定で5セグメント
+                        for (let t = 0; t <= svgSegments; t++) {
+                            const step = t / svgSegments;
                             const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
                             const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
                             currentStrokeSegment += ` L ${x},${y}`;
@@ -1319,8 +1320,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         const p2 = pathPoints[i + 1];
                         const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                        for (let t = 0; t <= segmentsPerCurve; t++) {
-                            const step = t / segmentsPerCurve;
+                        const svgSegments = 5; // SVG出力用に固定で5セグメント
+                        for (let t = 0; t <= svgSegments; t++) {
+                            const step = t / svgSegments;
                             const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
                             const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
                             currentFillSegment += ` L ${x},${y}`;
@@ -3230,6 +3232,45 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         className="download-button"
                     >
                         カスタマイズへ進む
+                    </button>
+                    
+                    {/* SVG出力ボタン */}
+                    <button
+                        onClick={() => {
+                            try {
+                                const { strokePathData, fillPathData } = generateSvgPaths();
+                                
+                                const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
+    ${fillPathData ? `<path d="${fillPathData}" stroke="${colors.fillBorder}" stroke-width="${lineWidths.fillBorder}" fill="${colors.fillArea}" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+    ${strokePathData ? `<path d="${strokePathData}" stroke="${colors.strokeLine}" stroke-width="${lineWidths.strokeLine}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+</svg>`;
+
+                                // SVGファイルとしてダウンロード
+                                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                                const fileName = `neon-sketch-${timestamp}`;
+                                
+                                const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `${fileName}.svg`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                                
+                                console.log('SVG出力完了:', fileName);
+                            } catch (error) {
+                                console.error('SVG出力エラー:', error);
+                                alert('SVG出力に失敗しました');
+                            }
+                        }}
+                        className="download-button"
+                        disabled={!paths || paths.length === 0 || !paths.some(path => path && Array.isArray(path.points) && path.points.length > 0)}
+                        title="現在のネオン下絵をSVGファイルとして出力"
+                    >
+                        📄 SVG出力
                     </button>
                 </div>
 
