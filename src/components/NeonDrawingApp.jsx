@@ -855,7 +855,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             
             const newHistory = [...truncatedHistory, newState];
             
-            const finalHistory = newHistory.length > 50 ? newHistory.slice(-50) : newHistory;
+            const finalHistory = newHistory.length > 30 ? newHistory.slice(-30) : newHistory;
             const newHistoryIndex = finalHistory.length - 1;
             
             setHistoryIndex(newHistoryIndex); // historyIndex を同期的に更新
@@ -2374,7 +2374,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const handleWheel = useCallback((e) => {
         // 長方形モーダル表示中はズーム可能、自動形状は除外
         
-        e.preventDefault();
+        // passive event listenerでは preventDefault は無効なので削除
         const scaleAmount = 0.1;
         const rect = e.target.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;

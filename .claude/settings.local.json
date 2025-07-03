@@ -16,7 +16,8 @@
       "Bash(git restore:*)",
       "Bash(find:*)",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
