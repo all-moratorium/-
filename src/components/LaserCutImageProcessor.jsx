@@ -851,13 +851,8 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     };
   }, []);
   
-  // ホームページに戻ったときにカスタマイズファイル読み込みフラグをクリア
-  useEffect(() => {
-    if (currentPage === 'home') {
-      window.customizeFileWasLoaded = false;
-      window.lastLoadedCustomizeProject = null;
-    }
-  }, [currentPage]);
+  // ホームページに戻ってもデータはクリアしない（作業継続のため）
+  // データクリアは明示的な操作（新しいファイル読み込み等）でのみ行う
 
   // ネオンサイン画像を生成する関数
   const generateNeonPreviewImage = (neonData) => {
