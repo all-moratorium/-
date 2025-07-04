@@ -2678,8 +2678,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         // モーダル表示中はキャンバス操作を無効化
         if (showRectangleModal) return;
         
-        // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、または土台モードで描画タイプ選択モーダルが表示されている場合は処理しない
-        if (e.button !== 0 || isPanning || didDragRef.current || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || (drawMode === 'fill' && showFillDrawingTypeModal)) {
+        // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、土台モードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
+        const isModeSelecting = !isModifyingPoints && !isPathDeleteMode && !isPointDeleteMode && 
+                               (drawMode !== 'stroke' && drawMode !== 'fill');
+        
+        if (e.button !== 0 || isPanning || didDragRef.current || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || 
+            (drawMode === 'fill' && showFillDrawingTypeModal) || isModeSelecting) {
             return;
         }
 
@@ -2902,7 +2906,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                              isPointDeleteMode ? '点削除モードアクティブ中' :
                              drawMode === 'stroke' ? `チューブパス${currentPathIndex + 1}描画中` :
                              drawMode === 'fill' ? '土台描画中' :
-                             '描画モード選択'}
+                             '描画モードを選択してください'}
                         </div>
                     </div>
 

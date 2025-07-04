@@ -1374,7 +1374,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     }, [neonPaths, calculatePathLength]);
 
     const handleWheel = useCallback((e) => {
-        e.preventDefault();
         const scaleAmount = 0.1;
         const rect = e.target.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
