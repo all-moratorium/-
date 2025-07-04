@@ -386,6 +386,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
         
         try {
+            // 履歴を最新の30件に制限
+            const limitedHistory = history.slice(-30);
+            const adjustedHistoryIndex = Math.min(historyIndex, limitedHistory.length - 1);
+            
             const dataToSave = {
                 paths,
                 currentPathIndex,
@@ -406,13 +410,63 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 gridOpacity,
                 colors,
                 lineWidths,
-                history,
-                historyIndex
+                history: limitedHistory,
+                historyIndex: adjustedHistoryIndex
             };
-            localStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
-            console.log('描画データをLocalStorageに保存しました - 履歴:', history.length, '個');
+            
+            const dataString = JSON.stringify(dataToSave);
+            
+            // データサイズをログ出力してデバッグ
+            const totalSizeKB = Math.round(dataString.length / 1024);
+            const bgImageSizeKB = backgroundImage ? Math.round(backgroundImage.length / 1024) : 0;
+            const historyString = JSON.stringify(limitedHistory);
+            const historySizeKB = Math.round(historyString.length / 1024);
+            
+            console.log(`LocalStorageデータサイズ詳細:
+                - 全体: ${totalSizeKB}KB
+                - 背景画像: ${bgImageSizeKB}KB
+                - 履歴: ${historySizeKB}KB (${limitedHistory.length}個)
+                - その他: ${totalSizeKB - bgImageSizeKB - historySizeKB}KB`);
+            
+            // データサイズが5MBを超える場合は背景画像を除外
+            if (dataString.length > 5 * 1024 * 1024) {
+                const dataWithoutImage = {
+                    ...dataToSave,
+                    backgroundImage: null,
+                    initialBgImageWidth: 0,
+                    initialBgImageHeight: 0
+                };
+                localStorage.setItem('neonDrawingData', JSON.stringify(dataWithoutImage));
+                console.log('背景画像を除外してLocalStorageに保存しました - 履歴:', limitedHistory.length, '個');
+            } else {
+                localStorage.setItem('neonDrawingData', dataString);
+                console.log('描画データをLocalStorageに保存しました - 履歴:', limitedHistory.length, '個');
+            }
         } catch (error) {
             console.error('LocalStorageへのデータ保存に失敗しました:', error);
+            // 履歴なしで保存を試行
+            try {
+                const minimalData = {
+                    paths,
+                    currentPathIndex,
+                    drawMode,
+                    drawingType,
+                    scale,
+                    offsetX,
+                    offsetY,
+                    showGrid,
+                    gridSize,
+                    gridOpacity,
+                    colors,
+                    lineWidths,
+                    history: [{ paths, currentPathIndex, drawMode, drawingType }],
+                    historyIndex: 0
+                };
+                localStorage.setItem('neonDrawingData', JSON.stringify(minimalData));
+                console.log('最小限のデータでLocalStorageに保存しました');
+            } catch (minimalError) {
+                console.error('最小限データの保存も失敗:', minimalError);
+            }
         }
     }, [isInitialized, paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, backgroundImage, 
         initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, 
@@ -855,6 +909,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             
             const newHistory = [...truncatedHistory, newState];
             
+            // 履歴を30件に制限
             const finalHistory = newHistory.length > 30 ? newHistory.slice(-30) : newHistory;
             const newHistoryIndex = finalHistory.length - 1;
             
@@ -2739,9 +2794,24 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const handleImageUpload = useCallback((event) => {
         const file = event.target.files[0];
         if (file) {
+            // ファイルサイズチェック (5MB制限)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('画像ファイルが大きすぎます。5MB以下のファイルを選択してください。');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onloadend = () => {
-                setBackgroundImage(reader.result);
+                const result = reader.result;
+                
+                // Base64データのサイズをチェック (約7MB制限)
+                if (result.length > 7 * 1024 * 1024) {
+                    alert('画像データが大きすぎます。より小さいファイルまたは低解像度の画像を使用してください。');
+                    return;
+                }
+                
+                console.log('背景画像を読み込みました:', Math.round(result.length / 1024), 'KB');
+                setBackgroundImage(result);
             };
             reader.readAsDataURL(file);
         }

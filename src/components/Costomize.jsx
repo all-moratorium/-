@@ -206,17 +206,48 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             const opacity = 1.0; // プレビュー画像では常にグロー効果オン
                             console.log(`PNG生成 strokeパス${pathIndex}: color=${color} thickness=${thickness}`);
                             
-                            const currentBrightness = 100; // プレビュー画像では常に最大輝度
-                            drawNeonTube(
-                                cleanCtx, 
-                                pathObj.points, 
-                                pathObj.type, 
-                                color, 
-                                thickness,
-                                50, // glowIntensity
-                                currentBrightness,
-                                false // isHighlighted
-                            );
+                            const currentBrightness = brightness; // 色仕様のカスタマイズと同じ輝度を使用
+                            
+                            // 商品情報用画像では常にネオンONで描画するため、一時的にneonPowerを保存・変更
+                            const originalNeonPower = neonPower;
+                            // 直接変更は避けて、カスタム描画関数を使用
+                            
+                            // drawNeonTube関数のネオンON部分のみを抜粋して実行
+                            // ネオンON時：メリハリのある光で描画
+                            // 1. 薄いグロー（シャープに）
+                            cleanCtx.save();
+                            cleanCtx.globalCompositeOperation = 'screen';
+                            cleanCtx.shadowColor = color;
+                            cleanCtx.shadowBlur = 50 * 0.4;
+                            cleanCtx.strokeStyle = color;
+                            cleanCtx.globalAlpha = 0.6 * (currentBrightness / 100);
+                            cleanCtx.lineWidth = thickness * 1.1;
+                            cleanCtx.lineCap = 'round';
+                            cleanCtx.lineJoin = 'round';
+                            drawPath(cleanCtx, pathObj.points, pathObj.type);
+                            cleanCtx.restore();
+                            
+                            // 2. コア（実際のチューブ）- しっかりとした光
+                            cleanCtx.save();
+                            cleanCtx.shadowColor = color;
+                            cleanCtx.shadowBlur = 50 * 0.3;
+                            cleanCtx.strokeStyle = adjustBrightness(color, Math.min(currentBrightness * 1.2, 200));
+                            cleanCtx.globalAlpha = 1.0;
+                            cleanCtx.lineWidth = thickness;
+                            cleanCtx.lineCap = 'round';
+                            cleanCtx.lineJoin = 'round';
+                            drawPath(cleanCtx, pathObj.points, pathObj.type);
+                            cleanCtx.restore();
+                            
+                            // 3. 内側のハイライト（メリハリを強調）
+                            cleanCtx.save();
+                            cleanCtx.strokeStyle = adjustBrightness(color, Math.min(currentBrightness * 1.5, 255));
+                            cleanCtx.globalAlpha = 0.8;
+                            cleanCtx.lineWidth = thickness * 0.6;
+                            cleanCtx.lineCap = 'round';
+                            cleanCtx.lineJoin = 'round';
+                            drawPath(cleanCtx, pathObj.points, pathObj.type);
+                            cleanCtx.restore();
                         });
                         
                         cleanCtx.restore();
