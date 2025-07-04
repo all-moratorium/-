@@ -913,11 +913,11 @@
 }
 
 /* 背景画像モーダル専用スタイル */
-.bg-modal-content-right {
+.bg-modal .modal-content-right {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
     width: 380px;
-    height: 600px;
+    height: 740px;
     position: fixed;
     right: 15px;
     top: 50%;
@@ -1082,7 +1082,6 @@
     cursor: pointer;
     transition: all 0.2s;
     transform: scale(1);
-    margin-top: 24px;
     font-weight: 600;
     font-size: 14px;
 }
@@ -1110,6 +1109,7 @@
     transition: all 0.2s;
     font-weight: 600;
     font-size: 14px;
+    margin-top: 4px;
 }
 
 .reset-size-button:hover {
@@ -1127,18 +1127,18 @@
 .reset-position-button {
     width: 100%;
     padding: 8px;
-    background-color: #2563eb;
+    background-color: #10b981;
     color: white;
     border-radius: 6px;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
-    margin-top: 16px;
-    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .reset-position-button:hover {
-    background-color: #3b82f6;
+    background-color: #14b8a6;
 }
 
 .setting-description {

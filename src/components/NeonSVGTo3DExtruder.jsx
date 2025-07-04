@@ -55,7 +55,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   };
   const [color, setColor] = useState('#ff0088');
   const [emissiveValue, setEmissiveValue] = useState(1.0);
-  const [glowValue, setGlowValue] = useState(0.62);
+  const [glowValue, setGlowValue] = useState(0.50);
   const [scatterStrength, setScatterStrength] = useState(0.00);
   const [tubeSize, setTubeSize] = useState(0.04);
   const [animationSpeed, setAnimationSpeed] = useState(0.0);
@@ -974,7 +974,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     );
     scene.add(hemisphereLight);
     // 正面からの大きな面光源（10m×4m）
-    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.3, 1750, 1750);
+    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.2, 1750, 1750);
     rectAreaLight.position.set(0, 0, 500); // 正面から
     rectAreaLight.lookAt(0, 0, 0); // 壁を向く
     rectAreaLight.visible = rectAreaLightEnabled; // 初期状態を設定
@@ -1400,7 +1400,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
               </span>
             </div>
             <button
-              onClick={() => setGlowValue(glowValue > 0 ? 0 : 0.6)}
+              onClick={() => setGlowValue(glowValue > 0 ? 0 : 0.50)}
               className={`neon3d-glow-power-switch ${glowValue > 0 ? 'on' : 'off'}`}
             >
               <div className={`neon3d-glow-switch-handle ${glowValue > 0 ? 'on' : 'off'}`} />

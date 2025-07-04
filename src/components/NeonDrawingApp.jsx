@@ -3364,7 +3364,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
                 setShowBgModal(false);
                 setSidebarVisible(true);
-            }} title="背景画像設定" position="right">
+            }} title="背景画像設定" position="right" className="bg-modal">
                 <div className="modal-content-inner">
                     <input
                         type="file"
@@ -3424,6 +3424,37 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     <span className="input-unit">cm</span>
                                 </div>
                             </div>
+                            {/* X/Y position controls */}
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageX" className="modal-label">
+                                    X位置: {(bgImageX / 25).toFixed(1)}cm
+                                </label>
+                                <input
+                                    id="bgImageX"
+                                    type="range"
+                                    min="-2500"
+                                    max="2500"
+                                    step="25"
+                                    value={bgImageX}
+                                    onChange={(e) => setBgImageX(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                            </div>
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageY" className="modal-label">
+                                    Y位置: {(bgImageY / 25).toFixed(1)}cm
+                                </label>
+                                <input
+                                    id="bgImageY"
+                                    type="range"
+                                    min="-2500"
+                                    max="2500"
+                                    step="25"
+                                    value={bgImageY}
+                                    onChange={(e) => setBgImageY(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                            </div>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageOpacity" className="modal-label">
                                     透明度: {(bgImageOpacity * 100).toFixed(0)}%
@@ -3440,6 +3471,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 />
                             </div>
                             <div className="modal-buttons-container">
+                                <button
+                                    onClick={() => {
+                                        setBgImageX(0);
+                                        setBgImageY(0);
+                                    }}
+                                    className="reset-position-button"
+                                >
+                                    位置をリセット
+                                </button>
                                 <button
                                     onClick={() => {
                                         setBgImageScale(1.0);
