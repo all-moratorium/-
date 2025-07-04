@@ -214,36 +214,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             
                             // drawNeonTube関数のネオンON部分のみを抜粋して実行
                             // ネオンON時：メリハリのある光で描画
-                            // 1. 薄いグロー（シャープに）
-                            cleanCtx.save();
-                            cleanCtx.globalCompositeOperation = 'screen';
-                            cleanCtx.shadowColor = color;
-                            cleanCtx.shadowBlur = 50 * 0.4;
-                            cleanCtx.strokeStyle = color;
-                            cleanCtx.globalAlpha = 0.6 * (currentBrightness / 100);
-                            cleanCtx.lineWidth = thickness * 1.1;
-                            cleanCtx.lineCap = 'round';
-                            cleanCtx.lineJoin = 'round';
-                            drawPath(cleanCtx, pathObj.points, pathObj.type);
-                            cleanCtx.restore();
-                            
-                            // 2. コア（実際のチューブ）- しっかりとした光
+                            // 軽量1層shadowBlurグロー（メインキャンバスと統一）
                             cleanCtx.save();
                             cleanCtx.shadowColor = color;
-                            cleanCtx.shadowBlur = 50 * 0.3;
+                            cleanCtx.shadowBlur = 15;
                             cleanCtx.strokeStyle = adjustBrightness(color, Math.min(currentBrightness * 1.2, 200));
                             cleanCtx.globalAlpha = 1.0;
                             cleanCtx.lineWidth = thickness;
-                            cleanCtx.lineCap = 'round';
-                            cleanCtx.lineJoin = 'round';
-                            drawPath(cleanCtx, pathObj.points, pathObj.type);
-                            cleanCtx.restore();
-                            
-                            // 3. 内側のハイライト（メリハリを強調）
-                            cleanCtx.save();
-                            cleanCtx.strokeStyle = adjustBrightness(color, Math.min(currentBrightness * 1.5, 255));
-                            cleanCtx.globalAlpha = 0.8;
-                            cleanCtx.lineWidth = thickness * 0.6;
                             cleanCtx.lineCap = 'round';
                             cleanCtx.lineJoin = 'round';
                             drawPath(cleanCtx, pathObj.points, pathObj.type);
@@ -651,27 +628,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             return;
         }
 
-        // 3D風軽量グロー - シングルパス描画
+        // 最軽量グロー：shadowBlur使用（filterより圧倒的に軽い）
         ctx.save();
         
-        // グローレイヤー（アディティブブレンド）
-        ctx.globalCompositeOperation = 'screen';
-        ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.6;
-        ctx.lineWidth = thickness * 1.8;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        // 商品画像風のブラー
-        ctx.filter = `blur(${Math.min(glowIntensity * 0.3, 6)}px)`;
-        drawPath(ctx, pathPoints, pathType);
-        
-        // コアチューブ（通常合成）
-        ctx.filter = 'none';
-        ctx.globalCompositeOperation = 'source-over';
+        // shadowBlurでグロー効果（GPUアクセラレーションが効く）
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 15;
         ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.3, 255));
         ctx.globalAlpha = 1.0;
         ctx.lineWidth = thickness;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         drawPath(ctx, pathPoints, pathType);
         
         ctx.restore();
