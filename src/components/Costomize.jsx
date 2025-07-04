@@ -651,43 +651,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             return;
         }
 
-        // ネオンON時：メリハリのある光で描画
-        // 1. 薄いグロー（シャープに）
+        // 3D風軽量グロー - シングルパス描画
         ctx.save();
+        
+        // グローレイヤー（アディティブブレンド）
         ctx.globalCompositeOperation = 'screen';
-        ctx.shadowColor = color;
-        ctx.shadowBlur = glowIntensity * 0.4;
         ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.6 * (brightness / 100);
-        ctx.lineWidth = thickness * 1.1;
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = thickness * 1.8;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         
+        // 商品画像風のブラー
+        ctx.filter = `blur(${Math.min(glowIntensity * 0.3, 6)}px)`;
         drawPath(ctx, pathPoints, pathType);
-        ctx.restore();
         
-        // 2. コア（実際のチューブ）- しっかりとした光
-        ctx.save();
-        ctx.shadowColor = color;
-        ctx.shadowBlur = glowIntensity * 0.3;
-        ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.2, 200));
+        // コアチューブ（通常合成）
+        ctx.filter = 'none';
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.3, 255));
         ctx.globalAlpha = 1.0;
         ctx.lineWidth = thickness;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
         drawPath(ctx, pathPoints, pathType);
-        ctx.restore();
         
-        // 3. 内側のハイライト（メリハリを強調）
-        ctx.save();
-        ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.5, 255));
-        ctx.globalAlpha = 0.8;
-        ctx.lineWidth = thickness * 0.6;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        drawPath(ctx, pathPoints, pathType);
         ctx.restore();
         
         // ハイライト（白い部分）は削除

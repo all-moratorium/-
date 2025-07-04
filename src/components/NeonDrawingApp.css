@@ -920,12 +920,12 @@
     height: 740px;
     position: fixed;
     right: 15px;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%) !important;
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
-    animation: modalSlideIn 0.3s ease-out !important;
+    animation: bgModalSlideIn 0.3s ease-out !important;
     border: none;
     background-color: rgb(29, 29, 29) !important;
     padding: 24px;
@@ -940,6 +940,20 @@
     to {
         right: 15px;
         top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+/* 背景画像モーダル専用アニメーション */
+@keyframes bgModalSlideIn {
+    from {
+        right: -380px;
+        top: 55%;
+        transform: translateY(-50%);
+    }
+    to {
+        right: 15px;
+        top: 55%;
         transform: translateY(-50%);
     }
 }
