@@ -140,6 +140,12 @@
 .neon-sidebar.collapsed {
     background-color: transparent;
     overflow: hidden;
+    pointer-events: none;
+}
+
+/* トグルボタンだけはクリック可能にする */
+.neon-sidebar.collapsed .neon-toggle-sidebar-button {
+    pointer-events: all;
 }
 
 /* サイドバー内のコンテンツを折りたたみ時に非表示にする */

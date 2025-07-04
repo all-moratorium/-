@@ -180,6 +180,13 @@
 .controls-panel.collapsed {
   background-color:transparent;
   overflow: hidden;
+  pointer-events: none;
+}
+
+/* トグルボタンとグローパワーセクションはクリック可能にする */
+.controls-panel.collapsed .sidebar-toggle-button,
+.controls-panel.collapsed .neon3d-glow-power-section {
+  pointer-events: all;
 }
 
 /* サイドバー内のコンテンツを折りたたみ時に非表示にする */

@@ -77,6 +77,12 @@
 .customize-sidebar.collapsed {
     background-color: transparent;
     overflow: hidden;
+    pointer-events: none;
+}
+
+/* トグルボタンだけはクリック可能にする */
+.customize-sidebar.collapsed .customize-toggle-sidebar-button {
+    pointer-events: all;
 }
 
 /* サイドバー内のコンテンツを折りたたみ時に非表示にする */
