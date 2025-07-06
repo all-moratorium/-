@@ -21,9 +21,22 @@ const Gallery3D = ({ models = [] }) => {
     const lastInteractionTimeRef = useRef(Date.now());
     const isInitializedRef = useRef(false); // 初期化フラグを追加
     const resizeTimeoutRef = useRef(null); // リサイズのデバウンス用
-    const cachedModelRef = useRef(null); // GLBモデルをキャッシュ
+    const cachedModelsRef = useRef({}); // 複数GLBモデルをキャッシュ
 
     const [loading, setLoading] = useState(true);
+    const [modelScales, setModelScales] = useState({});
+
+    // 利用可能なGLBモデルのリスト
+    const glbModels = [
+        '/models/neon sample glb/my-neon-sign-optimized (31).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (32).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (33).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (34).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (35).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (36).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (37).glb',
+        '/models/neon sample glb/my-neon-sign-optimized (38).glb'
+    ];
 
     // デフォルトの絵画情報（modelsが空の場合に使用）
     const defaultPaintingData = [
@@ -132,10 +145,10 @@ const Gallery3D = ({ models = [] }) => {
         scene.add(backLight);
     }, []);
 
-    // GLBモデルを一度だけ読み込んでキャッシュ
-    const loadCachedModel = useCallback(() => {
-        if (cachedModelRef.current) {
-            return Promise.resolve(cachedModelRef.current);
+    // 指定されたGLBモデルを読み込んでキャッシュ
+    const loadCachedModel = useCallback((modelPath) => {
+        if (cachedModelsRef.current[modelPath]) {
+            return Promise.resolve(cachedModelsRef.current[modelPath]);
         }
 
         return new Promise((resolve, reject) => {
@@ -144,19 +157,17 @@ const Gallery3D = ({ models = [] }) => {
             dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
             loader.setDRACOLoader(dracoLoader);
 
-            const modelPath = '/models/neon sample glb/my-neon-sign-optimized (31).glb';
-
             loader.load(
                 modelPath,
                 (gltf) => {
-                    cachedModelRef.current = gltf.scene;
+                    cachedModelsRef.current[modelPath] = gltf.scene;
                     resolve(gltf.scene);
                 },
                 (progress) => {
-                    console.log('GLBローディング進捗:', (progress.loaded / progress.total * 100) + '%');
+                    console.log(`GLBローディング進捗 (${modelPath}):`, (progress.loaded / progress.total * 100) + '%');
                 },
                 (error) => {
-                    console.error('GLBローディングエラー:', error);
+                    console.error(`GLBローディングエラー (${modelPath}):`, error);
                     reject(error);
                 }
             );
@@ -166,12 +177,18 @@ const Gallery3D = ({ models = [] }) => {
     const createNeonModel = useCallback((data, index, setIndex = 0) => {
         const group = new THREE.Group();
 
+        // データインデックスに基づいてGLBモデルを選択
+        const modelIndex = data.originalIndex % glbModels.length;
+        const modelPath = glbModels[modelIndex];
+        const modelKey = `${modelIndex}_${index}_${setIndex}`;
+
         // キャッシュされたモデルをクローンして使用
-        loadCachedModel().then((originalModel) => {
+        loadCachedModel(modelPath).then((originalModel) => {
             const model = originalModel.clone();
             
-            // モデルのスケールを調整
-            model.scale.set(0.006, 0.006, 0.006);
+            // 個別スケール値を取得（デフォルトは0.006）
+            const customScale = modelScales[modelKey] || 0.006;
+            model.scale.set(customScale, customScale, customScale);
             
             // モデルを中央に配置
             const box = new THREE.Box3().setFromObject(model);
@@ -192,23 +209,68 @@ const Gallery3D = ({ models = [] }) => {
             setIndex: setIndex,
             originalScale: 1,
             targetScale: 1,
-            paintingData: data
+            paintingData: data,
+            modelKey: modelKey
         };
 
         return group;
-    }, [paintingData, loadCachedModel]);
+    }, [paintingData, loadCachedModel, glbModels, modelScales]);
+
+    // 画像プレーンを作成（遠くのモデル用）
+    const createImagePlane = useCallback((data, index, setIndex = 0) => {
+        const group = new THREE.Group();
+        
+        // TODO: GLBモデルをレンダリングして画像として保存し、ここで読み込む
+        // 今は仮で色付きプレーンを表示
+        const planeGeometry = new THREE.PlaneGeometry(2, 2);
+        const planeMaterial = new THREE.MeshBasicMaterial({
+            color: data.color,
+            transparent: true,
+            opacity: 0.8
+        });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        group.add(plane);
+
+        const setOffset = setIndex * paintingData.length * spacing;
+        group.position.x = index * spacing + setOffset;
+        group.position.y = -0.5;
+
+        group.userData = {
+            originalIndex: index,
+            setIndex: setIndex,
+            originalScale: 1,
+            targetScale: 1,
+            paintingData: data,
+            isImage: true
+        };
+
+        return group;
+    }, [paintingData]);
 
     const createModels = useCallback(() => {
         const allModels = [];
-        for (let setIndex = -1; setIndex <= 1; setIndex++) {
-            for (let i = 0; i < paintingData.length; i++) {
-                const neonModel = createNeonModel(paintingData[i], i, setIndex);
+        
+        // 無限スクロール用に多くのモデルを作成（中央1個のみ3D、他は全て静止画）
+        for (let i = -10; i <= 10; i++) {
+            const dataIndex = ((i % glbModels.length) + glbModels.length) % glbModels.length;
+            // originalIndexを追加してGLBモデル選択に使用
+            const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+            
+            if (i === 0) {
+                // 中央1個のみ3Dモデル
+                const neonModel = createNeonModel(dataWithIndex, i, 0);
                 allModels.push(neonModel);
                 sceneRef.current.add(neonModel);
+            } else {
+                // 他は全て画像プレーン（GLBモデルのプレビュー画像として表示）
+                const imagePlane = createImagePlane(dataWithIndex, i, 0);
+                allModels.push(imagePlane);
+                sceneRef.current.add(imagePlane);
             }
         }
+        
         allModelsRef.current = allModels;
-    }, [createNeonModel, paintingData]);
+    }, [createNeonModel, createImagePlane, paintingData, glbModels]);
 
     const getCenterModel = useCallback(() => {
         const allModels = allModelsRef.current;
@@ -221,8 +283,43 @@ const Gallery3D = ({ models = [] }) => {
         });
     }, []);
 
+    // 中央モデルを3Dモデルに切り替える
+    const updateCenterModel = useCallback(() => {
+        const centerModel = getCenterModel();
+        if (!centerModel || centerModel.userData.isImage === false) return;
+
+        // 現在の中央が画像プレーンの場合、3Dモデルに置き換え
+        const dataIndex = centerModel.userData.paintingData.originalIndex;
+        const modelPath = glbModels[dataIndex % glbModels.length];
+
+        loadCachedModel(modelPath).then((originalModel) => {
+            // 既存の子要素をクリア
+            centerModel.children.forEach(child => {
+                centerModel.remove(child);
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+
+            const model = originalModel.clone();
+            
+            // 個別スケール値を取得
+            const modelKey = centerModel.userData.modelKey;
+            const customScale = modelScales[modelKey] || 0.006;
+            model.scale.set(customScale, customScale, customScale);
+            
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+            
+            centerModel.add(model);
+            centerModel.userData.isImage = false;
+        }).catch((error) => {
+            console.error('中央モデル更新エラー:', error);
+        });
+    }, [getCenterModel, loadCachedModel, glbModels, modelScales]);
+
     const adjustForSeamlessLoop = useCallback(() => {
-        const setLength = paintingData.length * spacing;
+        const setLength = glbModels.length * spacing;
 
         allModelsRef.current.forEach((model) => {
             if (model.position.x > setLength * 1.5) {
@@ -231,7 +328,7 @@ const Gallery3D = ({ models = [] }) => {
                 model.position.x += setLength * 3;
             }
         });
-    }, [paintingData.length]);
+    }, [glbModels.length]);
 
     const updateModelOpacity = useCallback((model, opacity) => {
         model.children.forEach(child => {
@@ -258,6 +355,7 @@ const Gallery3D = ({ models = [] }) => {
         allModels.forEach((model) => {
             const distanceFromCamera = Math.abs(model.position.x);
             const isCenterModel = model === centerModel;
+            const isImagePlane = model.userData.isImage;
 
             if (isCenterModel) {
                 model.userData.targetScale = 1.65;
@@ -271,9 +369,12 @@ const Gallery3D = ({ models = [] }) => {
                 updateModelOpacity(model, 1.0);
             }
 
-            model.scale.x = model.scale.x + (model.userData.targetScale - model.scale.x) * 0.1;
-            model.scale.y = model.scale.y + (model.userData.targetScale - model.scale.y) * 0.1;
-            model.scale.z = model.scale.z + (model.userData.targetScale - model.scale.z) * 0.1;
+            // 画像プレーンは静的（スケールアニメーションなし）
+            if (!isImagePlane) {
+                model.scale.x = model.scale.x + (model.userData.targetScale - model.scale.x) * 0.1;
+                model.scale.y = model.scale.y + (model.userData.targetScale - model.scale.y) * 0.1;
+                model.scale.z = model.scale.z + (model.userData.targetScale - model.scale.z) * 0.1;
+            }
         });
     }, [getCenterModel, updateModelOpacity]);
 
@@ -297,6 +398,7 @@ const Gallery3D = ({ models = [] }) => {
         const tooltipImage = document.getElementById('tooltipImage');
         const tooltipTitle = document.getElementById('tooltipTitle');
         const tooltipDescription = document.getElementById('tooltipDescription');
+        const scaleControls = document.getElementById('scaleControls');
 
         if (tooltipRight && tooltipLeft && tooltipImage && tooltipTitle && tooltipDescription) {
             tooltipImage.textContent = data.icon;
@@ -305,15 +407,29 @@ const Gallery3D = ({ models = [] }) => {
             
             tooltipTitle.textContent = data.name;
             tooltipDescription.textContent = data.description;
+            
+            // 中央モデルのスケール制御を表示
+            const centerModel = getCenterModel();
+            if (centerModel && scaleControls) {
+                const modelKey = centerModel.userData.modelKey;
+                const currentScale = modelScales[modelKey] || 0.006;
+                scaleControls.style.display = 'block';
+                const scaleInput = document.getElementById('scaleInput');
+                if (scaleInput) {
+                    scaleInput.value = (currentScale * 1000).toFixed(1); // 0.006 -> 6.0 for display
+                }
+            }
+            
             tooltipLeft.classList.add('show');
             
             isTooltipShownRef.current = true;
         }
-    }, []);
+    }, [getCenterModel, modelScales]);
 
     const hideTooltip = useCallback(() => {
         const tooltipRight = document.getElementById('hoverTooltipRight');
         const tooltipLeft = document.getElementById('hoverTooltipLeft');
+        const scaleControls = document.getElementById('scaleControls');
         
         if (tooltipRight) {
             tooltipRight.classList.remove('show');
@@ -321,8 +437,55 @@ const Gallery3D = ({ models = [] }) => {
         if (tooltipLeft) {
             tooltipLeft.classList.remove('show');
         }
+        if (scaleControls) {
+            scaleControls.style.display = 'none';
+        }
         isTooltipShownRef.current = false;
     }, []);
+
+    // 動的にモデルを追加する関数
+    const addModelIfNeeded = useCallback((direction) => {
+        const allModels = allModelsRef.current;
+        if (allModels.length === 0) return;
+
+        const centerModel = getCenterModel();
+        if (!centerModel) return;
+
+        const centerX = centerModel.position.x;
+        const threshold = spacing * 8; // 8モデル分の距離
+
+        if (direction > 0) {
+            // 右に移動する場合、右端にモデルを追加
+            const rightmostModel = allModels.reduce((rightmost, current) => 
+                current.position.x > rightmost.position.x ? current : rightmost
+            );
+            
+            if (centerX > rightmostModel.position.x - threshold) {
+                const newIndex = Math.floor(rightmostModel.position.x / spacing) + 1;
+                const dataIndex = ((newIndex % glbModels.length) + glbModels.length) % glbModels.length;
+                const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+                
+                const imagePlane = createImagePlane(dataWithIndex, newIndex, 0);
+                allModels.push(imagePlane);
+                sceneRef.current.add(imagePlane);
+            }
+        } else {
+            // 左に移動する場合、左端にモデルを追加
+            const leftmostModel = allModels.reduce((leftmost, current) => 
+                current.position.x < leftmost.position.x ? current : leftmost
+            );
+            
+            if (centerX < leftmostModel.position.x + threshold) {
+                const newIndex = Math.floor(leftmostModel.position.x / spacing) - 1;
+                const dataIndex = ((newIndex % glbModels.length) + glbModels.length) % glbModels.length;
+                const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+                
+                const imagePlane = createImagePlane(dataWithIndex, newIndex, 0);
+                allModels.push(imagePlane);
+                sceneRef.current.add(imagePlane);
+            }
+        }
+    }, [getCenterModel, glbModels, paintingData, createImagePlane]);
 
     const switchToModel = useCallback((direction) => {
         if (isTransitioningRef.current) return;
@@ -336,6 +499,9 @@ const Gallery3D = ({ models = [] }) => {
         if (isTooltipShownRef.current) {
             hideTooltip();
         }
+
+        // 動的にモデルを追加
+        addModelIfNeeded(direction);
 
         const moveDistance = spacing * direction;
         const startPositions = allModelsRef.current.map(model => model.position.x);
@@ -359,6 +525,8 @@ const Gallery3D = ({ models = [] }) => {
             if (progress < 1) {
                 requestAnimationFrame(animateTransition);
             } else {
+                // 新しい中央モデルに3Dモデルを更新
+                updateCenterModel();
                 adjustForSeamlessLoop();
                 updateModelPositions();
                 isTransitioningRef.current = false;
@@ -366,7 +534,7 @@ const Gallery3D = ({ models = [] }) => {
         };
 
         animateTransition();
-    }, [hideClickPrompt, hideTooltip, adjustForSeamlessLoop, updateModelPositions]);
+    }, [hideClickPrompt, hideTooltip, addModelIfNeeded, updateCenterModel, adjustForSeamlessLoop, updateModelPositions]);
 
     const recordUserInteraction = useCallback(() => {
         lastInteractionTimeRef.current = Date.now();
@@ -420,15 +588,20 @@ const Gallery3D = ({ models = [] }) => {
         const currentCenterModel = getCenterModel();
 
         allModelsRef.current.forEach(model => {
-            if (model === currentCenterModel) {
+            const isImagePlane = model.userData.isImage;
+            
+            if (model === currentCenterModel && !isImagePlane) {
+                // 中央の3Dモデルのみアニメーション
                 model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.03;
                 model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.03;
                 model.position.y = 0 + Math.sin(Date.now() * 0.0015) * 0.05;
-            } else {
+            } else if (!isImagePlane) {
+                // 3Dモデルは回転をリセット
                 model.rotation.y += (0 - model.rotation.y) * 0.03;
                 model.rotation.x += (0 - model.rotation.x) * 0.03;
                 model.position.y += (0 - model.position.y) * 0.05;
             }
+            // 画像プレーンは完全に静止
         });
 
         updateModelPositions();
@@ -621,11 +794,51 @@ const Gallery3D = ({ models = [] }) => {
         }
         
         // ボタンイベントは少し遅延して追加
+        const handleScaleChange = (event) => {
+            const newScale = parseFloat(event.target.value) / 1000; // 6.0 -> 0.006
+            const centerModel = getCenterModel();
+            if (centerModel) {
+                const modelKey = centerModel.userData.modelKey;
+                setModelScales(prev => ({ ...prev, [modelKey]: newScale }));
+                
+                // 即座にスケールを更新
+                centerModel.children.forEach(child => {
+                    if (child.scale && child.type === 'Group') {
+                        // グループ全体のスケールを設定
+                        child.scale.set(newScale, newScale, newScale);
+                        
+                        // スケール変更後、モデルを中央に再配置
+                        try {
+                            const box = new THREE.Box3().setFromObject(child);
+                            if (box.min.x !== Infinity && box.max.x !== -Infinity) {
+                                const center = box.getCenter(new THREE.Vector3());
+                                child.position.sub(center);
+                            }
+                        } catch (error) {
+                            // エラーの場合は位置をリセット
+                            child.position.set(0, 0, 0);
+                        }
+                    } else if (child.scale) {
+                        // 単一メッシュの場合
+                        child.scale.set(newScale, newScale, newScale);
+                    }
+                });
+                
+                // スケール値の表示を更新
+                const scaleValue = document.getElementById('scaleValue');
+                if (scaleValue) {
+                    scaleValue.textContent = event.target.value;
+                }
+            }
+        };
+
         const addButtonEvents = () => {
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
+            const scaleInput = document.getElementById('scaleInput');
             if (prevBtn) prevBtn.addEventListener('click', handlePrevClick);
             if (nextBtn) nextBtn.addEventListener('click', handleNextClick);
+            if (scaleInput) scaleInput.addEventListener('input', handleScaleChange);
         };
         
         setTimeout(addButtonEvents, 100);
@@ -642,8 +855,10 @@ const Gallery3D = ({ models = [] }) => {
             }
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
+            const scaleInput = document.getElementById('scaleInput');
             if (prevBtn) prevBtn.removeEventListener('click', handlePrevClick);
             if (nextBtn) nextBtn.removeEventListener('click', handleNextClick);
+            if (scaleInput) scaleInput.removeEventListener('input', handleScaleChange);
             document.removeEventListener('keydown', handleKeyDown);
             resizeObserver.disconnect();
             clearTimeout(autoSwitchTimerRef.current);
@@ -679,6 +894,18 @@ const Gallery3D = ({ models = [] }) => {
             <div className="hover-tooltip-left" id="hoverTooltipLeft">
                 <div className="tooltip-title" id="tooltipTitle"></div>
                 <div className="tooltip-description" id="tooltipDescription"></div>
+                <div className="scale-controls" id="scaleControls" style={{display: 'none'}}>
+                    <label htmlFor="scaleInput">スケール: </label>
+                    <input 
+                        type="range" 
+                        id="scaleInput" 
+                        min="1" 
+                        max="15" 
+                        step="0.1" 
+                        defaultValue="6.0"
+                    />
+                    <span id="scaleValue">6.0</span>
+                </div>
             </div>
         </div>
     );
