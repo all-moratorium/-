@@ -343,7 +343,7 @@
   pointer-events: none;
   overflow: hidden;
   will-change: transform;
-  background:  rgb(24, 24, 24);
+  background:  rgb(22, 22, 22);
 }
 
 /* 新しく追加するCSS */
