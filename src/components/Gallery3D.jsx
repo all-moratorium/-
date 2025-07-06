@@ -214,7 +214,7 @@ const Gallery3D = ({ models = [] }) => {
 
         const setOffset = setIndex * paintingData.length * spacing;
         group.position.x = index * spacing + setOffset;
-        group.position.y = -0.5;
+        group.position.y = 0; // 全て同じ高さに統一
 
         group.userData = {
             originalIndex: index,
@@ -252,7 +252,7 @@ const Gallery3D = ({ models = [] }) => {
 
         const setOffset = setIndex * paintingData.length * spacing;
         group.position.x = index * spacing + setOffset;
-        group.position.y = -0.5;
+        group.position.y = 0; // 全て同じ高さに統一
 
         group.userData = {
             originalIndex: index,
@@ -562,7 +562,7 @@ const Gallery3D = ({ models = [] }) => {
         const startPositions = allModelsRef.current.map(model => model.position.x);
 
         let progress = 0;
-        const duration = 800;
+        const duration = 800; // 800ms → 400msに高速化
         const startTime = Date.now();
 
         const animateTransition = () => {
@@ -646,15 +646,15 @@ const Gallery3D = ({ models = [] }) => {
             const isImagePlane = model.userData.isImage;
             
             if (model === currentCenterModel && !isImagePlane) {
-                // 中央の3Dモデルのみアニメーション
-                model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.03;
-                model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.03;
-                model.position.y = 0 + Math.sin(Date.now() * 0.0015) * 0.05;
+                // 中央の3Dモデルのみアニメーション（マウス追従を高速化）
+                model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
+                model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
+                model.position.y = 0; // 中央モデルも同じ高さに固定
             } else if (!isImagePlane) {
-                // 3Dモデルは回転をリセット
-                model.rotation.y += (0 - model.rotation.y) * 0.03;
-                model.rotation.x += (0 - model.rotation.x) * 0.03;
-                model.position.y += (0 - model.position.y) * 0.05;
+                // 3Dモデルは回転をリセット（高速化）
+                model.rotation.y += (0 - model.rotation.y) * 0.10;
+                model.rotation.x += (0 - model.rotation.x) * 0.10;
+                model.position.y = 0; // 他のモデルも同じ高さに固定
             }
             // 画像プレーンは完全に静止
         });
@@ -736,24 +736,24 @@ const Gallery3D = ({ models = [] }) => {
                 mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
                 mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
                 
-                if (Math.abs(mouseRef.current.x) <= 0.6 && Math.abs(mouseRef.current.y) <= 0.6) {
+                if (Math.abs(mouseRef.current.x) <= 0.4 && Math.abs(mouseRef.current.y) <= 0.8) {
                     targetRotationRef.current.y = mouseRef.current.x * 0.5;
                     targetRotationRef.current.x = -mouseRef.current.y * 0.5;
                 } else {
-                    targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.05;
-                    targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.05;
+                    targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.15;
+                    targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.15;
                 }
                 
                 checkHover(event);
             } else {
-                targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.05;
-                targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.05;
+                targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.15;
+                targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.15;
             }
         };
 
         const handleMouseLeave = () => {
-            targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.05;
-            targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.05;
+            targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.15;
+            targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.15;
             
             if (isHoveringModelRef.current) {
                 isHoveringModelRef.current = false;
