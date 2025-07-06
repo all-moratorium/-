@@ -77,11 +77,11 @@ const Gallery3D = ({ models = [] }) => {
             theme: "cocktail"
         },
         {
-            id: "corvette-1",
-            name: "コルベット1",
+            id: "sports car-1",
+            name: "sports car",
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (35).glb',
-            imagePath: '/ダーツバー2d.png', 
-            description: "コルベットのネオンサイン1",
+            imagePath: '/スポーツカー2d.png', 
+            description: "スポーツカーのネオンサイン1",
             modelScale: 0.008,
             imageScale: 6,
             sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
@@ -113,16 +113,16 @@ const Gallery3D = ({ models = [] }) => {
             theme: "sample"
         },
         {
-            id: "sample-off", 
-            name: "サンプルOFF",
+            id: "sports car", 
+            name: "スポーツカー",
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
-            imagePath: '/ダーツバー2d.png',
-            description: "サンプルネオン（消灯）",
-            modelScale: 0.006,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
-            icon: "🔌",
-            theme: "sample"
+            imagePath: '/スポーツカー2d.png',
+            description: "スポーツカーのネオンサイン",
+            modelScale: 0.0045,
+            imageScale: 5.5,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            icon: "🚗",
+            theme: "car"
         }
     ];
 
