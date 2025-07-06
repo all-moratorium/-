@@ -26,28 +26,104 @@ const Gallery3D = ({ models = [] }) => {
     const [loading, setLoading] = useState(true);
     const [modelScales, setModelScales] = useState({});
 
-    // 利用可能なGLBモデルのリスト
-    const glbModels = [
-        '/models/neon sample glb/my-neon-sign-optimized (31).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (32).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (33).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (34).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (35).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (36).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (37).glb',
-        '/models/neon sample glb/my-neon-sign-optimized (38).glb'
-    ];
-
-    // 対応するネオンサイン画像のリスト
-    const neonImages = [
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png',
-        '/ダーツバー2d.png'
+    // 個別モデル設定（各モデルごとにパラメーター管理）
+    const modelConfigs = [
+        {
+            id: "darts-bar-1",
+            name: "ダーツバー1",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (31).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "ダーツバーのネオンサイン1",
+            modelScale: 0.0062,
+            imageScale: 4.8,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
+            icon: "🎯",
+            theme: "darts"
+        },
+        {
+            id: "darts-bar-2", 
+            name: "ダーツバー2",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (32).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "ダーツバーのネオンサイン2",
+            modelScale: 0.006,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎯",
+            theme: "darts"
+        },
+        {
+            id: "bowling-1",
+            name: "ボウリング1", 
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (33).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "ボウリング場のネオンサイン1",
+            modelScale: 0.007,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎳",
+            theme: "bowling"
+        },
+        {
+            id: "cocktail-1",
+            name: "カクテル1",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (34).glb', 
+            imagePath: '/ダーツバー2d.png',
+            description: "カクテルバーのネオンサイン1",
+            modelScale: 0.005,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🍸",
+            theme: "cocktail"
+        },
+        {
+            id: "corvette-1",
+            name: "コルベット1",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (35).glb',
+            imagePath: '/ダーツバー2d.png', 
+            description: "コルベットのネオンサイン1",
+            modelScale: 0.008,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🚗",
+            theme: "car"
+        },
+        {
+            id: "corvette-2",
+            name: "コルベット2", 
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (36).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "コルベットのネオンサイン2", 
+            modelScale: 0.008,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🚗",
+            theme: "car"
+        },
+        {
+            id: "sample-on",
+            name: "サンプルON",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (37).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "サンプルネオン（点灯）",
+            modelScale: 0.006,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "💡",
+            theme: "sample"
+        },
+        {
+            id: "sample-off", 
+            name: "サンプルOFF",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
+            imagePath: '/ダーツバー2d.png',
+            description: "サンプルネオン（消灯）",
+            modelScale: 0.006,
+            imageScale: 6,
+            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            icon: "🔌",
+            theme: "sample"
+        }
     ];
 
     // デフォルトの絵画情報（modelsが空の場合に使用）
@@ -105,7 +181,7 @@ const Gallery3D = ({ models = [] }) => {
     ];
 
     // 使用するモデルデータ
-    const paintingData = models.length > 0 ? models : defaultPaintingData;
+    const paintingData = models.length > 0 ? models : modelConfigs;
 
     // モデル間の間隔
     const spacing = 9;
@@ -189,17 +265,16 @@ const Gallery3D = ({ models = [] }) => {
     const createNeonModel = useCallback((data, index, setIndex = 0) => {
         const group = new THREE.Group();
 
-        // データインデックスに基づいてGLBモデルを選択
-        const modelIndex = data.originalIndex % glbModels.length;
-        const modelPath = glbModels[modelIndex];
-        const modelKey = `${modelIndex}_${index}_${setIndex}`;
+        // モデル設定から直接パスとスケールを取得
+        const modelPath = data.glbPath;
+        const modelKey = `${data.id}_${index}_${setIndex}`;
 
         // キャッシュされたモデルをクローンして使用
         loadCachedModel(modelPath).then((originalModel) => {
             const model = originalModel.clone();
             
-            // 個別スケール値を取得（デフォルトは0.006）
-            const customScale = modelScales[modelKey] || 0.006;
+            // 個別スケール値を取得（設定値 > カスタム値 > デフォルト値の順）
+            const customScale = modelScales[modelKey] || data.modelScale || 0.006;
             model.scale.set(customScale, customScale, customScale);
             
             // モデルを中央に配置
@@ -226,16 +301,18 @@ const Gallery3D = ({ models = [] }) => {
         };
 
         return group;
-    }, [paintingData, loadCachedModel, glbModels, modelScales]);
+    }, [paintingData, loadCachedModel, modelScales]);
 
     // 画像プレーンを作成（遠くのモデル用）
     const createImagePlane = useCallback((data, index, setIndex = 0) => {
         const group = new THREE.Group();
         
-        // ネオンサイン画像を読み込んで表示
-        const imagePath = neonImages[data.originalIndex % neonImages.length];
+        // ネオンサイン画像を読み込んで表示（比率を自動保持）
+        const imagePath = data.imagePath;
         const textureLoader = new THREE.TextureLoader();
-        const planeGeometry = new THREE.PlaneGeometry(6, 6);
+        
+        // 仮のプレーンを作成（画像読み込み後にサイズ調整）
+        const planeGeometry = new THREE.PlaneGeometry(1, 1);
         const planeMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
             opacity: 0.9
@@ -244,6 +321,20 @@ const Gallery3D = ({ models = [] }) => {
         textureLoader.load(imagePath, (texture) => {
             texture.colorSpace = THREE.SRGBColorSpace;
             planeMaterial.map = texture;
+            
+            // 画像の元比率を取得
+            const aspectRatio = texture.image.width / texture.image.height;
+            const scale = data.imageScale || 6;
+            
+            // 比率を保ったままサイズ調整
+            if (aspectRatio >= 1) {
+                // 横長画像：幅をscaleにして高さを比率で調整
+                planeGeometry.scale(scale, scale / aspectRatio, 1);
+            } else {
+                // 縦長画像：高さをscaleにして幅を比率で調整
+                planeGeometry.scale(scale * aspectRatio, scale, 1);
+            }
+            
             planeMaterial.needsUpdate = true;
         });
         
@@ -260,36 +351,36 @@ const Gallery3D = ({ models = [] }) => {
             originalScale: 1,
             targetScale: 1,
             paintingData: data,
+            modelKey: `${data.id}_${index}_${setIndex}`,
             isImage: true
         };
 
         return group;
-    }, [paintingData, neonImages]);
+    }, [paintingData]);
 
     const createModels = useCallback(() => {
         const allModels = [];
         
         // 無限スクロール用に多くのモデルを作成（中央1個のみ3D、他は全て静止画）
         for (let i = -10; i <= 10; i++) {
-            const dataIndex = ((i % glbModels.length) + glbModels.length) % glbModels.length;
-            // originalIndexを追加してGLBモデル選択に使用
-            const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+            const configIndex = ((i % paintingData.length) + paintingData.length) % paintingData.length;
+            const modelConfig = paintingData[configIndex];
             
             if (i === 0) {
                 // 中央1個のみ3Dモデル
-                const neonModel = createNeonModel(dataWithIndex, i, 0);
+                const neonModel = createNeonModel(modelConfig, i, 0);
                 allModels.push(neonModel);
                 sceneRef.current.add(neonModel);
             } else {
                 // 他は全て画像プレーン（GLBモデルのプレビュー画像として表示）
-                const imagePlane = createImagePlane(dataWithIndex, i, 0);
+                const imagePlane = createImagePlane(modelConfig, i, 0);
                 allModels.push(imagePlane);
                 sceneRef.current.add(imagePlane);
             }
         }
         
         allModelsRef.current = allModels;
-    }, [createNeonModel, createImagePlane, paintingData, glbModels]);
+    }, [createNeonModel, createImagePlane, paintingData]);
 
     const getCenterModel = useCallback(() => {
         const allModels = allModelsRef.current;
@@ -318,11 +409,11 @@ const Gallery3D = ({ models = [] }) => {
                 });
 
                 // ネオンサイン画像プレーンを追加
-                const dataIndex = model.userData.paintingData.originalIndex;
-                const imagePath = neonImages[dataIndex % neonImages.length];
+                const paintingData = model.userData.paintingData;
+                const imagePath = paintingData.imagePath;
                 
                 const textureLoader = new THREE.TextureLoader();
-                const planeGeometry = new THREE.PlaneGeometry(6, 6);
+                const planeGeometry = new THREE.PlaneGeometry(1, 1);
                 const planeMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     opacity: 0.9
@@ -331,6 +422,20 @@ const Gallery3D = ({ models = [] }) => {
                 textureLoader.load(imagePath, (texture) => {
                     texture.colorSpace = THREE.SRGBColorSpace;
                     planeMaterial.map = texture;
+                    
+                    // 画像の元比率を取得
+                    const aspectRatio = texture.image.width / texture.image.height;
+                    const scale = paintingData.imageScale || 6;
+                    
+                    // 比率を保ったままサイズ調整
+                    if (aspectRatio >= 1) {
+                        // 横長画像：幅をscaleにして高さを比率で調整
+                        planeGeometry.scale(scale, scale / aspectRatio, 1);
+                    } else {
+                        // 縦長画像：高さをscaleにして幅を比率で調整
+                        planeGeometry.scale(scale * aspectRatio, scale, 1);
+                    }
+                    
                     planeMaterial.needsUpdate = true;
                 });
                 
@@ -342,8 +447,8 @@ const Gallery3D = ({ models = [] }) => {
 
         // 現在の中央が画像プレーンの場合、3Dモデルに置き換え
         if (centerModel.userData.isImage === true) {
-            const dataIndex = centerModel.userData.paintingData.originalIndex;
-            const modelPath = glbModels[dataIndex % glbModels.length];
+            const paintingData = centerModel.userData.paintingData;
+            const modelPath = paintingData.glbPath;
 
             // 既存の子要素をクリア
             centerModel.children.forEach(child => {
@@ -356,9 +461,9 @@ const Gallery3D = ({ models = [] }) => {
             loadCachedModel(modelPath).then((originalModel) => {
                 const model = originalModel.clone();
                 
-                // 個別スケール値を取得
+                // 個別スケール値を取得（設定値 > カスタム値 > デフォルト値の順）
                 const modelKey = centerModel.userData.modelKey;
-                const customScale = modelScales[modelKey] || 0.006;
+                const customScale = modelScales[modelKey] || paintingData.modelScale || 0.006;
                 model.scale.set(customScale, customScale, customScale);
                 
                 const box = new THREE.Box3().setFromObject(model);
@@ -371,10 +476,10 @@ const Gallery3D = ({ models = [] }) => {
                 console.error('中央モデル更新エラー:', error);
             });
         }
-    }, [getCenterModel, loadCachedModel, glbModels, modelScales]);
+    }, [getCenterModel, loadCachedModel, modelScales]);
 
     const adjustForSeamlessLoop = useCallback(() => {
-        const setLength = glbModels.length * spacing;
+        const setLength = paintingData.length * spacing;
 
         allModelsRef.current.forEach((model) => {
             if (model.position.x > setLength * 1.5) {
@@ -383,7 +488,7 @@ const Gallery3D = ({ models = [] }) => {
                 model.position.x += setLength * 3;
             }
         });
-    }, [glbModels.length]);
+    }, [paintingData.length]);
 
     const updateModelOpacity = useCallback((model, opacity) => {
         model.children.forEach(child => {
@@ -416,7 +521,9 @@ const Gallery3D = ({ models = [] }) => {
                 model.userData.targetScale = 1.65;
                 updateModelOpacity(model, 1.0);
             } else if (distanceFromCamera < spacing * 2.5) {
-                const scale = Math.max(1, 1.3 - (distanceFromCamera / (spacing * 3)));
+                // 設定値から縮小サイズを取得（デフォルトは1.2）
+                const sideScale = model.userData.paintingData?.sideModelScale || 1.2;
+                const scale = Math.max(1, sideScale - (distanceFromCamera / (spacing * 3)));
                 model.userData.targetScale = scale;
                 updateModelOpacity(model, 1.0);
             } else {
@@ -517,10 +624,10 @@ const Gallery3D = ({ models = [] }) => {
             
             if (centerX > rightmostModel.position.x - threshold) {
                 const newIndex = Math.floor(rightmostModel.position.x / spacing) + 1;
-                const dataIndex = ((newIndex % glbModels.length) + glbModels.length) % glbModels.length;
-                const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+                const configIndex = ((newIndex % paintingData.length) + paintingData.length) % paintingData.length;
+                const modelConfig = paintingData[configIndex];
                 
-                const imagePlane = createImagePlane(dataWithIndex, newIndex, 0);
+                const imagePlane = createImagePlane(modelConfig, newIndex, 0);
                 allModels.push(imagePlane);
                 sceneRef.current.add(imagePlane);
             }
@@ -532,15 +639,15 @@ const Gallery3D = ({ models = [] }) => {
             
             if (centerX < leftmostModel.position.x + threshold) {
                 const newIndex = Math.floor(leftmostModel.position.x / spacing) - 1;
-                const dataIndex = ((newIndex % glbModels.length) + glbModels.length) % glbModels.length;
-                const dataWithIndex = { ...paintingData[dataIndex % paintingData.length], originalIndex: dataIndex };
+                const configIndex = ((newIndex % paintingData.length) + paintingData.length) % paintingData.length;
+                const modelConfig = paintingData[configIndex];
                 
-                const imagePlane = createImagePlane(dataWithIndex, newIndex, 0);
+                const imagePlane = createImagePlane(modelConfig, newIndex, 0);
                 allModels.push(imagePlane);
                 sceneRef.current.add(imagePlane);
             }
         }
-    }, [getCenterModel, glbModels, paintingData, createImagePlane]);
+    }, [getCenterModel, paintingData, createImagePlane]);
 
     const switchToModel = useCallback((direction) => {
         if (isTransitioningRef.current) return;
