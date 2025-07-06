@@ -707,9 +707,8 @@
   align-items: center; /* これを変えると：プレビューエリア内の要素の縦方向の位置が変わります（中央揃え） */
   justify-content: center; /* これを変えると：プレビューエリア内の要素の横方向の位置が変わります（中央揃え） */
   background-color: transparent; /* これを変えると：プレビューエリアの背景色が変わります（透明） */
-  margin-top: 20px;
   position: fixed;
-  bottom: 0%;
+  bottom: 1.2%;
   transform: translateY(-50%);
   right: 0%;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* サイドバーと同期したスムーズな幅変更のためのトランジション */
