@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import './Gallery3D.css';
 
 const Gallery3D = ({ models = [] }) => {
@@ -19,6 +21,7 @@ const Gallery3D = ({ models = [] }) => {
     const lastInteractionTimeRef = useRef(Date.now());
     const isInitializedRef = useRef(false); // 初期化フラグを追加
     const resizeTimeoutRef = useRef(null); // リサイズのデバウンス用
+    const cachedModelRef = useRef(null); // GLBモデルをキャッシュ
 
     const [loading, setLoading] = useState(true);
 
@@ -129,34 +132,56 @@ const Gallery3D = ({ models = [] }) => {
         scene.add(backLight);
     }, []);
 
-    const createPainting = useCallback((data, index, setIndex = 0) => {
+    // GLBモデルを一度だけ読み込んでキャッシュ
+    const loadCachedModel = useCallback(() => {
+        if (cachedModelRef.current) {
+            return Promise.resolve(cachedModelRef.current);
+        }
+
+        return new Promise((resolve, reject) => {
+            const loader = new GLTFLoader();
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+            loader.setDRACOLoader(dracoLoader);
+
+            const modelPath = '/models/neon sample glb/my-neon-sign-optimized (31).glb';
+
+            loader.load(
+                modelPath,
+                (gltf) => {
+                    cachedModelRef.current = gltf.scene;
+                    resolve(gltf.scene);
+                },
+                (progress) => {
+                    console.log('GLBローディング進捗:', (progress.loaded / progress.total * 100) + '%');
+                },
+                (error) => {
+                    console.error('GLBローディングエラー:', error);
+                    reject(error);
+                }
+            );
+        });
+    }, []);
+
+    const createNeonModel = useCallback((data, index, setIndex = 0) => {
         const group = new THREE.Group();
 
-        const frameWidth = data.width * 2.1;
-        const frameHeight = data.height * 2.1;
-        const frameDepth = 0.1;
-
-        const canvasGeometry = new THREE.PlaneGeometry(frameWidth * 0.8, frameHeight * 0.8);
-        const canvasMaterial = new THREE.MeshPhysicalMaterial({
-            color: new THREE.Color(data.color).multiplyScalar(1.2),
-            roughness: 0.9,
-            metalness: 0.05,
-            emissive: new THREE.Color(data.color).multiplyScalar(0.02)
+        // キャッシュされたモデルをクローンして使用
+        loadCachedModel().then((originalModel) => {
+            const model = originalModel.clone();
+            
+            // モデルのスケールを調整
+            model.scale.set(0.006, 0.006, 0.006);
+            
+            // モデルを中央に配置
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+            
+            group.add(model);
+        }).catch((error) => {
+            console.error('GLBモデルのクローンエラー:', error);
         });
-        const canvas = new THREE.Mesh(canvasGeometry, canvasMaterial);
-        canvas.position.z = frameDepth / 2 + 0.01;
-        group.add(canvas);
-
-        const frameGeometry = new THREE.BoxGeometry(frameWidth, frameHeight, frameDepth);
-        const frameMaterial = new THREE.MeshPhysicalMaterial({
-            color: new THREE.Color(data.frameColor).multiplyScalar(1.1),
-            roughness: 0.8,
-            metalness: 0.1
-        });
-        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-        frame.castShadow = true;
-        frame.receiveShadow = true;
-        group.add(frame);
 
         const setOffset = setIndex * paintingData.length * spacing;
         group.position.x = index * spacing + setOffset;
@@ -171,19 +196,19 @@ const Gallery3D = ({ models = [] }) => {
         };
 
         return group;
-    }, [paintingData]);
+    }, [paintingData, loadCachedModel]);
 
     const createModels = useCallback(() => {
         const allModels = [];
         for (let setIndex = -1; setIndex <= 1; setIndex++) {
             for (let i = 0; i < paintingData.length; i++) {
-                const painting = createPainting(paintingData[i], i, setIndex);
-                allModels.push(painting);
-                sceneRef.current.add(painting);
+                const neonModel = createNeonModel(paintingData[i], i, setIndex);
+                allModels.push(neonModel);
+                sceneRef.current.add(neonModel);
             }
         }
         allModelsRef.current = allModels;
-    }, [createPainting, paintingData]);
+    }, [createNeonModel, paintingData]);
 
     const getCenterModel = useCallback(() => {
         const allModels = allModelsRef.current;
