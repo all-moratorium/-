@@ -40,14 +40,14 @@ const Gallery3D = ({ models = [] }) => {
 
     // 対応するネオンサイン画像のリスト
     const neonImages = [
-        '/sample.demo.on.png',
-        '/sample.demo.off.png',
-        '/sample.demo.on.png',
-        '/sample.demo.off.png',
-        '/sample.demo.on.png',
-        '/sample.demo.off.png',
-        '/sample.demo.on.png',
-        '/sample.demo.off.png'
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png',
+        '/ダーツバー2d.png'
     ];
 
     // デフォルトの絵画情報（modelsが空の場合に使用）
@@ -235,13 +235,14 @@ const Gallery3D = ({ models = [] }) => {
         // ネオンサイン画像を読み込んで表示
         const imagePath = neonImages[data.originalIndex % neonImages.length];
         const textureLoader = new THREE.TextureLoader();
-        const planeGeometry = new THREE.PlaneGeometry(2, 2);
+        const planeGeometry = new THREE.PlaneGeometry(6, 6);
         const planeMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
             opacity: 0.9
         });
         
         textureLoader.load(imagePath, (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
             planeMaterial.map = texture;
             planeMaterial.needsUpdate = true;
         });
@@ -321,13 +322,14 @@ const Gallery3D = ({ models = [] }) => {
                 const imagePath = neonImages[dataIndex % neonImages.length];
                 
                 const textureLoader = new THREE.TextureLoader();
-                const planeGeometry = new THREE.PlaneGeometry(2, 2);
+                const planeGeometry = new THREE.PlaneGeometry(6, 6);
                 const planeMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     opacity: 0.9
                 });
                 
                 textureLoader.load(imagePath, (texture) => {
+                    texture.colorSpace = THREE.SRGBColorSpace;
                     planeMaterial.map = texture;
                     planeMaterial.needsUpdate = true;
                 });
