@@ -7,6 +7,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import './NeonSVGTo3DExtruder.css';
@@ -1354,6 +1355,186 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     return false;
   }, [savedCameraState]);
 
+  // GLBエクスポート機能（379万頂点を大幅削減）
+  const exportToGLB = useCallback(() => {
+    if (!neonGroupRef.current) {
+      console.warn('エクスポートするモデルがありません。');
+      return;
+    }
+
+    // 379万頂点 → 1万頂点以下に削減
+    const exportGroup = new THREE.Group();
+    
+    neonGroupRef.current.traverse((child) => {
+      if (child.isMesh && child.geometry) {
+        if (child.geometry.type === 'TubeGeometry') {
+          const originalGeometry = child.geometry;
+          const originalRadius = originalGeometry.parameters?.radius || 0.04;
+          const path = originalGeometry.parameters?.path;
+          
+          if (path && path.points && path.points.length > 1) {
+            // パスポイント数を増やしてなめらかさを向上
+            const simplifiedPoints = [];
+            const totalPoints = path.points.length;
+            const maxPoints = 20; // 10→20に増加
+            const step = Math.max(1, Math.floor(totalPoints / maxPoints));
+            
+            for (let i = 0; i < totalPoints; i += step) {
+              simplifiedPoints.push(path.points[i]);
+            }
+            // 最後の点を必ず含める
+            if (simplifiedPoints[simplifiedPoints.length - 1] !== path.points[totalPoints - 1]) {
+              simplifiedPoints.push(path.points[totalPoints - 1]);
+            }
+            
+            const simplifiedCurve = new THREE.CatmullRomCurve3(simplifiedPoints, false, 'centripetal', 0.1);
+            
+            // なめらかさ重視の解像度設定
+            const newGeometry = new THREE.TubeGeometry(
+              simplifiedCurve,
+              Math.max(24, simplifiedPoints.length * 3), // tubularSegments（さらに増加）
+              originalRadius,
+              12, // radialSegments（10→12に増加）
+              false
+            );
+            
+            // 色を取得
+            let color = new THREE.Color(0xff0088);
+            if (child.material && child.material.uniforms && child.material.uniforms.baseColor) {
+              color = child.material.uniforms.baseColor.value;
+            }
+            
+            const material = new THREE.MeshBasicMaterial({ color: color });
+            const mesh = new THREE.Mesh(newGeometry, material);
+            
+            // 元の位置とローテーションを適用
+            mesh.position.copy(child.position);
+            mesh.rotation.copy(child.rotation);
+            mesh.scale.copy(child.scale);
+            
+            exportGroup.add(mesh);
+            
+            console.log(`チューブ簡略化: ${originalGeometry.attributes.position.count}頂点 → ${newGeometry.attributes.position.count}頂点`);
+          }
+        }
+        else if (child.geometry.type === 'SphereGeometry') {
+          // キャップ球体も大幅削減
+          const originalGeometry = child.geometry;
+          const originalRadius = originalGeometry.parameters?.radius || 0.04;
+          
+          const newGeometry = new THREE.SphereGeometry(originalRadius, 12, 12); // 12x12セグメント（なめらかさ向上）
+          
+          let color = new THREE.Color(0xff0088);
+          if (child.material && child.material.uniforms && child.material.uniforms.baseColor) {
+            color = child.material.uniforms.baseColor.value;
+          }
+          
+          const material = new THREE.MeshBasicMaterial({ color: color });
+          const mesh = new THREE.Mesh(newGeometry, material);
+          
+          mesh.position.copy(child.position);
+          mesh.rotation.copy(child.rotation);
+          mesh.scale.copy(child.scale);
+          
+          exportGroup.add(mesh);
+          
+          console.log(`球体簡略化: ${originalGeometry.attributes.position.count}頂点 → ${newGeometry.attributes.position.count}頂点`);
+        }
+        else if (child.geometry.type === 'ExtrudeGeometry') {
+          // 土台の元の色を保持
+          let baseMaterial;
+          if (child.material.type === 'MeshPhongMaterial') {
+            // 元のMeshPhongMaterialの設定を保持
+            baseMaterial = new THREE.MeshBasicMaterial({
+              color: child.material.color,
+              transparent: child.material.transparent,
+              opacity: child.material.opacity,
+              side: child.material.side
+            });
+          } else {
+            // フォールバック
+            baseMaterial = new THREE.MeshBasicMaterial({
+              color: child.material.color || 0x888888,
+              transparent: true,
+              opacity: 0.7
+            });
+          }
+          
+          const mesh = new THREE.Mesh(child.geometry.clone(), baseMaterial);
+          
+          mesh.position.copy(child.position);
+          mesh.rotation.copy(child.rotation);
+          mesh.scale.copy(child.scale);
+          
+          exportGroup.add(mesh);
+        }
+      }
+    });
+
+    // 総頂点数を確認
+    let totalVertices = 0;
+    exportGroup.traverse((child) => {
+      if (child.isMesh && child.geometry) {
+        const vertices = child.geometry.attributes.position ? child.geometry.attributes.position.count : 0;
+        totalVertices += vertices;
+      }
+    });
+    
+    console.log(`エクスポート予定: ${exportGroup.children.length}メッシュ, ${totalVertices}頂点`);
+
+    const exporter = new GLTFExporter();
+    
+    const options = {
+      binary: true,
+      embedImages: false,
+      includeCustomExtensions: false,
+      onlyVisible: true
+    };
+
+    exporter.parse(
+      exportGroup,
+      (result) => {
+        const blob = new Blob([result], { type: 'application/octet-stream' });
+        const fileSizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+        const fileSizeKB = (blob.size / 1024).toFixed(2);
+        
+        console.log(`GLBファイルサイズ: ${fileSizeMB}MB (${fileSizeKB}KB)`);
+        console.log(`削減率: ${((1 - totalVertices / 3792098) * 100).toFixed(1)}%`);
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'my-neon-sign-optimized.glb';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(URL.createObjectURL(blob));
+        
+        // クリーンアップ
+        exportGroup.traverse((child) => {
+          if (child.isMesh) {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+          }
+        });
+        exportGroup.clear();
+        
+        console.log('最適化GLBファイルのエクスポートが完了しました');
+      },
+      (error) => {
+        console.error('エクスポートエラー:', error);
+        exportGroup.traverse((child) => {
+          if (child.isMesh) {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+          }
+        });
+        exportGroup.clear();
+      },
+      options
+    );
+  }, []);
+
   // 外部から呼び出せるメソッドを公開
   useImperativeHandle(ref, () => ({
     // カメラ状態を保存
@@ -1373,8 +1554,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         return true;
       }
       return false;
+    },
+    
+    // GLBエクスポート
+    exportToGLB: () => {
+      exportToGLB();
     }
-  }), [saveCameraState, restoreCameraState, loadSVGFile]);
+  }), [saveCameraState, restoreCameraState, loadSVGFile, exportToGLB]);
 
   return (
     <div className="neon-container">
@@ -1462,6 +1648,15 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           </div>
         </div>
 
+        {/* エクスポートボタン */}
+        <div className="neon3d-export-button-container">
+          <button 
+            className="neon3d-export-button"
+            onClick={exportToGLB}
+          >
+            GLBファイルとして保存
+          </button>
+        </div>
 
         {/* 商品情報へ進むボタン */}
         <div className="neon3d-proceed-button-container">
