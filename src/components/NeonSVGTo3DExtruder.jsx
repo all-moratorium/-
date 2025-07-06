@@ -1376,7 +1376,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // パスポイント数を増やしてなめらかさを向上
             const simplifiedPoints = [];
             const totalPoints = path.points.length;
-            const maxPoints = 20; // 10→20に増加
+            const maxPoints = 25; // 10→20に増加
             const step = Math.max(1, Math.floor(totalPoints / maxPoints));
             
             for (let i = 0; i < totalPoints; i += step) {
@@ -1392,9 +1392,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // なめらかさ重視の解像度設定
             const newGeometry = new THREE.TubeGeometry(
               simplifiedCurve,
-              Math.max(24, simplifiedPoints.length * 3), // tubularSegments（さらに増加）
+              Math.max(30, simplifiedPoints.length * 1), // tubularSegments（さらに増加）
               originalRadius,
-              12, // radialSegments（10→12に増加）
+              8, // radialSegments（10→12に増加）
               false
             );
             
@@ -1422,7 +1422,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const originalGeometry = child.geometry;
           const originalRadius = originalGeometry.parameters?.radius || 0.04;
           
-          const newGeometry = new THREE.SphereGeometry(originalRadius, 12, 12); // 12x12セグメント（なめらかさ向上）
+          const newGeometry = new THREE.SphereGeometry(originalRadius, 6, 6); // 8x8セグメント（なめらかさ向上）
           
           let color = new THREE.Color(0xff0088);
           if (child.material && child.material.uniforms && child.material.uniforms.baseColor) {
