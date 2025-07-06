@@ -38,6 +38,18 @@ const Gallery3D = ({ models = [] }) => {
         '/models/neon sample glb/my-neon-sign-optimized (38).glb'
     ];
 
+    // 対応するネオンサイン画像のリスト
+    const neonImages = [
+        '/sample.demo.on.png',
+        '/sample.demo.off.png',
+        '/sample.demo.on.png',
+        '/sample.demo.off.png',
+        '/sample.demo.on.png',
+        '/sample.demo.off.png',
+        '/sample.demo.on.png',
+        '/sample.demo.off.png'
+    ];
+
     // デフォルトの絵画情報（modelsが空の場合に使用）
     const defaultPaintingData = [
         {
@@ -220,14 +232,20 @@ const Gallery3D = ({ models = [] }) => {
     const createImagePlane = useCallback((data, index, setIndex = 0) => {
         const group = new THREE.Group();
         
-        // TODO: GLBモデルをレンダリングして画像として保存し、ここで読み込む
-        // 今は仮で色付きプレーンを表示
+        // ネオンサイン画像を読み込んで表示
+        const imagePath = neonImages[data.originalIndex % neonImages.length];
+        const textureLoader = new THREE.TextureLoader();
         const planeGeometry = new THREE.PlaneGeometry(2, 2);
         const planeMaterial = new THREE.MeshBasicMaterial({
-            color: data.color,
             transparent: true,
-            opacity: 0.8
+            opacity: 0.9
         });
+        
+        textureLoader.load(imagePath, (texture) => {
+            planeMaterial.map = texture;
+            planeMaterial.needsUpdate = true;
+        });
+        
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
         group.add(plane);
 
@@ -245,7 +263,7 @@ const Gallery3D = ({ models = [] }) => {
         };
 
         return group;
-    }, [paintingData]);
+    }, [paintingData, neonImages]);
 
     const createModels = useCallback(() => {
         const allModels = [];
@@ -283,16 +301,48 @@ const Gallery3D = ({ models = [] }) => {
         });
     }, []);
 
-    // 中央モデルを3Dモデルに切り替える
+    // 中央モデルを3Dモデルに切り替え、他のモデルを画像プレーンに戻す
     const updateCenterModel = useCallback(() => {
         const centerModel = getCenterModel();
-        if (!centerModel || centerModel.userData.isImage === false) return;
+        if (!centerModel) return;
+
+        // 全てのモデルを画像プレーンに戻す
+        allModelsRef.current.forEach(model => {
+            if (model !== centerModel && !model.userData.isImage) {
+                // 3Dモデルを画像プレーンに変更
+                model.children.forEach(child => {
+                    model.remove(child);
+                    if (child.geometry) child.geometry.dispose();
+                    if (child.material) child.material.dispose();
+                });
+
+                // ネオンサイン画像プレーンを追加
+                const dataIndex = model.userData.paintingData.originalIndex;
+                const imagePath = neonImages[dataIndex % neonImages.length];
+                
+                const textureLoader = new THREE.TextureLoader();
+                const planeGeometry = new THREE.PlaneGeometry(2, 2);
+                const planeMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true,
+                    opacity: 0.9
+                });
+                
+                textureLoader.load(imagePath, (texture) => {
+                    planeMaterial.map = texture;
+                    planeMaterial.needsUpdate = true;
+                });
+                
+                const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                model.add(plane);
+                model.userData.isImage = true;
+            }
+        });
 
         // 現在の中央が画像プレーンの場合、3Dモデルに置き換え
-        const dataIndex = centerModel.userData.paintingData.originalIndex;
-        const modelPath = glbModels[dataIndex % glbModels.length];
+        if (centerModel.userData.isImage === true) {
+            const dataIndex = centerModel.userData.paintingData.originalIndex;
+            const modelPath = glbModels[dataIndex % glbModels.length];
 
-        loadCachedModel(modelPath).then((originalModel) => {
             // 既存の子要素をクリア
             centerModel.children.forEach(child => {
                 centerModel.remove(child);
@@ -300,22 +350,25 @@ const Gallery3D = ({ models = [] }) => {
                 if (child.material) child.material.dispose();
             });
 
-            const model = originalModel.clone();
-            
-            // 個別スケール値を取得
-            const modelKey = centerModel.userData.modelKey;
-            const customScale = modelScales[modelKey] || 0.006;
-            model.scale.set(customScale, customScale, customScale);
-            
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            model.position.sub(center);
-            
-            centerModel.add(model);
-            centerModel.userData.isImage = false;
-        }).catch((error) => {
-            console.error('中央モデル更新エラー:', error);
-        });
+            // 3Dモデルを非同期で読み込み（即座に画像プレーンをクリア）
+            loadCachedModel(modelPath).then((originalModel) => {
+                const model = originalModel.clone();
+                
+                // 個別スケール値を取得
+                const modelKey = centerModel.userData.modelKey;
+                const customScale = modelScales[modelKey] || 0.006;
+                model.scale.set(customScale, customScale, customScale);
+                
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                model.position.sub(center);
+                
+                centerModel.add(model);
+                centerModel.userData.isImage = false;
+            }).catch((error) => {
+                console.error('中央モデル更新エラー:', error);
+            });
+        }
     }, [getCenterModel, loadCachedModel, glbModels, modelScales]);
 
     const adjustForSeamlessLoop = useCallback(() => {
@@ -681,7 +734,7 @@ const Gallery3D = ({ models = [] }) => {
                 mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
                 mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
                 
-                if (Math.abs(mouseRef.current.x) <= 0.8 && Math.abs(mouseRef.current.y) <= 0.8) {
+                if (Math.abs(mouseRef.current.x) <= 0.6 && Math.abs(mouseRef.current.y) <= 0.6) {
                     targetRotationRef.current.y = mouseRef.current.x * 0.5;
                     targetRotationRef.current.x = -mouseRef.current.y * 0.5;
                 } else {
