@@ -2665,13 +2665,49 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setOffsetY(canvasHeight / 2);
     }, [canvasWidth, canvasHeight]);
 
-    // コンポーネント初期化時に視点をリセット（ページ戻り時のズレ防止）
+    // 視点状態を保存・復元する機能
+    const saveViewState = useCallback(() => {
+        const viewState = {
+            scale,
+            offsetX,
+            offsetY,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('neonDrawingViewState', JSON.stringify(viewState));
+    }, [scale, offsetX, offsetY]);
+
+    const restoreViewState = useCallback(() => {
+        try {
+            const savedViewState = localStorage.getItem('neonDrawingViewState');
+            if (savedViewState) {
+                const viewState = JSON.parse(savedViewState);
+                setScale(viewState.scale || 1);
+                setOffsetX(viewState.offsetX || canvasWidth / 2);
+                setOffsetY(viewState.offsetY || canvasHeight / 2);
+                return true;
+            }
+        } catch (error) {
+            console.error('視点状態の復元エラー:', error);
+        }
+        return false;
+    }, [canvasWidth, canvasHeight]);
+
+    // コンポーネント初期化時に視点を復元、失敗時はリセット
     useEffect(() => {
         if (canvasWidth > 0 && canvasHeight > 0) {
-            // 初回マウント時のみ視点をリセット
-            resetView();
+            if (!restoreViewState()) {
+                // 復元に失敗した場合のみリセット
+                resetView();
+            }
         }
-    }, [canvasWidth, canvasHeight, resetView]);
+    }, [canvasWidth, canvasHeight, restoreViewState, resetView]);
+
+    // コンポーネントのアンマウント時に視点を保存
+    useEffect(() => {
+        return () => {
+            saveViewState();
+        };
+    }, [saveViewState]);
 
     const handleMouseClick = useCallback((e) => {
         // モーダル表示中はキャンバス操作を無効化
@@ -3233,9 +3269,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
-                            // 視点をリセット
-                            resetView();
-                            
                             // 土台（fillモード）が存在するかチェック
                             const hasFillPath = paths.some(pathObj => 
                                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3

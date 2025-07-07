@@ -467,7 +467,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
-                            const padding = 100; // 周囲の余白
+                            const padding = 200; // 周囲の余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                             const scaleY = (screenHeight - padding * 2) / modelHeight;

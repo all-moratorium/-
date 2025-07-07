@@ -794,7 +794,20 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     if (controlsRef.current) {
       controlsRef.current.target.set(0, 0, 0);
-      cameraRef.current.position.set(0, 0, 1500);
+      // 画面サイズに対してモデルが適切に収まる視点を計算
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const padding = 200; // 周囲の余白
+      
+      // モデルのサイズを考慮した適切な距離を計算
+      const modelSize = 1000; // 想定されるモデルサイズ
+      const scaleX = (screenWidth - padding * 2) / modelSize;
+      const scaleY = (screenHeight - padding * 2) / modelSize;
+      const optimalScale = Math.min(scaleX, scaleY, 1);
+      
+      // 最適な視点距離を計算
+      const optimalDistance = Math.max(1200, modelSize / optimalScale);
+      cameraRef.current.position.set(0, 0, optimalDistance);
       controlsRef.current.update();
     }
 
@@ -847,11 +860,24 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // Camera setup - match SVGTo3DExtruder settings
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
-    // 保存された状態があれば復元、なければデフォルト
+    // 保存された状態があれば復元、なければ適切な初期視点を設定
     if (savedCameraState) {
       camera.position.copy(savedCameraState.position);
     } else {
-      camera.position.set(0, 0, 1500);
+      // 画面サイズに対してモデルが適切に収まる視点を計算
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const padding = 200; // 周囲の余白
+      
+      // モデルのサイズを考慮した適切な距離を計算
+      const modelSize = 1000; // 想定されるモデルサイズ
+      const scaleX = (screenWidth - padding * 2) / modelSize;
+      const scaleY = (screenHeight - padding * 2) / modelSize;
+      const optimalScale = Math.min(scaleX, scaleY, 1);
+      
+      // 最適な視点距離を計算
+      const optimalDistance = Math.max(1200, modelSize / optimalScale);
+      camera.position.set(0, 0, optimalDistance);
     }
     camera.layers.enable(ENTIRE_SCENE_LAYER);
     camera.layers.enable(BLOOM_SCENE_LAYER);

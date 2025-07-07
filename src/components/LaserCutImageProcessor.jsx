@@ -810,7 +810,8 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     window.addEventListener('show3DPreview', handleShow3DPreview);
 
     const handleRequestPageTransition = () => {
-      setCurrentPage('neonSvg3dPreview'); // ネオン3Dプレビューに移動
+      // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
+      setCurrentPage('neonSvg3dPreview');
     };
     window.addEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
 
