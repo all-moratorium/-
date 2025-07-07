@@ -34,8 +34,8 @@ const Gallery3D = ({ models = [] }) => {
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (31).glb',
             imagePath: '/ダーツバー2d.png',
             description: "ダーツバーのネオンサイン1",
-            modelScale: 0.0062,
-            imageScale: 4.8,
+            modelScale: 0.0070,
+            imageScale: 5.2,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "🎯",
             theme: "darts"
@@ -44,25 +44,25 @@ const Gallery3D = ({ models = [] }) => {
             id: "darts-bar-2", 
             name: "ダーツバー2",
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (32).glb',
-            imagePath: '/ダーツバー2d.png',
+            imagePath: '/ラーメン2d.png',
             description: "ダーツバーのネオンサイン2",
             modelScale: 0.006,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            imageScale: 4.5,
+            sideModelScale: 1.3, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",
             theme: "darts"
         },
         {
-            id: "bowling-1",
-            name: "ボウリング1", 
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (33).glb',
-            imagePath: '/ダーツバー2d.png',
-            description: "ボウリング場のネオンサイン1",
-            modelScale: 0.007,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎳",
-            theme: "bowling"
+            id: "ramen",
+            name: "ラーメン", 
+            glbPath: '/models/neon sample glb/ラーメン.glb',
+            imagePath: '/ラーメン2d.png',
+            description: "ラーメンのネオンサイン1",
+            modelScale: 0.006,
+            imageScale: 4.5,
+            sideModelScale: 1.3, // 中央から外れた時の3Dモデルサイズ
+            icon: "�",
+            theme: "ramen"
         },
         {
             id: "cocktail-1",
@@ -77,16 +77,16 @@ const Gallery3D = ({ models = [] }) => {
             theme: "cocktail"
         },
         {
-            id: "sports car-1",
-            name: "sports car",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (35).glb',
+            id: "ボウリング",
+            name: "ボウリング",
+            glbPath: '/models/neon sample glb/ボウリング.glb',
             imagePath: 'ボウリング2d.png', 
-            description: "スポーツカーのネオンサイン1",
-            modelScale: 0.007,
-            imageScale: 4.3,
-            sideModelScale: 1, // 中央から外れた時の3Dモデルサイズ
-            icon: "🚗",
-            theme: "car"
+            description: "ボウリングのネオンサイン",
+            modelScale: 0.0075,
+            imageScale: 4.45,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: " Bowling",
+            theme: "bowling"
         },
         {
             id: "corvette-2",
@@ -95,7 +95,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/ダーツバー2d.png',
             description: "コルベットのネオンサイン2", 
             modelScale: 0.008,
-            imageScale: 6,
+            imageScale: 5.8,
             sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
             icon: "🚗",
             theme: "car"
@@ -118,65 +118,11 @@ const Gallery3D = ({ models = [] }) => {
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
             imagePath: '/スポーツカー2d.png',
             description: "スポーツカーのネオンサイン",
-            modelScale: 0.0045,
-            imageScale: 5.5,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            modelScale: 0.0048,
+            imageScale: 5.8,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: "🚗",
             theme: "car"
-        }
-    ];
-
-    // デフォルトの絵画情報（modelsが空の場合に使用）
-    const defaultPaintingData = [
-        {
-            name: "Ethereal Hummingbird",
-            description: "美しい虹色の羽を持つ幻想的なハチドリ。光と影が織りなす神秘的な世界を表現しています。",
-            color: 0x4a9eff,
-            frameColor: 0x8b4513,
-            icon: "🦜",
-            theme: "hummingbird",
-            width: 1.8,
-            height: 2.4
-        },
-        {
-            name: "Steampunk Guardian",
-            description: "蒸気とギアで動く機械の守護者。古き良き時代の技術と未来への憧れが融合した作品です。",
-            color: 0xd4af37,
-            frameColor: 0x2f4f4f,
-            icon: "⚙️",
-            theme: "steampunk",
-            width: 2.4,
-            height: 1.8
-        },
-        {
-            name: "Lunar Scorpion",
-            description: "月の光を纏う神秘的なサソリ。夜の静寂の中で輝く銀色の美しさを表現しています。",
-            color: 0xc0c0c0,
-            frameColor: 0x1e1e1e,
-            icon: "🦂",
-            theme: "scorpion",
-            width: 2.0,
-            height: 2.0
-        },
-        {
-            name: "Mystic Cottage",
-            description: "魔法使いが住む小さな家。温かな光に包まれた、ファンタジーの世界への入り口です。",
-            color: 0x8b4513,
-            frameColor: 0x654321,
-            icon: "🏠",
-            theme: "cottage",
-            width: 2.6,
-            height: 1.6
-        },
-        {
-            name: "Crimson Dragon",
-            description: "炎を操る古代の竜。力強さと美しさを兼ね備えた、伝説の生き物を描いた傑作です。",
-            color: 0xff4500,
-            frameColor: 0x800000,
-            icon: "🐉",
-            theme: "dragon",
-            width: 1.6,
-            height: 2.8
         }
     ];
 
@@ -529,7 +475,7 @@ const Gallery3D = ({ models = [] }) => {
             const isImagePlane = model.userData.isImage;
 
             if (isCenterModel) {
-                model.userData.targetScale = 1.65;
+                model.userData.targetScale = 1.40;
                 updateModelOpacity(model, 1.0);
             } else if (distanceFromCamera < spacing * 2.5) {
                 // 設定値から縮小サイズを取得（デフォルトは1.2）

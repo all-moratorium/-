@@ -1376,7 +1376,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // パスポイント数を増やしてなめらかさを向上
             const simplifiedPoints = [];
             const totalPoints = path.points.length;
-            const maxPoints = 25; // 10→20に増加
+            const maxPoints = 40; // 10→20に増加
             const step = Math.max(1, Math.floor(totalPoints / maxPoints));
             
             for (let i = 0; i < totalPoints; i += step) {
@@ -1392,9 +1392,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // なめらかさ重視の解像度設定
             const newGeometry = new THREE.TubeGeometry(
               simplifiedCurve,
-              Math.max(30, simplifiedPoints.length * 1), // tubularSegments（さらに増加）
+              Math.max(40, simplifiedPoints.length * 3), // tubularSegments（さらに増加）
               originalRadius,
-              8, // radialSegments（10→12に増加）
+              8, // radialSegments（10→12に増加
               false
             );
             

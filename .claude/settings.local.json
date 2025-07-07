@@ -17,7 +17,8 @@
       "Bash(find:*)",
       "Bash(cat:*)",
       "Bash(curl:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
