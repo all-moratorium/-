@@ -1353,7 +1353,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             newScale = canvasSettings.scale / (1 + scaleAmount);
         }
 
-        newScale = Math.max(0.1, Math.min(newScale, 10)); // 最小0.1倍、最大10倍に制限
+        newScale = Math.max(0.18, Math.min(newScale, 10)); // 最小0.18倍、最大10倍に制限
 
         // ズームの中心をマウスカーソルに合わせる
         const newOffsetX = mouseX - (mouseX - canvasSettings.offsetX) * (newScale / canvasSettings.scale);

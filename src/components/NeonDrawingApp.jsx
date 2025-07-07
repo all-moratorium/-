@@ -2442,7 +2442,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             newScale = scale / (1 + scaleAmount);
         }
 
-        newScale = Math.max(0.3, Math.min(newScale, 20)); // 最小0.3倍、最大20倍に制限
+        newScale = Math.max(0.18, Math.min(newScale, 20)); // 最小0.18倍、最大20倍に制限
 
         // ズームの中心をマウスカーソルに合わせる
         setOffsetX(mouseX - (mouseX - offsetX) * (newScale / scale));
@@ -2451,8 +2451,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     }, [scale, offsetX, offsetY]);
 
     const handleMouseDown = useCallback((e) => {
-        // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        // モーダル表示中はクリック操作のみ無効化、パン操作は許可
+        if (showRectangleModal && e.button !== 2) return;
         
         e.preventDefault();
         didDragRef.current = false; // ドラッグ開始時にリセット
@@ -2598,8 +2598,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     }, [offsetX, offsetY, scale, paths, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory]);
 
     const handleMouseMove = useCallback((e) => {
-        // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        // モーダル表示中はパン操作のみ許可
+        if (showRectangleModal && !isPanning) return;
         
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -2639,8 +2639,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale]);
 
     const handleMouseUp = useCallback(() => {
-        // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        // モーダル表示中でもパン操作終了は許可
+        if (showRectangleModal && !isPanning) return;
         
         // 点をドラッグした場合は履歴に保存
         if (activePoint !== null && didDragRef.current) {
@@ -2652,12 +2652,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     }, [activePoint, paths, currentPathIndex, drawMode, drawingType, saveToHistory]);
 
     const handleMouseLeave = useCallback(() => {
-        // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        // モーダル表示中でもパン操作終了は許可
         
         setIsPanning(false);
         setActivePoint(null);
-    }, [showRectangleModal]);
+    }, []);
 
     // ビューをリセット（ズームとパンを初期値に戻す）
     const resetView = useCallback(() => {
