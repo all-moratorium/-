@@ -333,13 +333,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             return;
         }
         
-        // 保存時は視点を初期状態にリセット
-        const resetCanvasSettings = {
-            scale: 1,
-            offsetX: canvasWidth / 2,  // 画面中央
-            offsetY: canvasHeight / 2, // 画面中央
-            segmentsPerCurve: canvasSettings.segmentsPerCurve || 30
-        };
+        // 現在の視点をそのまま保存
 
         const projectData = {
             version: '1.0',
@@ -363,7 +357,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             neonPaths,
             neonColors,
             neonLineWidths,
-            canvasSettings: resetCanvasSettings,
+            canvasSettings,
             installationEnvironment,
             svgData
         };
@@ -405,6 +399,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
+                // ファイル読み込み開始時に初期化フラグを設定（ちらつき防止）
+                setIsInitializing(true);
+                
                 const projectData = JSON.parse(e.target.result);
                 
                 // ファイル形式の判定
@@ -445,8 +442,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 }
                 if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
                 if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
-                // 読み込み後は視点を初期化（遅延実行で確実に画面サイズを取得）
-                setTimeout(() => {
+                // 読み込み後は視点を初期化（即座に実行してちらつき防止）
+                if (true) { // setTimeoutを削除して即座に実行
                     if (projectData.neonPaths && projectData.neonPaths.length > 0) {
                         // モデルの境界を計算
                         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -504,8 +501,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             segmentsPerCurve: projectData.canvasSettings?.segmentsPerCurve || 30
                         });
                     }
-                }, 100);
+                } // 即座に実行でちらつき防止
+                
                 if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
+                
+                // 視点計算完了後に表示開始
+                setIsInitializing(false);
 
                 // svgDataの復元（ネオン下絵データ）
                 if (projectData.svgData !== undefined) {
@@ -749,6 +750,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     useEffect(() => {
         loadCustomizeData();
         
+        // 視点復元は正式な保存システム（ファイル・グローバルバックアップ）を使用
+        
         // グローバルバックアップからの復元を試行（ファイルが読み込まれた場合のみ）
         if (window.lastLoadedCustomizeProject && window.customizeFileWasLoaded && neonPaths.length === 0) {
             const projectData = window.lastLoadedCustomizeProject;
@@ -846,14 +849,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 gridColorOff: gridColorOff,
                 gridSize: gridSize,
                 isTubeSettingsMinimized: isTubeSettingsMinimized,
-                installationEnvironment: installationEnvironment
+                installationEnvironment: installationEnvironment,
+                canvasSettings: canvasSettings
             };
         }
     }, [
         selectedColor, thickness, backgroundColor,
         gridColor, showGrid, gridOpacity, pathColors, pathThickness, neonPower,
         backgroundColorOff, gridColorOff, gridSize, isTubeSettingsMinimized, 
-        installationEnvironment, isDataLoaded
+        installationEnvironment, isDataLoaded, canvasSettings
     ]);
 
     // 3Dプレビューから戻った時の状態復元
