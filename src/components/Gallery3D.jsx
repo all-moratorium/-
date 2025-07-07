@@ -67,7 +67,7 @@ const Gallery3D = ({ models = [] }) => {
         {
             id: "cocktail-1",
             name: "カクテル1",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (34).glb', 
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (53).glb', 
             imagePath: '/ダーツバー2d.png',
             description: "カクテルバーのネオンサイン1",
             modelScale: 0.005,
@@ -80,11 +80,11 @@ const Gallery3D = ({ models = [] }) => {
             id: "sports car-1",
             name: "sports car",
             glbPath: '/models/neon sample glb/my-neon-sign-optimized (35).glb',
-            imagePath: '/スポーツカー2d.png', 
+            imagePath: 'ボウリング2d.png', 
             description: "スポーツカーのネオンサイン1",
-            modelScale: 0.008,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            modelScale: 0.007,
+            imageScale: 4.3,
+            sideModelScale: 1, // 中央から外れた時の3Dモデルサイズ
             icon: "🚗",
             theme: "car"
         },
@@ -103,7 +103,7 @@ const Gallery3D = ({ models = [] }) => {
         {
             id: "sample-on",
             name: "サンプルON",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (37).glb',
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (53).glb',
             imagePath: '/ダーツバー2d.png',
             description: "サンプルネオン（点灯）",
             modelScale: 0.006,
@@ -361,21 +361,23 @@ const Gallery3D = ({ models = [] }) => {
     const createModels = useCallback(() => {
         const allModels = [];
         
-        // 無限スクロール用に多くのモデルを作成（中央1個のみ3D、他は全て静止画）
-        for (let i = -10; i <= 10; i++) {
-            const configIndex = ((i % paintingData.length) + paintingData.length) % paintingData.length;
-            const modelConfig = paintingData[configIndex];
-            
-            if (i === 0) {
-                // 中央1個のみ3Dモデル
-                const neonModel = createNeonModel(modelConfig, i, 0);
-                allModels.push(neonModel);
-                sceneRef.current.add(neonModel);
-            } else {
-                // 他は全て画像プレーン（GLBモデルのプレビュー画像として表示）
-                const imagePlane = createImagePlane(modelConfig, i, 0);
-                allModels.push(imagePlane);
-                sceneRef.current.add(imagePlane);
+        // 3セット作成して継ぎ目なく繋がるように配置
+        for (let set = 0; set < 3; set++) {
+            for (let i = 0; i < paintingData.length; i++) {
+                const modelConfig = paintingData[i];
+                const position = (set - 1) * paintingData.length + i;
+                
+                if (set === 1 && i === 0) {
+                    // 中央のセットの最初のモデルを3Dモデルに
+                    const neonModel = createNeonModel(modelConfig, position, 0);
+                    allModels.push(neonModel);
+                    sceneRef.current.add(neonModel);
+                } else {
+                    // その他は全て画像プレーン
+                    const imagePlane = createImagePlane(modelConfig, position, 0);
+                    allModels.push(imagePlane);
+                    sceneRef.current.add(imagePlane);
+                }
             }
         }
         
@@ -482,9 +484,10 @@ const Gallery3D = ({ models = [] }) => {
         const setLength = paintingData.length * spacing;
 
         allModelsRef.current.forEach((model) => {
-            if (model.position.x > setLength * 1.5) {
+            // セットの境界を越えた場合のみループ
+            if (model.position.x >= setLength) {
                 model.position.x -= setLength * 3;
-            } else if (model.position.x < -setLength * 1.5) {
+            } else if (model.position.x <= -setLength) {
                 model.position.x += setLength * 3;
             }
         });
@@ -605,49 +608,11 @@ const Gallery3D = ({ models = [] }) => {
         isTooltipShownRef.current = false;
     }, []);
 
-    // 動的にモデルを追加する関数
+    // 動的にモデルを追加する関数（削除は不要）
     const addModelIfNeeded = useCallback((direction) => {
-        const allModels = allModelsRef.current;
-        if (allModels.length === 0) return;
-
-        const centerModel = getCenterModel();
-        if (!centerModel) return;
-
-        const centerX = centerModel.position.x;
-        const threshold = spacing * 8; // 8モデル分の距離
-
-        if (direction > 0) {
-            // 右に移動する場合、右端にモデルを追加
-            const rightmostModel = allModels.reduce((rightmost, current) => 
-                current.position.x > rightmost.position.x ? current : rightmost
-            );
-            
-            if (centerX > rightmostModel.position.x - threshold) {
-                const newIndex = Math.floor(rightmostModel.position.x / spacing) + 1;
-                const configIndex = ((newIndex % paintingData.length) + paintingData.length) % paintingData.length;
-                const modelConfig = paintingData[configIndex];
-                
-                const imagePlane = createImagePlane(modelConfig, newIndex, 0);
-                allModels.push(imagePlane);
-                sceneRef.current.add(imagePlane);
-            }
-        } else {
-            // 左に移動する場合、左端にモデルを追加
-            const leftmostModel = allModels.reduce((leftmost, current) => 
-                current.position.x < leftmost.position.x ? current : leftmost
-            );
-            
-            if (centerX < leftmostModel.position.x + threshold) {
-                const newIndex = Math.floor(leftmostModel.position.x / spacing) - 1;
-                const configIndex = ((newIndex % paintingData.length) + paintingData.length) % paintingData.length;
-                const modelConfig = paintingData[configIndex];
-                
-                const imagePlane = createImagePlane(modelConfig, newIndex, 0);
-                allModels.push(imagePlane);
-                sceneRef.current.add(imagePlane);
-            }
-        }
-    }, [getCenterModel, paintingData, createImagePlane]);
+        // 3セット構成なので動的追加は不要
+        // adjustForSeamlessLoopでループ処理を行う
+    }, []);
 
     const switchToModel = useCallback((direction) => {
         if (isTransitioningRef.current) return;
@@ -662,14 +627,11 @@ const Gallery3D = ({ models = [] }) => {
             hideTooltip();
         }
 
-        // 動的にモデルを追加
-        addModelIfNeeded(direction);
-
         const moveDistance = spacing * direction;
         const startPositions = allModelsRef.current.map(model => model.position.x);
 
         let progress = 0;
-        const duration = 800; // 800ms → 400msに高速化
+        const duration = 800;
         const startTime = Date.now();
 
         const animateTransition = () => {
@@ -687,16 +649,17 @@ const Gallery3D = ({ models = [] }) => {
             if (progress < 1) {
                 requestAnimationFrame(animateTransition);
             } else {
+                // アニメーション完了後に即座にループ調整
+                adjustForSeamlessLoop();
                 // 新しい中央モデルに3Dモデルを更新
                 updateCenterModel();
-                adjustForSeamlessLoop();
                 updateModelPositions();
                 isTransitioningRef.current = false;
             }
         };
 
         animateTransition();
-    }, [hideClickPrompt, hideTooltip, addModelIfNeeded, updateCenterModel, adjustForSeamlessLoop, updateModelPositions]);
+    }, [hideClickPrompt, hideTooltip, updateCenterModel, adjustForSeamlessLoop, updateModelPositions]);
 
     const recordUserInteraction = useCallback(() => {
         lastInteractionTimeRef.current = Date.now();
