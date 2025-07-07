@@ -445,7 +445,66 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 }
                 if (projectData.neonColors !== undefined) setNeonColors(projectData.neonColors);
                 if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
-                if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
+                // 読み込み後は視点を初期化（遅延実行で確実に画面サイズを取得）
+                setTimeout(() => {
+                    if (projectData.neonPaths && projectData.neonPaths.length > 0) {
+                        // モデルの境界を計算
+                        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                        projectData.neonPaths.forEach(pathObj => {
+                            if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                                pathObj.points.forEach(point => {
+                                    minX = Math.min(minX, point.x);
+                                    minY = Math.min(minY, point.y);
+                                    maxX = Math.max(maxX, point.x);
+                                    maxY = Math.max(maxY, point.y);
+                                });
+                            }
+                        });
+                        
+                        if (minX !== Infinity) {
+                            const modelWidth = maxX - minX;
+                            const modelHeight = maxY - minY;
+                            const modelCenterX = (minX + maxX) / 2;
+                            const modelCenterY = (minY + maxY) / 2;
+                            
+                            // 画面サイズに対してモデルが適切に収まるスケールを計算
+                            const screenWidth = window.innerWidth;
+                            const screenHeight = window.innerHeight;
+                            const padding = 100; // 周囲の余白
+                            
+                            const scaleX = (screenWidth - padding * 2) / modelWidth;
+                            const scaleY = (screenHeight - padding * 2) / modelHeight;
+                            const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+                            
+                            // モデル中央を画面中央に配置するオフセット計算
+                            const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+                            const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+                            
+                            setCanvasSettings({
+                                scale: optimalScale,
+                                offsetX: offsetX,
+                                offsetY: offsetY,
+                                segmentsPerCurve: projectData.canvasSettings?.segmentsPerCurve || 30
+                            });
+                        } else {
+                            // モデルがない場合はデフォルト
+                            setCanvasSettings({
+                                scale: 1,
+                                offsetX: window.innerWidth / 2,
+                                offsetY: window.innerHeight / 2,
+                                segmentsPerCurve: projectData.canvasSettings?.segmentsPerCurve || 30
+                            });
+                        }
+                    } else {
+                        // データがない場合はデフォルト
+                        setCanvasSettings({
+                            scale: 1,
+                            offsetX: window.innerWidth / 2,
+                            offsetY: window.innerHeight / 2,
+                            segmentsPerCurve: projectData.canvasSettings?.segmentsPerCurve || 30
+                        });
+                    }
+                }, 100);
                 if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
 
                 // svgDataの復元（ネオン下絵データ）
