@@ -315,7 +315,8 @@ const Gallery3D = ({ models = [] }) => {
         const planeGeometry = new THREE.PlaneGeometry(1, 1);
         const planeMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
-            opacity: 0.9
+            opacity: 0, // 初期状態で透明
+            visible: false // 初期状態で非表示
         });
         
         textureLoader.load(imagePath, (texture) => {
@@ -335,6 +336,9 @@ const Gallery3D = ({ models = [] }) => {
                 planeGeometry.scale(scale * aspectRatio, scale, 1);
             }
             
+            // 画像が読み込まれてから表示
+            planeMaterial.opacity = 0.9;
+            planeMaterial.visible = true;
             planeMaterial.needsUpdate = true;
         });
         
@@ -418,7 +422,8 @@ const Gallery3D = ({ models = [] }) => {
                 const planeGeometry = new THREE.PlaneGeometry(1, 1);
                 const planeMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
-                    opacity: 0.9
+                    opacity: 0, // 初期状態で透明
+                    visible: false // 初期状態で非表示
                 });
                 
                 textureLoader.load(imagePath, (texture) => {
@@ -438,6 +443,9 @@ const Gallery3D = ({ models = [] }) => {
                         planeGeometry.scale(scale * aspectRatio, scale, 1);
                     }
                     
+                    // 画像が読み込まれてから表示
+                    planeMaterial.opacity = 0.9;
+                    planeMaterial.visible = true;
                     planeMaterial.needsUpdate = true;
                 });
                 
