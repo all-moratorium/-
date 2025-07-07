@@ -3279,16 +3279,16 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 return;
                             }
                             
-                            // カスタマイズへ進む前に現在の状態を親に保存（視点は初期視点で保存）
+                            // カスタマイズへ進む前に現在の状態を親に保存（現在の視点で保存）
                             if (onStateChange) {
                                 const currentState = {
                                     paths: paths,
                                     currentPathIndex: currentPathIndex,
                                     drawMode: drawMode,
                                     drawingType: drawingType,
-                                    scale: 1,
-                                    offsetX: canvasWidth / 2,
-                                    offsetY: canvasHeight / 2,
+                                    scale: scale,
+                                    offsetX: offsetX,
+                                    offsetY: offsetY,
                                     backgroundImage: backgroundImage,
                                     initialBgImageWidth: initialBgImageWidth,
                                     initialBgImageHeight: initialBgImageHeight,
@@ -3321,9 +3321,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     colors: colors,
                                     lineWidths: lineWidths,
                                     canvasData: {
-                                        scale: 1,
-                                        offsetX: canvasWidth / 2,
-                                        offsetY: canvasHeight / 2,
+                                        scale: scale,
+                                        offsetX: offsetX,
+                                        offsetY: offsetY,
                                         segmentsPerCurve: segmentsPerCurve,
                                         canvasWidth: canvasWidth,
                                         canvasHeight: canvasHeight,
