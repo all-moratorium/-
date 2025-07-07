@@ -1409,6 +1409,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             
             // 元の位置とローテーションを適用
             mesh.position.copy(child.position);
+            mesh.position.z = 16; // チューブを土台より前面に配置
             mesh.rotation.copy(child.rotation);
             mesh.scale.copy(child.scale);
             
@@ -1433,6 +1434,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const mesh = new THREE.Mesh(newGeometry, material);
           
           mesh.position.copy(child.position);
+          mesh.position.z = 16; // キャップも土台より前面に配置
           mesh.rotation.copy(child.rotation);
           mesh.scale.copy(child.scale);
           
@@ -1463,6 +1465,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const mesh = new THREE.Mesh(child.geometry.clone(), baseMaterial);
           
           mesh.position.copy(child.position);
+          mesh.position.z = 7; // 土台を正しい位置に配置
           mesh.rotation.copy(child.rotation);
           mesh.scale.copy(child.scale);
           
