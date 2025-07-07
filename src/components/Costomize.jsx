@@ -333,6 +333,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             return;
         }
         
+        // 保存時は視点を初期状態にリセット
+        const resetCanvasSettings = {
+            scale: 1,
+            offsetX: canvasWidth / 2,  // 画面中央
+            offsetY: canvasHeight / 2, // 画面中央
+            segmentsPerCurve: canvasSettings.segmentsPerCurve || 30
+        };
+
         const projectData = {
             version: '1.0',
             timestamp: new Date().toISOString(),
@@ -355,7 +363,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             neonPaths,
             neonColors,
             neonLineWidths,
-            canvasSettings,
+            canvasSettings: resetCanvasSettings,
             installationEnvironment,
             svgData
         };
