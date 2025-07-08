@@ -1083,9 +1083,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (svgData.canvasData.showGrid !== undefined && (!shouldUseInitialState || initialState.showGrid === undefined)) {
                     setShowGrid(svgData.canvasData.showGrid);
                 }
-                if (svgData.canvasData.gridColor !== undefined && (!shouldUseInitialState || !initialState.gridColorOff)) {
-                    setGridColorOff(svgData.canvasData.gridColor);
-                }
+                // ネオン下絵のグリッド色をオフ時のグリッド色として引き継がない（独自設定を維持）
+                // if (svgData.canvasData.gridColor !== undefined && (!shouldUseInitialState || !initialState.gridColorOff)) {
+                //     setGridColorOff(svgData.canvasData.gridColor);
+                // }
             }
             
             // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合のみ）
