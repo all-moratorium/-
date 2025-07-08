@@ -3279,16 +3279,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 return;
                             }
                             
-                            // カスタマイズへ進む前に現在の状態を親に保存（現在の視点で保存）
+                            // カスタマイズへ進む前に現在の状態を親に保存（視点情報は保存しない）
                             if (onStateChange) {
                                 const currentState = {
                                     paths: paths,
                                     currentPathIndex: currentPathIndex,
                                     drawMode: drawMode,
                                     drawingType: drawingType,
-                                    scale: scale,
-                                    offsetX: offsetX,
-                                    offsetY: offsetY,
                                     backgroundImage: backgroundImage,
                                     initialBgImageWidth: initialBgImageWidth,
                                     initialBgImageHeight: initialBgImageHeight,
