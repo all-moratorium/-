@@ -1232,7 +1232,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     fillPoint: '#000000',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
                     fillBorder: '#000000',
-                    background: '#646464',
+                    background: '#3c3c3c',
                     grid: '#000000'
                 },
                 lineWidths: {
@@ -1841,12 +1841,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     }));
                 }
                 
-                // キャンバス設定を復元
+                // キャンバス設定を復元（視点情報は除く）
                 if (sharedFileData.canvasSettings) {
                     const settings = sharedFileData.canvasSettings;
-                    if (settings.scale !== undefined) setScale(settings.scale);
-                    if (settings.offsetX !== undefined) setOffsetX(settings.offsetX);
-                    if (settings.offsetY !== undefined) setOffsetY(settings.offsetY);
                     if (settings.showGrid !== undefined) setShowGrid(settings.showGrid);
                     if (settings.gridSize !== undefined) setGridSize(settings.gridSize);
                     if (settings.gridOpacity !== undefined) setGridOpacity(settings.gridOpacity);
@@ -3858,7 +3855,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 fillPoint: '#000000',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
-                                background: '#646464',
+                                background: '#3c3c3c',
                                 grid: '#000000'
                             });
                             setLineWidths({
