@@ -139,6 +139,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 初期化完了フラグ
     const isInitialized = useRef(false);
     const [isInitializing, setIsInitializing] = useState(true); // 初期化中フラグ（ちらつき防止）
+    const hasLoadedFromCustomize = useRef(false); // カスタマイズからの読み込み完了フラグ
     
     const canvasRef = useRef(null);
     const widthInputRef = useRef(null);
@@ -1842,6 +1843,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 // LocalStorageに保存
                 saveToLocalStorage();
                 
+                // カスタマイズからの読み込み完了フラグを設定
+                hasLoadedFromCustomize.current = true;
+                
                 console.log('カスタマイズからの共有ファイルデータの処理完了');
                 
                 // 処理完了を通知（親コンポーネントで状態をクリア）
@@ -2797,15 +2801,19 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         return false;
     }, [canvasWidth, canvasHeight]);
 
-    // コンポーネント初期化時に視点を復元、失敗時はリセット
+    // コンポーネント初期化時に視点を復元
     useEffect(() => {
         if (canvasWidth > 0 && canvasHeight > 0) {
-            if (!restoreViewState()) {
-                // 復元に失敗した場合のみリセット
-                resetView();
+            // カスタマイズからのデータ読み込み完了後は視点復元をスキップ
+            if (hasLoadedFromCustomize.current) {
+                console.log('カスタマイズからのデータ読み込み完了のため視点復元をスキップ');
+                return;
             }
+            
+            // 視点復元を試行（失敗してもリセットしない）
+            restoreViewState();
         }
-    }, [canvasWidth, canvasHeight, restoreViewState, resetView]);
+    }, [canvasWidth, canvasHeight, restoreViewState]);
 
     // コンポーネントのアンマウント時に視点を保存
     useEffect(() => {
