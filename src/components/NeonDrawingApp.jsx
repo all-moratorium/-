@@ -1582,11 +1582,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             setScale(optimalScale);
                             setOffsetX(offsetX);
                             setOffsetY(offsetY);
-                        } else {
-                            // モデルが見つからない場合はデフォルト視点
-                            setScale(1);
-                            setOffsetX(window.innerWidth / 2);
-                            setOffsetY(window.innerHeight / 2);
                         }
                         
                         // グリッド設定は現在の設定を維持（読み込まない）
@@ -1661,11 +1656,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     setScale(optimalScale);
                                     setOffsetX(offsetX);
                                     setOffsetY(offsetY);
-                                } else {
-                                    // モデルが見つからない場合はデフォルト視点
-                                    setScale(1);
-                                    setOffsetX(window.innerWidth / 2);
-                                    setOffsetY(window.innerHeight / 2);
                                 }
                                 
                                 // 適切なcurrentPathIndexを設定（新しいパスを追加）
