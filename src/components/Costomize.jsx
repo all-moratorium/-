@@ -68,8 +68,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     });
     const [installationEnvironment, setInstallationEnvironment] = useState(initialState?.installationEnvironment || 'indoor'); // 'indoor' or 'outdoor'
     
-    // 寸法モーダル関連の状態
-    const [showScaleModal, setShowScaleModal] = useState(false);
+    // 寸法表示用の状態
     const [modelSize, setModelSize] = useState({
         width: 0,
         height: 0,
@@ -1883,8 +1882,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 {/* キャンバス右上のサイズ表示 */}
                 <div 
                     className={`canvas-size-display ${!sidebarVisible ? 'sidebar-collapsed' : ''}`}
-                    onClick={() => setShowScaleModal(true)}
-                    style={{ cursor: 'pointer' }}
                 >
                     <div className="canvas-size-title">寸法</div>
                     <div className="canvas-size-item">
@@ -3150,44 +3147,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 </div>
             )}
 
-            {/* 寸法詳細モーダル */}
-            {showScaleModal && (
-                <div className="modal-overlay" onClick={() => setShowScaleModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-inner">
-                            <div className="modal-header">
-                                <h3>寸法詳細</h3>
-                                <button 
-                                    onClick={() => setShowScaleModal(false)}
-                                    className="modal-close-button"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="size-detail-grid">
-                                    <div className="size-detail-item">
-                                        <span className="size-detail-label">幅:</span>
-                                        <span className="size-detail-value">{modelSize.width.toFixed(2)} cm</span>
-                                    </div>
-                                    <div className="size-detail-item">
-                                        <span className="size-detail-label">高さ:</span>
-                                        <span className="size-detail-value">{modelSize.height.toFixed(2)} cm</span>
-                                    </div>
-                                    <div className="size-detail-item">
-                                        <span className="size-detail-label">チューブ長:</span>
-                                        <span className="size-detail-value">{modelSize.totalLength.toFixed(2)} cm</span>
-                                    </div>
-                                    <div className="size-detail-item">
-                                        <span className="size-detail-label">設置環境:</span>
-                                        <span className="size-detail-value">{installationEnvironment === 'indoor' ? '屋内' : '屋外'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
