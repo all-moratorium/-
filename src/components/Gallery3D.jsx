@@ -48,7 +48,7 @@ const Gallery3D = ({ models = [] }) => {
             description: "ダーツバーのネオンサイン2",
             modelScale: 0.006,
             imageScale: 4.5,
-            sideModelScale: 1.3, // 中央から外れた時の3Dモデルサイズ
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",
             theme: "darts"
         },
@@ -59,8 +59,8 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/ラーメン2d.png',
             description: "ラーメンのネオンサイン1",
             modelScale: 0.006,
-            imageScale: 4.5,
-            sideModelScale: 1.3, // 中央から外れた時の3Dモデルサイズ
+            imageScale: 4.7,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "�",
             theme: "ramen"
         },
@@ -83,7 +83,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/ボウリング2d.png', 
             description: "ボウリングのネオンサイン",
             modelScale: 0.0075,
-            imageScale: 4.45,
+            imageScale: 4.4,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: " Bowling",
             theme: "bowling"

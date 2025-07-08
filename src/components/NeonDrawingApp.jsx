@@ -1795,6 +1795,43 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 if (sharedFileData.neonPaths && sharedFileData.neonPaths.length > 0) {
                     const loadedPaths = sharedFileData.neonPaths;
                     
+                    // 最適視点を計算（ファイル読み込み処理と同様）
+                    const allPoints = [];
+                    loadedPaths.forEach(pathObj => {
+                        if (pathObj && pathObj.points) {
+                            allPoints.push(...pathObj.points);
+                        }
+                    });
+                    
+                    if (allPoints.length > 0) {
+                        const minX = Math.min(...allPoints.map(p => p.x));
+                        const maxX = Math.max(...allPoints.map(p => p.x));
+                        const minY = Math.min(...allPoints.map(p => p.y));
+                        const maxY = Math.max(...allPoints.map(p => p.y));
+                        
+                        const modelWidth = maxX - minX;
+                        const modelHeight = maxY - minY;
+                        const modelCenterX = (minX + maxX) / 2;
+                        const modelCenterY = (minY + maxY) / 2;
+                        
+                        // 画面サイズに対してモデルが適切に収まるスケールを計算
+                        const screenWidth = window.innerWidth;
+                        const screenHeight = window.innerHeight;
+                        const padding = 200; // 周囲の余白
+                        
+                        const scaleX = (screenWidth - padding * 2) / modelWidth;
+                        const scaleY = (screenHeight - padding * 2) / modelHeight;
+                        const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+                        
+                        // モデル中央を画面中央に配置するオフセット計算
+                        const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+                        const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+                        
+                        setScale(optimalScale);
+                        setOffsetX(offsetX);
+                        setOffsetY(offsetY);
+                    }
+                    
                     // 新しいパスを追加（現在の描画モードで）
                     const newPath = { points: [], mode: drawMode, type: drawingType };
                     const pathsWithNewPath = [...loadedPaths, newPath];
