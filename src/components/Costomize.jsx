@@ -919,7 +919,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // モデルの境界を計算して最適な視点を設定する関数
     const calculateOptimalView = useCallback((paths) => {
+        console.log('calculateOptimalView実行:', { pathsCount: paths?.length });
+        
         if (!paths || paths.length === 0) {
+            console.log('パスデータなし、デフォルト視点を返す');
             return {
                 scale: 1,
                 offsetX: canvasWidth / 2,
@@ -941,6 +944,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
         });
 
+        console.log('境界計算結果:', { minX, minY, maxX, maxY });
+
         if (minX !== Infinity) {
             const modelWidth = maxX - minX;
             const modelHeight = maxY - minY;
@@ -960,14 +965,24 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
             const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
             
-            return {
+            const result = {
                 scale: optimalScale,
                 offsetX: offsetX,
                 offsetY: offsetY,
                 segmentsPerCurve: 30
             };
+            
+            console.log('最適視点計算完了:', {
+                modelSize: { width: modelWidth, height: modelHeight },
+                modelCenter: { x: modelCenterX, y: modelCenterY },
+                screenSize: { width: screenWidth, height: screenHeight },
+                result: result
+            });
+            
+            return result;
         }
 
+        console.log('境界が無効、デフォルト視点を返す');
         return {
             scale: 1,
             offsetX: canvasWidth / 2,
@@ -1025,9 +1040,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 // initialStateにカメラ位置情報がある場合はそちらを優先、無い場合は最適な視点を計算
                 const hasInitialViewState = initialState && (initialState.scale !== undefined || initialState.offsetX !== undefined || initialState.offsetY !== undefined);
                 
+                console.log('カスタマイズ視点計算:', {
+                    hasInitialState: !!initialState,
+                    hasInitialViewState,
+                    initialState: initialState,
+                    pathsCount: limitedPaths.length
+                });
+                
                 let canvasSettings;
                 if (hasInitialViewState) {
                     // 既存の設定を使用
+                    console.log('既存の視点設定を使用');
                     canvasSettings = {
                         ...svgData.canvasData,
                         scale: initialState.scale !== undefined ? initialState.scale : svgData.canvasData.scale,
@@ -1036,7 +1059,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     };
                 } else {
                     // 新しく読み込まれた場合は最適な視点を計算
+                    console.log('最適な視点を計算中...');
                     const optimalView = calculateOptimalView(limitedPaths);
+                    console.log('計算された最適視点:', optimalView);
                     canvasSettings = {
                         ...svgData.canvasData,
                         scale: optimalView.scale,
