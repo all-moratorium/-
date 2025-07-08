@@ -1537,27 +1537,138 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
                 
                 if (isCustomizeFile) {
+                    console.log('カスタマイズファイル検出:', projectData);
+                    
+                    // カスタマイズファイルには必ずneonPathsが含まれている
+                    if (projectData.neonPaths && Array.isArray(projectData.neonPaths) && projectData.neonPaths.length > 0) {
+                        // neonPathsから直接パスデータを取得
+                        const loadedPaths = projectData.neonPaths;
+                        
+                        // カスタマイズされた色設定のみ反映（線幅は下絵で独自に決める）
+                        if (projectData.neonColors) setColors(projectData.neonColors);
+                        
+                        // 最適な初期視点を計算してモデルを画面中央に配置
+                        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                        loadedPaths.forEach(pathObj => {
+                            if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                                pathObj.points.forEach(point => {
+                                    minX = Math.min(minX, point.x);
+                                    minY = Math.min(minY, point.y);
+                                    maxX = Math.max(maxX, point.x);
+                                    maxY = Math.max(maxY, point.y);
+                                });
+                            }
+                        });
+                        
+                        if (minX !== Infinity) {
+                            const modelWidth = maxX - minX;
+                            const modelHeight = maxY - minY;
+                            const modelCenterX = (minX + maxX) / 2;
+                            const modelCenterY = (minY + maxY) / 2;
+                            
+                            // 画面サイズに対してモデルが適切に収まるスケールを計算
+                            const screenWidth = window.innerWidth;
+                            const screenHeight = window.innerHeight;
+                            const padding = 200; // 周囲の余白
+                            
+                            const scaleX = (screenWidth - padding * 2) / modelWidth;
+                            const scaleY = (screenHeight - padding * 2) / modelHeight;
+                            const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+                            
+                            // モデル中央を画面中央に配置するオフセット計算
+                            const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+                            const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+                            
+                            setScale(optimalScale);
+                            setOffsetX(offsetX);
+                            setOffsetY(offsetY);
+                        } else {
+                            // モデルが見つからない場合はデフォルト視点
+                            setScale(1);
+                            setOffsetX(window.innerWidth / 2);
+                            setOffsetY(window.innerHeight / 2);
+                        }
+                        
+                        // グリッド設定は現在の設定を維持（読み込まない）
+                        
+                        // 適切なcurrentPathIndexを設定（新しいパスを追加）
+                        const newPath = { points: [], mode: drawMode, type: drawingType };
+                        const pathsWithNewPath = [...loadedPaths, newPath];
+                        const newCurrentPathIndex = pathsWithNewPath.length - 1;
+                        
+                        setPaths(pathsWithNewPath);
+                        setCurrentPathIndex(newCurrentPathIndex);
+                        
+                        // 履歴を初期化（新しいパスを含めた状態で）
+                        const initialHistory = [{
+                            paths: JSON.parse(JSON.stringify(pathsWithNewPath)),
+                            currentPathIndex: newCurrentPathIndex,
+                            drawMode: drawMode,
+                            drawingType: drawingType
+                        }];
+                        setHistory(initialHistory);
+                        setHistoryIndex(0);
+                        
+                        saveToLocalStorage();
+                        alert('色 / 仕様のカスタマイズファイルを読み込みました');
+                        console.log('パスデータ復元完了:', loadedPaths.length, '個のパス');
+                        return;
+                    }
+                    
+                    // フォールバック: svgDataからパスデータを復元
                     if (projectData.svgData) {
-                        // svgDataからパスデータを復元
                         try {
                             const svgDataParsed = typeof projectData.svgData === 'string' ? 
                                 JSON.parse(projectData.svgData) : projectData.svgData;
                             
                             if (svgDataParsed && svgDataParsed.paths) {
-                                // カスタマイズされた色や線幅の設定も反映
+                                // カスタマイズされた色設定のみ反映
                                 if (svgDataParsed.colors) setColors(svgDataParsed.colors);
-                                if (svgDataParsed.lineWidths) setLineWidths(svgDataParsed.lineWidths);
-                                if (svgDataParsed.canvasData) {
-                                    if (svgDataParsed.canvasData.scale) setScale(svgDataParsed.canvasData.scale);
-                                    if (svgDataParsed.canvasData.offsetX) setOffsetX(svgDataParsed.canvasData.offsetX);
-                                    if (svgDataParsed.canvasData.offsetY) setOffsetY(svgDataParsed.canvasData.offsetY);
-                                    if (svgDataParsed.canvasData.showGrid !== undefined) setShowGrid(svgDataParsed.canvasData.showGrid);
-                                    if (svgDataParsed.canvasData.gridSize) setGridSize(svgDataParsed.canvasData.gridSize);
-                                    if (svgDataParsed.canvasData.gridOpacity) setGridOpacity(svgDataParsed.canvasData.gridOpacity);
+                                
+                                // 最適な初期視点を計算してモデルを画面中央に配置
+                                const loadedPaths = svgDataParsed.paths;
+                                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                                loadedPaths.forEach(pathObj => {
+                                    if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                                        pathObj.points.forEach(point => {
+                                            minX = Math.min(minX, point.x);
+                                            minY = Math.min(minY, point.y);
+                                            maxX = Math.max(maxX, point.x);
+                                            maxY = Math.max(maxY, point.y);
+                                        });
+                                    }
+                                });
+                                
+                                if (minX !== Infinity) {
+                                    const modelWidth = maxX - minX;
+                                    const modelHeight = maxY - minY;
+                                    const modelCenterX = (minX + maxX) / 2;
+                                    const modelCenterY = (minY + maxY) / 2;
+                                    
+                                    // 画面サイズに対してモデルが適切に収まるスケールを計算
+                                    const screenWidth = window.innerWidth;
+                                    const screenHeight = window.innerHeight;
+                                    const padding = 200; // 周囲の余白
+                                    
+                                    const scaleX = (screenWidth - padding * 2) / modelWidth;
+                                    const scaleY = (screenHeight - padding * 2) / modelHeight;
+                                    const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+                                    
+                                    // モデル中央を画面中央に配置するオフセット計算
+                                    const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+                                    const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+                                    
+                                    setScale(optimalScale);
+                                    setOffsetX(offsetX);
+                                    setOffsetY(offsetY);
+                                } else {
+                                    // モデルが見つからない場合はデフォルト視点
+                                    setScale(1);
+                                    setOffsetX(window.innerWidth / 2);
+                                    setOffsetY(window.innerHeight / 2);
                                 }
                                 
                                 // 適切なcurrentPathIndexを設定（新しいパスを追加）
-                                const loadedPaths = svgDataParsed.paths;
                                 const newPath = { points: [], mode: drawMode, type: drawingType };
                                 const pathsWithNewPath = [...loadedPaths, newPath];
                                 const newCurrentPathIndex = pathsWithNewPath.length - 1;
@@ -1583,7 +1694,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             console.error('svgData parsing error:', parseError);
                         }
                     }
-                    alert('色 / 仕様のカスタマイズファイルに下絵データが含まれていません');
+                    
+                    // より詳細なエラーメッセージを表示
+                    if (!projectData.svgData && !projectData.neonPaths) {
+                        alert('色 / 仕様のカスタマイズファイルに下絵データが含まれていません');
+                    } else {
+                        alert('色 / 仕様のカスタマイズファイルの下絵データの形式が正しくありません');
+                    }
+                    console.log('Debug: projectData structure:', projectData);
                     return;
                 }
                 
