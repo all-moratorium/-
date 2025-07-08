@@ -3812,9 +3812,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <input
                             id="rectangleSize"
                             type="range"
-                            min="3"
+                            min="1.5"
                             max="10"
-                            step="1"
+                            step="0.5"
+                            defaultValue="3"
                             value={rectangleSize}
                             onChange={(e) => setRectangleSize(Number(e.target.value))}
                             className="scale-range-input"
