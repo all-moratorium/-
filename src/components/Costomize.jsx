@@ -292,16 +292,26 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 pathColors,
                 pathThickness,
                 isTubeSettingsMinimized,
-                installationEnvironment
+                installationEnvironment,
+                scale: canvasSettings.scale,
+                offsetX: canvasSettings.offsetX,
+                offsetY: canvasSettings.offsetY
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, onStateChange]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, canvasSettings, onStateChange]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
         saveCurrentState();
     }, [isTubeSettingsMinimized, saveCurrentState]);
+
+    // カメラ位置が変更された時に状態を保存
+    useEffect(() => {
+        if (isDataLoaded) {
+            saveCurrentState();
+        }
+    }, [canvasSettings, isDataLoaded, saveCurrentState]);
 
     const neonPresetColors = [
         '#ff0000', '#ff8000', '#ffee00', '#ffff40',
@@ -954,7 +964,16 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
             
             if (svgData.canvasData) {
-                setCanvasSettings(svgData.canvasData);
+                // initialStateにカメラ位置情報がある場合はそちらを優先
+                const canvasSettings = {
+                    ...svgData.canvasData,
+                    ...(initialState && (initialState.scale !== undefined || initialState.offsetX !== undefined || initialState.offsetY !== undefined) ? {
+                        scale: initialState.scale !== undefined ? initialState.scale : svgData.canvasData.scale,
+                        offsetX: initialState.offsetX !== undefined ? initialState.offsetX : svgData.canvasData.offsetX,
+                        offsetY: initialState.offsetY !== undefined ? initialState.offsetY : svgData.canvasData.offsetY
+                    } : {})
+                };
+                setCanvasSettings(canvasSettings);
                 
                 // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
                 const shouldUseInitialState = initialState;
