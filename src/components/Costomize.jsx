@@ -1037,39 +1037,17 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
             
             if (svgData.canvasData) {
-                // initialStateにカメラ位置情報がある場合はそちらを優先、無い場合は最適な視点を計算
-                const hasInitialViewState = initialState && (initialState.scale !== undefined || initialState.offsetX !== undefined || initialState.offsetY !== undefined);
-                
-                console.log('カスタマイズ視点計算:', {
-                    hasInitialState: !!initialState,
-                    hasInitialViewState,
-                    initialState: initialState,
-                    pathsCount: limitedPaths.length
-                });
-                
-                let canvasSettings;
-                if (hasInitialViewState) {
-                    // 既存の設定を使用
-                    console.log('既存の視点設定を使用');
-                    canvasSettings = {
-                        ...svgData.canvasData,
-                        scale: initialState.scale !== undefined ? initialState.scale : svgData.canvasData.scale,
-                        offsetX: initialState.offsetX !== undefined ? initialState.offsetX : svgData.canvasData.offsetX,
-                        offsetY: initialState.offsetY !== undefined ? initialState.offsetY : svgData.canvasData.offsetY
-                    };
-                } else {
-                    // 新しく読み込まれた場合は最適な視点を計算
-                    console.log('最適な視点を計算中...');
-                    const optimalView = calculateOptimalView(limitedPaths);
-                    console.log('計算された最適視点:', optimalView);
-                    canvasSettings = {
-                        ...svgData.canvasData,
-                        scale: optimalView.scale,
-                        offsetX: optimalView.offsetX,
-                        offsetY: optimalView.offsetY,
-                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
-                    };
-                }
+                // カスタマイズページでは常に最適な視点を計算
+                console.log('最適な視点を計算中...');
+                const optimalView = calculateOptimalView(limitedPaths);
+                console.log('計算された最適視点:', optimalView);
+                const canvasSettings = {
+                    ...svgData.canvasData,
+                    scale: optimalView.scale,
+                    offsetX: optimalView.offsetX,
+                    offsetY: optimalView.offsetY,
+                    segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
+                };
                 setCanvasSettings(canvasSettings);
                 
                 // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
