@@ -513,8 +513,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     }
 
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.1);
-    const radialSegments = 16;
-    const tubularSegments = Math.max(100, points.length * 12);
+    const radialSegments = 20;
+    const tubularSegments = Math.max(200, points.length * 15);
     
     const geometry = new THREE.TubeGeometry(curve, tubularSegments, actualTubeSizeMm, radialSegments, false);
 
@@ -551,7 +551,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     neonTube.castShadow = false;
     neonTube.layers.set(BLOOM_SCENE_LAYER); // Set layer for blooming
 
-    const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.01, 16, 16);
+    const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.0, 20, 20);
     const capMaterial = neonMaterial.clone();
     capMaterial.clippingPlanes = [clippingPlane]; // キャップにもクリッピング適用
 
@@ -890,7 +890,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       logarithmicDepthBuffer: true,
       powerPreference: "high-performance"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x242424);
     renderer.shadowMap.enabled = false;
@@ -903,7 +903,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // ブルーム効果の解像度を高くしてズームアウト時もシャープに
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth * 2.0, window.innerHeight * 2.0),
+      new THREE.Vector2(window.innerWidth * 3.0, window.innerHeight * 3.0),
       glowValue, 0, 0
     );
     unrealBloomPassRef.current = bloomPass;
@@ -1120,7 +1120,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
       if (composerRef.current) {
-        composerRef.current.bloom.setSize(width * 1.5, height * 1.5);
+        composerRef.current.bloom.setSize(width * 3.0, height * 3.0);
         composerRef.current.final.setSize(width, height);
       }
     };

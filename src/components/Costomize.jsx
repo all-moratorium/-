@@ -25,7 +25,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     // 点滅エフェクトを削除
     const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : true);
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
-    const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#0d0d0d'); // RGB(13,13,13)
+    const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#191919'); // RGB(25,25,25)
     const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#e6e6e6'); // RGB(230,230,230)
     const [gridColor, setGridColor] = useState(initialState?.gridColor || '#646464'); // RGB(100,100,100)
     const [gridColorOff, setGridColorOff] = useState(initialState?.gridColorOff || '#000000'); // RGB(0,0,0)
@@ -917,6 +917,65 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         return () => window.removeEventListener('restoreCustomizeState', handleRestoreState);
     }, []);
 
+    // モデルの境界を計算して最適な視点を設定する関数
+    const calculateOptimalView = useCallback((paths) => {
+        if (!paths || paths.length === 0) {
+            return {
+                scale: 1,
+                offsetX: canvasWidth / 2,
+                offsetY: canvasHeight / 2,
+                segmentsPerCurve: 30
+            };
+        }
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        
+        paths.forEach(pathObj => {
+            if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                pathObj.points.forEach(point => {
+                    minX = Math.min(minX, point.x);
+                    minY = Math.min(minY, point.y);
+                    maxX = Math.max(maxX, point.x);
+                    maxY = Math.max(maxY, point.y);
+                });
+            }
+        });
+
+        if (minX !== Infinity) {
+            const modelWidth = maxX - minX;
+            const modelHeight = maxY - minY;
+            const modelCenterX = (minX + maxX) / 2;
+            const modelCenterY = (minY + maxY) / 2;
+            
+            // 画面サイズに対してモデルが適切に収まるスケールを計算
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const padding = 200; // 周囲の余白
+            
+            const scaleX = (screenWidth - padding * 2) / modelWidth;
+            const scaleY = (screenHeight - padding * 2) / modelHeight;
+            const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+            
+            // モデル中央を画面中央に配置するオフセット計算
+            const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+            const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+            
+            return {
+                scale: optimalScale,
+                offsetX: offsetX,
+                offsetY: offsetY,
+                segmentsPerCurve: 30
+            };
+        }
+
+        return {
+            scale: 1,
+            offsetX: canvasWidth / 2,
+            offsetY: canvasHeight / 2,
+            segmentsPerCurve: 30
+        };
+    }, [canvasWidth, canvasHeight]);
+
     // ネオン下絵データの解析
     useEffect(() => {
         if (svgData && svgData.paths) {
@@ -963,15 +1022,29 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
             
             if (svgData.canvasData) {
-                // initialStateにカメラ位置情報がある場合はそちらを優先
-                const canvasSettings = {
-                    ...svgData.canvasData,
-                    ...(initialState && (initialState.scale !== undefined || initialState.offsetX !== undefined || initialState.offsetY !== undefined) ? {
+                // initialStateにカメラ位置情報がある場合はそちらを優先、無い場合は最適な視点を計算
+                const hasInitialViewState = initialState && (initialState.scale !== undefined || initialState.offsetX !== undefined || initialState.offsetY !== undefined);
+                
+                let canvasSettings;
+                if (hasInitialViewState) {
+                    // 既存の設定を使用
+                    canvasSettings = {
+                        ...svgData.canvasData,
                         scale: initialState.scale !== undefined ? initialState.scale : svgData.canvasData.scale,
                         offsetX: initialState.offsetX !== undefined ? initialState.offsetX : svgData.canvasData.offsetX,
                         offsetY: initialState.offsetY !== undefined ? initialState.offsetY : svgData.canvasData.offsetY
-                    } : {})
-                };
+                    };
+                } else {
+                    // 新しく読み込まれた場合は最適な視点を計算
+                    const optimalView = calculateOptimalView(limitedPaths);
+                    canvasSettings = {
+                        ...svgData.canvasData,
+                        scale: optimalView.scale,
+                        offsetX: optimalView.offsetX,
+                        offsetY: optimalView.offsetY,
+                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
+                    };
+                }
                 setCanvasSettings(canvasSettings);
                 
                 // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
@@ -2299,7 +2372,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     if (window.confirm('すべてのカスタマイズ設定がリセットされます。本当に実行しますか？')) {
                                         setSelectedColor('#ff0080');
                                         setThickness(20);
-                                        setBackgroundColor('#0d0d0d'); // RGB(13,13,13)
+                                        setBackgroundColor('#191919'); // RGB(25,25,25)
                                         setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
                                         setGridColor('#646464'); // RGB(100,100,100)
                                         setGridColorOff('#000000'); // RGB(0,0,0)

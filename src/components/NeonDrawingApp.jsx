@@ -91,7 +91,7 @@ const getInitialDrawingState = (initialState) => {
         fillPoint: '#000000',
         fillArea: 'rgba(110, 110, 110, 0.5)',
         fillBorder: '#000000',
-        background: '#646464',
+        background: '#3c3c3c',
         grid: '#000000'
     };
     
