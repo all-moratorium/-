@@ -677,8 +677,6 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     const handleShowCustomize = (event) => {
       if (event.detail) {
         setCustomizeSvgData(event.detail);
-        // ネオン下絵から来る場合は既存のcustomizeStateをクリアして最適な初期視点を計算させる
-        setCustomizeState(null);
       }
       setCurrentPage('customize');
     };
@@ -837,9 +835,8 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
     };
     window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
     
-    // カスタマイズで新しいファイルが読み込まれたときにcustomizeStateとcustomizeSvgDataをクリア
+    // カスタマイズで新しいファイルが読み込まれたときにcustomizeSvgDataをクリア
     const handleClearCustomizeState = () => {
-      setCustomizeState(null);
       setCustomizeSvgData(null); // ネオン下絵からのデータもクリア
     };
     window.addEventListener('clearCustomizeState', handleClearCustomizeState);
