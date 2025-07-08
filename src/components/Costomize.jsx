@@ -1089,16 +1089,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 // }
             }
             
-            // ネオン下絵の背景色を消灯時の背景色として設定（initialStateが無い場合のみ）
             const shouldUseInitialState = initialState;
-            if (svgData.colors && svgData.colors.background !== undefined && (!shouldUseInitialState || !initialState.backgroundColorOff)) {
-                setBackgroundColorOff(svgData.colors.background);
-            }
-            
-            // ネオン下絵のグリッド色を消灯時のグリッド色として設定（initialStateが無い場合、またはファイルが読み込まれていない場合のみ）
-            if (svgData.colors && svgData.colors.grid !== undefined && (!shouldUseInitialState || !initialState.gridColorOff)) {
-                setGridColorOff(svgData.colors.grid);
-            }
             
             // パス別の初期色設定（initialStateが無い場合のみ設定）
             if (!shouldUseInitialState || !initialState.pathColors || Object.keys(initialState.pathColors).length === 0) {
