@@ -2681,6 +2681,36 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         
                         saveToHistory(newPaths, nextCurrentPathIndex, drawMode, drawingType); // 履歴を保存
                         setCurrentPathIndex(nextCurrentPathIndex);
+                        
+                        // パス削除通知: 他のコンポーネントでpathColors/pathThicknessを調整
+                        if (onStateChange) {
+                            setTimeout(() => {
+                                const currentState = {
+                                    paths: newPaths,
+                                    currentPathIndex: nextCurrentPathIndex,
+                                    drawMode: drawMode,
+                                    drawingType: drawingType,
+                                    scale: scale,
+                                    offsetX: offsetX,
+                                    offsetY: offsetY,
+                                    backgroundImage: backgroundImage,
+                                    initialBgImageWidth: initialBgImageWidth,
+                                    initialBgImageHeight: initialBgImageHeight,
+                                    bgImageScale: bgImageScale,
+                                    bgImageX: bgImageX,
+                                    bgImageY: bgImageY,
+                                    bgImageOpacity: bgImageOpacity,
+                                    showGrid: showGrid,
+                                    gridSize: gridSize,
+                                    gridOpacity: gridOpacity,
+                                    colors: colors,
+                                    lineWidths: lineWidths,
+                                    pathDeletedIndex: pathToDeleteIdx // 削除されたパスのインデックス
+                                };
+                                onStateChange(currentState);
+                            }, 0);
+                        }
+                        
                         return newPaths;
                     });
                 }
@@ -2731,6 +2761,36 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             }
                             saveToHistory(filteredPaths, nextCurrentPathIndex, drawMode, drawingType); // 履歴を保存
                             setCurrentPathIndex(nextCurrentPathIndex);
+                            
+                            // 点削除によるパス削除通知: 他のコンポーネントでpathColors/pathThicknessを調整
+                            if (onStateChange) {
+                                setTimeout(() => {
+                                    const currentState = {
+                                        paths: filteredPaths,
+                                        currentPathIndex: nextCurrentPathIndex,
+                                        drawMode: drawMode,
+                                        drawingType: drawingType,
+                                        scale: scale,
+                                        offsetX: offsetX,
+                                        offsetY: offsetY,
+                                        backgroundImage: backgroundImage,
+                                        initialBgImageWidth: initialBgImageWidth,
+                                        initialBgImageHeight: initialBgImageHeight,
+                                        bgImageScale: bgImageScale,
+                                        bgImageX: bgImageX,
+                                        bgImageY: bgImageY,
+                                        bgImageOpacity: bgImageOpacity,
+                                        showGrid: showGrid,
+                                        gridSize: gridSize,
+                                        gridOpacity: gridOpacity,
+                                        colors: colors,
+                                        lineWidths: lineWidths,
+                                        pathDeletedIndex: pathIndex // 削除されたパスのインデックス
+                                    };
+                                    onStateChange(currentState);
+                                }, 0);
+                            }
+                            
                             return filteredPaths;
                         } else {
                             newPaths[pathIndex] = { ...newPaths[pathIndex], points: updatedPoints };

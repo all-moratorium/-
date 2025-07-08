@@ -517,6 +517,106 @@ const LaserCutImageProcessor = () => {
   // Costomizeコンポーネントの状態を保存
   const [customizeState, setCustomizeState] = useState(null);
   
+  // NeonDrawingAppの状態変更を処理する関数（パス削除時の調整を含む）
+  const handleNeonDrawingStateChange = useCallback((newState) => {
+    // pathDeletedIndexが含まれている場合はCostomizeStateも調整
+    if (newState && newState.pathDeletedIndex !== undefined) {
+      const deletedIndex = newState.pathDeletedIndex;
+      
+      // CustomizeStateのpathColors, pathThicknessも調整
+      if (customizeState) {
+        const currentPathColors = customizeState.pathColors || {};
+        const currentPathThickness = customizeState.pathThickness || {};
+        
+        // 削除インデックス以降のキーを1つずつ前にずらす
+        const newPathColors = {};
+        const newPathThickness = {};
+        
+        Object.keys(currentPathColors).forEach(key => {
+          const index = parseInt(key);
+          if (index < deletedIndex) {
+            newPathColors[key] = currentPathColors[key];
+          } else if (index > deletedIndex) {
+            newPathColors[index - 1] = currentPathColors[key];
+          }
+        });
+        
+        Object.keys(currentPathThickness).forEach(key => {
+          const index = parseInt(key);
+          if (index < deletedIndex) {
+            newPathThickness[key] = currentPathThickness[key];
+          } else if (index > deletedIndex) {
+            newPathThickness[index - 1] = currentPathThickness[key];
+          }
+        });
+        
+        // CustomizeStateを更新
+        setCustomizeState({
+          ...customizeState,
+          pathColors: newPathColors,
+          pathThickness: newPathThickness
+        });
+      }
+      
+      // pathDeletedIndexを除いてNeonDrawingStateを更新
+      const { pathDeletedIndex, ...stateWithoutDeletedIndex } = newState;
+      setNeonDrawingState(stateWithoutDeletedIndex);
+    } else {
+      // 通常の状態更新
+      setNeonDrawingState(newState);
+    }
+  }, [customizeState]);
+  
+  // Costomizeコンポーネントの状態変更を処理する関数（パス削除時の調整を含む）
+  const handleCustomizeStateChange = useCallback((newState) => {
+    // pathDeletedIndexが含まれている場合はパス削除の処理を行う
+    if (newState && newState.pathDeletedIndex !== undefined) {
+      const deletedIndex = newState.pathDeletedIndex;
+      
+      // 現在のCustomizeStateからpathColors, pathThicknessを取得
+      const currentPathColors = customizeState?.pathColors || {};
+      const currentPathThickness = customizeState?.pathThickness || {};
+      
+      // 削除インデックス以降のキーを1つずつ前にずらす
+      const newPathColors = {};
+      const newPathThickness = {};
+      
+      // 削除されたインデックスより前のキーはそのまま保持
+      Object.keys(currentPathColors).forEach(key => {
+        const index = parseInt(key);
+        if (index < deletedIndex) {
+          newPathColors[key] = currentPathColors[key];
+        } else if (index > deletedIndex) {
+          // 削除されたインデックスより後のキーは1つ前にずらす
+          newPathColors[index - 1] = currentPathColors[key];
+        }
+        // index === deletedIndex の場合は削除（何もしない）
+      });
+      
+      Object.keys(currentPathThickness).forEach(key => {
+        const index = parseInt(key);
+        if (index < deletedIndex) {
+          newPathThickness[key] = currentPathThickness[key];
+        } else if (index > deletedIndex) {
+          // 削除されたインデックスより後のキーは1つ前にずらす
+          newPathThickness[index - 1] = currentPathThickness[key];
+        }
+        // index === deletedIndex の場合は削除（何もしない）
+      });
+      
+      // pathDeletedIndexを除いて状態を更新
+      const { pathDeletedIndex, ...stateWithoutDeletedIndex } = newState;
+      setCustomizeState({
+        ...stateWithoutDeletedIndex,
+        pathColors: newPathColors,
+        pathThickness: newPathThickness
+      });
+    } else {
+      // 通常の状態更新
+      setCustomizeState(newState);
+    }
+  }, [customizeState]);
+  
   // カスタマイズで読み込まれたファイルデータをネオン下絵で共有するための状態
   const [sharedFileData, setSharedFileData] = useState(null);
   
@@ -2885,7 +2985,7 @@ const quantizeColors = (pixels, k) => {
       case 'neonDrawing':
         return <NeonDrawingApp 
           initialState={neonDrawingState} 
-          onStateChange={setNeonDrawingState}
+          onStateChange={handleNeonDrawingStateChange}
           sharedFileData={sharedFileData}
           onSharedFileDataProcessed={() => setSharedFileData(null)}
         />;
@@ -2893,7 +2993,7 @@ const quantizeColors = (pixels, k) => {
         return <Costomize 
           svgData={customizeSvgData} 
           initialState={customizeState}
-          onStateChange={setCustomizeState}
+          onStateChange={handleCustomizeStateChange}
         />;
       case 'neonSvg3dPreview':
         return null; // NeonSVGTo3DExtruderはルートレベルで表示
