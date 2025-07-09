@@ -1687,15 +1687,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         
         // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
         if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
-            // 画面の真の中央位置
-            const canvasCenterX = canvas.width / 2;
+            // 画面の真の中央位置（サイドバー分を考慮して65px左に調整）
+            const canvasCenterX = canvas.width / 2 - 72;
             const canvasCenterY = canvas.height / 2;
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '24px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('ネオン下絵からデータを作成するか、前回保存したデータを読み込んでください', canvasCenterX, canvasCenterY);
+            ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
             return;
         }
         
@@ -1705,15 +1705,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         );
         
         if (!hasValidData) {
-            // データはあるが空の場合も、メッセージを表示
-            const canvasCenterX = canvas.width / 2;
+            // データはあるが空の場合も、メッセージを表示（サイドバー分を考慮して65px左に調整）
+            const canvasCenterX = canvas.width / 2 - 72;
             const canvasCenterY = canvas.height / 2;
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '24px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('ネオン下絵からデータを作成するか、前回保存したデータを読み込んでください', canvasCenterX, canvasCenterY);
+            ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
             return;
         }
 
