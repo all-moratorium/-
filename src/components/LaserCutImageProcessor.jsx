@@ -696,7 +696,7 @@ const LaserCutImageProcessor = () => {
       // 通常の状態更新
       setCustomizeState(newState);
     }
-  }, [customizeState]);
+  }, []);
   
   // カスタマイズで読み込まれたファイルデータをネオン下絵で共有するための状態
   const [sharedFileData, setSharedFileData] = useState(null);
