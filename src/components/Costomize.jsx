@@ -152,22 +152,34 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         const modelHeight = (maxY - minY) + padding * 2;
                         
                         // アスペクト比を維持して正方形にする
-                        const maxDimension = Math.max(modelWidth, modelHeight, 300); // 最小サイズ300px
-                        cleanCanvas.width = maxDimension;
-                        cleanCanvas.height = maxDimension;
+                        const originalMaxDimension = Math.max(modelWidth, modelHeight, 300); // 最小サイズ300px
+                        
+                        // 軽量化のために大きすぎる場合は縮小（画像切れを防ぐためのスケール処理）
+                        const maxAllowedSize = 1000; // 最大許可サイズ
+                        let targetSize = originalMaxDimension;
+                        let scale = 1;
+                        
+                        if (originalMaxDimension > maxAllowedSize) {
+                            targetSize = maxAllowedSize;
+                            scale = maxAllowedSize / originalMaxDimension;
+                        }
+                        
+                        cleanCanvas.width = targetSize;
+                        cleanCanvas.height = targetSize;
                         
                         // 背景色を設定（商品情報用は常に黒背景）
                         cleanCtx.fillStyle = '#000000';
-                        cleanCtx.fillRect(0, 0, maxDimension, maxDimension);
+                        cleanCtx.fillRect(0, 0, targetSize, targetSize);
                         
-                        // キャンバス設定を適用
-                        const centerX = maxDimension / 2;
-                        const centerY = maxDimension / 2;
+                        // キャンバス設定を適用（スケールと中心配置）
+                        const centerX = targetSize / 2;
+                        const centerY = targetSize / 2;
                         const modelCenterX = (minX + maxX) / 2;
                         const modelCenterY = (minY + maxY) / 2;
                         
                         cleanCtx.save();
-                        cleanCtx.translate(centerX - modelCenterX, centerY - modelCenterY);
+                        cleanCtx.scale(scale, scale);
+                        cleanCtx.translate(centerX / scale - modelCenterX, centerY / scale - modelCenterY);
                         
                         // 1. 土台（fill）パスを先に描画
                         neonPaths.forEach((pathObj, pathIndex) => {
@@ -228,7 +240,19 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         
                         cleanCtx.restore();
                         
-                        const canvasImageDataURL = cleanCanvas.toDataURL('image/png');
+                        // 軽量化: WebP形式で圧縮（品質0.85）、非対応の場合はJPEGにフォールバック
+                        let canvasImageDataURL;
+                        try {
+                            // WebP形式で試行（Chrome, Edge, Firefox対応）
+                            canvasImageDataURL = cleanCanvas.toDataURL('image/webp', 0.85);
+                            // WebPがサポートされていない場合はdata:image/webpで始まらない
+                            if (!canvasImageDataURL.startsWith('data:image/webp')) {
+                                throw new Error('WebP not supported');
+                            }
+                        } catch (error) {
+                            // WebP非対応の場合はJPEGにフォールバック
+                            canvasImageDataURL = cleanCanvas.toDataURL('image/jpeg', 0.85);
+                        }
                         window.dispatchEvent(new CustomEvent('customizeCanvasImage', {
                             detail: { canvasImageDataURL }
                         }));
