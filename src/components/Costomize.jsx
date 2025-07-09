@@ -287,12 +287,23 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     }, [selectedTubes, selectedBulkColor, selectedBulkThickness, pathColors, pathThickness]);
 
     // 背景色変更処理（即座に変更）
+    // デバウンス用のRef
+    const backgroundColorTimeoutRef = useRef(null);
+    
     const handleBackgroundColorChange = useCallback((color) => {
-        if (neonPower) {
-            setBackgroundColor(color);
-        } else {
-            setBackgroundColorOff(color);
+        // 既存のタイマーをクリア
+        if (backgroundColorTimeoutRef.current) {
+            clearTimeout(backgroundColorTimeoutRef.current);
         }
+        
+        // 200ms後に実際の更新を実行
+        backgroundColorTimeoutRef.current = setTimeout(() => {
+            if (neonPower) {
+                setBackgroundColor(color);
+            } else {
+                setBackgroundColorOff(color);
+            }
+        }, 200);
     }, [neonPower]);
 
     // 現在の状態を保存する関数

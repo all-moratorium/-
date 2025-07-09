@@ -41,18 +41,6 @@ const Gallery3D = ({ models = [] }) => {
             theme: "darts"
         },
         {
-            id: "darts-bar-2", 
-            name: "ダーツバー2",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (32).glb',
-            imagePath: '/neon sample pictures/ラーメン2d.png',
-            description: "ダーツバーのネオンサイン2",
-            modelScale: 0.006,
-            imageScale: 4.5,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎯",
-            theme: "darts"
-        },
-        {
             id: "ramen",
             name: "ラーメン", 
             glbPath: '/models/neon sample glb/ラーメン.glb',
@@ -64,6 +52,19 @@ const Gallery3D = ({ models = [] }) => {
             icon: "�",
             theme: "ramen"
         },
+        {
+            id: "darts-bar-2", 
+            name: "ダーツバー2",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (32).glb',
+            imagePath: '/neon sample pictures/ラーメン2d.png',
+            description: "ダーツバーのネオンサイン2",
+            modelScale: 0.006,
+            imageScale: 4.5,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎯",
+            theme: "darts"
+        },
+        
         {
             id: "cocktail-1",
             name: "カクテル1",
