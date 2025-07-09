@@ -517,7 +517,7 @@ const LaserCutImageProcessor = () => {
   // Costomizeコンポーネントの状態を保存
   const [customizeState, setCustomizeState] = useState(null);
   
-  // NeonDrawingAppの状態変更を処理する関数（パス削除時の調整を含む）
+  // NeonDrawingAppの状態変更を処理する関数（パス削除・復活時の調整を含む）
   const handleNeonDrawingStateChange = useCallback((newState) => {
     // pathDeletedIndexが含まれている場合はCostomizeStateも調整
     if (newState && newState.pathDeletedIndex !== undefined) {
@@ -561,13 +561,55 @@ const LaserCutImageProcessor = () => {
       // pathDeletedIndexを除いてNeonDrawingStateを更新
       const { pathDeletedIndex, ...stateWithoutDeletedIndex } = newState;
       setNeonDrawingState(stateWithoutDeletedIndex);
+    } else if (newState && newState.pathRestoredIndex !== undefined) {
+      // パス復活時の処理
+      const restoredIndex = newState.pathRestoredIndex;
+      
+      // CustomizeStateのpathColors, pathThicknessも調整
+      if (customizeState) {
+        const currentPathColors = customizeState.pathColors || {};
+        const currentPathThickness = customizeState.pathThickness || {};
+        
+        // 復活インデックス以降のキーを1つずつ後ろにずらす
+        const newPathColors = {};
+        const newPathThickness = {};
+        
+        Object.keys(currentPathColors).forEach(key => {
+          const index = parseInt(key);
+          if (index < restoredIndex) {
+            newPathColors[key] = currentPathColors[key];
+          } else if (index >= restoredIndex) {
+            newPathColors[index + 1] = currentPathColors[key];
+          }
+        });
+        
+        Object.keys(currentPathThickness).forEach(key => {
+          const index = parseInt(key);
+          if (index < restoredIndex) {
+            newPathThickness[key] = currentPathThickness[key];
+          } else if (index >= restoredIndex) {
+            newPathThickness[index + 1] = currentPathThickness[key];
+          }
+        });
+        
+        // CustomizeStateを更新
+        setCustomizeState({
+          ...customizeState,
+          pathColors: newPathColors,
+          pathThickness: newPathThickness
+        });
+      }
+      
+      // pathRestoredIndexを除いてNeonDrawingStateを更新
+      const { pathRestoredIndex, ...stateWithoutRestoredIndex } = newState;
+      setNeonDrawingState(stateWithoutRestoredIndex);
     } else {
       // 通常の状態更新
       setNeonDrawingState(newState);
     }
   }, [customizeState]);
   
-  // Costomizeコンポーネントの状態変更を処理する関数（パス削除時の調整を含む）
+  // Costomizeコンポーネントの状態変更を処理する関数（パス削除・復活時の調整を含む）
   const handleCustomizeStateChange = useCallback((newState) => {
     // pathDeletedIndexが含まれている場合はパス削除の処理を行う
     if (newState && newState.pathDeletedIndex !== undefined) {
@@ -608,6 +650,45 @@ const LaserCutImageProcessor = () => {
       const { pathDeletedIndex, ...stateWithoutDeletedIndex } = newState;
       setCustomizeState({
         ...stateWithoutDeletedIndex,
+        pathColors: newPathColors,
+        pathThickness: newPathThickness
+      });
+    } else if (newState && newState.pathRestoredIndex !== undefined) {
+      // パス復活時の処理
+      const restoredIndex = newState.pathRestoredIndex;
+      
+      // 現在のCustomizeStateからpathColors, pathThicknessを取得
+      const currentPathColors = customizeState?.pathColors || {};
+      const currentPathThickness = customizeState?.pathThickness || {};
+      
+      // 復活インデックス以降のキーを1つずつ後ろにずらす
+      const newPathColors = {};
+      const newPathThickness = {};
+      
+      Object.keys(currentPathColors).forEach(key => {
+        const index = parseInt(key);
+        if (index < restoredIndex) {
+          newPathColors[key] = currentPathColors[key];
+        } else if (index >= restoredIndex) {
+          // 復活インデックス以降のキーは1つ後ろにずらす
+          newPathColors[index + 1] = currentPathColors[key];
+        }
+      });
+      
+      Object.keys(currentPathThickness).forEach(key => {
+        const index = parseInt(key);
+        if (index < restoredIndex) {
+          newPathThickness[key] = currentPathThickness[key];
+        } else if (index >= restoredIndex) {
+          // 復活インデックス以降のキーは1つ後ろにずらす
+          newPathThickness[index + 1] = currentPathThickness[key];
+        }
+      });
+      
+      // pathRestoredIndexを除いて状態を更新
+      const { pathRestoredIndex, ...stateWithoutRestoredIndex } = newState;
+      setCustomizeState({
+        ...stateWithoutRestoredIndex,
         pathColors: newPathColors,
         pathThickness: newPathThickness
       });

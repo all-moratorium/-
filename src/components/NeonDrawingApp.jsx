@@ -1318,7 +1318,35 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 
                 // 親コンポーネントに状態変更を通知
                 if (onStateChange) {
-                    onStateChange(prevState);
+                    // 現在のパス数と復元後のパス数を比較
+                    const currentPathCount = paths.length;
+                    const restoredPathCount = prevState.paths.length;
+                    
+                    // パスが復活した場合の処理
+                    if (restoredPathCount > currentPathCount) {
+                        // 復活したパスのインデックスを特定
+                        let restoredIndex = -1;
+                        for (let i = 0; i < restoredPathCount; i++) {
+                            if (i >= currentPathCount || 
+                                JSON.stringify(prevState.paths[i]) !== JSON.stringify(paths[i] || {})) {
+                                restoredIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // pathRestoredIndexを含めた状態を送信
+                        if (restoredIndex !== -1) {
+                            const stateWithRestoredIndex = {
+                                ...prevState,
+                                pathRestoredIndex: restoredIndex
+                            };
+                            onStateChange(stateWithRestoredIndex);
+                        } else {
+                            onStateChange(prevState);
+                        }
+                    } else {
+                        onStateChange(prevState);
+                    }
                 }
             } else {
                 console.error("Undo failed: Previous state is invalid or missing.", { historyIndex, prevIndex, historySnapshot: history });
