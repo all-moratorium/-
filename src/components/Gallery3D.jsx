@@ -284,7 +284,7 @@ const Gallery3D = ({ models = [] }) => {
             }
             
             // 画像が読み込まれてから表示
-            planeMaterial.opacity = 0.9;
+            planeMaterial.opacity = 1.0;
             planeMaterial.visible = true;
             planeMaterial.needsUpdate = true;
         });
@@ -391,7 +391,7 @@ const Gallery3D = ({ models = [] }) => {
                     }
                     
                     // 画像が読み込まれてから表示
-                    planeMaterial.opacity = 0.9;
+                    planeMaterial.opacity = 1.0;
                     planeMaterial.visible = true;
                     planeMaterial.needsUpdate = true;
                 });
