@@ -1402,7 +1402,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // パスポイント数を増やしてなめらかさを向上
             const simplifiedPoints = [];
             const totalPoints = path.points.length;
-            const maxPoints = 40; // 10→20に増加
+            const maxPoints = 50; // 10→20に増加
             const step = Math.max(1, Math.floor(totalPoints / maxPoints));
             
             for (let i = 0; i < totalPoints; i += step) {

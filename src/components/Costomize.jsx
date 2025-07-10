@@ -556,7 +556,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (projectData.svgData !== undefined) {
                     // svgDataを直接更新するのではなく、親コンポーネントに通知
                     if (onStateChange) {
-                        onStateChange({ svgData: projectData.svgData });
+                        onStateChange({ 
+                            svgData: projectData.svgData,
+                            isCustomizeLoad: true // カスタマイズからの読み込みフラグ
+                        });
                     }
                 }
 
@@ -580,7 +583,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         neonPaths: projectData.neonPaths,
                         neonColors: projectData.neonColors,
                         neonLineWidths: projectData.neonLineWidths,
-                        canvasSettings: projectData.canvasSettings
+                        canvasSettings: projectData.canvasSettings,
+                        isCustomizeLoad: true // カスタマイズからの読み込みフラグ
                     };
                     
                     const event = new CustomEvent('sharedFileDataLoaded', {

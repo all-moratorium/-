@@ -55,10 +55,10 @@ const Gallery3D = ({ models = [] }) => {
         {
             id: "darts-bar-2", 
             name: "ダーツバー2",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (32).glb',
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (75).glb',
             imagePath: '/neon sample pictures/ラーメン2d.png',
             description: "ダーツバーのネオンサイン2",
-            modelScale: 0.006,
+            modelScale: 0.008,
             imageScale: 4.5,
             sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",

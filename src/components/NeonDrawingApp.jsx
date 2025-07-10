@@ -1819,6 +1819,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             try {
                 console.log('カスタマイズからの共有ファイルデータを受信:', sharedFileData);
                 
+                // カスタマイズからの読み込みフラグを設定
+                if (sharedFileData.isCustomizeLoad) {
+                    hasLoadedFromCustomize.current = true;
+                    console.log('カスタマイズからの読み込みフラグを設定しました');
+                }
+                
                 // ネオンパスデータを読み込み
                 if (sharedFileData.neonPaths && sharedFileData.neonPaths.length > 0) {
                     const loadedPaths = sharedFileData.neonPaths;
@@ -2928,7 +2934,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     // コンポーネント初期化時に視点を復元
     useEffect(() => {
-        if (canvasWidth > 0 && canvasHeight > 0) {
+        if (canvasWidth > 0 && canvasHeight > 0 && !isInitializing) {
             // カスタマイズからのデータ読み込み完了後は視点復元をスキップ
             if (hasLoadedFromCustomize.current) {
                 console.log('カスタマイズからのデータ読み込み完了のため視点復元をスキップ');
@@ -2938,7 +2944,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             // 視点復元を試行（失敗してもリセットしない）
             restoreViewState();
         }
-    }, [canvasWidth, canvasHeight, restoreViewState]);
+    }, [canvasWidth, canvasHeight, restoreViewState, isInitializing]);
 
     // コンポーネントのアンマウント時に視点を保存
     useEffect(() => {
