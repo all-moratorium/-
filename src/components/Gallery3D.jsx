@@ -53,16 +53,16 @@ const Gallery3D = ({ models = [] }) => {
             theme: "ramen"
         },
         {
-            id: "darts-bar-2", 
-            name: "ダーツバー2",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (75).glb',
-            imagePath: '/neon sample pictures/ラーメン2d.png',
-            description: "ダーツバーのネオンサイン2",
-            modelScale: 0.008,
-            imageScale: 4.5,
+            id: "coffee", 
+            name: "コーヒー",
+            glbPath: '/models/neon sample glb/コーヒー.glb',
+            imagePath: '/neon sample pictures/コーヒー2d.png',
+            description: "コーヒーのネオンサイン1",
+            modelScale: 0.0145,
+            imageScale: 4.9,
             sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",
-            theme: "darts"
+            theme: "coffee"
         },
         
         {
