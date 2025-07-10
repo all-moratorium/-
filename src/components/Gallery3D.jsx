@@ -35,7 +35,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/ダーツバー2d.png',
             description: "ダーツバーのネオンサイン1",
             modelScale: 0.0070,
-            imageScale: 5.2,
+            imageScale: 6.2,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "🎯",
             theme: "darts"
@@ -47,7 +47,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/ラーメン2d.png',
             description: "ラーメンのネオンサイン1",
             modelScale: 0.006,
-            imageScale: 4.7,
+            imageScale: 4.9,
             sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "�",
             theme: "ramen"
@@ -399,6 +399,9 @@ const Gallery3D = ({ models = [] }) => {
                 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
                 model.add(plane);
                 model.userData.isImage = true;
+                // グループのスケールを1に戻す
+                model.scale.set(1, 1, 1);
+                model.userData.targetScale = 1;
             }
         });
 
