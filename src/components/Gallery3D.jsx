@@ -29,9 +29,9 @@ const Gallery3D = ({ models = [] }) => {
     // 個別モデル設定（各モデルごとにパラメーター管理）
     const modelConfigs = [
         {
-            id: "darts-bar-1",
-            name: "ダーツバー1",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (31).glb',
+            id: "darts-bar",
+            name: "ダーツバー",
+            glbPath: '/models/neon sample glb/ダーツバー.glb',
             imagePath: '/neon sample pictures/ダーツバー2d.png',
             description: "ダーツバーのネオンサイン1",
             modelScale: 0.0070,
@@ -58,46 +58,58 @@ const Gallery3D = ({ models = [] }) => {
             glbPath: '/models/neon sample glb/コーヒー.glb',
             imagePath: '/neon sample pictures/コーヒー2d.png',
             description: "コーヒーのネオンサイン1",
-            modelScale: 0.0145,
-            imageScale: 4.9,
+            modelScale: 0.015,
+            imageScale: 5.2,
             sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",
             theme: "coffee"
         },
         
         {
-            id: "cocktail-1",
-            name: "カクテル1",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (53).glb', 
-            imagePath: '/neon sample pictures/ダーツバー2d.png',
-            description: "カクテルバーのネオンサイン1",
-            modelScale: 0.005,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
-            icon: "🍸",
-            theme: "cocktail"
+            id: "happy halloween",
+            name: "ハッピーハロウィン",
+            glbPath: '/models/neon sample glb/ハッピーハロウィン.glb', 
+            imagePath: '/neon sample pictures/ハッピーハロウィン2d.png',
+            description: "ハッピーハロウィンのネオンサイン",
+            modelScale: 0.0085,
+            imageScale: 6.5,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎃",
+            theme: "halloween"
         },
         {
-            id: "ボウリング",
+            id: "bowling",
             name: "ボウリング",
             glbPath: '/models/neon sample glb/ボウリング.glb',
             imagePath: '/neon sample pictures/ボウリング2d.png', 
             description: "ボウリングのネオンサイン",
             modelScale: 0.0075,
-            imageScale: 4.4,
+            imageScale: 5.1,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: " Bowling",
             theme: "bowling"
         },
         {
-            id: "corvette-2",
-            name: "コルベット2", 
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (36).glb',
-            imagePath: '/neon sample pictures/ダーツバー2d.png',
-            description: "コルベットのネオンサイン2", 
-            modelScale: 0.008,
-            imageScale: 5.8,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
+            id: "happy birthday",
+            name: "ハッピーバースデイ", 
+            glbPath: '/models/neon sample glb/ハッピーバースデイ.glb',
+            imagePath: '/neon sample pictures/ハッピーバースデイ2d.png',
+            description: "ハッピーバースデイのネオンサイン", 
+            modelScale: 0.0085,
+            imageScale: 6.9,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎂",
+            theme: "birthday"
+        },
+        {
+            id: "sports car", 
+            name: "スポーツカー",
+            glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
+            imagePath: '/neon sample pictures/スポーツカー2d.png',
+            description: "スポーツカーのネオンサイン",
+            modelScale: 0.0048,
+            imageScale: 6.8,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: "🚗",
             theme: "car"
         },
@@ -113,18 +125,7 @@ const Gallery3D = ({ models = [] }) => {
             icon: "💡",
             theme: "sample"
         },
-        {
-            id: "sports car", 
-            name: "スポーツカー",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
-            imagePath: '/neon sample pictures/スポーツカー2d.png',
-            description: "スポーツカーのネオンサイン",
-            modelScale: 0.0048,
-            imageScale: 5.8,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🚗",
-            theme: "car"
-        }
+       
     ];
 
     // 使用するモデルデータ

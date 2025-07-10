@@ -1511,30 +1511,15 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 
     // 色設定の一番下（最後のチューブ）にスクロールする関数
     const scrollToLastTube = useCallback(() => {
-        // 最後のチューブのインデックスを取得
-        const tubeIndices = neonPaths
-            .map((pathObj, index) => pathObj && pathObj.mode === 'stroke' ? index : null)
-            .filter(index => index !== null);
-        
-        if (tubeIndices.length > 0) {
-            // 長さ順にソートして最後のチューブ（最短のチューブ）を取得
-            const sortedTubes = tubeIndices
-                .map(index => ({ index, length: calculatePathLength(neonPaths[index]) }))
-                .sort((a, b) => b.length - a.length);
-            
-            const lastTubeIndex = sortedTubes[sortedTubes.length - 1].index;
-            
-            setTimeout(() => {
-                const lastTubeElement = document.querySelector(`[data-tube-index="${lastTubeIndex}"]`);
-                if (lastTubeElement) {
-                    lastTubeElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            }, 100);
+        // 一番上へボタンのある位置までスクロール
+        const topButton = document.querySelector('.tube-action-button.scroll-top');
+        if (topButton) {
+            topButton.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
         }
-    }, [neonPaths, calculatePathLength]);
+    }, []);
 
     const handleWheel = useCallback((e) => {
         const scaleAmount = 0.1;
