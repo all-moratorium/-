@@ -2900,10 +2900,59 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     // ビューをリセット（ズームとパンを初期値に戻す）
     const resetView = useCallback(() => {
+        // パスが存在する場合は最適視点を計算
+        if (paths.length > 0) {
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            paths.forEach(pathObj => {
+                if (pathObj && pathObj.points && pathObj.points.length > 0) {
+                    pathObj.points.forEach(point => {
+                        minX = Math.min(minX, point.x);
+                        minY = Math.min(minY, point.y);
+                        maxX = Math.max(maxX, point.x);
+                        maxY = Math.max(maxY, point.y);
+                    });
+                }
+            });
+
+            if (minX !== Infinity) {
+                const modelWidth = maxX - minX;
+                const modelHeight = maxY - minY;
+                const modelCenterX = (minX + maxX) / 2;
+                const modelCenterY = (minY + maxY) / 2;
+                
+                // 画面サイズに対してモデルが適切に収まるスケールを計算
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const padding = 200; // 周囲の余白
+                
+                const scaleX = (screenWidth - padding * 2) / modelWidth;
+                const scaleY = (screenHeight - padding * 2) / modelHeight;
+                const optimalScale = Math.min(scaleX, scaleY, 1); // 最大1倍まで
+                
+                // モデル中央を画面中央に配置するオフセット計算
+                const offsetX = screenWidth / 2 - modelCenterX * optimalScale;
+                const offsetY = screenHeight / 2 - modelCenterY * optimalScale;
+                
+                console.log('視点リセット: 最適視点を計算:', {
+                    modelSize: { width: modelWidth, height: modelHeight },
+                    modelCenter: { x: modelCenterX, y: modelCenterY },
+                    screenSize: { width: screenWidth, height: screenHeight },
+                    result: { scale: optimalScale, offsetX: offsetX, offsetY: offsetY }
+                });
+                
+                setScale(optimalScale);
+                setOffsetX(offsetX);
+                setOffsetY(offsetY);
+                return;
+            }
+        }
+        
+        // パスがない場合はデフォルト視点
+        console.log('視点リセット: デフォルト視点を使用');
         setScale(1);
         setOffsetX(canvasWidth / 2); // 原点(0,0)を画面中央に表示
         setOffsetY(canvasHeight / 2);
-    }, [canvasWidth, canvasHeight]);
+    }, [canvasWidth, canvasHeight, paths]);
 
     // 視点状態を保存・復元する機能
     const saveViewState = useCallback(() => {
