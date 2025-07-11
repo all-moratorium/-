@@ -28,18 +28,20 @@ const Gallery3D = ({ models = [] }) => {
 
     // 個別モデル設定（各モデルごとにパラメーター管理）
     const modelConfigs = [
+        
         {
-            id: "darts-bar",
-            name: "ダーツバー",
-            glbPath: '/models/neon sample glb/ダーツバー.glb',
-            imagePath: '/neon sample pictures/ダーツバー2d.png',
-            description: "ダーツバーのネオンサイン1",
-            modelScale: 0.0070,
-            imageScale: 6.2,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
-            icon: "🎯",
-            theme: "darts"
+            id: "butterfly",
+            name: "蝶々",
+            glbPath: '/models/neon sample glb/蝶々.glb',
+            imagePath: '/neon sample pictures/蝶々2d.png',
+            description: "蝶々のネオンサイン",
+            modelScale: 0.0065,
+            imageScale: 5.7,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            icon: "🦋",
+            theme: "butterfly"
         },
+       
         {
             id: "ramen",
             name: "ラーメン", 
@@ -64,6 +66,7 @@ const Gallery3D = ({ models = [] }) => {
             icon: "🎯",
             theme: "coffee"
         },
+       
         
         {
             id: "happy halloween",
@@ -102,9 +105,22 @@ const Gallery3D = ({ models = [] }) => {
             theme: "birthday"
         },
         {
+            id: "cocktail",
+            name: "カクテル",
+            glbPath: '/models/neon sample glb/カクテル.glb',
+            imagePath: '/neon sample pictures/カクテル2d.png',
+            description: "カクテルのネオンサイン1",
+            modelScale: 0.0065,
+            imageScale: 5.5,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
+            icon: "�",
+            theme: "cocktail"
+        },
+        
+        {
             id: "sports car", 
             name: "スポーツカー",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (38).glb',
+            glbPath: '/models/neon sample glb/スポーツカー.glb',
             imagePath: '/neon sample pictures/スポーツカー2d.png',
             description: "スポーツカーのネオンサイン",
             modelScale: 0.0048,
@@ -114,17 +130,43 @@ const Gallery3D = ({ models = [] }) => {
             theme: "car"
         },
         {
-            id: "sample-on",
-            name: "サンプルON",
-            glbPath: '/models/neon sample glb/my-neon-sign-optimized (53).glb',
+            id: "darts-bar",
+            name: "ダーツバー",
+            glbPath: '/models/neon sample glb/ダーツバー.glb',
             imagePath: '/neon sample pictures/ダーツバー2d.png',
-            description: "サンプルネオン（点灯）",
-            modelScale: 0.006,
-            imageScale: 6,
-            sideModelScale: 1.2, // 中央から外れた時の3Dモデルサイズ
-            icon: "💡",
-            theme: "sample"
+            description: "ダーツバーのネオンサイン1",
+            modelScale: 0.0070,
+            imageScale: 6.2,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
+            icon: "🎯",
+            theme: "darts"
         },
+        {
+            id: "onair", 
+            name: "オンエア",
+            glbPath: '/models/neon sample glb/オンエア.glb',
+            imagePath: '/neon sample pictures/オンエア2d.png',
+            description: "オンエアのネオンサイン1",
+            modelScale: 0.0086,
+            imageScale: 5.2,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            icon: "",
+            theme: "onair"
+        },
+        
+        {
+            id: "light blue hair",
+            name: "ライトブルーヘアー",
+            glbPath: '/models/neon sample glb/ライトブルーヘアー黒.glb',
+            imagePath: '/neon sample pictures/ライトブルーヘアー黒2d.png',
+            description: "ライトブルーヘアーのネオンサイン",
+            modelScale: 0.0058,
+            imageScale: 5.9,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: "",
+            theme: "light blue hair"
+        },
+        
        
     ];
 
