@@ -1967,10 +1967,25 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             setCanvasHeight(newHeight);
             
             // 初期表示時は原点を中央に配置
-            // offsetXとoffsetYが初期値(0)の場合のみ設定
+            // 初期表示時は保存された視点状態を復元、なければ中央に配置
+            // ただし、offsetXとoffsetYが初期値(0)の場合のみ
             if (offsetX === 0 && offsetY === 0) {
-                setOffsetX(newWidth / 2);
-                setOffsetY(newHeight / 2);
+                const savedViewState = localStorage.getItem('neonDrawingViewState');
+                if (savedViewState) {
+                    try {
+                        const viewState = JSON.parse(savedViewState);
+                        setOffsetX(viewState.offsetX || newWidth / 2);
+                        setOffsetY(viewState.offsetY || newHeight / 2);
+                        setScale(viewState.scale || 1);
+                    } catch (error) {
+                        console.error('視点状態の復元エラー:', error);
+                        setOffsetX(newWidth / 2);
+                        setOffsetY(newHeight / 2);
+                    }
+                } else {
+                    setOffsetX(newWidth / 2);
+                    setOffsetY(newHeight / 2);
+                }
             }
         };
 
