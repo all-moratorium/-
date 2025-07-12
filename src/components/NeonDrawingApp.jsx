@@ -708,19 +708,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
 
             if (pathType === 'spline') { // スプライン描画
-                // 閉じたパスのスプライン補間のため、最後の点から最初の点への曲線も描画
+                // SVG出力と全く同じ閉じたパス処理: キャンバス描画でもベジェ曲線を使用
                 for (let i = 0; i < pathPoints.length; i++) {
                     const p0 = pathPoints[(i - 1 + pathPoints.length) % pathPoints.length];
                     const p1 = pathPoints[i];
                     const p2 = pathPoints[(i + 1) % pathPoints.length];
                     const p3 = pathPoints[(i + 2) % pathPoints.length];
 
-                    for (let t = 0; t <= segmentsPerCurve; t++) {
-                        const step = t / segmentsPerCurve;
-                        const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                        const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                        ctx.lineTo(x, y);
-                    }
+                    // SVG出力と全く同じCatmull-Rom→ベジェ制御点計算
+                    const cp1x = p1.x + (p2.x - p0.x) / 8;
+                    const cp1y = p1.y + (p2.y - p0.y) / 8;
+                    const cp2x = p2.x - (p3.x - p1.x) / 8;
+                    const cp2y = p2.y - (p3.y - p1.y) / 8;
+                    
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
                 }
             } else { // 直線描画
                 for (let i = 1; i < pathPoints.length; i++) {
@@ -757,18 +758,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
 
             if (pathType === 'spline') { // スプライン描画
+                // SVG出力と全く同じ開いたパス処理: キャンバス描画でもベジェ曲線を使用
                 for (let i = 0; i < pathPoints.length - 1; i++) {
                     const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
                     const p1 = pathPoints[i];
                     const p2 = pathPoints[i + 1];
                     const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                    for (let t = 0; t <= segmentsPerCurve; t++) {
-                        const step = t / segmentsPerCurve;
-                        const x = getCatmullRomPt(p0.x, p1.x, p2.x, p3.x, step);
-                        const y = getCatmullRomPt(p0.y, p1.y, p2.y, p3.y, step);
-                        ctx.lineTo(x, y);
-                    }
+                    // SVG出力と全く同じCatmull-Rom→ベジェ制御点計算
+                    const cp1x = p1.x + (p2.x - p0.x) / 8;
+                    const cp1y = p1.y + (p2.y - p0.y) / 8;
+                    const cp2x = p2.x - (p3.x - p1.x) / 8;
+                    const cp2y = p2.y - (p3.y - p1.y) / 8;
+                    
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
                 }
             } else { // 直線描画
                 for (let i = 1; i < pathPoints.length; i++) {
@@ -1398,11 +1401,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             if (pathMode === 'fill' && pathPoints.length >= 3) {
                 let currentFillSegment = `M ${pathPoints[0].x},${pathPoints[0].y}`;
                 if (pathType === 'spline') { // スプラインのSVG生成
-                    for (let i = 0; i < pathPoints.length - 1; i++) {
-                        const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
+                    // 閉じたパス処理: キャンバス描画と同じ循環参照方式を使用
+                    for (let i = 0; i < pathPoints.length; i++) {
+                        const p0 = pathPoints[(i - 1 + pathPoints.length) % pathPoints.length];
                         const p1 = pathPoints[i];
-                        const p2 = pathPoints[i + 1];
-                        const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
+                        const p2 = pathPoints[(i + 1) % pathPoints.length];
+                        const p3 = pathPoints[(i + 2) % pathPoints.length];
 
                         // Catmull-RomからBezier制御点を計算（より滑らか）
                         const cp1x = p1.x + (p2.x - p0.x) / 8;
