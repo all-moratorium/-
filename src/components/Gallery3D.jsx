@@ -80,6 +80,7 @@ const Gallery3D = ({ models = [] }) => {
             icon: "🎃",
             theme: "halloween"
         },
+
         {
             id: "bowling",
             name: "ボウリング",
@@ -103,6 +104,18 @@ const Gallery3D = ({ models = [] }) => {
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: "🎂",
             theme: "birthday"
+        },
+        {
+            id: "ak47",
+            name: "ak47", 
+            glbPath: '/models/neon sample glb/ak47.glb',
+            imagePath: '/neon sample pictures/ak472d.png',
+            description: "ak47のネオンサイン", 
+            modelScale: 0.0068,
+            imageScale: 6.9,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: "",
+            theme: "ak47"
         },
         {
             id: "cocktail",
