@@ -106,16 +106,16 @@ const Gallery3D = ({ models = [] }) => {
             theme: "birthday"
         },
         {
-            id: "ak47",
-            name: "ak47", 
-            glbPath: '/models/neon sample glb/ak47.glb',
-            imagePath: '/neon sample pictures/ak472d.png',
-            description: "ak47のネオンサイン", 
-            modelScale: 0.0068,
-            imageScale: 6.9,
+            id: "unicorn",
+            name: "ユニコーン", 
+            glbPath: '/models/neon sample glb/ユニコーン.glb',
+            imagePath: '/neon sample pictures/ユニコーン2d.png',
+            description: "ユニコーンのネオンサイン", 
+            modelScale: 0.0072,
+            imageScale: 6.2,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "",
-            theme: "ak47"
+            icon: "🦄",
+            theme: "unicorn"
         },
         {
             id: "cocktail",
@@ -128,6 +128,18 @@ const Gallery3D = ({ models = [] }) => {
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "�",
             theme: "cocktail"
+        },
+        {
+            id: "rose",
+            name: "バラ",
+            glbPath: '/models/neon sample glb/バラ.glb',
+            imagePath: '/neon sample pictures/バラ2d.png',
+            description: "バラのネオンサイン1",
+            modelScale: 0.0056,
+            imageScale: 6.1,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
+            icon: "�",
+            theme: "rose"
         },
         
         {
@@ -148,8 +160,8 @@ const Gallery3D = ({ models = [] }) => {
             glbPath: '/models/neon sample glb/ダーツバー.glb',
             imagePath: '/neon sample pictures/ダーツバー2d.png',
             description: "ダーツバーのネオンサイン1",
-            modelScale: 0.0070,
-            imageScale: 6.2,
+            modelScale: 0.0068,
+            imageScale: 6,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "🎯",
             theme: "darts"
