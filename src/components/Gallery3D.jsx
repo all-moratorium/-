@@ -94,18 +94,6 @@ const Gallery3D = ({ models = [] }) => {
             theme: "bowling"
         },
         {
-            id: "happy birthday",
-            name: "ハッピーバースデイ", 
-            glbPath: '/models/neon sample glb/ハッピーバースデイ.glb',
-            imagePath: '/neon sample pictures/ハッピーバースデイ2d.png',
-            description: "ハッピーバースデイのネオンサイン", 
-            modelScale: 0.0085,
-            imageScale: 6.9,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎂",
-            theme: "birthday"
-        },
-        {
             id: "unicorn",
             name: "ユニコーン", 
             glbPath: '/models/neon sample glb/ユニコーン.glb',
@@ -117,6 +105,19 @@ const Gallery3D = ({ models = [] }) => {
             icon: "🦄",
             theme: "unicorn"
         },
+        {
+            id: "happy birthday",
+            name: "ハッピーバースデイ", 
+            glbPath: '/models/neon sample glb/ハッピーバースデイ.glb',
+            imagePath: '/neon sample pictures/ハッピーバースデイ2d.png',
+            description: "ハッピーバースデイのネオンサイン", 
+            modelScale: 0.0085,
+            imageScale: 6.9,
+            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎂",
+            theme: "birthday"
+        },
+       
         {
             id: "cocktail",
             name: "カクテル",
@@ -136,7 +137,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/バラ2d.png',
             description: "バラのネオンサイン1",
             modelScale: 0.0056,
-            imageScale: 6.1,
+            imageScale: 6.2,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "�",
             theme: "rose"
@@ -161,7 +162,7 @@ const Gallery3D = ({ models = [] }) => {
             imagePath: '/neon sample pictures/ダーツバー2d.png',
             description: "ダーツバーのネオンサイン1",
             modelScale: 0.0068,
-            imageScale: 6,
+            imageScale: 5.8,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
             icon: "🎯",
             theme: "darts"
