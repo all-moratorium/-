@@ -1667,7 +1667,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       <div ref={mountRef} className="neon-canvas-mount" />
       
       {/* グロー ON/OFF スイッチ - サイドバー外 */}
-      <div className="neon3d-glow-power-section">
+      <div className={`neon3d-glow-power-section ${sidebarVisible ? 'sidebar-open' : 'sidebar-closed'}`}>
         <div className="neon3d-glow-power-controls">
           <div className="neon3d-glow-power-status">
             <span className={`neon3d-status-dot ${glowValue > 0 ? 'on' : 'off'}`}></span>

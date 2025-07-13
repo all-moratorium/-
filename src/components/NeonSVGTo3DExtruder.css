@@ -397,8 +397,8 @@
 /* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
 .neon3d-glow-power-section {
   position: fixed;
-  bottom: 20%;
-  left: 50%;
+  bottom: 25px;
+  width: 170px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -406,17 +406,28 @@
   justify-content: center;
   gap: 16px;
   padding: 16px 20px;
-  background-color: rgba(10, 10, 10, 0.9);
+  background-color: rgb(29, 29, 29);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 103;
   min-width: 160px;
+  transition: all 0.3s ease;
+}
+
+/* サイドバーが開いている時のグローパワーセクション位置 */
+.neon3d-glow-power-section.sidebar-open {
+  right: 245px
+}
+
+/* サイドバーが閉じている時のグローパワーセクション位置 */
+.neon3d-glow-power-section.sidebar-closed {
+  right: -80px;
 }
 
 /* エクスポートボタンコンテナ - サイドバー外に配置 */
 .neon3d-export-button-container {
   position: fixed;
-  bottom: 10%;
+  bottom: 6%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 103;
@@ -433,6 +444,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: none;
 }
 
 .neon3d-export-button:hover {
@@ -534,7 +546,7 @@
 
 /* モデル詳細情報表示セクション */
 .neon3d-details-info-container {
-  margin-bottom: 40px;
+  margin-bottom: 150px;
   margin-top: 60px;
   padding: 12px;
   border-radius: 8px;
@@ -548,7 +560,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 70px;
   position: relative;
 }
 
@@ -571,7 +583,6 @@
   margin: 0;
   padding: 0;
   text-align: center;
-  margin-bottom: 25px;
 }
 
 .neon3d-info-item {
@@ -607,7 +618,7 @@
   padding: 6px 0;
   font-size: 0.9em;
   border-bottom: 1px solid #4a4a4a;
-  margin-top:30px;
+  margin-top:25px;
   width: 100%;
 }
 
@@ -629,12 +640,7 @@
   padding-left: 8px;
 }
 
-/* 商品情報へ進むボタン */
-.neon3d-proceed-button-container {
-  bottom: 20px;
-  left: 16px;
-  right: 16px;
-}
+
 
 .neon3d-proceed-button {
   padding: 12px 24px;
@@ -645,8 +651,7 @@
   font-size: 1em;
   border-radius: 8px;
   border: none;
-  margin-bottom: 32px;
-  margin-top: 16px;
+  margin-bottom: 20px;
   width: 90%; /* サイズ維持 */
   box-sizing: border-box; /* 維持 */
   box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* 黄色のグロー効果に変更 */
