@@ -734,8 +734,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             // LEDネオンOFF時：マットな質感で描画
             ctx.save();
             
-            // 色は元のまま、質感だけマットにする
-            ctx.strokeStyle = color; // 元の色をそのまま使用
+            // OFF時の色設定：offTubeColorが'white'なら白色、'matching'なら元の色
+            const effectiveColor = (offTubeColor === 'white') ? '#ffffff' : color;
+            ctx.strokeStyle = effectiveColor;
             ctx.globalAlpha = 1.0; // 完全に不透明
             ctx.lineWidth = thickness;
             ctx.lineCap = 'round';
@@ -1970,7 +1971,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes, offTubeColor]);
 
     return (
         <div className="customize-app-container">
