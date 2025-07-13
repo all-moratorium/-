@@ -904,11 +904,38 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setHistory(prevHistory => {
             const truncatedHistory = prevHistory.slice(0, historyIndex + 1);
             
+            // 現在のパスと前の状態を比較して差分のみ保存
+            const lastState = prevHistory[prevHistory.length - 1];
+            let pathChanges = null;
+            
+            if (lastState && lastState.paths) {
+                // 変更されたパスのみを特定
+                pathChanges = [];
+                for (let i = 0; i < Math.max(currentPaths.length, lastState.paths.length); i++) {
+                    const currentPath = currentPaths[i];
+                    const lastPath = lastState.paths[i];
+                    
+                    if (!lastPath || !currentPath || 
+                        JSON.stringify(currentPath) !== JSON.stringify(lastPath)) {
+                        pathChanges.push({
+                            index: i,
+                            path: currentPath ? JSON.parse(JSON.stringify(currentPath)) : null
+                        });
+                    }
+                }
+            }
+            
             const newState = {
-                paths: JSON.parse(JSON.stringify(currentPaths)), // ディープコピー
+                type: 'state_change',
+                pathChanges: pathChanges || currentPaths.map((path, index) => ({
+                    index: index,
+                    path: JSON.parse(JSON.stringify(path))
+                })),
                 currentPathIndex: currentPathIdx,
                 drawMode: currentDrawMode,
-                drawingType: currentDrawingType
+                drawingType: currentDrawingType,
+                // 後方互換性のため、フルデータも保持（削除予定）
+                paths: JSON.parse(JSON.stringify(currentPaths))
             };
             
             const newHistory = [...truncatedHistory, newState];
@@ -1152,8 +1179,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const nextIndex = historyIndex + 1;
             const nextState = history[nextIndex];
             console.log("Attempting to access nextIndex:", nextIndex, "history[nextIndex]:", nextState);
-            if (nextState && Array.isArray(nextState.paths)) { 
-                setPaths(nextState.paths);
+            
+            // 新形式と旧形式の両方に対応
+            if (nextState) {
+                if (nextState.paths) {
+                    // 旧形式（フルパス）
+                    setPaths(nextState.paths);
+                } else if (nextState.pathChanges) {
+                    // 新形式（差分）- 現在のパスに差分を適用
+                    setPaths(prevPaths => {
+                        const newPaths = [...prevPaths];
+                        nextState.pathChanges.forEach(change => {
+                            if (change.path === null) {
+                                // パス削除
+                                newPaths.splice(change.index, 1);
+                            } else {
+                                // パス追加・変更
+                                newPaths[change.index] = change.path;
+                            }
+                        });
+                        return newPaths;
+                    });
+                }
+                
                 setCurrentPathIndex(nextState.currentPathIndex);
                 setHistoryIndex(nextIndex);
                 setDrawMode(nextState.drawMode); // Redoでモードも復元
@@ -1303,8 +1351,28 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const prevState = history[prevIndex];
             console.log("Attempting to access prevIndex:", prevIndex, "history[prevIndex]:", prevState);
 
-            if (prevState && Array.isArray(prevState.paths)) { 
-                setPaths(prevState.paths);
+            // 新形式と旧形式の両方に対応
+            if (prevState) {
+                if (prevState.paths) {
+                    // 旧形式（フルパス）
+                    setPaths(prevState.paths);
+                } else if (prevState.pathChanges) {
+                    // 新形式（差分）- 現在のパスに差分を適用
+                    setPaths(prevPaths => {
+                        const newPaths = [...prevPaths];
+                        prevState.pathChanges.forEach(change => {
+                            if (change.path === null) {
+                                // パス削除
+                                newPaths.splice(change.index, 1);
+                            } else {
+                                // パス追加・変更
+                                newPaths[change.index] = change.path;
+                            }
+                        });
+                        return newPaths;
+                    });
+                }
+                
                 setCurrentPathIndex(prevState.currentPathIndex);
                 setHistoryIndex(prevIndex);
                 setDrawMode(prevState.drawMode); // Undoでモードも復元
