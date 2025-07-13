@@ -161,26 +161,15 @@ body:active {
 .tooltip-image {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 48px;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
-}
-
-.tooltip-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 50%);
+    background: transparent;
 }
 
 .tooltip-title {

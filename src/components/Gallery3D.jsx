@@ -183,8 +183,8 @@ const Gallery3D = ({ models = [] }) => {
         {
             id: "light blue hair",
             name: "ライトブルーヘアー",
-            glbPath: '/models/neon sample glb/ライトブルーヘアー黒.glb',
-            imagePath: '/neon sample pictures/ライトブルーヘアー黒2d.png',
+            glbPath: '/models/neon sample glb/ライトブルーヘアー.glb',
+            imagePath: '/neon sample pictures/ライトブルーヘアー2d.png',
             description: "ライトブルーヘアーのネオンサイン",
             modelScale: 0.0058,
             imageScale: 5.9,
@@ -592,8 +592,33 @@ const Gallery3D = ({ models = [] }) => {
         const tooltipDescription = document.getElementById('tooltipDescription');
 
         if (tooltipRight && tooltipLeft && tooltipImage && tooltipTitle && tooltipDescription) {
-            tooltipImage.textContent = data.icon;
-            tooltipImage.className = `tooltip-image ${data.theme}`;
+            // 画像パスを生成（名前から対応する画像ファイルを取得）
+            // 「ライトブルーヘアー」は「ライトブルーヘア」になっているので調整
+            const imageName = data.name === 'ライトブルーヘアー' ? 'ライトブルーヘア' : data.name;
+            const imagePath = `/neon sample on image/${imageName}　サンプルイメージ.png`;
+            
+            // 既存の内容をクリア
+            tooltipImage.innerHTML = '';
+            tooltipImage.className = 'tooltip-image';
+            
+            // 画像要素を作成
+            const img = document.createElement('img');
+            img.src = imagePath;
+            img.alt = `${data.name}のサンプル`;
+            img.style.cssText = `
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 12px;
+            `;
+            
+            // 画像読み込みエラー時のフォールバック
+            img.onerror = () => {
+                tooltipImage.textContent = data.icon || '🎨';
+                tooltipImage.className = `tooltip-image ${data.theme}`;
+            };
+            
+            tooltipImage.appendChild(img);
             tooltipRight.classList.add('show');
             
             tooltipTitle.textContent = data.name;
