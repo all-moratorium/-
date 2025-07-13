@@ -65,8 +65,8 @@ const limitCoordinates = (x, y) => {
     const HALF_SIZE = 3750; // 1.5m = 3750px (100px = 4cm基準)
     
     return {
-        x: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, x)),
-        y: Math.max(-HALF_SIZE, Math.min(HALF_SIZE, y))
+        x: Math.round(Math.max(-HALF_SIZE, Math.min(HALF_SIZE, x)) * 10) / 10,
+        y: Math.round(Math.max(-HALF_SIZE, Math.min(HALF_SIZE, y)) * 10) / 10
     };
 };
 
