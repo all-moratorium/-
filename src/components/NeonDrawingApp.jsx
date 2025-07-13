@@ -206,6 +206,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 履歴管理 (Undo/Redo) - 包括的な初期化
     const [history, setHistory] = useState(initialDrawingState.history);
     const [historyIndex, setHistoryIndex] = useState(initialDrawingState.historyIndex);
+    // historyIndex の最新値を同期的に参照するための Ref
+    const historyIndexRef = useRef(historyIndex);
+    useEffect(() => {
+        historyIndexRef.current = historyIndex;
+    }, [historyIndex]);
     
     // 背景色変更のデバウンス用ref
     const backgroundColorTimeoutRef = useRef(null);
@@ -902,10 +907,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         setHistory(prevHistory => {
-            const truncatedHistory = prevHistory.slice(0, historyIndex + 1);
+            const truncatedHistory = prevHistory.slice(0, historyIndexRef.current + 1);
             
             // 現在のパスと前の状態を比較して差分のみ保存
-            const lastState = prevHistory[prevHistory.length - 1];
+            const lastState = truncatedHistory[truncatedHistory.length - 1];
             let pathChanges = null;
             
             if (lastState && lastState.paths) {
@@ -1179,27 +1184,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const nextIndex = historyIndex + 1;
             const nextState = history[nextIndex];
             console.log("Attempting to access nextIndex:", nextIndex, "history[nextIndex]:", nextState);
-            
+
             // 新形式と旧形式の両方に対応
             if (nextState) {
-                if (nextState.paths) {
-                    // 旧形式（フルパス）
-                    setPaths(nextState.paths);
-                } else if (nextState.pathChanges) {
-                    // 新形式（差分）- 現在のパスに差分を適用
-                    setPaths(prevPaths => {
-                        const newPaths = [...prevPaths];
-                        nextState.pathChanges.forEach(change => {
-                            if (change.path === null) {
-                                // パス削除
-                                newPaths.splice(change.index, 1);
-                            } else {
-                                // パス追加・変更
-                                newPaths[change.index] = change.path;
-                            }
-                        });
-                        return newPaths;
+                if (nextState.paths && Array.isArray(nextState.paths)) {
+                    // フルパス情報を使用して完全に復元
+                    setPaths(JSON.parse(JSON.stringify(nextState.paths)));
+                } else if (nextState.pathChanges && Array.isArray(nextState.pathChanges)) {
+                    const restoredPaths = [];
+                    nextState.pathChanges.forEach(change => {
+                        if (change.path !== null) {
+                            restoredPaths[change.index] = change.path;
+                        }
                     });
+                    setPaths(restoredPaths.filter(p => p));
                 }
                 
                 setCurrentPathIndex(nextState.currentPathIndex);
@@ -1353,24 +1351,18 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             // 新形式と旧形式の両方に対応
             if (prevState) {
-                if (prevState.paths) {
-                    // 旧形式（フルパス）
-                    setPaths(prevState.paths);
-                } else if (prevState.pathChanges) {
-                    // 新形式（差分）- 現在のパスに差分を適用
-                    setPaths(prevPaths => {
-                        const newPaths = [...prevPaths];
-                        prevState.pathChanges.forEach(change => {
-                            if (change.path === null) {
-                                // パス削除
-                                newPaths.splice(change.index, 1);
-                            } else {
-                                // パス追加・変更
-                                newPaths[change.index] = change.path;
-                            }
-                        });
-                        return newPaths;
+                if (prevState.paths && Array.isArray(prevState.paths)) {
+                    // フルパス情報がある場合はそれをそのまま使用して復元する。
+                    setPaths(JSON.parse(JSON.stringify(prevState.paths)));
+                } else if (prevState.pathChanges && Array.isArray(prevState.pathChanges)) {
+                    // 差分のみ保持しているレガシー履歴の場合：空配列をベースに差分を適用して復元。
+                    const restoredPaths = [];
+                    prevState.pathChanges.forEach(change => {
+                        if (change.path !== null) {
+                            restoredPaths[change.index] = change.path;
+                        }
                     });
+                    setPaths(restoredPaths.filter(p => p));
                 }
                 
                 setCurrentPathIndex(prevState.currentPathIndex);
