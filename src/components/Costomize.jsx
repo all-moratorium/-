@@ -1076,18 +1076,31 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             }
             
             if (svgData.canvasData) {
-                // カスタマイズページでは常に最適な視点を計算
-                console.log('最適な視点を計算中...');
-                const optimalView = calculateOptimalView(limitedPaths);
-                console.log('計算された最適視点:', optimalView);
-                const canvasSettings = {
-                    ...svgData.canvasData,
-                    scale: optimalView.scale,
-                    offsetX: optimalView.offsetX,
-                    offsetY: optimalView.offsetY,
-                    segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
-                };
-                setCanvasSettings(canvasSettings);
+                // initialStateがある場合は保存された視点を使用、ない場合のみ最適視点を計算
+                if (initialState && initialState.scale !== undefined) {
+                    console.log('保存された視点を使用:', initialState);
+                    const canvasSettings = {
+                        ...svgData.canvasData,
+                        scale: initialState.scale,
+                        offsetX: initialState.offsetX,
+                        offsetY: initialState.offsetY,
+                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
+                    };
+                    setCanvasSettings(canvasSettings);
+                } else {
+                    // 初回のみ最適な視点を計算
+                    console.log('最適な視点を計算中...');
+                    const optimalView = calculateOptimalView(limitedPaths);
+                    console.log('計算された最適視点:', optimalView);
+                    const canvasSettings = {
+                        ...svgData.canvasData,
+                        scale: optimalView.scale,
+                        offsetX: optimalView.offsetX,
+                        offsetY: optimalView.offsetY,
+                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
+                    };
+                    setCanvasSettings(canvasSettings);
+                }
                 
                 // ネオン下絵のグリッド設定をそのまま使用（initialStateが無い場合のみ）
                 const shouldUseInitialState = initialState;

@@ -856,6 +856,15 @@ const [mergingStep, setMergingStep] = useState(0);                  // 結合の
   // カスタマイズページへの遷移イベントリスナー
   useEffect(() => {
     const handleShowCustomize = (event) => {
+      // 🔥 ネオン3Dプレビューから離れる時にカメラ状態を保存
+      if (currentPage === 'neonSvg3dPreview' && neonSvgTo3DExtruderRef.current) {
+        console.log('ネオンカメラ状態を保存中...');
+        const saveResult = neonSvgTo3DExtruderRef.current.saveCameraState();
+        if (saveResult) {
+          console.log('ネオンカメラ状態を保存しました');
+        }
+      }
+      
       if (event.detail) {
         setCustomizeSvgData(event.detail);
       }
