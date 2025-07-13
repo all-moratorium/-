@@ -2294,7 +2294,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                                 background: 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff, #ff00ff)',
                                                 border: '2px solid #ccc'
                                             }}
-                                            onClick={() => setOffTubeColor('matching')}
+                                            onClick={() => {
+                                                setOffTubeColor('matching');
+                                                setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                                            }}
                                             title="発光色マッチング"
                                         />
                                         <span className="color-name-text">発光色マッチング</span>
@@ -2303,7 +2306,10 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                         <button
                                             className={`base-color-button white ${offTubeColor === 'white' ? 'active' : ''}`}
                                             style={{ backgroundColor: '#ffffff', border: '2px solid #ccc' }}
-                                            onClick={() => setOffTubeColor('white')}
+                                            onClick={() => {
+                                                setOffTubeColor('white');
+                                                setBackgroundColorOff('#bebebe'); // RGB(190,190,190)
+                                            }}
                                             title="ホワイト"
                                         />
                                         <span className="color-name-text">ホワイト</span>
