@@ -396,7 +396,7 @@
 
 /* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
 .neon3d-glow-power-section {
-  position: absolute;
+  position: fixed;
   bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
@@ -411,6 +411,34 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 103;
   min-width: 160px;
+}
+
+/* エクスポートボタンコンテナ - サイドバー外に配置 */
+.neon3d-export-button-container {
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 103;
+}
+
+.neon3d-export-button {
+  padding: 12px 24px;
+  background-color: #4b5563;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.neon3d-export-button:hover {
+  background-color: #6b7280;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .neon3d-glow-power-controls {
@@ -520,7 +548,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   position: relative;
 }
 
@@ -603,7 +631,6 @@
 
 /* 商品情報へ進むボタン */
 .neon3d-proceed-button-container {
-  position: absolute;
   bottom: 20px;
   left: 16px;
   right: 16px;

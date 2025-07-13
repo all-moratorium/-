@@ -1666,6 +1666,47 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     <div className="neon-container">
       <div ref={mountRef} className="neon-canvas-mount" />
       
+      {/* グロー ON/OFF スイッチ - サイドバー外 */}
+      <div className="neon3d-glow-power-section">
+        <div className="neon3d-glow-power-controls">
+          <div className="neon3d-glow-power-status">
+            <span className={`neon3d-status-dot ${glowValue > 0 ? 'on' : 'off'}`}></span>
+            <span className={`neon3d-glow-status-text ${glowValue > 0 ? 'on' : 'off'}`}>
+              {glowValue > 0 ? 'ON' : 'OFF'}
+            </span>
+          </div>
+          <button
+            onClick={() => setGlowValue(glowValue > 0 ? 0 : 0.50)}
+            className={`neon3d-glow-power-switch ${glowValue > 0 ? 'on' : 'off'}`}
+          >
+            <div className={`neon3d-glow-switch-handle ${glowValue > 0 ? 'on' : 'off'}`} />
+          </button>
+        </div>
+        
+        {/* 照明スイッチを追加 */}
+        <div className="neon3d-lighting-controls">
+          <span className="neon3d-lighting-label">壁面照明</span>
+          <button
+            onClick={toggleRectAreaLight}
+            className={`neon3d-lighting-toggle ${rectAreaLightEnabled ? 'on' : 'off'}`}
+          >
+            <span className="neon3d-lighting-text">
+              {rectAreaLightEnabled ? 'ON' : 'OFF'}
+            </span>
+          </button>
+        </div>
+      </div>
+      
+      {/* エクスポートボタン - サイドバー外 */}
+      <div className="neon3d-export-button-container">
+        <button 
+          className="neon3d-export-button"
+          onClick={exportToGLB}
+        >
+          GLBファイルとして保存
+        </button>
+      </div>
+      
       {/* Controls Panel */}
       <div className={`controls-panel ${sidebarVisible ? '' : 'collapsed'}`}>
         <button 
@@ -1675,38 +1716,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         >
           {sidebarVisible ? '▲' : '▼'}
         </button>
-        
-        {/* グロー ON/OFF スイッチ */}
-        <div className="neon3d-glow-power-section">
-          <div className="neon3d-glow-power-controls">
-            <div className="neon3d-glow-power-status">
-              <span className={`neon3d-status-dot ${glowValue > 0 ? 'on' : 'off'}`}></span>
-              <span className={`neon3d-glow-status-text ${glowValue > 0 ? 'on' : 'off'}`}>
-                {glowValue > 0 ? 'ON' : 'OFF'}
-              </span>
-            </div>
-            <button
-              onClick={() => setGlowValue(glowValue > 0 ? 0 : 0.50)}
-              className={`neon3d-glow-power-switch ${glowValue > 0 ? 'on' : 'off'}`}
-            >
-              <div className={`neon3d-glow-switch-handle ${glowValue > 0 ? 'on' : 'off'}`} />
-            </button>
-          </div>
-          
-          {/* 照明スイッチを追加 */}
-          <div className="neon3d-lighting-controls">
-            <span className="neon3d-lighting-label">壁面照明</span>
-            <button
-              onClick={toggleRectAreaLight}
-              className={`neon3d-lighting-toggle ${rectAreaLightEnabled ? 'on' : 'off'}`}
-            >
-              <span className="neon3d-lighting-text">
-                {rectAreaLightEnabled ? 'ON' : 'OFF'}
-              </span>
-            </button>
-          </div>
-        </div>
-
 
         {/* モデル詳細情報表示 */}
         <div className="neon3d-details-info-container">
@@ -1750,16 +1759,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             <span className="neon3d-dimension-label">タイプ</span>
             <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? calculatedModelData.modelType : 'N/A'}</span>
           </div>
-        </div>
-
-        {/* エクスポートボタン */}
-        <div className="neon3d-export-button-container">
-          <button 
-            className="neon3d-export-button"
-            onClick={exportToGLB}
-          >
-            GLBファイルとして保存
-          </button>
         </div>
 
         {/* 商品情報へ進むボタン */}
