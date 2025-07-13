@@ -3523,6 +3523,10 @@ const quantizeColors = (pixels, k) => {
                                 <span className="spec-value">{neonModelData ? `${(neonModelData.tubeLength8mm / 10).toFixed(1)}cm` : '---'}</span>
                               </div>
                               <div className="spec-item-row">
+                                <span className="spec-label">OFF時のチューブカラー</span>
+                                <span className="spec-value">{neonModelData ? (neonModelData.offTubeColor === 'white' ? 'ホワイト' : '発光色マッチング') : '---'}</span>
+                              </div>
+                              <div className="spec-item-row">
                                 <span className="spec-label">ベースプレート色</span>
                                 <span className="spec-value">{neonModelData ? neonModelData.baseColor : '---'}</span>
                               </div>
