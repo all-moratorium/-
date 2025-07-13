@@ -65,6 +65,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [wallLightsEnabled, setWallLightsEnabled] = useState(true);
   const [rectAreaLightEnabled, setRectAreaLightEnabled] = useState(false); // 面光源オン/オフ状態
   const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
+  const [offTubeColor, setOffTubeColor] = useState('matching'); // OFF時のチューブカラー設定
 
   // Define layers for selective rendering
   const ENTIRE_SCENE_LAYER = 0;
@@ -160,6 +161,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         
         // ネオンパワー状態を更新
         setNeonPowerState(data.neonPower !== undefined ? data.neonPower : true);
+        // OFF時のチューブカラー設定を更新
+        setOffTubeColor(data.offTubeColor || 'matching');
       }
     };
     
@@ -564,14 +567,37 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     neonTube.layers.set(BLOOM_SCENE_LAYER); // Set layer for blooming
 
     const capGeometry = new THREE.SphereGeometry(actualTubeSizeMm * 1.0, 20, 20);
-    const capMaterial = neonMaterial.clone();
-    capMaterial.clippingPlanes = [clippingPlane]; // キャップにもクリッピング適用
+    
+    // 各キャップに個別のマテリアルを作成
+    const startCapMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        baseColor: { value: tubeColor.clone() },
+        emissiveIntensity: { value: emissiveValue }
+      },
+      vertexShader: neonVertexShader,
+      fragmentShader: neonFragmentShader,
+      clippingPlanes: [clippingPlane],
+      transparent: false,
+      opacity: 1.0
+    });
+    
+    const endCapMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        baseColor: { value: tubeColor.clone() },
+        emissiveIntensity: { value: emissiveValue }
+      },
+      vertexShader: neonVertexShader,
+      fragmentShader: neonFragmentShader,
+      clippingPlanes: [clippingPlane],
+      transparent: false,
+      opacity: 1.0
+    });
 
-    const startCap = new THREE.Mesh(capGeometry, capMaterial);
+    const startCap = new THREE.Mesh(capGeometry, startCapMaterial);
     startCap.position.copy(points[0]);
     startCap.layers.set(BLOOM_SCENE_LAYER);
 
-    const endCap = new THREE.Mesh(capGeometry, capMaterial);
+    const endCap = new THREE.Mesh(capGeometry, endCapMaterial);
     endCap.position.copy(points[points.length - 1]);
     endCap.layers.set(BLOOM_SCENE_LAYER);
 
@@ -585,7 +611,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     
     neonMaterialsRef.current[materialIndex] = {
       main: neonMaterial,
-      caps: [startCap, endCap]
+      caps: [
+        { material: startCapMaterial },
+        { material: endCapMaterial }
+      ]
     };
 
     return group;
@@ -728,20 +757,44 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   }, [color]);
 
   const updateEmissive = useCallback(() => {
-    // ネオンパワーがオフの場合は発光強度を0に、オンの場合は設定値を使用
-    const actualEmissiveValue = neonPowerState ? emissiveValue : 0;
+    // グローが0以下の場合はネオンOFF、それ以上はON
+    const isNeonOn = glowValue > 0;
+    const actualEmissiveValue = isNeonOn ? emissiveValue : 0;
     
     neonMaterialsRef.current.forEach(materialSet => {
       if (materialSet.main.uniforms && materialSet.main.uniforms.emissiveIntensity) {
         materialSet.main.uniforms.emissiveIntensity.value = actualEmissiveValue;
+        
+        // OFF時かつoffTubeColorが'white'の場合は白色
+        if (!isNeonOn && offTubeColor === 'white') {
+          // 元の色を保存（初回のみ）
+          if (!materialSet.originalColor) {
+            materialSet.originalColor = materialSet.main.uniforms.baseColor.value.getHex();
+          }
+          materialSet.main.uniforms.baseColor.value.setHex(0xffffff);
+        } else if (isNeonOn && materialSet.originalColor !== undefined) {
+          // ON時に元の色を復元
+          materialSet.main.uniforms.baseColor.value.setHex(materialSet.originalColor);
+        }
+        
         materialSet.caps.forEach(cap => {
           if (cap.material.uniforms && cap.material.uniforms.emissiveIntensity) {
             cap.material.uniforms.emissiveIntensity.value = actualEmissiveValue;
+            
+            // キャップの色も同様に変更
+            if (!isNeonOn && offTubeColor === 'white') {
+              if (!cap.originalColor) {
+                cap.originalColor = cap.material.uniforms.baseColor.value.getHex();
+              }
+              cap.material.uniforms.baseColor.value.setHex(0xffffff);
+            } else if (isNeonOn && cap.originalColor !== undefined) {
+              cap.material.uniforms.baseColor.value.setHex(cap.originalColor);
+            }
           }
         });
       }
     });
-  }, [emissiveValue, neonPowerState]);
+  }, [emissiveValue, glowValue, offTubeColor]);
 
 
   const updateGlow = useCallback(() => {
@@ -839,7 +892,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
   useEffect(() => {
     updateEmissive();
-  }, [updateEmissive, neonPowerState]);
+  }, [updateEmissive, glowValue]);
+
+  useEffect(() => {
+    updateEmissive();
+  }, [updateEmissive, offTubeColor]);
 
   useEffect(() => {
     updateGlow();

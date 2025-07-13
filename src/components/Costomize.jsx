@@ -2831,7 +2831,8 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     gridSizeCm: 4,
                                     svgContent: customizedSvg,
                                     strokeWidthsPx: neonLineWidths,
-                                    installationEnvironment: installationEnvironment
+                                    installationEnvironment: installationEnvironment,
+                                    offTubeColor: offTubeColor
                                 }
                             }));
                             
