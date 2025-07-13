@@ -1546,7 +1546,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             console.error('プロジェクトファイルのダウンロードに失敗:', error);
             alert('ファイルのダウンロードに失敗しました');
         }
-    }, [paths, currentPathIndex, drawMode, drawingType, history, historyIndex, scale, offsetX, offsetY, 
+    }, [paths, currentPathIndex, drawMode, drawingType, scale, offsetX, offsetY, 
         backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, 
         bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, canvasWidth, canvasHeight, segmentsPerCurve]);
 
