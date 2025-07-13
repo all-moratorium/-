@@ -221,72 +221,31 @@ body:active {
     background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
 }
 
-/* スケール制御 */
-.scale-controls {
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+
+/* プロジェクトファイルダウンロードボタン */
+.download-project-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.scale-controls label {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #ffffff;
+.download-project-btn:hover {
+    background: linear-gradient(135deg, #357abd 0%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 158, 255, 0.4);
 }
 
-.scale-controls input[type="range"] {
-    width: 100%;
-    margin: 5px 0;
-    background: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 6px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.2);
-    outline: none;
-}
-
-.scale-controls input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #4a9eff;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
-}
-
-.scale-controls input[type="range"]::-webkit-slider-thumb:hover {
-    background: #357abd;
-    transform: scale(1.1);
-}
-
-.scale-controls input[type="range"]::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #4a9eff;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
-}
-
-.scale-controls input[type="range"]::-moz-range-thumb:hover {
-    background: #357abd;
-    transform: scale(1.1);
-}
-
-.scale-controls span {
-    font-size: 12px;
-    color: #cccccc;
-    margin-left: 8px;
-    min-width: 35px;
-    display: inline-block;
+.download-project-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
 }

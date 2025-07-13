@@ -590,7 +590,6 @@ const Gallery3D = ({ models = [] }) => {
         const tooltipImage = document.getElementById('tooltipImage');
         const tooltipTitle = document.getElementById('tooltipTitle');
         const tooltipDescription = document.getElementById('tooltipDescription');
-        const scaleControls = document.getElementById('scaleControls');
 
         if (tooltipRight && tooltipLeft && tooltipImage && tooltipTitle && tooltipDescription) {
             tooltipImage.textContent = data.icon;
@@ -600,28 +599,15 @@ const Gallery3D = ({ models = [] }) => {
             tooltipTitle.textContent = data.name;
             tooltipDescription.textContent = data.description;
             
-            // 中央モデルのスケール制御を表示
-            const centerModel = getCenterModel();
-            if (centerModel && scaleControls) {
-                const modelKey = centerModel.userData.modelKey;
-                const currentScale = modelScales[modelKey] || 0.006;
-                scaleControls.style.display = 'block';
-                const scaleInput = document.getElementById('scaleInput');
-                if (scaleInput) {
-                    scaleInput.value = (currentScale * 1000).toFixed(1); // 0.006 -> 6.0 for display
-                }
-            }
-            
             tooltipLeft.classList.add('show');
             
             isTooltipShownRef.current = true;
         }
-    }, [getCenterModel, modelScales]);
+    }, []);
 
     const hideTooltip = useCallback(() => {
         const tooltipRight = document.getElementById('hoverTooltipRight');
         const tooltipLeft = document.getElementById('hoverTooltipLeft');
-        const scaleControls = document.getElementById('scaleControls');
         
         if (tooltipRight) {
             tooltipRight.classList.remove('show');
@@ -629,10 +615,38 @@ const Gallery3D = ({ models = [] }) => {
         if (tooltipLeft) {
             tooltipLeft.classList.remove('show');
         }
-        if (scaleControls) {
-            scaleControls.style.display = 'none';
-        }
         isTooltipShownRef.current = false;
+    }, []);
+
+    // プロジェクトファイルダウンロード機能
+    const downloadProjectFile = useCallback((modelName) => {
+        // モデル名からJSONファイル名を生成
+        const fileName = `${modelName}　プロジェクトファイル.json`;
+        const filePath = `/neon sample json/${fileName}`;
+        
+        // ファイルをダウンロード
+        fetch(filePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('プロジェクトファイルのダウンロードエラー:', error);
+                alert('プロジェクトファイルのダウンロードに失敗しました。');
+            });
     }, []);
 
     // 動的にモデルを追加する関数（削除は不要）
@@ -945,52 +959,22 @@ const Gallery3D = ({ models = [] }) => {
             container.addEventListener('click', handleClick);
         }
         
-        // ボタンイベントは少し遅延して追加
-        const handleScaleChange = (event) => {
-            const newScale = parseFloat(event.target.value) / 1000; // 6.0 -> 0.006
+
+        const handleDownloadProject = () => {
             const centerModel = getCenterModel();
             if (centerModel) {
-                const modelKey = centerModel.userData.modelKey;
-                setModelScales(prev => ({ ...prev, [modelKey]: newScale }));
-                
-                // 即座にスケールを更新
-                centerModel.children.forEach(child => {
-                    if (child.scale && child.type === 'Group') {
-                        // グループ全体のスケールを設定
-                        child.scale.set(newScale, newScale, newScale);
-                        
-                        // スケール変更後、モデルを中央に再配置
-                        try {
-                            const box = new THREE.Box3().setFromObject(child);
-                            if (box.min.x !== Infinity && box.max.x !== -Infinity) {
-                                const center = box.getCenter(new THREE.Vector3());
-                                child.position.sub(center);
-                            }
-                        } catch (error) {
-                            // エラーの場合は位置をリセット
-                            child.position.set(0, 0, 0);
-                        }
-                    } else if (child.scale) {
-                        // 単一メッシュの場合
-                        child.scale.set(newScale, newScale, newScale);
-                    }
-                });
-                
-                // スケール値の表示を更新
-                const scaleValue = document.getElementById('scaleValue');
-                if (scaleValue) {
-                    scaleValue.textContent = event.target.value;
-                }
+                const modelName = centerModel.userData.paintingData.name;
+                downloadProjectFile(modelName);
             }
         };
 
         const addButtonEvents = () => {
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const scaleInput = document.getElementById('scaleInput');
+            const downloadBtn = document.getElementById('downloadProjectBtn');
             if (prevBtn) prevBtn.addEventListener('click', handlePrevClick);
             if (nextBtn) nextBtn.addEventListener('click', handleNextClick);
-            if (scaleInput) scaleInput.addEventListener('input', handleScaleChange);
+            if (downloadBtn) downloadBtn.addEventListener('click', handleDownloadProject);
         };
         
         setTimeout(addButtonEvents, 100);
@@ -1007,10 +991,10 @@ const Gallery3D = ({ models = [] }) => {
             }
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const scaleInput = document.getElementById('scaleInput');
+            const downloadBtn = document.getElementById('downloadProjectBtn');
             if (prevBtn) prevBtn.removeEventListener('click', handlePrevClick);
             if (nextBtn) nextBtn.removeEventListener('click', handleNextClick);
-            if (scaleInput) scaleInput.removeEventListener('input', handleScaleChange);
+            if (downloadBtn) downloadBtn.removeEventListener('click', handleDownloadProject);
             document.removeEventListener('keydown', handleKeyDown);
             resizeObserver.disconnect();
             clearTimeout(autoSwitchTimerRef.current);
@@ -1046,18 +1030,9 @@ const Gallery3D = ({ models = [] }) => {
             <div className="hover-tooltip-left" id="hoverTooltipLeft">
                 <div className="tooltip-title" id="tooltipTitle"></div>
                 <div className="tooltip-description" id="tooltipDescription"></div>
-                <div className="scale-controls" id="scaleControls" style={{display: 'none'}}>
-                    <label htmlFor="scaleInput">スケール: </label>
-                    <input 
-                        type="range" 
-                        id="scaleInput" 
-                        min="1" 
-                        max="15" 
-                        step="0.1" 
-                        defaultValue="6.0"
-                    />
-                    <span id="scaleValue">6.0</span>
-                </div>
+                <button className="download-project-btn" id="downloadProjectBtn">
+                    プロジェクトファイルをダウンロード
+                </button>
             </div>
         </div>
     );
