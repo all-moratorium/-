@@ -384,14 +384,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             case 'c':
               for (let i = 0; i < coords.length; i += 6) {
                 if (i + 5 < coords.length) {
-                  const p0 = new THREE.Vector2(currentX, currentY);
-                  const p1 = new THREE.Vector2(type === 'C' ? coords[i] : currentX + coords[i], type === 'C' ? coords[i+1] : currentY + coords[i+1]);
-                  const p2 = new THREE.Vector2(type === 'C' ? coords[i+2] : currentX + coords[i+2], type === 'C' ? coords[i+3] : currentY + coords[i+3]);
                   const p3 = new THREE.Vector2(type === 'C' ? coords[i+4] : currentX + coords[i+4], type === 'C' ? coords[i+5] : currentY + coords[i+5]);
                   
-                  const curve = new THREE.CubicBezierCurve(p0, p1, p2, p3);
-                  const curvePoints = curve.getPoints(30);
-                  curvePoints.forEach(p => points.push(new THREE.Vector3(p.x * scale, -p.y * scale, 0)));
+                  // NeonDrawingApp方式：効率的処理 - 30ポイント展開をスキップ、終点のみ追加
+                  points.push(new THREE.Vector3(p3.x * scale, -p3.y * scale, 0));
                   
                   currentX = p3.x;
                   currentY = p3.y;
@@ -443,9 +439,25 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     
     if (points.length < 3) return null;
     
-    shape.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      shape.lineTo(points[i].x, points[i].y);
+    // 強制的にポイント数を削減
+    const maxPoints = 500;
+    const simplifiedPoints = [];
+    const step = Math.max(1, Math.floor(points.length / maxPoints));
+    
+    for (let i = 0; i < points.length; i += step) {
+      simplifiedPoints.push(points[i]);
+    }
+    
+    // 最後の点を必ず含める（形状を閉じるため）
+    if (simplifiedPoints[simplifiedPoints.length - 1] !== points[points.length - 1]) {
+      simplifiedPoints.push(points[points.length - 1]);
+    }
+    
+    console.log(`土台ポイント削減: ${points.length} → ${simplifiedPoints.length}ポイント`);
+    
+    shape.moveTo(simplifiedPoints[0].x, simplifiedPoints[0].y);
+    for (let i = 1; i < simplifiedPoints.length; i++) {
+      shape.lineTo(simplifiedPoints[i].x, simplifiedPoints[i].y);
     }
     shape.closePath();
     
