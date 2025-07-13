@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center', classNam
 // 安全なLocalStorage読み込み関数
 const safeGetFromLocalStorage = (key, fallback = null) => {
     try {
-        const item = localStorage.getItem(key);
+        const item = sessionStorage.getItem(key);
         return item ? JSON.parse(item) : fallback;
     } catch (error) {
         console.error(`LocalStorage読み込みエラー (${key}):`, error);
@@ -332,7 +332,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     // 初期化完了マーカー + LocalStorageから最新状態を確実に復元
     useEffect(() => {
-        // ページリロード時にlocalStorageをクリア
+        // ページリロード時にsessionStorageをクリア
         const isPageReload = () => {
             // performance.getEntriesByType('navigation')をサポートしているブラウザの場合
             if (typeof performance !== 'undefined' && performance.getEntriesByType) {
@@ -354,7 +354,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         // リマウント時に最新の状態を確実に復元
         try {
-            const savedData = localStorage.getItem('neonDrawingData');
+            const savedData = sessionStorage.getItem('neonDrawingData');
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 console.log('リマウント時にLocalStorageから最新状態を復元:', parsedData);
@@ -442,10 +442,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     initialBgImageWidth: 0,
                     initialBgImageHeight: 0
                 };
-                localStorage.setItem('neonDrawingData', JSON.stringify(dataWithoutImage));
+                sessionStorage.setItem('neonDrawingData', JSON.stringify(dataWithoutImage));
                 console.log('背景画像を除外してLocalStorageに保存しました - 履歴:', limitedHistory.length, '個');
             } else {
-                localStorage.setItem('neonDrawingData', dataString);
+                sessionStorage.setItem('neonDrawingData', dataString);
                 console.log('描画データをLocalStorageに保存しました - 履歴:', limitedHistory.length, '個');
             }
         } catch (error) {
@@ -468,7 +468,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     history: [{ paths, currentPathIndex, drawMode, drawingType }],
                     historyIndex: 0
                 };
-                localStorage.setItem('neonDrawingData', JSON.stringify(minimalData));
+                sessionStorage.setItem('neonDrawingData', JSON.stringify(minimalData));
                 console.log('最小限のデータでLocalStorageに保存しました');
             } catch (minimalError) {
                 console.error('最小限データの保存も失敗:', minimalError);
@@ -546,7 +546,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             img.onload = () => {
                 setLoadedBackgroundImage(img);
 
-                // localStorageから復元された場合はサイズ計算のみ行い、設定値は保持する
+                // sessionStorageから復元された場合はサイズ計算のみ行い、設定値は保持する
                 const isRestoredFromStorage = bgImageScale !== 1.0 || bgImageX !== 0 || bgImageY !== 0 || bgImageOpacity !== 1.0;
                 
                 const drawingAreaWidth = 800; // 仮想的な初期サイズ
@@ -976,7 +976,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     history: finalHistory, // 最新の履歴全体を保存
                     historyIndex: newHistoryIndex // 最新の履歴インデックスを保存
                 };
-                localStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
+                sessionStorage.setItem('neonDrawingData', JSON.stringify(dataToSave));
                 console.log('描画データをLocalStorageに保存しました (履歴保存時) - 履歴:', finalHistory.length, '個');
             } catch (error) {
                 console.error('LocalStorageへのデータ保存に失敗しました (履歴保存時):', error);
@@ -1251,7 +1251,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         // LocalStorageもクリア状態に更新
         try {
             const clearedData = getInitialDrawingState({}); // デフォルト状態を取得
-            localStorage.setItem('neonDrawingData', JSON.stringify(clearedData));
+            sessionStorage.setItem('neonDrawingData', JSON.stringify(clearedData));
             console.log('LocalStorageをクリア状態に更新しました。');
         } catch (error) {
             console.error('LocalStorageクリアエラー:', error);
@@ -2034,7 +2034,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             // 初期表示時は保存された視点状態を復元、なければ中央に配置
             // ただし、offsetXとoffsetYが初期値(0)の場合のみ
             if (offsetX === 0 && offsetY === 0) {
-                const savedViewState = localStorage.getItem('neonDrawingViewState');
+                const savedViewState = sessionStorage.getItem('neonDrawingViewState');
                 if (savedViewState) {
                     try {
                         const viewState = JSON.parse(savedViewState);
@@ -3041,12 +3041,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             offsetY,
             timestamp: Date.now()
         };
-        localStorage.setItem('neonDrawingViewState', JSON.stringify(viewState));
+        sessionStorage.setItem('neonDrawingViewState', JSON.stringify(viewState));
     }, [scale, offsetX, offsetY]);
 
     const restoreViewState = useCallback(() => {
         try {
-            const savedViewState = localStorage.getItem('neonDrawingViewState');
+            const savedViewState = sessionStorage.getItem('neonDrawingViewState');
             if (savedViewState) {
                 const viewState = JSON.parse(savedViewState);
                 setScale(viewState.scale || 1);
@@ -3201,32 +3201,64 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setIsPathDeleteMode(false); // パス削除モードを無効化
     }, []);
 
+    // 画像圧縮関数
+    const compressImage = useCallback((file, quality = 0.7, maxWidth = 1920) => {
+        return new Promise((resolve) => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                // アスペクト比を保持してリサイズ
+                let { width, height } = img;
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 画像を描画
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // 圧縮してBase64で出力
+                const compressedDataURL = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedDataURL);
+            };
+            
+            img.src = URL.createObjectURL(file);
+        });
+    }, []);
+
     // 背景画像ファイルのアップロード
-    const handleImageUpload = useCallback((event) => {
+    const handleImageUpload = useCallback(async (event) => {
         const file = event.target.files[0];
         if (file) {
-            // ファイルサイズチェック (5MB制限)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('画像ファイルが大きすぎます。5MB以下のファイルを選択してください。');
-                return;
+            // 1.5MB以上は自動で圧縮
+            if (file.size > 1.5 * 1024 * 1024) {
+                try {
+                    console.log(`画像が大きいため圧縮します (${Math.round(file.size / 1024 / 1024 * 10) / 10}MB)`);
+                    const compressedImage = await compressImage(file, 0.7, 1920);
+                    console.log('圧縮完了:', Math.round(compressedImage.length / 1024), 'KB');
+                    setBackgroundImage(compressedImage);
+                    return;
+                } catch (error) {
+                    console.error('画像圧縮エラー:', error);
+                    // 圧縮に失敗した場合は元の画像で続行
+                }
             }
             
+            // 通常の読み込み処理（1.5MB以下または圧縮失敗時）
             const reader = new FileReader();
             reader.onloadend = () => {
                 const result = reader.result;
-                
-                // Base64データのサイズをチェック (約7MB制限)
-                if (result.length > 7 * 1024 * 1024) {
-                    alert('画像データが大きすぎます。より小さいファイルまたは低解像度の画像を使用してください。');
-                    return;
-                }
-                
                 console.log('背景画像を読み込みました:', Math.round(result.length / 1024), 'KB');
                 setBackgroundImage(result);
             };
             reader.readAsDataURL(file);
         }
-    }, []);
+    }, [compressImage]);
 
     // 背景画像をクリア
     const clearBackgroundImage = useCallback(() => {

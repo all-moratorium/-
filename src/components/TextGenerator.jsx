@@ -1,20 +1,20 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './TextGenerator.css';
 
-// LocalStorageからデータを安全に読み込む関数
-const safeGetFromLocalStorage = (key, fallback = null) => {
+// SessionStorageからデータを安全に読み込む関数
+const safeGetFromSessionStorage = (key, fallback = null) => {
     try {
-        const item = localStorage.getItem(key);
+        const item = sessionStorage.getItem(key);
         return item ? JSON.parse(item) : fallback;
     } catch (error) {
-        console.error(`LocalStorage読み込みエラー (${key}):`, error);
+        console.error(`SessionStorage読み込みエラー (${key}):`, error);
         return fallback;
     }
 };
 
 // 初期状態を取得する関数
 const getInitialTextGeneratorState = () => {
-    const savedData = safeGetFromLocalStorage('textGeneratorData');
+    const savedData = safeGetFromSessionStorage('textGeneratorData');
     
     return {
         inputText: savedData?.inputText || '',
@@ -591,9 +591,9 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                 letterSpacing,
                 strokeWidth
             };
-            localStorage.setItem('textGeneratorData', JSON.stringify(dataToSave));
+            sessionStorage.setItem('textGeneratorData', JSON.stringify(dataToSave));
         } catch (error) {
-            console.error('LocalStorage保存エラー:', error);
+            console.error('SessionStorage保存エラー:', error);
         }
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
 
