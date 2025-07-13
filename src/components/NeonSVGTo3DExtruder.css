@@ -397,7 +397,7 @@
 /* グローパワーセクション（カスタマイズからコピー、クラス名変更） */
 .neon3d-glow-power-section {
   position: fixed;
-  bottom: 25px;
+  bottom: 24px;
   width: 170px;
   transform: translateX(-50%);
   display: flex;
@@ -416,12 +416,12 @@
 
 /* サイドバーが開いている時のグローパワーセクション位置 */
 .neon3d-glow-power-section.sidebar-open {
-  right: 245px
+  right: 248px
 }
 
 /* サイドバーが閉じている時のグローパワーセクション位置 */
 .neon3d-glow-power-section.sidebar-closed {
-  right: -80px;
+  right: -60px;
 }
 
 /* エクスポートボタンコンテナ - サイドバー外に配置 */
@@ -546,7 +546,7 @@
 
 /* モデル詳細情報表示セクション */
 .neon3d-details-info-container {
-  margin-bottom: 150px;
+  margin-bottom: 130px;
   margin-top: 60px;
   padding: 12px;
   border-radius: 8px;
