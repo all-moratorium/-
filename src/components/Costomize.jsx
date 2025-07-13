@@ -67,6 +67,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         segmentsPerCurve: 30
     });
     const [installationEnvironment, setInstallationEnvironment] = useState(initialState?.installationEnvironment || 'indoor'); // 'indoor' or 'outdoor'
+    const [offTubeColor, setOffTubeColor] = useState(initialState?.offTubeColor || 'matching'); // 'white' or 'matching'
     
     // 寸法表示用の状態
     const [modelSize, setModelSize] = useState({
@@ -327,13 +328,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 pathThickness,
                 isTubeSettingsMinimized,
                 installationEnvironment,
+                offTubeColor,
                 scale: canvasSettings.scale,
                 offsetX: canvasSettings.offsetX,
                 offsetY: canvasSettings.offsetY
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, canvasSettings, onStateChange]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, offTubeColor, canvasSettings, onStateChange]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
@@ -433,7 +435,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, neonPaths, neonColors, neonLineWidths, canvasSettings, installationEnvironment, offTubeColor]);
 
     // プロジェクト読み込み機能
     const loadProjectFromFile = useCallback((event) => {
@@ -548,6 +550,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 } // 即座に実行でちらつき防止
                 
                 if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
+                if (projectData.offTubeColor !== undefined) setOffTubeColor(projectData.offTubeColor);
                 
                 // 視点計算完了後に表示開始
                 setIsInitializing(false);
@@ -836,6 +839,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
             if (projectData.neonLineWidths !== undefined) setNeonLineWidths(projectData.neonLineWidths);
             if (projectData.canvasSettings !== undefined) setCanvasSettings(projectData.canvasSettings);
             if (projectData.installationEnvironment !== undefined) setInstallationEnvironment(projectData.installationEnvironment);
+            if (projectData.offTubeColor !== undefined) setOffTubeColor(projectData.offTubeColor);
 
             // svgDataの復元
             if (projectData.svgData !== undefined && onStateChange) {
@@ -905,7 +909,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
         selectedColor, thickness, backgroundColor,
         gridColor, showGrid, gridOpacity, pathColors, pathThickness, neonPower,
         backgroundColorOff, gridColorOff, gridSize, isTubeSettingsMinimized, 
-        installationEnvironment, isDataLoaded, canvasSettings
+        installationEnvironment, offTubeColor, isDataLoaded, canvasSettings
     ]);
 
     // 3Dプレビューから戻った時の状態復元
@@ -942,6 +946,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                 if (backupState.neonLineWidths) setNeonLineWidths(backupState.neonLineWidths);
                 if (backupState.canvasSettings) setCanvasSettings(backupState.canvasSettings);
                 if (backupState.installationEnvironment) setInstallationEnvironment(backupState.installationEnvironment);
+                if (backupState.offTubeColor) setOffTubeColor(backupState.offTubeColor);
                 
                 // svgDataの復元
                 if (backupState.svgData && onStateChange) {
@@ -2269,6 +2274,41 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                     ネオンチューブ設定が最小化されています
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {/* OFF時のチューブカラー設定 */}
+                    {neonPaths.some(pathObj => pathObj && pathObj.mode === 'stroke') && (
+                        <div className="base-settings">
+                            <div className="base-settings-header">
+                                <h3 className="customize-setting-title">OFF時のチューブカラー</h3>
+                            </div>
+                            <div className="base-item off-tube-color-section">
+                                <label className="base-color-label">電源OFF時のチューブの色を選択してください</label>
+                                <div className="base-color-options">
+                                    <div className="color-button-container">
+                                        <button
+                                            className={`base-color-button rainbow ${offTubeColor === 'matching' ? 'active' : ''}`}
+                                            style={{ 
+                                                background: 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff, #ff00ff)',
+                                                border: '2px solid #ccc'
+                                            }}
+                                            onClick={() => setOffTubeColor('matching')}
+                                            title="発光色マッチング"
+                                        />
+                                        <span className="color-name-text">発光色マッチング</span>
+                                    </div>
+                                    <div className="color-button-container">
+                                        <button
+                                            className={`base-color-button white ${offTubeColor === 'white' ? 'active' : ''}`}
+                                            style={{ backgroundColor: '#ffffff', border: '2px solid #ccc' }}
+                                            onClick={() => setOffTubeColor('white')}
+                                            title="ホワイト"
+                                        />
+                                        <span className="color-name-text">ホワイト</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
