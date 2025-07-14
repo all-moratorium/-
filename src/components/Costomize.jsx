@@ -3360,11 +3360,14 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             </div>
                             
                             <div className="processing-tips">
-                                <h4>処理時間を短縮するコツ</h4>
+                                <h4>処理時間を短縮について</h4>
                                 <ul className="tips-list">
-                                    <li className="tip-item">色数の少ないシンプルな画像を使用</li>
-                                    <li className="tip-item">適切なレイヤー数</li>
-                                    <li className="tip-item">画像サイズを2000px以下に調整</li>
+                                    <li className="tip-item">より複雑なモデルは、処理時間が長くなります。</li>
+                                    <li className="tip-item">3dモデルは表示用に最適化されております</li>
+                                    <li className="tip-item">ご不明な点があれば、お気軽にお問い合わせください。</li>
+                                    
+                                    
+                                    
                                 </ul>
                             </div>
                         </div>
