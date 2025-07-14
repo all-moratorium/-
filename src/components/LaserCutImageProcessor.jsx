@@ -5,6 +5,7 @@ import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネ
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート
 import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
 import TextGenerator from './TextGenerator'; // テキスト生成コンポーネントをインポート
+import GuideModal from './GuideModal'; // ガイドモーダルコンポーネントをインポート
 import { lab as culoriLabConverter, differenceEuclidean } from 'culori';
 
 // Canvasプールの実装 - メモリリーク対策
@@ -723,6 +724,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
   const [isModalOpen, setIsModalOpen] = useState(false); // メインのモーダル用
   const [isLayerInfoModalOpen, setIsLayerInfoModalOpen] = useState(false); // レイヤー情報モーダル用の状態
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false); // ガイドモーダル用の状態
   // ボタンのエフェクト制御用の状態変数
   const [isEffectStopped, setIsEffectStopped] = useState(false);
   const [isLayerInfoButtonEffectStopped, setIsLayerInfoButtonEffectStopped] = useState(false);
@@ -2863,14 +2865,20 @@ const quantizeColors = (pixels, k) => {
     // 🔥 画像処理は3Dモデル生成時のみ実行
   };
   
-  // メインモーダルを開く関数
+  // ガイドモーダルを開く関数
   const handleOpenModal = () => {
-    console.log('メインモーダルを開きます');
-    setIsModalOpen(true);
-    // メインモーダル専用のロジック
+    console.log('ガイドモーダルを開きます');
+    setIsGuideModalOpen(true);
     setTimeout(() => {
-      console.log('メインモーダルを開いた後の状態:', isModalOpen);
-    }, 0);
+      setIsEffectStopped(true);
+    }, 150);
+  };
+
+  // ガイドモーダルを閉じる関数
+  const handleCloseGuideModal = () => {
+    console.log('ガイドモーダルを閉じます');
+    setIsGuideModalOpen(false);
+    setIsEffectStopped(true);
   };
 
   // メインモーダルを閉じる関数
@@ -3896,8 +3904,11 @@ const quantizeColors = (pixels, k) => {
       
       {renderOriginalComponent()}
       
-     
-      
+      {/* ガイドモーダル */}
+      <GuideModal 
+        isOpen={isGuideModalOpen} 
+        onClose={handleCloseGuideModal} 
+      />
 
     </div>
   );
