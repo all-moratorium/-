@@ -37,9 +37,9 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center', classNam
                     {onClose && (
                         <button 
                             onClick={onClose}
-                            className="modal-close-btn"
+                            className="modal-apply-btn"
                         >
-                            ×
+                            適用
                         </button>
                     )}
                 </div>
