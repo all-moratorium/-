@@ -36,12 +36,13 @@ const GuideModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* ページ1 */}
-        {currentPage === 1 && (
-          <div className="guide-page">
-            <div className="guide-header">
-              <h3 className="guide-subtitle">Image To LED Neon Signへようこそ</h3>
-            </div>
+        {/* ページコンテンツエリア */}
+        <div className="guide-modal-body">
+          {/* ページ1 */}
+          <div className={`guide-page ${currentPage === 1 ? 'active' : ''}`}>
+          <div className="guide-header">
+            <h3 className="guide-subtitle">Image To LED Neon Signへようこそ</h3>
+          </div>
             
             {/* 横長画像枠 */}
             <div className="guide-hero-image">
@@ -93,15 +94,13 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
             </div>
-          </div>
-        )}
+        </div>
 
         {/* ページ2 */}
-        {currentPage === 2 && (
-          <div className="guide-page">
-            <div className="guide-header">
-              <h3 className="guide-subtitle">推奨される使用例</h3>
-            </div>
+        <div className={`guide-page ${currentPage === 2 ? 'active' : ''}`}>
+          <div className="guide-header">
+            <h3 className="guide-subtitle">推奨される使用例</h3>
+          </div>
             
             <div className="guide-use-cases">
               <div className="use-case-card">
@@ -133,12 +132,10 @@ const GuideModal = ({ isOpen, onClose }) => {
                 権利侵害に関するトラブルについて、当サイトは一切の責任を負いかねます。
               </p>
             </div>
-          </div>
-        )}
+        </div>
 
         {/* ページ3 */}
-        {currentPage === 3 && (
-          <div className="guide-page">
+        <div className={`guide-page ${currentPage === 3 ? 'active' : ''}`}>
             
             <div className="guide-getting-started">
               <div className="guide-section">
@@ -171,7 +168,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* ナビゲーション */}
         <div className="guide-navigation">
