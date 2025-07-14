@@ -26,16 +26,20 @@ const GuideModal = ({ isOpen, onClose }) => {
   return (
     <div className="guide-modal-overlay" onClick={resetAndClose}>
       <div className="guide-modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* 閉じるボタン */}
-        <button className="guide-modal-close" onClick={resetAndClose}>
-          ×
-        </button>
+        {/* ヘッダー */}
+        <div className="guide-modal-header">
+          <div className="guide-header">
+            <h2 className="guide-title">はじめに</h2>
+          </div>
+          <button className="guide-modal-close" onClick={resetAndClose}>
+            ×
+          </button>
+        </div>
 
         {/* ページ1 */}
         {currentPage === 1 && (
           <div className="guide-page">
             <div className="guide-header">
-              <h2 className="guide-title">はじめに</h2>
               <h3 className="guide-subtitle">Image To LED Neon Signへようこそ</h3>
             </div>
             
@@ -96,7 +100,6 @@ const GuideModal = ({ isOpen, onClose }) => {
         {currentPage === 2 && (
           <div className="guide-page">
             <div className="guide-header">
-              <h2 className="guide-title">はじめに</h2>
               <h3 className="guide-subtitle">推奨される使用例</h3>
             </div>
             
@@ -136,18 +139,15 @@ const GuideModal = ({ isOpen, onClose }) => {
         {/* ページ3 */}
         {currentPage === 3 && (
           <div className="guide-page">
-            <div className="guide-header">
-              <h2 className="guide-title">はじめに</h2>
-            </div>
             
             <div className="guide-getting-started">
               <div className="guide-section">
-                <h3>ガイドを開く</h3>
                 <div className="guide-info-section">
+                  <h3 className="section-title">ガイドを開く</h3>
                   <div className="info-icon">
                     <div className="icon-placeholder">i</div>
                   </div>
-                  <div className="info-text">
+                  <div className="guide-info-text">
                     それぞれのページには「i」マークの<br />
                     ガイドボタンが配置されています。<br />
                     <br />
@@ -158,8 +158,8 @@ const GuideModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="guide-section">
-                <h3>作成開始</h3>
                 <div className="creation-section">
+                  <h3 className="section-title">作成開始</h3>
                   <div className="creation-image">
                     <div className="image-placeholder">アプリスクリーンショット</div>
                   </div>
