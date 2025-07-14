@@ -392,8 +392,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
         
         try {
-            // 履歴を最新の30件に制限
-            const limitedHistory = history.slice(-30);
+            // 履歴を最新の20件に制限
+            const limitedHistory = history.slice(-20);
             const adjustedHistoryIndex = Math.min(historyIndex, limitedHistory.length - 1);
             
             const dataToSave = {
@@ -945,8 +945,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             
             const newHistory = [...truncatedHistory, newState];
             
-            // 履歴を30件に制限
-            const finalHistory = newHistory.length > 30 ? newHistory.slice(-30) : newHistory;
+            // 履歴を20件に制限
+            const finalHistory = newHistory.length > 20 ? newHistory.slice(-20) : newHistory;
             const newHistoryIndex = finalHistory.length - 1;
             
             setHistoryIndex(newHistoryIndex); // historyIndex を同期的に更新
@@ -1237,7 +1237,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setIsModifyingPoints(false);
         setIsPathDeleteMode(false); 
         setIsPointDeleteMode(false); 
-        setIsNewPathDisabled(false); 
+        setIsNewPathDisabled(false);
+        
+        // 背景画像もクリア
+        setBackgroundImage(null);
+        setLoadedBackgroundImage(null);
+        setInitialBgImageWidth(0);
+        setInitialBgImageHeight(0);
+        setBgImageScale(1.0);
+        setBgImageX(0);
+        setBgImageY(0);
+        setBgImageOpacity(1.0);
         
         const initialHistory = [{
             paths: JSON.parse(JSON.stringify(initialPaths)),
