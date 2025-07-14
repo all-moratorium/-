@@ -312,19 +312,93 @@
   max-width: 350px;
 }
 
-.info-icon .icon-placeholder {
-  width: 80px;
-  height: 80px;
-  background: #222;
-  border-radius: 50%;
-  margin: 0 auto 20px auto;
+.info-icon .guide-info-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  font-size: 28px;
+  background: white;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  animation: guide-lightning-flash 1.5s infinite;
+  overflow: visible;
+  transition: all 0.3s ease;
+  margin: 0 auto 20px auto;
+}
+
+.guide-info-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.guide-info-button::before {
+  content: 'i';
   font-weight: bold;
-  border: 2px solid #333;
+  font-style: italic;
+  font-family: 'Times New Roman', serif;
+  color: #333;
+  animation: guide-lightning-flicker 1.5s infinite;
+}
+
+.guide-info-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: guide-ripple-wave 1.5s infinite;
+}
+
+/* アニメーション定義 */
+@keyframes guide-lightning-flash {
+  0%, 90%, 100% { 
+      box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+      border-color: #ffffff; 
+  }
+  5%, 10% { 
+      box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+      border-color: #ffffff; 
+      background: #ffffff; 
+  }
+}
+
+@keyframes guide-lightning-flicker {
+  0%, 90%, 100% { 
+      text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+      color: #333; 
+  }
+  5%, 10% { 
+      text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+      color: #ffffff; 
+  }
+}
+
+@keyframes guide-ripple-wave {
+  0% { 
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+      border-color: rgba(255,255,255,0.7);
+  }
+  10% { 
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.8;
+      border-color: rgba(255,255,255,0.7);
+  }
+  100% { 
+      transform: translate(-50%, -50%) scale(2.5);
+      opacity: 0;
+      border-color: rgba(255,255,255,0);
+  }
 }
 
 .guide-info-text {

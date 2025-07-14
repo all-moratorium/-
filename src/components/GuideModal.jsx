@@ -142,7 +142,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 <div className="guide-info-section">
                   <h3 className="section-title">ガイドを開く</h3>
                   <div className="info-icon">
-                    <div className="icon-placeholder">i</div>
+                    <div className="guide-info-button"></div>
                   </div>
                   <div className="guide-info-text">
                     それぞれのページには「i」マークの<br />
