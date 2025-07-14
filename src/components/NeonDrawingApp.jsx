@@ -18,7 +18,7 @@ const POINT_HIT_RADIUS = 12; // 点のヒット判定半径
 const MIN_HIT_RADIUS = 6; // 最小ヒット判定半径（ズーム時の保証）
 
 // モーダルコンポーネント
-const Modal = ({ isOpen, onClose, title, children, position = 'center', className = '' }) => {
+const Modal = ({ isOpen, onClose, title, children, position = 'center', className = '', showCloseButton = false }) => {
     if (!isOpen) return null;
     
     const modalClass = position === 'right' 
@@ -37,9 +37,9 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center', classNam
                     {onClose && (
                         <button 
                             onClick={onClose}
-                            className="modal-apply-btn"
+                            className={showCloseButton ? "modal-close-btn" : "modal-apply-btn"}
                         >
-                            適用
+                            {showCloseButton ? "×" : "適用"}
                         </button>
                     )}
                 </div>
@@ -4170,7 +4170,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 土台モード時の描画タイプ選択モーダル */}
-            <Modal isOpen={showFillDrawingTypeModal} onClose={() => setShowFillDrawingTypeModal(false)} title="土台の描画タイプを選択" position="center">
+            <Modal isOpen={showFillDrawingTypeModal} onClose={() => setShowFillDrawingTypeModal(false)} title="土台の描画タイプを選択" position="center" showCloseButton={true}>
                 <p className="drawing-type-description">土台の描画方法を選択してください。</p>
                 <div className="drawing-type-buttons">
                     <button
@@ -4296,7 +4296,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             {/* 拡大縮小モーダル */}
             <Modal isOpen={showScaleModal} onClose={closeScaleModal} title="拡大縮小" position="right">
-                <div className="modal-content-inner">
+                <div className="modal-content-inner scale-modal-content">
                     <div className="scale-setting-item">
                         <label htmlFor="scaleFactor" className="scale-label">
                             倍率: {scaleFactor.toFixed(2)}x
