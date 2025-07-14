@@ -2836,19 +2836,39 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 }
                             }));
                             
-                            // NeonRenderingCompleted イベントを待つ
+                            // NeonRenderingCompleted イベントを待つ（進捗を刻みながら）
                             await new Promise(resolve => {
+                                let currentProgress = 75;
                                 const handleNeonRenderingComplete = () => {
                                     window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
+                                    clearInterval(progressInterval);
                                     resolve();
                                 };
                                 window.addEventListener('NeonRenderingCompleted', handleNeonRenderingComplete, { once: true });
                                 
+                                // 進捗を徐々に上げる
+                                const progressInterval = setInterval(() => {
+                                    if (currentProgress < 95) {
+                                        currentProgress += 2;
+                                        setProcessing3DProgress(currentProgress);
+                                        if (currentProgress <= 80) {
+                                            setProcessing3DMessage('3Dモデルを構築中...');
+                                        } else if (currentProgress <= 85) {
+                                            setProcessing3DMessage('マテリアルを適用中...');
+                                        } else if (currentProgress <= 90) {
+                                            setProcessing3DMessage('ライティングを設定中...');
+                                        } else {
+                                            setProcessing3DMessage('最終調整中...');
+                                        }
+                                    }
+                                }, 100);
+                                
                                 setTimeout(() => {
                                     window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
+                                    clearInterval(progressInterval);
                                     console.warn('NeonRenderingCompleted event timed out.');
                                     resolve(); 
-                                }, 30000);
+                                }, 25000);
                             });
 
                             setProcessing3DProgress(100);
