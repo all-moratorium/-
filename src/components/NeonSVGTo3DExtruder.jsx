@@ -411,7 +411,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     
     static createCirclePoints(cx, cy, r, scale) {
       const points = [];
-      const segments = 64;
+      const segments = 32;
       for (let i = 0; i <= segments; i++) {
         const angle = (i / segments) * Math.PI * 2;
         points.push(new THREE.Vector3(
@@ -443,7 +443,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     if (points.length < 3) return null;
     
     // 強制的にポイント数を削減
-    const maxPoints = 500;
+    const maxPoints = 450;
     const simplifiedPoints = [];
     const step = Math.max(1, Math.floor(points.length / maxPoints));
     

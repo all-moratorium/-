@@ -2721,7 +2721,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 
                                 // 各パス処理完了時に進捗更新
                                 processedPaths++;
-                                const progressPercent = 25 + (processedPaths / totalPaths) * 15; // 25-40%
+                                const progressPercent = 25 + (processedPaths / totalPaths) * 10; // 25-35%
                                 setProcessing3DProgress(Math.round(progressPercent));
                                 setProcessing3DMessage(`パス処理中... (${processedPaths}/${totalPaths})`);
                                 
@@ -2729,13 +2729,13 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 await new Promise(resolve => setTimeout(resolve, 30));
                             }
                             
-                            setProcessing3DProgress(45);
+                            setProcessing3DProgress(35);
                             setProcessing3DMessage('パスデータ調整中...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 200));
+                            await new Promise(resolve => setTimeout(resolve, 100));
                             
                             // パスデータの座標を調整（全ての数値座標を対象）
-                            setProcessing3DProgress(50);
+                            setProcessing3DProgress(40);
                             setProcessing3DMessage('ストロークデータを調整中...');
                             
                             const adjustedStrokePathData = strokePathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
@@ -2744,9 +2744,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
                             
-                            await new Promise(resolve => setTimeout(resolve, 250));
+                            await new Promise(resolve => setTimeout(resolve, 100));
                             
-                            setProcessing3DProgress(55);
+                            setProcessing3DProgress(45);
                             setProcessing3DMessage('フィルデータを調整中...');
 
                             const adjustedFillPathData = fillPathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
@@ -2755,7 +2755,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
                             
-                            await new Promise(resolve => setTimeout(resolve, 300));
+                            await new Promise(resolve => setTimeout(resolve, 100));
 
                             const customizedSvg = `
 <svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -2776,33 +2776,33 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
 </svg>
                             `.trim();
                             
-                            setProcessing3DProgress(60);
+                            setProcessing3DProgress(50);
                             setProcessing3DMessage('データ生成完了...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            await new Promise(resolve => setTimeout(resolve, 80));
                             
                             // 3Dモデルデータ生成完了
-                            setProcessing3DProgress(65);
+                            setProcessing3DProgress(55);
                             setProcessing3DMessage('3Dモデルデータを構築しています...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 300));
+                            await new Promise(resolve => setTimeout(resolve, 80));
                             
-                            setProcessing3DProgress(70);
+                            setProcessing3DProgress(60);
                             setProcessing3DMessage('3Dモデル事前生成中...');
                             
-                            await new Promise(resolve => setTimeout(resolve, 350));
+                            await new Promise(resolve => setTimeout(resolve, 80));
                             
                             // SVGデータをプリロード処理
-                            setProcessing3DProgress(75);
+                            setProcessing3DProgress(65);
                             setProcessing3DMessage('プリロード中...');
                             
                             const blob = new Blob([customizedSvg], { type: 'image/svg+xml' });
                             const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
                             
-                            await new Promise(resolve => setTimeout(resolve, 200));
+                            await new Promise(resolve => setTimeout(resolve, 80));
                             
                             // DOMParserで事前解析
-                            setProcessing3DProgress(80);
+                            setProcessing3DProgress(70);
                             setProcessing3DMessage('DOM解析中...');
                             
                             const parser = new DOMParser();
@@ -2810,9 +2810,9 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             const svgElement = svgDoc.querySelector('svg');
                             const viewBoxAttr = svgElement ? svgElement.getAttribute('viewBox') : null;
                             
-                            await new Promise(resolve => setTimeout(resolve, 15));
+                            await new Promise(resolve => setTimeout(resolve, 80));
                             
-                            setProcessing3DProgress(85);
+                            setProcessing3DProgress(75);
                             setProcessing3DMessage('3Dモデルのレンダリングを待っています...');
 
                             
@@ -2854,7 +2854,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             setProcessing3DProgress(100);
                             setProcessing3DMessage('生成完了');
                             
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            await new Promise(resolve => setTimeout(resolve, 400));
                             
                             setIsProcessing3D(false);
                             
