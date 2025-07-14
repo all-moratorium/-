@@ -3678,34 +3678,9 @@ const quantizeColors = (pixels, k) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productQuantity, currentPage]); // Assuming updateEstimate is stable or memoized
 
-  // サンプル画像のプリロード
+  // サンプル画像は Gallery3D でプリロードされるため、初期化時に true に設定
   useEffect(() => {
-    const preloadImages = async () => {
-      const imagePromises = [
-        new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = '/sample.demo.on.png';
-        }),
-        new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = '/sample.demo.off.png';
-        })
-      ];
-      
-      try {
-        await Promise.all(imagePromises);
-        setSampleImagesLoaded(true);
-      } catch (error) {
-        console.warn('Sample images failed to preload:', error);
-        setSampleImagesLoaded(true); // Still set to true to show fallback
-      }
-    };
-    
-    preloadImages();
+    setSampleImagesLoaded(true);
   }, []);
 
   // パーティクル生成コードを削除

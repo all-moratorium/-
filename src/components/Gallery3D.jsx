@@ -22,9 +22,12 @@ const Gallery3D = ({ models = [] }) => {
     const isInitializedRef = useRef(false); // 初期化フラグを追加
     const resizeTimeoutRef = useRef(null); // リサイズのデバウンス用
     const cachedModelsRef = useRef({}); // 複数GLBモデルをキャッシュ
+    const preloadStatusRef = useRef({}); // プリロード状況を管理
 
     const [loading, setLoading] = useState(true);
     const [modelScales, setModelScales] = useState({});
+    const [preloadProgress, setPreloadProgress] = useState(0); // プリロード進行状況
+    const [isPreloading, setIsPreloading] = useState(false); // プリロード中フラグ
 
     // 個別モデル設定（各モデルごとにパラメーター管理）
     const modelConfigs = [
@@ -249,6 +252,79 @@ const Gallery3D = ({ models = [] }) => {
         scene.add(backLight);
     }, []);
 
+    // 全モデルとサンプル画像をプリロードする関数
+    const preloadAllModels = useCallback(async () => {
+        setIsPreloading(true);
+        setPreloadProgress(0);
+        
+        const totalModels = modelConfigs.length;
+        const totalImages = 2; // sample.demo.on.png, sample.demo.off.png
+        const totalAssets = totalModels + totalImages;
+        let loadedCount = 0;
+        
+        console.log('全ネオンサインモデルと画像のプリロードを開始...');
+        
+        try {
+            // モデルとサンプル画像を並列でプリロード
+            const allPromises = [
+                // モデルのプリロード
+                ...modelConfigs.map(async (config) => {
+                    try {
+                        await loadCachedModel(config.glbPath);
+                        loadedCount++;
+                        setPreloadProgress((loadedCount / totalAssets) * 100);
+                        console.log(`モデルプリロード完了: ${config.name} (${loadedCount}/${totalAssets})`);
+                    } catch (error) {
+                        console.error(`モデルプリロード失敗: ${config.name}`, error);
+                        loadedCount++; // エラーでもカウントを進める
+                        setPreloadProgress((loadedCount / totalAssets) * 100);
+                    }
+                }),
+                // サンプル画像のプリロード
+                new Promise(async (resolve) => {
+                    try {
+                        const img1 = new Image();
+                        img1.onload = () => {
+                            loadedCount++;
+                            setPreloadProgress((loadedCount / totalAssets) * 100);
+                            console.log(`画像プリロード完了: sample.demo.on.png (${loadedCount}/${totalAssets})`);
+                        };
+                        img1.src = '/sample.demo.on.png';
+                    } catch (error) {
+                        console.error('sample.demo.on.png プリロード失敗:', error);
+                        loadedCount++;
+                        setPreloadProgress((loadedCount / totalAssets) * 100);
+                    }
+                    resolve();
+                }),
+                new Promise(async (resolve) => {
+                    try {
+                        const img2 = new Image();
+                        img2.onload = () => {
+                            loadedCount++;
+                            setPreloadProgress((loadedCount / totalAssets) * 100);
+                            console.log(`画像プリロード完了: sample.demo.off.png (${loadedCount}/${totalAssets})`);
+                        };
+                        img2.src = '/sample.demo.off.png';
+                    } catch (error) {
+                        console.error('sample.demo.off.png プリロード失敗:', error);
+                        loadedCount++;
+                        setPreloadProgress((loadedCount / totalAssets) * 100);
+                    }
+                    resolve();
+                })
+            ];
+
+            await Promise.all(allPromises);
+            
+            console.log('全モデルと画像のプリロードが完了しました');
+        } catch (error) {
+            console.error('プリロード中にエラーが発生しました:', error);
+        } finally {
+            setIsPreloading(false);
+        }
+    }, []);
+
     // 指定されたGLBモデルを読み込んでキャッシュ
     const loadCachedModel = useCallback((modelPath) => {
         if (cachedModelsRef.current[modelPath]) {
@@ -379,6 +455,25 @@ const Gallery3D = ({ models = [] }) => {
     }, [paintingData]);
 
     const createModels = useCallback(() => {
+        // 既存のモデルをシーンから削除
+        if (allModelsRef.current.length > 0) {
+            allModelsRef.current.forEach(model => {
+                if (model && sceneRef.current) {
+                    sceneRef.current.remove(model);
+                    // メモリリーク防止のためジオメトリとマテリアルも破棄
+                    if (model.geometry) model.geometry.dispose();
+                    if (model.material) {
+                        if (Array.isArray(model.material)) {
+                            model.material.forEach(mat => mat.dispose());
+                        } else {
+                            model.material.dispose();
+                        }
+                    }
+                }
+            });
+            allModelsRef.current = [];
+        }
+
         const allModels = [];
         
         // 3セット作成して継ぎ目なく繋がるように配置
@@ -844,17 +939,20 @@ const Gallery3D = ({ models = [] }) => {
         // ライティング
         setupLighting();
 
-        // モデル作成
-        createModels();
-        updateModelPositions();
-
-        // アニメーションループ開始
-        animate();
-
-        // 自動切り替えタイマー開始
-        recordUserInteraction();
-
-        setLoading(false);
+        // プリロード開始
+        preloadAllModels().then(() => {
+            // モデル作成
+            createModels();
+            updateModelPositions();
+            
+            // アニメーションループ開始
+            animate();
+            
+            // 自動切り替えタイマー開始
+            recordUserInteraction();
+            
+            setLoading(false);
+        });
 
         // イベントリスナー
         const handleMouseMove = (event) => {
@@ -1042,7 +1140,20 @@ const Gallery3D = ({ models = [] }) => {
     return (
         <div id="container" ref={containerRef}>
             <div className="background-strip" id="backgroundStrip"></div>
-            {loading && <div className="loading" id="loading">ギャラリーを読み込み中...</div>}
+            {loading && (
+                <div className="loading" id="loading">
+                    {isPreloading ? (
+                        <>
+                            ネオンサインモデルを読み込み中...<br/>
+                            <div style={{fontSize: '14px', marginTop: '10px'}}>
+                                進行状況: {Math.round(preloadProgress)}%
+                            </div>
+                        </>
+                    ) : (
+                        'ギャラリーを読み込み中...'
+                    )}
+                </div>
+            )}
             <div className="navigation nav-left" id="prevBtn">‹</div>
             <div className="navigation nav-right" id="nextBtn">›</div>
 
