@@ -33,8 +33,11 @@
   padding: 0;
   color: white;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
+  border: 2px solid #ffff00;                         /* ボーダー色 */
+  box-shadow: 
+    0 0 10px rgba(255, 255, 0, 0.5),               /* 近くのグロー */
+    0 0 20px rgba(255, 255, 0, 0.3),               /* 中くらいのグロー */
+    0 0 30px rgba(255, 255, 0, 0.1);               /* 遠くのグロー */
   display: flex;
   flex-direction: column;
 }
@@ -370,7 +373,9 @@
 }
 
 .dot.active {
-  background: #ffff00;
+  background: #ffff00;                                /* 黄色に変化 */
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);      /* 黄色のグロー */
+  transform: scale(1.2);                             /* 少し大きくする */
 }
 
 .page-text {
