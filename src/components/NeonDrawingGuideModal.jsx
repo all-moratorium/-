@@ -1,8 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './NeonDrawingGuideModal.css';
 
 const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (currentPage === 1 && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+    }
+  }, [currentPage]);
+
+  const handleFullscreen = () => {
+    if (videoRef.current) {
+      videoRef.current.style.position = 'fixed';
+      videoRef.current.style.top = '20px';
+      videoRef.current.style.left = '20px';
+      videoRef.current.style.width = 'calc(100vw - 40px)';
+      videoRef.current.style.height = 'calc(100vh - 40px)';
+      videoRef.current.style.zIndex = '9999';
+      videoRef.current.style.objectFit = 'contain';
+      videoRef.current.style.backgroundColor = 'black';
+      videoRef.current.style.borderRadius = '8px';
+      
+      const exitFullscreen = (e) => {
+        if (e.key === 'Escape' || e.type === 'click') {
+          videoRef.current.style.position = '';
+          videoRef.current.style.top = '';
+          videoRef.current.style.left = '';
+          videoRef.current.style.width = '100%';
+          videoRef.current.style.height = 'auto';
+          videoRef.current.style.zIndex = '';
+          videoRef.current.style.objectFit = '';
+          videoRef.current.style.backgroundColor = '';
+          videoRef.current.style.borderRadius = '8px';
+          
+          document.removeEventListener('keydown', exitFullscreen);
+          videoRef.current.removeEventListener('click', exitFullscreen);
+        }
+      };
+      
+      document.addEventListener('keydown', exitFullscreen);
+      videoRef.current.addEventListener('click', exitFullscreen);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -41,7 +83,35 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
           {/* ページ1 */}
           <div className={`neon-drawing-guide-page ${currentPage === 1 ? 'active' : ''}`}>
             <div className="neon-drawing-guide-content">
-              {/* コンテンツは空白 */}
+              <div className="neon-drawing-video-section">
+                <video 
+                  ref={videoRef}
+                  autoPlay
+                  loop
+                  muted
+                  className="neon-drawing-video"
+                >
+                  <source src="/ネオン下絵　ガイドモーダル/サンプル動画1.mp4" type="video/mp4" />
+                  お使いのブラウザは動画をサポートしていません。
+                </video>
+                <button 
+                  onClick={handleFullscreen}
+                  className="neon-drawing-fullscreen-btn"
+                >
+                  ⛶ 全画面表示
+                </button>
+              </div>
+              <div className="neon-drawing-text-section">
+                <h3>ネオン下絵の描き方</h3>
+                <p>
+                  この動画では、ネオン下絵の基本的な描き方を説明しています。
+                </p>
+                <ul>
+                  <li>ペンツールを使って線を描く</li>
+                  <li>色を選択して塗りつぶす</li>
+                  <li>ネオン効果を適用する</li>
+                </ul>
+              </div>
             </div>
           </div>
 

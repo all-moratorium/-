@@ -3767,8 +3767,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         カスタマイズへ進む
                     </button>
                     
-                    {/* SVG出力ボタン */}
-                    <button
+                    {/* SVG出力ボタン - 非表示 */}
+                    {/* <button
                         onClick={() => {
                             try {
                                 const { strokePathData, fillPathData } = generateSvgPaths();
@@ -3804,7 +3804,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         title="現在のネオン下絵をSVGファイルとして出力"
                     >
                         📄 SVG出力
-                    </button>
+                    </button> */}
                 </div>
 
 
