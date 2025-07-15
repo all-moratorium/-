@@ -155,10 +155,19 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [canvasHeight, setCanvasHeight] = useState(600);
     const [segmentsPerCurve, setSegmentsPerCurve] = useState(30);
 
-    // ズームとパン
-    const [scale, setScale] = useState(initialDrawingState.scale);
-    const [offsetX, setOffsetX] = useState(initialDrawingState.offsetX);
-    const [offsetY, setOffsetY] = useState(initialDrawingState.offsetY);
+    // ズームとパン（LocalStorageから直接初期化）
+    const [scale, setScale] = useState(() => {
+        const saved = safeGetFromLocalStorage('neonDrawingData');
+        return saved?.scale || initialDrawingState.scale;
+    });
+    const [offsetX, setOffsetX] = useState(() => {
+        const saved = safeGetFromLocalStorage('neonDrawingData');
+        return saved?.offsetX || initialDrawingState.offsetX;
+    });
+    const [offsetY, setOffsetY] = useState(() => {
+        const saved = safeGetFromLocalStorage('neonDrawingData');
+        return saved?.offsetY || initialDrawingState.offsetY;
+    });
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
@@ -3039,22 +3048,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
         
         // パスがない場合は保存された視点を復元、なければデフォルト視点
-        console.log('視点リセット: 保存された視点の復元を試行');
-        try {
-            const savedViewState = sessionStorage.getItem('neonDrawingViewState');
-            if (savedViewState) {
-                const viewState = JSON.parse(savedViewState);
-                setScale(viewState.scale || 1);
-                setOffsetX(viewState.offsetX || canvasWidth / 2);
-                setOffsetY(viewState.offsetY || canvasHeight / 2);
-                console.log('視点リセット: 保存された視点を復元');
-                return;
-            }
-        } catch (error) {
-            console.error('視点状態の復元エラー:', error);
-        }
-        
-        console.log('視点リセット: 保存された視点がないためデフォルト視点を使用');
+        console.log('視点リセット: パスがないためデフォルト視点を使用');
         setScale(1);
         setOffsetX(canvasWidth / 2); // 原点(0,0)を画面中央に表示
         setOffsetY(canvasHeight / 2);
@@ -3087,19 +3081,19 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         return false;
     }, [canvasWidth, canvasHeight]);
 
-    // コンポーネント初期化時に視点を復元
-    useEffect(() => {
-        if (canvasWidth > 0 && canvasHeight > 0 && !isInitializing) {
-            // カスタマイズからのデータ読み込み完了後は視点復元をスキップ
-            if (hasLoadedFromCustomize.current) {
-                console.log('カスタマイズからのデータ読み込み完了のため視点復元をスキップ');
-                return;
-            }
-            
-            // 視点復元を試行（失敗してもリセットしない）
-            restoreViewState();
-        }
-    }, [canvasWidth, canvasHeight, restoreViewState, isInitializing]);
+    // このuseEffectは無効化（LocalStorageからの復元で十分）
+    // useEffect(() => {
+    //     if (canvasWidth > 0 && canvasHeight > 0 && !isInitializing) {
+    //         // カスタマイズからのデータ読み込み完了後は視点復元をスキップ
+    //         if (hasLoadedFromCustomize.current) {
+    //             console.log('カスタマイズからのデータ読み込み完了のため視点復元をスキップ');
+    //             return;
+    //         }
+    //         
+    //         // 視点復元を試行（失敗してもリセットしない）
+    //         restoreViewState();
+    //     }
+    // }, [canvasWidth, canvasHeight, restoreViewState, isInitializing]);
 
     // コンポーネントのアンマウント時に視点を保存
     useEffect(() => {
