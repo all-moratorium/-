@@ -3038,8 +3038,23 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
         }
         
-        // パスがない場合はデフォルト視点
-        console.log('視点リセット: デフォルト視点を使用');
+        // パスがない場合は保存された視点を復元、なければデフォルト視点
+        console.log('視点リセット: 保存された視点の復元を試行');
+        try {
+            const savedViewState = sessionStorage.getItem('neonDrawingViewState');
+            if (savedViewState) {
+                const viewState = JSON.parse(savedViewState);
+                setScale(viewState.scale || 1);
+                setOffsetX(viewState.offsetX || canvasWidth / 2);
+                setOffsetY(viewState.offsetY || canvasHeight / 2);
+                console.log('視点リセット: 保存された視点を復元');
+                return;
+            }
+        } catch (error) {
+            console.error('視点状態の復元エラー:', error);
+        }
+        
+        console.log('視点リセット: 保存された視点がないためデフォルト視点を使用');
         setScale(1);
         setOffsetX(canvasWidth / 2); // 原点(0,0)を画面中央に表示
         setOffsetY(canvasHeight / 2);
