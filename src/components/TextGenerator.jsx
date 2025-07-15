@@ -26,7 +26,7 @@ const getInitialTextGeneratorState = () => {
     };
 };
 
-const TextGenerator = ({ onNavigateToCustomize }) => {
+const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEffectStop }) => {
     const initialState = getInitialTextGeneratorState();
     
     const [inputText, setInputText] = useState(initialState.inputText);
@@ -642,8 +642,13 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                 <div className="text-generator-header">
                     <h2 className="text-generator-title">テキストから生成</h2>
                     <div 
-                        className="text-generator-guide-button"
-                        onClick={() => setIsGuideModalOpen(true)}
+                        className={`text-generator-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
+                        onClick={() => {
+                            setIsGuideModalOpen(true);
+                            setTimeout(() => {
+                                onGuideEffectStop?.();
+                            }, 150);
+                        }}
                     ></div>
                 </div>
                 <div className="text-input-tools-title">テキスト入力</div>

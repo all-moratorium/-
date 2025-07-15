@@ -17,7 +17,7 @@ const limitCoordinates = (x, y) => {
     };
 };
 
-const Costomize = ({ svgData, initialState, onStateChange }) => {
+const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped, onGuideEffectStop }) => {
     // 初期状態の設定（propsから受け取るか、デフォルト値を使用）
     const [selectedColor, setSelectedColor] = useState(initialState?.selectedColor || '#ff0080');
     const brightness = 100; // 固定値
@@ -50,7 +50,6 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     );
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [showGuideModal, setShowGuideModal] = useState(false);
-    const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
     const [selectedBulkColor, setSelectedBulkColor] = useState(null); // 一括設定で選択された色
     const [originalPathSettings, setOriginalPathSettings] = useState({}); // 元の設定を保存
@@ -2023,7 +2022,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </h1>
                         {/* ガイドボタン */}
                         <button
-                            onClick={() => setIsGuideModalOpen(true)}
+                            onClick={() => {
+                                setIsGuideModalOpen(true);
+                                setTimeout(() => {
+                                    onGuideEffectStop?.();
+                                }, 150);
+                            }}
                             className={`customize-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
                         </button>
@@ -3328,7 +3332,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                             <button 
                                 onClick={() => {
                                     setShowGuideModal(false);
-                                    setIsGuideEffectStopped(true);
+                                    onGuideEffectStop?.();
                                 }} 
                                 className="customize-guide-modal-close-button"
                             >

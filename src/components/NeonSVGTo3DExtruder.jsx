@@ -13,7 +13,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData, onNavigateToInfo }, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData, onNavigateToInfo, isGuideEffectStopped, onGuideEffectStop }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -1724,8 +1724,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           <div className="neon3d-model-details-header">
             <div className="neon3d-info-section-title">モデル詳細情報</div>
             <button
-              onClick={() => setIsGuideModalOpen(true)}
-              className="neon3d-guide-button"
+              onClick={() => {
+                setIsGuideModalOpen(true);
+                setTimeout(() => {
+                  onGuideEffectStop?.();
+                }, 150);
+              }}
+              className={`neon3d-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
             >
             </button>
           </div>

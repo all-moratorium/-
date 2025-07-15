@@ -728,6 +728,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // ボタンのエフェクト制御用の状態変数
   const [isEffectStopped, setIsEffectStopped] = useState(false);
   const [isLayerInfoButtonEffectStopped, setIsLayerInfoButtonEffectStopped] = useState(false);
+  const [isTextGeneratorGuideEffectStopped, setIsTextGeneratorGuideEffectStopped] = useState(false);
+  const [isNeonDrawingGuideEffectStopped, setIsNeonDrawingGuideEffectStopped] = useState(false);
+  const [isCustomizeGuideEffectStopped, setIsCustomizeGuideEffectStopped] = useState(false);
+  const [isPreview3DGuideEffectStopped, setIsPreview3DGuideEffectStopped] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
   // State variables
   const [image, setImage] = useState(null);
@@ -3078,6 +3082,8 @@ const quantizeColors = (pixels, k) => {
               setNeonSvgData(textSvgData);
               setCurrentPage('customize');
             }}
+            isGuideEffectStopped={isTextGeneratorGuideEffectStopped}
+            onGuideEffectStop={() => setIsTextGeneratorGuideEffectStopped(true)}
           />
         );
       case 'neonDrawing':
@@ -3086,12 +3092,16 @@ const quantizeColors = (pixels, k) => {
           onStateChange={handleNeonDrawingStateChange}
           sharedFileData={sharedFileData}
           onSharedFileDataProcessed={() => setSharedFileData(null)}
+          isGuideEffectStopped={isNeonDrawingGuideEffectStopped}
+          onGuideEffectStop={() => setIsNeonDrawingGuideEffectStopped(true)}
         />;
       case 'customize':
         return <Costomize 
           svgData={customizeSvgData} 
           initialState={customizeState}
           onStateChange={handleCustomizeStateChange}
+          isGuideEffectStopped={isCustomizeGuideEffectStopped}
+          onGuideEffectStop={() => setIsCustomizeGuideEffectStopped(true)}
         />;
       case 'neonSvg3dPreview':
         return null; // NeonSVGTo3DExtruderはルートレベルで表示
@@ -3821,6 +3831,8 @@ const quantizeColors = (pixels, k) => {
             }
             setCurrentPage('info');
           }}
+          isGuideEffectStopped={isPreview3DGuideEffectStopped}
+          onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
         />
       </div>
       

@@ -133,7 +133,7 @@ const getInitialDrawingState = (initialState) => {
     };
 };
 
-const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedFileDataProcessed }) => {
+const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedFileDataProcessed, isGuideEffectStopped, onGuideEffectStop }) => {
     // 包括的な初期状態を取得
     const initialDrawingState = useMemo(() => getInitialDrawingState(initialState), [initialState]);
     
@@ -203,7 +203,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
     // ガイドモーダル関連のstate
     const [showGuideModal, setShowGuideModal] = useState(false);
-    const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false); 
+ 
     
     // 履歴管理 (Undo/Redo) - 包括的な初期化
     const [history, setHistory] = useState(initialDrawingState.history);
@@ -3335,7 +3335,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         </h1>
                         {/* ガイドボタン */}
                         <button
-                            onClick={() => setIsGuideModalOpen(true)}
+                            onClick={() => {
+                                setIsGuideModalOpen(true);
+                                setTimeout(() => {
+                                    onGuideEffectStop?.();
+                                }, 150);
+                            }}
                             className={`neon-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
                         </button>
@@ -4465,7 +4470,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             <button 
                                 onClick={() => {
                                     setShowGuideModal(false);
-                                    setIsGuideEffectStopped(true);
+                                    onGuideEffectStop?.();
                                 }} 
                                 className="neon-guide-modal-close-button"
                             >
