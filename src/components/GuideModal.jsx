@@ -24,7 +24,7 @@ const GuideModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="guide-modal-overlay" onClick={resetAndClose}>
+    <div className="guide-modal-overlay">
       <div className="guide-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* ヘッダー */}
         <div className="guide-modal-header">
@@ -140,7 +140,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <div className="guide-getting-started">
               <div className="guide-section">
                 <div className="guide-info-section">
-                  <h3 className="section-title">ガイドを開く</h3>
+                  <h3 className="guide-info-title">ガイドを開く</h3>
                   <div className="info-icon">
                     <div className="guide-info-button"></div>
                   </div>
@@ -156,7 +156,7 @@ const GuideModal = ({ isOpen, onClose }) => {
 
               <div className="guide-section">
                 <div className="creation-section">
-                  <h3 className="section-title">作成開始</h3>
+                  <h3 className="creation-title">作成開始</h3>
                   <div className="creation-image">
                     <div className="image-placeholder">アプリスクリーンショット</div>
                   </div>

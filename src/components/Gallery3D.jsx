@@ -739,7 +739,13 @@ const Gallery3D = ({ models = [] }) => {
     }, []);
 
     // プロジェクトファイルダウンロード機能
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const downloadProjectFile = useCallback((modelName) => {
+        if (isDownloading) return; // ダウンロード中は処理しない
+        
+        setIsDownloading(true);
+        
         // モデル名からJSONファイル名を生成
         const fileName = `${modelName}　プロジェクトファイル.json`;
         const filePath = `/neon sample json/${fileName}`;
@@ -766,8 +772,22 @@ const Gallery3D = ({ models = [] }) => {
             .catch(error => {
                 console.error('プロジェクトファイルのダウンロードエラー:', error);
                 alert('プロジェクトファイルのダウンロードに失敗しました。');
+            })
+            .finally(() => {
+                setIsDownloading(false);
             });
-    }, []);
+    }, [isDownloading]);
+
+    // ダウンロードボタンのハンドラー
+    const handleDownloadProject = () => {
+        console.log('ダウンロードボタンがクリックされました');
+        const centerModel = getCenterModel();
+        if (centerModel) {
+            const modelName = centerModel.userData.paintingData.name;
+            console.log('ダウンロード開始:', modelName);
+            downloadProjectFile(modelName);
+        }
+    };
 
     // 動的にモデルを追加する関数（削除は不要）
     const addModelIfNeeded = useCallback((direction) => {
@@ -1083,21 +1103,21 @@ const Gallery3D = ({ models = [] }) => {
         }
         
 
-        const handleDownloadProject = () => {
-            const centerModel = getCenterModel();
-            if (centerModel) {
-                const modelName = centerModel.userData.paintingData.name;
-                downloadProjectFile(modelName);
-            }
-        };
 
         const addButtonEvents = () => {
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const downloadBtn = document.getElementById('downloadProjectBtn');
-            if (prevBtn) prevBtn.addEventListener('click', handlePrevClick);
-            if (nextBtn) nextBtn.addEventListener('click', handleNextClick);
-            if (downloadBtn) downloadBtn.addEventListener('click', handleDownloadProject);
+            
+            // 既存のイベントリスナーを削除してから追加
+            if (prevBtn) {
+                prevBtn.removeEventListener('click', handlePrevClick);
+                prevBtn.addEventListener('click', handlePrevClick);
+            }
+            if (nextBtn) {
+                nextBtn.removeEventListener('click', handleNextClick);
+                nextBtn.addEventListener('click', handleNextClick);
+            }
+            // ダウンロードボタンのイベントリスナー追加は削除（ReactのonClickを使用）
         };
         
         setTimeout(addButtonEvents, 100);
@@ -1114,10 +1134,9 @@ const Gallery3D = ({ models = [] }) => {
             }
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const downloadBtn = document.getElementById('downloadProjectBtn');
             if (prevBtn) prevBtn.removeEventListener('click', handlePrevClick);
             if (nextBtn) nextBtn.removeEventListener('click', handleNextClick);
-            if (downloadBtn) downloadBtn.removeEventListener('click', handleDownloadProject);
+            // ダウンロードボタンのクリーンアップは不要（ReactのonClickを使用）
             document.removeEventListener('keydown', handleKeyDown);
             resizeObserver.disconnect();
             clearTimeout(autoSwitchTimerRef.current);
@@ -1166,7 +1185,11 @@ const Gallery3D = ({ models = [] }) => {
             <div className="hover-tooltip-left" id="hoverTooltipLeft">
                 <div className="tooltip-title" id="tooltipTitle"></div>
                 <div className="tooltip-description" id="tooltipDescription"></div>
-                <button className="download-project-btn" id="downloadProjectBtn">
+                <button 
+                    className="download-project-btn" 
+                    id="downloadProjectBtn"
+                    onClick={handleDownloadProject}
+                >
                     プロジェクトファイルをダウンロード
                 </button>
             </div>

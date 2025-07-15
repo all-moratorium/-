@@ -290,18 +290,20 @@
   height: 100%;
 }
 
-.guide-info-section .section-title {
+.guide-info-section .guide-info-title {
   text-align: center;
   font-size: 20px;
   margin-bottom: 20px;
   color: #fff;
+  font-weight: 600;
 }
 
-.creation-section .section-title {
+.creation-section .creation-title {
   text-align: center;
   font-size: 20px;
   margin-bottom: 20px;
   color: #fff;
+  font-weight: 600;
 }
 
 .guide-info-section {
@@ -333,7 +335,7 @@
   animation: guide-lightning-flash 1.5s infinite;
   overflow: visible;
   transition: all 0.3s ease;
-  margin: 40px auto;
+  margin: 45px auto;
 }
 
 .guide-info-button:hover {
@@ -407,7 +409,7 @@
 
 .guide-info-text {
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: #ddd;
 }
 
@@ -434,7 +436,7 @@
 }
 
 .creation-text {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: #ddd;
 }
