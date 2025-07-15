@@ -1,0 +1,207 @@
+@keyframes neon-drawing-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes neon-drawing-bookOpen {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.neon-drawing-guide-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: neon-drawing-fadeIn 0.3s ease-out;
+}
+
+.neon-drawing-guide-modal-content {
+  background: #000;
+  border-radius: 20px;
+  width: 98%;
+  max-width: 1400px;
+  height: 90vh;
+  max-height: 900px;
+  position: relative;
+  padding: 0;
+  color: white;
+  overflow: hidden;
+  border: 2px solid #ffff00;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 0, 0.5),
+    0 0 20px rgba(255, 255, 0, 0.3),
+    0 0 30px rgba(255, 255, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  animation: neon-drawing-bookOpen 0.3s ease-out;
+}
+
+.neon-drawing-guide-modal-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-drawing-guide-modal-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+}
+
+.neon-drawing-guide-modal-close {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.neon-drawing-guide-modal-close:hover {
+  color: white;
+}
+
+.neon-drawing-guide-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.neon-drawing-guide-page.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.neon-drawing-guide-modal-header .neon-drawing-guide-header {
+  margin: 0;
+  text-align: left;
+}
+
+.neon-drawing-guide-modal-header .neon-drawing-guide-title {
+  font-size: 28px;
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+.neon-drawing-guide-content {
+  height: 100%;
+  width: 100%;
+}
+
+.neon-drawing-guide-navigation {
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.neon-drawing-nav-button {
+  background: #333;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.neon-drawing-nav-button:hover:not(:disabled) {
+  background: #444;
+}
+
+.neon-drawing-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.neon-drawing-page-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.neon-drawing-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #555;
+  transition: all 0.2s ease;
+}
+
+.neon-drawing-dot.active {
+  background: #ffff00;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+  transform: scale(1.2);
+}
+
+.neon-drawing-page-text {
+  margin-left: 10px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .neon-drawing-guide-modal-content {
+    width: 95%;
+    height: 90vh;
+    padding: 20px;
+  }
+  
+  .neon-drawing-guide-navigation {
+    left: 20px;
+    right: 20px;
+    padding: 0;
+  }
+  
+  .neon-drawing-nav-button {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+}

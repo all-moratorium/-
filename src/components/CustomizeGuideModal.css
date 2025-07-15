@@ -1,0 +1,207 @@
+@keyframes customize-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes customize-bookOpen {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.customize-guide-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: customize-fadeIn 0.3s ease-out;
+}
+
+.customize-guide-modal-overlay .customize-guide-modal-content {
+  background: #000 !important;
+  border-radius: 20px !important;
+  width: 98% !important;
+  max-width: 1400px !important;
+  height: 90vh !important;
+  max-height: 900px !important;
+  position: relative !important;
+  padding: 0 !important;
+  color: white !important;
+  overflow: hidden !important;
+  border: 2px solid #ffff00 !important;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 0, 0.5),
+    0 0 20px rgba(255, 255, 0, 0.3),
+    0 0 30px rgba(255, 255, 0, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: customize-bookOpen 0.3s ease-out !important;
+}
+
+.customize-guide-modal-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.customize-guide-modal-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+}
+
+.customize-guide-modal-close {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.customize-guide-modal-close:hover {
+  color: white;
+}
+
+.customize-guide-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.customize-guide-page.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.customize-guide-modal-header .customize-guide-header {
+  margin: 0;
+  text-align: left;
+}
+
+.customize-guide-modal-header .customize-guide-title {
+  font-size: 28px;
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+.customize-guide-content {
+  height: 100%;
+  width: 100%;
+}
+
+.customize-guide-navigation {
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.customize-nav-button {
+  background: #333;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.customize-nav-button:hover:not(:disabled) {
+  background: #444;
+}
+
+.customize-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.customize-page-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.customize-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #555;
+  transition: all 0.2s ease;
+}
+
+.customize-dot.active {
+  background: #ffff00;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+  transform: scale(1.2);
+}
+
+.customize-page-text {
+  margin-left: 10px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .customize-guide-modal-content {
+    width: 95%;
+    height: 90vh;
+    padding: 20px;
+  }
+  
+  .customize-guide-navigation {
+    left: 20px;
+    right: 20px;
+    padding: 0;
+  }
+  
+  .customize-nav-button {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+}

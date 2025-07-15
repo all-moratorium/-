@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './Costomize.css';
+import CustomizeGuideModal from './CustomizeGuideModal';
 
 /* 背景色設定 */
 
@@ -47,6 +48,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
     const [isTubeSettingsMinimized, setIsTubeSettingsMinimized] = useState(
         initialState?.isTubeSettingsMinimized !== undefined ? initialState.isTubeSettingsMinimized : false
     );
+    const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [showGuideModal, setShowGuideModal] = useState(false);
     const [isGuideEffectStopped, setIsGuideEffectStopped] = useState(false);
     const [selectedBulkThickness, setSelectedBulkThickness] = useState(null); // 一括設定で選択された太さ
@@ -2021,7 +2023,7 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                         </h1>
                         {/* ガイドボタン */}
                         <button
-                            onClick={() => setShowGuideModal(true)}
+                            onClick={() => setIsGuideModalOpen(true)}
                             className={`customize-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
                         </button>
@@ -3377,6 +3379,12 @@ const Costomize = ({ svgData, initialState, onStateChange }) => {
                     </div>
                 </div>
             )}
+
+            {/* ガイドモーダル */}
+            <CustomizeGuideModal 
+                isOpen={isGuideModalOpen} 
+                onClose={() => setIsGuideModalOpen(false)} 
+            />
 
         </div>
     );

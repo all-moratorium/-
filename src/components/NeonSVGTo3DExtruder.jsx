@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import * as THREE from 'three';
+import Preview3DGuideModal from './Preview3DGuideModal';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -35,6 +36,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
   // State for UI controls
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   
   // Model data state
   const [calculatedModelData, setCalculatedModelData] = useState(null);
@@ -1722,7 +1724,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           <div className="neon3d-model-details-header">
             <div className="neon3d-info-section-title">モデル詳細情報</div>
             <button
-              onClick={() => {/* ガイドモーダル表示処理 */}}
+              onClick={() => setIsGuideModalOpen(true)}
               className="neon3d-guide-button"
             >
             </button>
@@ -1779,6 +1781,12 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       <div className="info-text">
         ドラッグ: 回転 | ホイール: ズーム | リアルなネオンサイン
       </div>
+
+      {/* ガイドモーダル */}
+      <Preview3DGuideModal 
+        isOpen={isGuideModalOpen} 
+        onClose={() => setIsGuideModalOpen(false)} 
+      />
     </div>
   );
 });

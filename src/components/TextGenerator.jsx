@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './TextGenerator.css';
+import TextGeneratorGuideModal from './TextGeneratorGuideModal';
 
 // SessionStorageからデータを安全に読み込む関数
 const safeGetFromSessionStorage = (key, fallback = null) => {
@@ -37,6 +38,7 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
     const [generatedPaths, setGeneratedPaths] = useState([]);
     const textAreaRef = useRef(null);
     const isInitialized = useRef(false);
+    const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -639,7 +641,10 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
             <div className="text-generator-sidebar">
                 <div className="text-generator-header">
                     <h2 className="text-generator-title">テキストから生成</h2>
-                    <div className="text-generator-guide-button"></div>
+                    <div 
+                        className="text-generator-guide-button"
+                        onClick={() => setIsGuideModalOpen(true)}
+                    ></div>
                 </div>
                 <div className="text-input-tools-title">テキスト入力</div>
                 <div className="text-generator-control-group">
@@ -718,6 +723,12 @@ const TextGenerator = ({ onNavigateToCustomize }) => {
                     </button>
                 </div>
             </div>
+
+            {/* ガイドモーダル */}
+            <TextGeneratorGuideModal 
+                isOpen={isGuideModalOpen} 
+                onClose={() => setIsGuideModalOpen(false)} 
+            />
         </div>
     );
 };

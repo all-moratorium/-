@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './NeonDrawingApp.css';
 import { calculateSvgSizeCm, calculateTotalLength, scalePathsToSize } from '../utils/sizeCalculations';
+import NeonDrawingGuideModal from './NeonDrawingGuideModal';
 
 // Catmull-Rom補間関数
 const getCatmullRomPt = (p0, p1, p2, p3, t) => {
@@ -161,6 +162,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
+    const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
     // ドラッグと編集
     const [activePoint, setActivePoint] = useState(null);
@@ -3333,7 +3335,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         </h1>
                         {/* ガイドボタン */}
                         <button
-                            onClick={() => setShowGuideModal(true)}
+                            onClick={() => setIsGuideModalOpen(true)}
                             className={`neon-guide-button ${isGuideEffectStopped ? 'stopped' : ''}`}
                         >
                         </button>
@@ -4473,6 +4475,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </div>
                 </div>
             )}
+
+            {/* ガイドモーダル */}
+            <NeonDrawingGuideModal 
+                isOpen={isGuideModalOpen} 
+                onClose={() => setIsGuideModalOpen(false)} 
+            />
         </div>
     );
 };
