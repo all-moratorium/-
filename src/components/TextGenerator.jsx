@@ -274,35 +274,10 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const centerX = displayAreaLeft + displayAreaWidth / 2;
         const centerY = displayAreaTop + displayAreaHeight / 2;
         
-        // グラデーション背景を描画
-        const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height) * 0.7);
-        gradient.addColorStop(0, '#f8f9fa');
-        gradient.addColorStop(0.3, '#e9ecef');
-        gradient.addColorStop(0.7, '#dee2e6');
-        gradient.addColorStop(1, '#adb5bd');
-        ctx.fillStyle = gradient;
+        // 背景を描画
+        ctx.fillStyle = '#f5f5f5';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // 微細なパターンを追加
-        ctx.save();
-        ctx.globalAlpha = 0.03;
-        ctx.strokeStyle = '#495057';
-        ctx.lineWidth = 1;
-        const lineSpacing = 50;
-        // 斑の線パターン
-        for (let x = 0; x < canvas.width; x += lineSpacing) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas.height);
-            ctx.stroke();
-        }
-        for (let y = 0; y < canvas.height; y += lineSpacing) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(canvas.width, y);
-            ctx.stroke();
-        }
-        ctx.restore();
         
         
         // テキスト描画
