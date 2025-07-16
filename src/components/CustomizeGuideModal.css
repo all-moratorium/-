@@ -138,6 +138,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .customize-nav-button {
@@ -151,6 +152,7 @@
   transition: all 0.2s ease;
 }
 
+
 .customize-nav-button:hover:not(:disabled) {
   background: #444;
 }
@@ -160,10 +162,13 @@
   cursor: not-allowed;
 }
 
-.customize-page-indicator {
+.customize-dots-container {
   display: flex;
   align-items: center;
   gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .customize-dot {
@@ -181,9 +186,12 @@
 }
 
 .customize-page-text {
-  margin-left: 10px;
   color: #ccc;
   font-size: 14px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-left: 50px;
 }
 
 /* 動画セクションのCSS */

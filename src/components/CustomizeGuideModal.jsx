@@ -424,12 +424,13 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
             ← 前のページ
           </button>
           
-          <div className="customize-page-indicator">
+          <div className="customize-dots-container">
             <span className={`customize-dot ${currentPage === 1 ? 'active' : ''}`}></span>
             <span className={`customize-dot ${currentPage === 2 ? 'active' : ''}`}></span>
             <span className={`customize-dot ${currentPage === 3 ? 'active' : ''}`}></span>
-            <span className="customize-page-text">{currentPage}/3</span>
           </div>
+          
+          <span className="customize-page-text">{currentPage}/3</span>
           
           <button 
             className="customize-nav-button next" 
