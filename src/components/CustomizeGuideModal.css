@@ -141,6 +141,7 @@
   position: relative;
 }
 
+
 .customize-nav-button {
   background: #333;
   border: 1px solid #555;
@@ -480,7 +481,7 @@
 
 .customize-container-description {
   color: #ccc;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
   margin-bottom: 12px;
   transition: color 0.3s ease;

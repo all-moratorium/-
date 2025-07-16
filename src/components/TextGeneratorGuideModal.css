@@ -138,7 +138,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
+
 
 .text-generator-nav-button {
   background: #333;
@@ -164,6 +166,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .text-generator-dot {
@@ -181,9 +186,12 @@
 }
 
 .text-generator-page-text {
-  margin-left: 10px;
   color: #ccc;
   font-size: 14px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-left: 50px;
 }
 
 /* レスポンシブ対応 */

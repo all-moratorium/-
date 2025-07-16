@@ -210,7 +210,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
+
 
 .neon-drawing-nav-button {
   background: #333;
@@ -236,6 +238,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .neon-drawing-dot {
@@ -253,9 +258,12 @@
 }
 
 .neon-drawing-page-text {
-  margin-left: 10px;
   color: #ccc;
   font-size: 14px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-left: 50px;
 }
 
 /* レスポンシブ対応 */

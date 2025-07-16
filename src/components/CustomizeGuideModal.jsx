@@ -10,6 +10,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const videoRef = useRef(null);
   const videoRef2 = useRef(null);
   const containerRef = useRef(null);
+  const containerRef2 = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -154,15 +155,17 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const handleFullscreen = () => {
-    const videoSection = document.querySelector('.customize-video-section');
-    if (videoSection) {
+    const videoSections = document.querySelectorAll('.customize-video-section');
+    const activeVideoSection = videoSections[currentPage - 1];
+    
+    if (activeVideoSection) {
       if (!isFullscreen) {
-        if (videoSection.requestFullscreen) {
-          videoSection.requestFullscreen();
-        } else if (videoSection.webkitRequestFullscreen) {
-          videoSection.webkitRequestFullscreen();
-        } else if (videoSection.msRequestFullscreen) {
-          videoSection.msRequestFullscreen();
+        if (activeVideoSection.requestFullscreen) {
+          activeVideoSection.requestFullscreen();
+        } else if (activeVideoSection.webkitRequestFullscreen) {
+          activeVideoSection.webkitRequestFullscreen();
+        } else if (activeVideoSection.msRequestFullscreen) {
+          activeVideoSection.msRequestFullscreen();
         }
       } else {
         if (document.exitFullscreen) {
@@ -313,7 +316,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
             <div className="customize-guide-content">
               <div className="customize-modal-content">
                 <div className="customize-video-section" onMouseMove={handleMouseMove}>
-                  <div className="customize-video-container" ref={currentPage === 2 ? containerRef : null}>
+                  <div className="customize-video-container" ref={containerRef2}>
                     <video 
                       ref={videoRef2}
                       src="/ネオン下絵　ガイドモーダル/カスタマイズガイド2.mp4"
