@@ -6,8 +6,10 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+  const controlsTimeoutRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -21,29 +23,46 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
         setCurrentTime(0);
       };
 
+      const handleLoadedMetadata = () => {
+        setCurrentTime(Math.floor(video.currentTime));
+      };
+
       video.addEventListener('timeupdate', updateTime);
       video.addEventListener('ended', handleEnded);
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
 
       return () => {
         video.removeEventListener('timeupdate', updateTime);
         video.removeEventListener('ended', handleEnded);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       };
     }
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (video && isOpen && currentPage === 1) {
       video.currentTime = 0;
-      video.play();
-      setIsPlaying(true);
-      setCurrentTime(0);
+      video.play().then(() => {
+        setIsPlaying(true);
+        setCurrentTime(0);
+      });
     }
   }, [isOpen, currentPage]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const fullscreenState = !!document.fullscreenElement;
+      setIsFullscreen(fullscreenState);
+      if (fullscreenState) {
+        setShowControls(true);
+        resetControlsTimeout();
+      } else {
+        setShowControls(true);
+        if (controlsTimeoutRef.current) {
+          clearTimeout(controlsTimeoutRef.current);
+        }
+      }
     };
 
     const handleKeyDown = (e) => {
@@ -62,6 +81,24 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isFullscreen]);
+
+  const resetControlsTimeout = () => {
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    if (isFullscreen) {
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+    }
+  };
+
+  const handleMouseMove = () => {
+    if (isFullscreen) {
+      setShowControls(true);
+      resetControlsTimeout();
+    }
+  };
 
   const handleProgressClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -95,7 +132,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getVideoDuration = () => {
-    return videoRef.current ? Math.floor(videoRef.current.duration) : 330;
+    return videoRef.current && videoRef.current.duration ? Math.floor(videoRef.current.duration) : 0;
   };
 
   const handleFullscreen = () => {
@@ -159,7 +196,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
           <div className={`customize-guide-page ${currentPage === 1 ? 'active' : ''}`}>
             <div className="customize-guide-content">
               <div className="customize-modal-content">
-                <div className="customize-video-section">
+                <div className="customize-video-section" onMouseMove={handleMouseMove}>
                   <div className="customize-video-container" ref={containerRef}>
                     <video 
                       ref={videoRef}
@@ -174,7 +211,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <div className="customize-video-controls">
+                  <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
                     <div 
                       className="customize-video-progress" 
                       onClick={handleProgressClick}
@@ -196,9 +233,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                 <div className="customize-content-section">
                   <div className="customize-step-indicator">
                     <div className="customize-step-number">1</div>
-                    <div className="customize-step-text">STEP 1</div>
+                    <div className="customize-step-text">PAGE 1</div>
                   </div>
-                  <h3 className="customize-guide-title">テキストプロンプトを入力</h3>
+                  <h3 className="customize-guide-title">基本操作ガイド</h3>
                   
                   <div className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} data-time="0-60">
                     <h4 className="customize-container-title">基本的な考え方</h4>
