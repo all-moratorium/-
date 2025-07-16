@@ -238,40 +238,32 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   <h3 className="customize-guide-title">基本操作ガイド</h3>
                   
                   <div className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} data-time="0-60">
-                    <h4 className="customize-container-title">基本的な考え方</h4>
-                    <p className="customize-container-description">作成したいコンテンツについて、できるだけ具体的に説明してください。AIは詳細な情報を元に、より正確で有用な結果を生成することができます。</p>
-                    <p className="customize-container-description">自然言語で自由に記述でき、具体的な要求や制約条件も指定可能です。文章の長さ、書式、トーン、対象読者なども併せて指定すると、より期待に沿った内容が生成されます。</p>
+                    <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
+                    <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
+                    <p className="customize-container-description">右クリック＋ドラッグで視点移動</p>
+                    <p className="customize-container-description">マウスホイールで拡大 / 縮小</p>
                   </div>
                   
                   <div className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} data-time="60-150">
-                    <h4 className="customize-container-title">効果的な入力のポイント</h4>
-                    <p className="customize-container-description">良いプロンプトを作成するためには、以下の要素を明確にすることが重要です：</p>
-                    <ul className="customize-tips-list">
-                      <li className="customize-tips-item">何を作成したいか（コンテンツの種類）</li>
-                      <li className="customize-tips-item">誰に向けたものか（対象読者・ターゲット）</li>
-                      <li className="customize-tips-item">どのような目的で使うか（用途・目標）</li>
-                      <li className="customize-tips-item">どの程度の長さや詳しさが必要か</li>
-                      <li className="customize-tips-item">どのようなトーンで書いてほしいか</li>
-                    </ul>
+                    <h4 className="customize-container-title">「キャンバスからチューブを選択」ボタンでチューブを一括設定</h4>
+                    <p className="customize-container-description">キャンバスのチューブをクリックして一括設定するチューブを選択</p>
+                    <p className="customize-container-description">選択したチューブの入と太さを選択</p>
+                    <p className="customize-container-description">「完了」ボタンで適用</p>
                   </div>
                   
                   <div className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} data-time="150-270">
-                    <h4 className="customize-container-title">入力例</h4>
-                    <p className="customize-container-description">効果的なプロンプトの例をご紹介します。具体的で詳細な指示ほど、AIはより正確で有用な結果を生成できます。</p>
-                    <p className="customize-container-description">「新入社員向けの会社説明資料を作成してください。IT企業の概要、事業内容、働く環境について、A4サイズ3ページ程度で、親しみやすく分かりやすい文体でお願いします。」</p>
-                    <p className="customize-container-description">さらに詳しく指定する場合：「弊社（従業員100名のWeb制作会社）の新入社員向け会社説明資料を作成してください。会社の歴史・ミッション、主要サービス（Webサイト制作、アプリ開発、デジタルマーケティング）、社内制度（フレックス制度、リモートワーク、研修制度）について説明し、新入社員が安心して働けることを伝えたいです。A4サイズ3ページ、見出しと箇条書きを使った読みやすい構成で、温かみのある文体でお願いします。」</p>
+                    <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
+                    <p className="customize-container-description">コンテナを選択してキャンバスにハイライト</p>
+                    <p className="customize-container-description">キャンバスからチューブを直接選択して編集</p>
+                    <p className="customize-container-description">「色を選択」ボタンで色を変更</p>
+                    <p className="customize-container-description">太さ項目で太さを変更</p>
                   </div>
                   
                   <div className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} data-time="270-330">
-                    <h4 className="customize-container-title">よくある注意点</h4>
-                    <p className="customize-container-description">以下のような曖昧な指示は避け、具体的な要求を心がけましょう：</p>
-                    <ul className="customize-tips-list">
-                      <li className="customize-tips-item">「いい感じの資料を作って」→ 具体的な用途と要件を明記</li>
-                      <li className="customize-tips-item">「短めで」→ 文字数や分量を具体的に指定</li>
-                      <li className="customize-tips-item">「分かりやすく」→ 対象読者のレベルを明確に</li>
-                      <li className="customize-tips-item">「おしゃれに」→ 求めるデザインの方向性を詳しく</li>
-                    </ul>
-                    <p className="customize-container-description">詳細な説明を入力するほど、AIがあなたの意図を正確に理解し、高品質なコンテンツを生成できるようになります。遠慮せずに、思っていることを具体的に書いてください。</p>
+                    <h4 className="customize-container-title">その他の機能</h4>
+                    <p className="customize-container-description">「一番上に戻る」ボタンで最上へ移動</p>
+                    <p className="customize-container-description">トグルボタンでネオンチューブ設定を最小化</p>
+                    <p className="customize-container-description"> ON / OFFスイッチで点灯 / 消灯切り替え</p>
                   </div>
                 </div>
               </div>
