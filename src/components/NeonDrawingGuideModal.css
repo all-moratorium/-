@@ -150,16 +150,27 @@
   top: calc(100% + 45px);
   left: 50%;
   transform: translateX(-50%);
-  background: #333;
+  background:rgb(24, 24, 24);
   color: #ffffff;
   border: 1px solid #555;
   border-radius: 6px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
+}
+
+.neon-drawing-video-title {
+  position: absolute;
+  top: calc(-75px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 

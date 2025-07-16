@@ -84,6 +84,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
           <div className={`neon-drawing-guide-page ${currentPage === 1 ? 'active' : ''}`}>
             <div className="neon-drawing-guide-content">
               <div className="neon-drawing-video-section">
+                <div className="neon-drawing-video-title">
+                  基本操作について　1:54
+                </div>
                 <video 
                   ref={videoRef}
                   autoPlay
