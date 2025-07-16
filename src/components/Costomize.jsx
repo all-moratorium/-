@@ -3369,7 +3369,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             </div>
                             
                             <div className="processing-tips">
-                                <h4>処理時間を短縮について</h4>
+                                <h4>処理時間について</h4>
                                 <ul className="tips-list">
                                     <li className="tip-item">より複雑なモデルは、処理時間が長くなります。</li>
                                     <li className="tip-item">3dモデルは表示用に最適化されております</li>
