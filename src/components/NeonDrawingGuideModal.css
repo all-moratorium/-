@@ -33,25 +33,25 @@
   animation: neon-drawing-fadeIn 0.3s ease-out;
 }
 
-.neon-drawing-guide-modal-content {
-  background: #000;
-  border-radius: 20px;
-  width: 98%;
-  max-width: 1400px;
-  height: 90vh;
-  max-height: 900px;
-  position: relative;
-  padding: 0;
-  color: white;
-  overflow: hidden;
-  border: 2px solid #ffff00;
+.neon-drawing-guide-modal-overlay .neon-drawing-guide-modal-content {
+  background: #000 !important;
+  border-radius: 20px !important;
+  width: 98% !important;
+  max-width: 1400px !important;
+  height: 90vh !important;
+  max-height: 900px !important;
+  position: relative !important;
+  padding: 0 !important;
+  color: white !important;
+  overflow: hidden !important;
+  border: 2px solid #ffff00 !important;
   box-shadow: 
     0 0 10px rgba(255, 255, 0, 0.5),
     0 0 20px rgba(255, 255, 0, 0.3),
-    0 0 30px rgba(255, 255, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  animation: neon-drawing-bookOpen 0.3s ease-out;
+    0 0 30px rgba(255, 255, 0, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: neon-drawing-bookOpen 0.3s ease-out !important;
 }
 
 .neon-drawing-guide-modal-body {
@@ -105,7 +105,7 @@
   transition: all 0.3s ease;
   flex: 1;
   overflow-y: auto;
-  padding: 30px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -129,78 +129,6 @@
 .neon-drawing-guide-content {
   height: 100%;
   width: 100%;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.neon-drawing-video-section {
-  flex: 0 0 60%;
-  position: relative;
-}
-
-.neon-drawing-video {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.neon-drawing-fullscreen-btn {
-  position: absolute;
-  top: calc(100% + 45px);
-  left: 50%;
-  transform: translateX(-50%);
-  background:rgb(24, 24, 24);
-  color: #ffffff;
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: all 0.2s ease;
-}
-
-.neon-drawing-video-title {
-  position: absolute;
-  top: calc(-75px);
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-
-
-.neon-drawing-text-section {
-  flex: 0 0 40%;
-  padding: 20px;
-}
-
-.neon-drawing-text-section h3 {
-  margin: 0 0 15px 0;
-  color: #333;
-  font-size: 18px;
-}
-
-.neon-drawing-text-section p {
-  margin: 0 0 15px 0;
-  line-height: 1.6;
-  color: #666;
-}
-
-.neon-drawing-text-section ul {
-  margin: 0;
-  padding: 0 0 0 20px;
-  line-height: 1.6;
-  color: #666;
-}
-
-.neon-drawing-text-section li {
-  margin-bottom: 8px;
 }
 
 .neon-drawing-guide-navigation {
@@ -212,7 +140,6 @@
   align-items: center;
   position: relative;
 }
-
 
 .neon-drawing-nav-button {
   background: #333;
@@ -234,7 +161,7 @@
   cursor: not-allowed;
 }
 
-.neon-drawing-page-indicator {
+.neon-drawing-dots-container {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -263,7 +190,424 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin-left: 50px;
+  margin-left: 61px;
+}
+
+/* 動画セクションのCSS */
+.neon-drawing-modal-content {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.neon-drawing-video-section {
+  width: 60%;
+  background: #000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.neon-drawing-video-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #111;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neon-drawing-video-section:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-video-container {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.neon-drawing-video-section:fullscreen video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+  margin-top: 0;
+  height: 60px;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-video-controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-video-progress {
+  height: 20px;
+  background: transparent;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-video-progress::before {
+  background: #555;
+}
+
+.neon-drawing-video-section:fullscreen .neon-drawing-progress-bar {
+  background: #ffeb3b;
+}
+
+.neon-drawing-video-controls {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  z-index: 10;
+}
+
+.neon-drawing-video-progress {
+  flex: 1;
+  height: 20px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.neon-drawing-video-progress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.neon-drawing-progress-bar {
+  height: 4px;
+  background: #ffeb3b;
+  border-radius: 2px;
+  transition: width 0.1s ease;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.neon-drawing-video-time {
+  color: white;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid #555;
+}
+
+.neon-drawing-fullscreen-btn {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid #555;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.neon-drawing-fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #777;
+}
+
+/* コンテンツセクションのCSS */
+.neon-drawing-content-section {
+  width: 40%;
+  background: #1a1a1a;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.neon-drawing-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.neon-drawing-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffeb3b;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.neon-drawing-step-text {
+  color: #ffeb3b;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.neon-drawing-guide-title {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.neon-drawing-content-container {
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background: #222;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.neon-drawing-content-container.active {
+  border-color: #ffeb3b;
+  background: #2a2a1a;
+  box-shadow: 0 4px 16px rgba(255, 235, 59, 0.2);
+}
+
+.neon-drawing-container-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.neon-drawing-container-title::before {
+  content: '';
+  width: 4px;
+  height: 1em;
+  background: #555;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.neon-drawing-content-container.active .neon-drawing-container-title::before {
+  background: #ffeb3b;
+}
+
+.neon-drawing-content-container .neon-drawing-container-description {
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.neon-drawing-content-container.active .neon-drawing-container-description {
+  color: #fff;
+}
+
+.neon-drawing-tips-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neon-drawing-tips-item {
+  color: #ccc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: color 0.3s ease;
+}
+
+.neon-drawing-content-container.active .neon-drawing-tips-item {
+  color: #fff;
+}
+
+.neon-drawing-steps-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.neon-drawing-step-item {
+  color: #ccc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: color 0.3s ease;
+  counter-increment: step-counter;
+}
+
+.neon-drawing-step-item::before {
+  content: counter(step-counter);
+  background: #555;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.neon-drawing-content-container.active .neon-drawing-step-item {
+  color: #fff;
+}
+
+.neon-drawing-content-container.active .neon-drawing-step-item::before {
+  background: #ffeb3b;
+  color: #000;
+}
+
+.neon-drawing-tips-item::before {
+  content: '⚙️';
+  font-size: 14px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* 補足事項コンテナのCSS */
+.neon-drawing-supplement-container {
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background: #1a2a2a;
+  border: 2px solid #00bcd4;
+  box-shadow: 0 4px 16px rgba(0, 188, 212, 0.3);
+}
+
+.neon-drawing-supplement-title {
+  color: #00bcd4;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.neon-drawing-supplement-list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+}
+
+.neon-drawing-supplement-item {
+  color: #b3e5fc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.neon-drawing-supplement-item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #00bcd4;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+/* 注意事項コンテナのCSS */
+.neon-drawing-warning-container {
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background: #2a1a1a;
+  border: 2px solid #ff4444;
+  box-shadow: 0 4px 16px rgba(255, 68, 68, 0.3);
+}
+
+.neon-drawing-warning-title {
+  color: #ff4444;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.neon-drawing-warning-list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+}
+
+.neon-drawing-warning-item {
+  color: #ffdddd;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.neon-drawing-warning-item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #ff4444;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
 }
 
 /* レスポンシブ対応 */
@@ -282,6 +626,32 @@
   
   .neon-drawing-nav-button {
     padding: 8px 15px;
+    font-size: 12px;
+  }
+  
+  .neon-drawing-modal-content {
+    flex-direction: column;
+  }
+  
+  .neon-drawing-video-section {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .neon-drawing-content-section {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .neon-drawing-guide-title {
+    font-size: 20px;
+  }
+  
+  .neon-drawing-container-title {
+    font-size: 14px;
+  }
+  
+  .neon-drawing-container-description {
     font-size: 12px;
   }
 }

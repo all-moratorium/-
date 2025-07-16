@@ -313,11 +313,11 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
+                    <h4 className="customize-container-title">「ネオンチューブ設定」でチューブを個別に設定</h4>
                     
                     <ol className="customize-steps-list">
-                      <li className="customize-step-item">キャンバスからチューブを直接選択</li>
                       <li className="customize-step-item">コンテナを選択してキャンバスにハイライト</li>
+                      <li className="customize-step-item">キャンバスからチューブを直接選択</li>
                       <li className="customize-step-item">「色を選択」ボタンで色を変更</li>
                       <li className="customize-step-item">太さ項目で太さを変更</li>
                     </ol>
