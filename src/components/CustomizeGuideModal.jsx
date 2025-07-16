@@ -131,6 +131,21 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
     return 1;
   };
 
+  const handleContainerClick = (containerNumber) => {
+    const video = videoRef.current;
+    if (video) {
+      let targetTime = 0;
+      switch(containerNumber) {
+        case 1: targetTime = 0; break;
+        case 2: targetTime = 60; break;
+        case 3: targetTime = 150; break;
+        case 4: targetTime = 270; break;
+      }
+      video.currentTime = targetTime;
+      setCurrentTime(targetTime);
+    }
+  };
+
   const getVideoDuration = () => {
     return videoRef.current && videoRef.current.duration ? Math.floor(videoRef.current.duration) : 0;
   };
@@ -237,21 +252,36 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="customize-guide-title">基本操作ガイド</h3>
                   
-                  <div className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} data-time="0-60">
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
+                    data-time="0-60"
+                    onClick={() => handleContainerClick(1)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
                     <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
                     <p className="customize-container-description">右クリック＋ドラッグで視点移動</p>
                     <p className="customize-container-description">マウスホイールで拡大 / 縮小</p>
                   </div>
                   
-                  <div className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} data-time="60-150">
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                    data-time="60-150"
+                    onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <h4 className="customize-container-title">「キャンバスからチューブを選択」ボタンでチューブを一括設定</h4>
                     <p className="customize-container-description">キャンバスのチューブをクリックして一括設定するチューブを選択</p>
                     <p className="customize-container-description">選択したチューブの入と太さを選択</p>
                     <p className="customize-container-description">「完了」ボタンで適用</p>
                   </div>
                   
-                  <div className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} data-time="150-270">
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="150-270"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
                     <p className="customize-container-description">コンテナを選択してキャンバスにハイライト</p>
                     <p className="customize-container-description">キャンバスからチューブを直接選択して編集</p>
@@ -259,7 +289,12 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     <p className="customize-container-description">太さ項目で太さを変更</p>
                   </div>
                   
-                  <div className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} data-time="270-330">
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
+                    data-time="270-330"
+                    onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <h4 className="customize-container-title">その他の機能</h4>
                     <p className="customize-container-description">「一番上に戻る」ボタンで最上へ移動</p>
                     <p className="customize-container-description">トグルボタンでネオンチューブ設定を最小化</p>

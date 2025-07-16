@@ -475,6 +475,11 @@
   font-size: 14px;
   line-height: 1.5;
   margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.customize-content-container.active .customize-container-description {
+  color: #fff;
 }
 
 .customize-tips-list {
@@ -490,6 +495,11 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  transition: color 0.3s ease;
+}
+
+.customize-content-container.active .customize-tips-item {
+  color: #fff;
 }
 
 .customize-tips-item::before {
