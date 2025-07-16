@@ -146,8 +146,8 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if (currentTime >= 0 && currentTime < 11) return 1;
-    if (currentTime >= 11 && currentTime < 49) return 2;
+    if (currentTime >= 0 && currentTime < 12) return 1;
+    if (currentTime >= 12 && currentTime < 49) return 2;
     if (currentTime >= 49 && currentTime < 77) return 3;
     if (currentTime >= 77) return 4;
     return 1;
@@ -159,7 +159,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       let targetTime = 0;
       switch(containerNumber) {
         case 1: targetTime = 0; break;
-        case 2: targetTime = 11; break;
+        case 2: targetTime = 12; break;
         case 3: targetTime = 49; break;
         case 4: targetTime = 77; break;
       }
@@ -223,7 +223,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
         {/* ヘッダー */}
         <div className="customize-guide-modal-header">
           <div className="customize-guide-header">
-            <h2 className="customize-guide-title">色仕様のカスタマイズガイド</h2>
+            <h2 className="customize-guide-title">色 / 仕様のカスタマイズガイド</h2>
           </div>
           <button className="customize-guide-modal-close" onClick={resetAndClose}>
             ×
@@ -410,16 +410,15 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">3Dモデルを生成</h4>
-                    <p className="customize-container-description">「3Dモデル生成」ボタンで3Dモデルが生成され、3Dプレビューページに移動</p>
+                    <p className="customize-container-description">「3Dモデル生成」ボタンを押すと3Dモデルが生成され、レンダリング完了後3Dプレビューページに移動します。</p>
                   </div>
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                   
-                    onClick={() => handleContainerClick(2)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <h4 className="customize-container-title">保存ファイルについて</h4>
-                    <p className="customize-container-description">ネオン下絵で保存したファイルは下絵のみ保存されます、一方で色 / 仕様の保存ファイルは下絵と色 / 仕様の情報が保存されます。そのため色 / 仕様の保存ファイルはネオン下絵、色 / 仕様のカスタマイズのどちらのページからでも読み込みできます</p>
+                  <div className="customize-supplement-container">
+                    <h4 className="customize-supplement-title">📝 保存ファイルについて</h4>
+                    <ul className="customize-supplement-list">
+                      <li className="customize-supplement-item">ネオン下絵で保存したファイルは下絵のみ保存されます</li>
+                      <li className="customize-supplement-item">色 / 仕様の保存ファイルは下絵と色 / 仕様の情報が保存されます</li>
+                      <li className="customize-supplement-item">色 / 仕様の保存ファイルはどちらのページからでも読み込みできます</li>
+                    </ul>
                   </div>
                  
                   
