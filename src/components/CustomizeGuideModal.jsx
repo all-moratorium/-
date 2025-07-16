@@ -8,11 +8,13 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const videoRef = useRef(null);
+  const videoRef2 = useRef(null);
   const containerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
+    
     if (video) {
       const updateTime = () => {
         setCurrentTime(Math.floor(video.currentTime));
@@ -37,11 +39,11 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
         video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, currentPage]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video && isOpen && currentPage === 1) {
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
+    if (video && isOpen && (currentPage === 1 || currentPage === 2)) {
       video.currentTime = 0;
       video.play().then(() => {
         setIsPlaying(true);
@@ -103,7 +105,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const handleProgressClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const percentage = (e.clientX - rect.left) / rect.width;
-    const video = videoRef.current;
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
     if (video) {
       const newTime = percentage * video.duration;
       video.currentTime = newTime;
@@ -132,7 +134,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const handleContainerClick = (containerNumber) => {
-    const video = videoRef.current;
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
     if (video) {
       let targetTime = 0;
       switch(containerNumber) {
@@ -147,7 +149,8 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getVideoDuration = () => {
-    return videoRef.current && videoRef.current.duration ? Math.floor(videoRef.current.duration) : 0;
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
+    return video && video.duration ? Math.floor(video.duration) : 0;
   };
 
   const handleFullscreen = () => {
@@ -308,7 +311,98 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
           {/* ページ2 */}
           <div className={`customize-guide-page ${currentPage === 2 ? 'active' : ''}`}>
             <div className="customize-guide-content">
-              {/* コンテンツは空白 */}
+              <div className="customize-modal-content">
+                <div className="customize-video-section" onMouseMove={handleMouseMove}>
+                  <div className="customize-video-container" ref={currentPage === 2 ? containerRef : null}>
+                    <video 
+                      ref={videoRef2}
+                      src="/ネオン下絵　ガイドモーダル/カスタマイズガイド2.mp4"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      autoPlay
+                      loop
+                      muted
+                      controls={false}
+                      controlsList="nodownload nofullscreen noremoteplayback"
+                      disablePictureInPicture
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
+                  </div>
+                  <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
+                    <div 
+                      className="customize-video-progress" 
+                      onClick={handleProgressClick}
+                      onMouseMove={handleProgressMouseMove}
+                    >
+                      <div className="customize-progress-bar" style={{ width: `${(currentTime / getVideoDuration()) * 100}%` }}></div>
+                    </div>
+                    <div className="customize-video-time">
+                      {formatTime(currentTime)} / {formatTime(getVideoDuration())}
+                    </div>
+                    <button 
+                      onClick={handleFullscreen}
+                      className="customize-fullscreen-btn"
+                    >
+                      {isFullscreen ? '⛶ 全画面終了' : '⛶ 全画面表示'}
+                    </button>
+                  </div>
+                </div>
+                <div className="customize-content-section">
+                  <div className="customize-step-indicator">
+                    <div className="customize-step-number">2</div>
+                    <div className="customize-step-text">PAGE 2</div>
+                  </div>
+                  <h3 className="customize-guide-title">基本操作ガイド</h3>
+                  
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
+                    data-time="0-60"
+                    onClick={() => handleContainerClick(1)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
+                    <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
+                    <p className="customize-container-description">右クリック＋ドラッグで視点移動</p>
+                    <p className="customize-container-description">マウスホイールで拡大 / 縮小</p>
+                  </div>
+                  
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                    data-time="60-150"
+                    onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="customize-container-title">「キャンバスからチューブを選択」ボタンでチューブを一括設定</h4>
+                    <p className="customize-container-description">キャンバスのチューブをクリックして一括設定するチューブを選択</p>
+                    <p className="customize-container-description">選択したチューブの入と太さを選択</p>
+                    <p className="customize-container-description">「完了」ボタンで適用</p>
+                  </div>
+                  
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="150-270"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
+                    <p className="customize-container-description">コンテナを選択してキャンバスにハイライト</p>
+                    <p className="customize-container-description">キャンバスからチューブを直接選択して編集</p>
+                    <p className="customize-container-description">「色を選択」ボタンで色を変更</p>
+                    <p className="customize-container-description">太さ項目で太さを変更</p>
+                  </div>
+                  
+                  <div 
+                    className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
+                    data-time="270-330"
+                    onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="customize-container-title">その他の機能</h4>
+                    <p className="customize-container-description">「一番上に戻る」ボタンで最上へ移動</p>
+                    <p className="customize-container-description">トグルボタンでネオンチューブ設定を最小化</p>
+                    <p className="customize-container-description"> ON / OFFスイッチで点灯 / 消灯切り替え</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
