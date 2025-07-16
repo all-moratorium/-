@@ -479,9 +479,9 @@
   background: #ffeb3b;
 }
 
-.customize-container-description {
+.customize-content-container .customize-container-description {
   color: #ccc;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   margin-bottom: 12px;
   transition: color 0.3s ease;
@@ -511,8 +511,51 @@
   color: #fff;
 }
 
+.customize-steps-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.customize-step-item {
+  color: #ccc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: color 0.3s ease;
+  counter-increment: step-counter;
+}
+
+.customize-step-item::before {
+  content: counter(step-counter);
+  background: #555;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.customize-content-container.active .customize-step-item {
+  color: #fff;
+}
+
+.customize-content-container.active .customize-step-item::before {
+  background: #ffeb3b;
+  color: #000;
+}
+
 .customize-tips-item::before {
-  content: '💡';
+  content: '⚙️';
   font-size: 14px;
   margin-top: 2px;
   flex-shrink: 0;
@@ -560,6 +603,6 @@
   }
   
   .customize-container-description {
-    font-size: 13px;
+    font-size: 12px;
   }
 }

@@ -49,6 +49,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       video.play().then(() => {
         setIsPlaying(true);
         setCurrentTime(0);
+      }).catch((error) => {
+        console.log('Autoplay prevented:', error);
+        setIsPlaying(false);
       });
     }
   }, [isOpen, currentPage]);
@@ -103,6 +106,22 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleVideoClick = () => {
+    const video = currentPage === 1 ? videoRef.current : videoRef2.current;
+    if (video) {
+      if (video.paused) {
+        video.play().then(() => {
+          setIsPlaying(true);
+        }).catch((error) => {
+          console.log('Play failed:', error);
+        });
+      } else {
+        video.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
   const handleProgressClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const percentage = (e.clientX - rect.left) / rect.width;
@@ -127,10 +146,10 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if (currentTime >= 0 && currentTime < 60) return 1;
-    if (currentTime >= 60 && currentTime < 150) return 2;
-    if (currentTime >= 150 && currentTime < 270) return 3;
-    if (currentTime >= 270) return 4;
+    if (currentTime >= 0 && currentTime < 11) return 1;
+    if (currentTime >= 11 && currentTime < 49) return 2;
+    if (currentTime >= 49 && currentTime < 77) return 3;
+    if (currentTime >= 77) return 4;
     return 1;
   };
 
@@ -140,9 +159,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       let targetTime = 0;
       switch(containerNumber) {
         case 1: targetTime = 0; break;
-        case 2: targetTime = 60; break;
-        case 3: targetTime = 150; break;
-        case 4: targetTime = 270; break;
+        case 2: targetTime = 11; break;
+        case 3: targetTime = 49; break;
+        case 4: targetTime = 77; break;
       }
       video.currentTime = targetTime;
       setCurrentTime(targetTime);
@@ -230,6 +249,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       controlsList="nodownload nofullscreen noremoteplayback"
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
+                      onClick={handleVideoClick}
                     />
                   </div>
                   <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
@@ -260,51 +280,61 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-60"
+                    data-time="0-11"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
                     <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
-                    <p className="customize-container-description">右クリック＋ドラッグで視点移動</p>
-                    <p className="customize-container-description">マウスホイールで拡大 / 縮小</p>
+                    <ul className="customize-tips-list">
+                      <li className="customize-tips-item">右クリック＋ドラッグで視点移動</li>
+                      <li className="customize-tips-item">マウスホイールで拡大 / 縮小</li>
+                    </ul>
                   </div>
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="60-150"
+                    data-time="11-49"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">「キャンバスからチューブを選択」ボタンでチューブを一括設定</h4>
-                    <p className="customize-container-description">キャンバスのチューブをクリックして一括設定するチューブを選択</p>
-                    <p className="customize-container-description">選択したチューブの入と太さを選択</p>
-                    <p className="customize-container-description">「完了」ボタンで適用</p>
+                    
+                    <ol className="customize-steps-list">
+                      <li className="customize-step-item">キャンバスのチューブをクリックして一括設定するチューブを選択</li>
+                      <li className="customize-step-item">選択したチューブの色と太さを選択</li>
+                      <li className="customize-step-item">「完了」ボタンで適用</li>
+                    </ol>
                   </div>
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="150-270"
+                    data-time="49-77"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
-                    <p className="customize-container-description">コンテナを選択してキャンバスにハイライト</p>
-                    <p className="customize-container-description">キャンバスからチューブを直接選択して編集</p>
-                    <p className="customize-container-description">「色を選択」ボタンで色を変更</p>
-                    <p className="customize-container-description">太さ項目で太さを変更</p>
+                    
+                    <ol className="customize-steps-list">
+                      <li className="customize-step-item">キャンバスからチューブを直接選択</li>
+                      <li className="customize-step-item">コンテナを選択してキャンバスにハイライト</li>
+                      <li className="customize-step-item">「色を選択」ボタンで色を変更</li>
+                      <li className="customize-step-item">太さ項目で太さを変更</li>
+                    </ol>
                   </div>
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="270-330"
+                    data-time="77-99"
                     onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">その他の機能</h4>
-                    <p className="customize-container-description">「一番上に戻る」ボタンで最上へ移動</p>
-                    <p className="customize-container-description">トグルボタンでネオンチューブ設定を最小化</p>
-                    <p className="customize-container-description"> ON / OFFスイッチで点灯 / 消灯切り替え</p>
+                    <ul className="customize-tips-list">
+                      <li className="customize-tips-item">「一番上に戻る」ボタンで最上へ移動</li>
+                      <li className="customize-tips-item">トグルボタンでネオンチューブ設定を最小化</li>
+                      <li className="customize-tips-item">ON / OFFスイッチで点灯 / 消灯切り替え</li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -328,6 +358,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       controlsList="nodownload nofullscreen noremoteplayback"
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
+                      onClick={handleVideoClick}
                     />
                   </div>
                   <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
@@ -354,56 +385,46 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     <div className="customize-step-number">2</div>
                     <div className="customize-step-text">PAGE 2</div>
                   </div>
-                  <h3 className="customize-guide-title">基本操作ガイド</h3>
+                  <h3 className="customize-guide-title">基本操作ガイド2</h3>
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-60"
+                    data-time="0-12"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
-                    <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
-                    <p className="customize-container-description">右クリック＋ドラッグで視点移動</p>
-                    <p className="customize-container-description">マウスホイールで拡大 / 縮小</p>
+                    <h4 className="customize-container-title">色 / 仕様の情報を保存</h4>
+                    <p className="customize-container-description">色 / 仕様の情報を保存することで、次回の作業で同じ設定を再現できます。</p>
+                    <ul className="customize-tips-list">
+                      <li className="customize-tips-item">「保存」ボタンで下絵と色 / 仕様の保存を保存</li>
+                      <li className="customize-tips-item">保存するファイルの名前を入力</li>
+                    </ul>
                   </div>
+                 
+ 
                   
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="60-150"
+                    data-time="12-24"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">「キャンバスからチューブを選択」ボタンでチューブを一括設定</h4>
-                    <p className="customize-container-description">キャンバスのチューブをクリックして一括設定するチューブを選択</p>
-                    <p className="customize-container-description">選択したチューブの入と太さを選択</p>
-                    <p className="customize-container-description">「完了」ボタンで適用</p>
+                    <h4 className="customize-container-title">3Dモデルを生成</h4>
+                    <p className="customize-container-description">「3Dモデル生成」ボタンで3Dモデルが生成され、3Dプレビューページに移動</p>
                   </div>
-                  
                   <div 
-                    className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="150-270"
-                    onClick={() => handleContainerClick(3)}
+                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                   
+                    onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">「ネオンチューブ設定」ではチューブを個別に設定可能</h4>
-                    <p className="customize-container-description">コンテナを選択してキャンバスにハイライト</p>
-                    <p className="customize-container-description">キャンバスからチューブを直接選択して編集</p>
-                    <p className="customize-container-description">「色を選択」ボタンで色を変更</p>
-                    <p className="customize-container-description">太さ項目で太さを変更</p>
+                    <h4 className="customize-container-title">保存ファイルについて</h4>
+                    <p className="customize-container-description">ネオン下絵で保存したファイルは下絵のみ保存されます、一方で色 / 仕様の保存ファイルは下絵と色 / 仕様の情報が保存されます。そのため色 / 仕様の保存ファイルはネオン下絵、色 / 仕様のカスタマイズのどちらのページからでも読み込みできます</p>
                   </div>
+                 
                   
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="270-330"
-                    onClick={() => handleContainerClick(4)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <h4 className="customize-container-title">その他の機能</h4>
-                    <p className="customize-container-description">「一番上に戻る」ボタンで最上へ移動</p>
-                    <p className="customize-container-description">トグルボタンでネオンチューブ設定を最小化</p>
-                    <p className="customize-container-description"> ON / OFFスイッチで点灯 / 消灯切り替え</p>
-                  </div>
+                  
+                  
                 </div>
               </div>
             </div>
