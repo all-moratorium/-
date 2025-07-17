@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './Preview3DGuideModal.css';
 
 const Preview3DGuideModal = ({ isOpen, onClose }) => {
@@ -240,7 +241,7 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="preview3d-guide-modal-overlay">
       <div className="preview3d-guide-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* ヘッダー */}
@@ -359,7 +360,8 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
