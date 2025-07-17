@@ -329,6 +329,24 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
 
+                  <div className="preview3d-supplement-container">
+                    <h4 className="preview3d-supplement-title">📝 補足事項</h4>
+                    <ul className="preview3d-supplement-list">
+                      <li className="preview3d-supplement-item">3Dモデルは高精度でレンダリングされます</li>
+                      <li className="preview3d-supplement-item">カメラアングルは自由に変更できます</li>
+                      <li className="preview3d-supplement-item">照明効果でリアルな仕上がりを確認できます</li>
+                    </ul>
+                  </div>
+
+                  <div className="preview3d-warning-container">
+                    <h4 className="preview3d-warning-title">⚠️ 注意事項</h4>
+                    <ul className="preview3d-warning-list">
+                      <li className="preview3d-warning-item">3Dプレビューは実際の製品と若干異なる場合があります</li>
+                      <li className="preview3d-warning-item">複雑な形状の場合、表示に時間がかかることがあります</li>
+                      <li className="preview3d-warning-item">照明設定は参考用です</li>
+                    </ul>
+                  </div>
+
                 </div>
               </div>
             </div>

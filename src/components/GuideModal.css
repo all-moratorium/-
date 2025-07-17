@@ -259,10 +259,10 @@
 }
 
 .guide-warning {
-  background: rgba(255, 107, 53, 0.1);
-  border-left: 4px solid #ff3030;
-  border: 1px solid rgba(255, 48, 48, 0.2);
-  border-radius: 15px;
+  background: #2a1a1a;
+  border: 2px solid #ff4444;
+  box-shadow: 0 4px 16px rgba(255, 68, 68, 0.3);
+  border-radius: 8px;
   padding: 20px;
   margin-top: 50px;
   width: 80%;
