@@ -53,24 +53,28 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
     if (activeContainer !== lastActiveContainer) {
       setLastActiveContainer(activeContainer);
       
-      const activeElement = document.querySelector('.neon-drawing-content-container.active');
-      
-      if (activeElement) {
-        const contentSection = activeElement.closest('.neon-drawing-content-section');
-        if (contentSection) {
-          const elementTop = activeElement.offsetTop;
-          const elementHeight = activeElement.offsetHeight;
-          const containerHeight = contentSection.offsetHeight;
-          const scrollTop = contentSection.scrollTop;
-          
-          const elementBottom = elementTop + elementHeight;
-          const containerBottom = scrollTop + containerHeight;
-          
-          if (elementTop < scrollTop || elementBottom > containerBottom) {
-            contentSection.scrollTo({
-              top: elementTop - containerHeight / 2 + elementHeight / 2,
-              behavior: 'smooth'
-            });
+      // 現在のページに対応するアクティブな要素を取得
+      const currentPageElement = document.querySelector(`.neon-drawing-guide-page:nth-child(${currentPage}).active`);
+      if (currentPageElement) {
+        const activeElement = currentPageElement.querySelector('.neon-drawing-content-container.active');
+        
+        if (activeElement) {
+          const contentSection = activeElement.closest('.neon-drawing-content-section');
+          if (contentSection) {
+            const elementTop = activeElement.offsetTop;
+            const elementHeight = activeElement.offsetHeight;
+            const containerHeight = contentSection.offsetHeight;
+            const scrollTop = contentSection.scrollTop;
+            
+            const elementBottom = elementTop + elementHeight;
+            const containerBottom = scrollTop + containerHeight;
+            
+            if (elementTop < scrollTop || elementBottom > containerBottom) {
+              contentSection.scrollTo({
+                top: elementTop - containerHeight / 2 + elementHeight / 2,
+                behavior: 'smooth'
+              });
+            }
           }
         }
       }
@@ -287,12 +291,14 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
   const nextPage = () => {
     if (currentPage < 4) {
       setCurrentPage(currentPage + 1);
+      setLastActiveContainer(1);
     }
   };
 
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      setLastActiveContainer(1);
     }
   };
 

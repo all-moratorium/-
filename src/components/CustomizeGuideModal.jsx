@@ -7,6 +7,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [lastActiveContainer, setLastActiveContainer] = useState(1);
   const videoRef = useRef(null);
   const videoRef2 = useRef(null);
   const containerRef = useRef(null);
@@ -55,6 +56,40 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       });
     }
   }, [isOpen, currentPage]);
+
+  useEffect(() => {
+    const activeContainer = getActiveContainer();
+    
+    if (activeContainer !== lastActiveContainer) {
+      setLastActiveContainer(activeContainer);
+      
+      // 現在のページに対応するアクティブな要素を取得
+      const currentPageElement = document.querySelector(`.customize-guide-page:nth-child(${currentPage}).active`);
+      if (currentPageElement) {
+        const activeElement = currentPageElement.querySelector('.customize-content-container.active');
+        
+        if (activeElement) {
+          const contentSection = activeElement.closest('.customize-content-section');
+          if (contentSection) {
+            const elementTop = activeElement.offsetTop;
+            const elementHeight = activeElement.offsetHeight;
+            const containerHeight = contentSection.offsetHeight;
+            const scrollTop = contentSection.scrollTop;
+            
+            const elementBottom = elementTop + elementHeight;
+            const containerBottom = scrollTop + containerHeight;
+            
+            if (elementTop < scrollTop || elementBottom > containerBottom) {
+              contentSection.scrollTo({
+                top: elementTop - containerHeight / 2 + elementHeight / 2,
+                behavior: 'smooth'
+              });
+            }
+          }
+        }
+      }
+    }
+  }, [currentTime, currentPage, lastActiveContainer]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -203,12 +238,14 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   const nextPage = () => {
     if (currentPage < 3) {
       setCurrentPage(currentPage + 1);
+      setLastActiveContainer(1);
     }
   };
 
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      setLastActiveContainer(1);
     }
   };
 
