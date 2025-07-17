@@ -174,6 +174,14 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       if (currentTime >= 0 && currentTime < 35) return 1;
       if (currentTime >= 35 && currentTime < 111) return 2;
       return 1;
+    } else if (currentPage === 3) {
+      if (currentTime >= 0 && currentTime < 26) return 1;
+      if (currentTime >= 26 && currentTime < 99) return 2;
+      if (currentTime >= 99 && currentTime < 118) return 3;
+      if (currentTime >= 118 && currentTime < 133) return 4;
+      if (currentTime >= 133 && currentTime < 148) return 5;
+      if (currentTime >= 148) return 6;
+      return 1;
     }
     return 1;
   };
@@ -197,6 +205,15 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
         switch(containerNumber) {
           case 1: targetTime = 0; break;
           case 2: targetTime = 35; break;
+        }
+      } else if (currentPage === 3) {
+        switch(containerNumber) {
+          case 1: targetTime = 0; break;
+          case 2: targetTime = 26; break;
+          case 3: targetTime = 99; break;
+          case 4: targetTime = 118; break;
+          case 5: targetTime = 133; break;
+          case 6: targetTime = 148; break;
         }
       }
       video.currentTime = targetTime;
@@ -614,7 +631,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
-                    data-time="133-147"
+                    data-time="133-148"
                     onClick={() => handleContainerClick(5)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -626,9 +643,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ul>
                   </div>
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
-                    data-time="147-151"
-                    onClick={() => handleContainerClick(5)}
+                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`} 
+                    data-time="148-151"
+                    onClick={() => handleContainerClick(6)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">色 / 仕様のカスタマイズへ進む</h4>
