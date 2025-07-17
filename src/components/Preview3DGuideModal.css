@@ -33,25 +33,25 @@
   animation: preview3d-fadeIn 0.3s ease-out;
 }
 
-.preview3d-guide-modal-content {
-  background: #000;
-  border-radius: 20px;
-  width: 98%;
-  max-width: 1400px;
-  height: 90vh;
-  max-height: 900px;
-  position: relative;
-  padding: 0;
-  color: white;
-  overflow: hidden;
-  border: 2px solid #ffff00;
+.preview3d-guide-modal-overlay .preview3d-guide-modal-content {
+  background: #000 !important;
+  border-radius: 20px !important;
+  width: 98% !important;
+  max-width: 1400px !important;
+  height: 90vh !important;
+  max-height: 900px !important;
+  position: relative !important;
+  padding: 0 !important;
+  color: white !important;
+  overflow: hidden !important;
+  border: 2px solid #ffff00 !important;
   box-shadow: 
     0 0 10px rgba(255, 255, 0, 0.5),
     0 0 20px rgba(255, 255, 0, 0.3),
-    0 0 30px rgba(255, 255, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  animation: preview3d-bookOpen 0.3s ease-out;
+    0 0 30px rgba(255, 255, 0, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: preview3d-bookOpen 0.3s ease-out !important;
 }
 
 .preview3d-guide-modal-body {
@@ -105,7 +105,7 @@
   transition: all 0.3s ease;
   flex: 1;
   overflow-y: auto;
-  padding: 30px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -191,7 +191,334 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin-left: 50px;
+  margin-left: 30px;
+}
+
+/* 動画セクションのCSS */
+.preview3d-modal-content {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.preview3d-video-section {
+  width: 60%;
+  background: #000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.preview3d-video-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #111;
+  border: 1px solid #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview3d-video-section:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0;
+}
+
+.preview3d-video-section:fullscreen .preview3d-video-container {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.preview3d-video-section:fullscreen video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.preview3d-video-section:fullscreen .preview3d-video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+  margin-top: 0;
+  height: 60px;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease;
+}
+
+.preview3d-video-section:fullscreen .preview3d-video-controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preview3d-video-section:fullscreen .preview3d-video-progress {
+  height: 20px;
+  background: transparent;
+}
+
+.preview3d-video-section:fullscreen .preview3d-video-progress::before {
+  background: #555;
+}
+
+.preview3d-video-section:fullscreen .preview3d-progress-bar {
+  background: #ffeb3b;
+}
+
+.preview3d-video-controls {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  z-index: 10;
+}
+
+.preview3d-video-progress {
+  flex: 1;
+  height: 20px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.preview3d-video-progress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.preview3d-progress-bar {
+  height: 4px;
+  background: #ffeb3b;
+  border-radius: 2px;
+  transition: width 0.1s ease;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.preview3d-video-time {
+  color: white;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid #555;
+}
+
+.preview3d-fullscreen-btn {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid #555;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.preview3d-fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #777;
+}
+
+/* コンテンツセクションのCSS */
+.preview3d-content-section {
+  width: 40%;
+  background: #1a1a1a;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview3d-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.preview3d-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffeb3b;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.preview3d-step-text {
+  color: #ffeb3b;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.preview3d-guide-title {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.preview3d-content-container {
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 20px;
+  background: #222;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.preview3d-content-container.active {
+  border-color: #ffeb3b;
+  background: #2a2a1a;
+  box-shadow: 0 4px 16px rgba(255, 235, 59, 0.2);
+}
+
+.preview3d-container-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.preview3d-container-title::before {
+  content: '';
+  width: 4px;
+  height: 1em;
+  background: #555;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.preview3d-content-container.active .preview3d-container-title::before {
+  background: #ffeb3b;
+}
+
+.preview3d-content-container .preview3d-container-description {
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.preview3d-content-container.active .preview3d-container-description {
+  color: #fff;
+}
+
+.preview3d-tips-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.preview3d-tips-item {
+  color: #ccc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: color 0.3s ease;
+}
+
+.preview3d-content-container.active .preview3d-tips-item {
+  color: #fff;
+}
+
+.preview3d-steps-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.preview3d-step-item {
+  color: #ccc;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: color 0.3s ease;
+  counter-increment: step-counter;
+}
+
+.preview3d-step-item::before {
+  content: counter(step-counter);
+  background: #555;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.preview3d-content-container.active .preview3d-step-item {
+  color: #fff;
+}
+
+.preview3d-content-container.active .preview3d-step-item::before {
+  background: #ffeb3b;
+  color: #000;
+}
+
+.preview3d-tips-item::before {
+  content: '⚙️';
+  font-size: 14px;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 /* レスポンシブ対応 */
@@ -210,6 +537,32 @@
   
   .preview3d-nav-button {
     padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .preview3d-modal-content {
+    flex-direction: column;
+  }
+  
+  .preview3d-video-section {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .preview3d-content-section {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .preview3d-guide-title {
+    font-size: 20px;
+  }
+  
+  .preview3d-container-title {
+    font-size: 14px;
+  }
+  
+  .preview3d-container-description {
     font-size: 12px;
   }
 }
