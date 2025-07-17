@@ -217,6 +217,11 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       if (currentTime >= 133 && currentTime < 148) return 5;
       if (currentTime >= 148) return 6;
       return 1;
+    } else if (currentPage === 4) {
+      if (currentTime >= 0 && currentTime < 51) return 1;
+      if (currentTime >= 51 && currentTime < 70) return 2;
+      if (currentTime >= 70) return 3;
+      return 1;
     }
     return 1;
   };
@@ -249,6 +254,12 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
           case 4: targetTime = 118; break;
           case 5: targetTime = 133; break;
           case 6: targetTime = 148; break;
+        }
+      } else if (currentPage === 4) {
+        switch(containerNumber) {
+          case 1: targetTime = 0; break;
+          case 2: targetTime = 51; break;
+          case 3: targetTime = 70; break;
         }
       }
       video.currentTime = targetTime;
@@ -741,22 +752,46 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     <div className="neon-drawing-step-number">4</div>
                     <div className="neon-drawing-step-text">PAGE 4</div>
                   </div>
-                  <h3 className="neon-drawing-guide-title">完成と出力</h3>
+                  <h3 className="neon-drawing-guide-title">テキストから背景画像を生成した場合</h3>
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-12"
+                    data-time="0-51"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">作品の仕上げ</h4>
-                    <p className="neon-drawing-container-description">作品を完成させて出力する方法を学びます。</p>
-                    <ul className="neon-drawing-tips-list">
-                      <li className="neon-drawing-tips-item">最終チェック</li>
-                      <li className="neon-drawing-tips-item">出力設定</li>
+                    <h4 className="neon-drawing-container-title">ネオンパスを描画</h4>
+                    <p className="neon-drawing-container-description">テキストから背景画像を生成した場合でも、通常の背景と同じようにネオンパスを描画します</p>
+                    <ul className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」であることを確認</li>
+                      <li className="neon-drawing-step-item">チューブパスをテキスト背景画像に沿って描画開始</li>
                     </ul>
                   </div>
-                  
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                    data-time="51-70"
+                    onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">土台を描画、スケールを調整</h4>
+                    <p className="neon-drawing-container-description">ここでは自動(長方形)で作成していますが、他のお好みのもので構いません。詳しくはPAGE 3をご確認ください。</p>
+                    <ul className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">土台を描画</li>
+                      <li className="neon-drawing-step-item">スケールを調整</li>
+                    </ul>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="70-72"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">色 / 仕様のカスタマイズへ進む</h4>
+                    <ul className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「カスタマイズへ進む」ボタンで色 / 仕様のカスタマイズへ進む</li>
+                    </ul>
+                  </div>
+
                   <div className="neon-drawing-supplement-container">
                     <h4 className="neon-drawing-supplement-title">📝 完成後のヒント</h4>
                     <ul className="neon-drawing-supplement-list">
