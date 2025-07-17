@@ -7,6 +7,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [lastActiveContainer, setLastActiveContainer] = useState(1);
   const videoRef = useRef(null);
   const videoRef2 = useRef(null);
   const videoRef3 = useRef(null);
@@ -45,6 +46,36 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       };
     }
   }, [isOpen, currentPage]);
+
+  useEffect(() => {
+    const activeContainer = getActiveContainer();
+    
+    if (activeContainer !== lastActiveContainer) {
+      setLastActiveContainer(activeContainer);
+      
+      const activeElement = document.querySelector('.neon-drawing-content-container.active');
+      
+      if (activeElement) {
+        const contentSection = activeElement.closest('.neon-drawing-content-section');
+        if (contentSection) {
+          const elementTop = activeElement.offsetTop;
+          const elementHeight = activeElement.offsetHeight;
+          const containerHeight = contentSection.offsetHeight;
+          const scrollTop = contentSection.scrollTop;
+          
+          const elementBottom = elementTop + elementHeight;
+          const containerBottom = scrollTop + containerHeight;
+          
+          if (elementTop < scrollTop || elementBottom > containerBottom) {
+            contentSection.scrollTo({
+              top: elementTop - containerHeight / 2 + elementHeight / 2,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+    }
+  }, [currentTime, currentPage, lastActiveContainer]);
 
   useEffect(() => {
     const video = getCurrentVideo();
