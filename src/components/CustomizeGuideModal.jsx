@@ -289,6 +289,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     <ul className="customize-tips-list">
                       <li className="customize-tips-item">右クリック＋ドラッグで視点移動</li>
                       <li className="customize-tips-item">マウスホイールで拡大 / 縮小</li>
+                      <li className="customize-tips-item">「視点リセット」ボタンで視点をリセット</li>
                     </ul>
                   </div>
                   

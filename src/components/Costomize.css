@@ -462,11 +462,7 @@
 }
 
 /* すべての要素にbox-sizingを適用 */
-.customize-app-container *,
-.customize-app-container *:before,
-.customize-app-container *:after {
-    box-sizing: border-box;
-}
+
 
 /* サイドバー内要素の幅制限 */
 .customize-sidebar * {
@@ -981,6 +977,7 @@ html, body {
 /* 設置環境ボタンスタイル（独自クラス名） */
 .installation-environment-button {
     background-color: #6b7280;
+    box-sizing: border-box;
     color: white;
     border: 1px solid #6b7280;
     border-radius: 6px;

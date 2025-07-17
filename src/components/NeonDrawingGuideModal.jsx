@@ -294,57 +294,119 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-12"
+                    data-time="0-10"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">基本的なキャンバスの操作方法</h4>
-                    <p className="neon-drawing-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
+                    <p className="neon-drawing-container-description"></p>
                     <ul className="neon-drawing-tips-list">
                       <li className="neon-drawing-tips-item">右クリック＋ドラッグで視点移動</li>
                       <li className="neon-drawing-tips-item">マウスホイールで拡大 / 縮小</li>
+                      <li className="neon-drawing-tips-item">「視点リセット」ボタンで視点をリセット</li>
                     </ul>
                   </div>
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="12-49"
+                    data-time="10-15"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">線の描き方</h4>
-                    <p className="neon-drawing-container-description">ペンツールを使って線を描く方法</p>
+                    <h4 className="neon-drawing-container-title">描画モード</h4>
+                    <p className="neon-drawing-container-description">現在の描画モードは「描画ツール」テキストの上のステータスバーで確認できます</p>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">ペンツールを選択</li>
-                      <li className="neon-drawing-step-item">クリックして線を描く</li>
+                      <li className="neon-drawing-tips-item">チューブパス描画モード</li>
+                      <li className="neon-drawing-tips-item">土台描画モード</li>
+                      <li className="neon-drawing-tips-item">点修正モード</li>
+                      <li className="neon-drawing-tips-item">点削除モード</li>
+                      <li className="neon-drawing-tips-item">パス削除モード</li>
                     </ol>
                   </div>
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="49-77"
+                    data-time="15-36"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">色の塗り方</h4>
-                    <p className="neon-drawing-container-description">線に色を塗る方法</p>
+                    <h4 className="neon-drawing-container-title">キャンバスに描画する</h4>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">色を選択</li>
-                      <li className="neon-drawing-step-item">線をクリックして塗りつぶし</li>
+                      <li className="neon-drawing-step-item">キャンバス上に右クリックで点を描画</li>
+                      <li className="neon-drawing-step-item">「←戻る」ボタンで一つ前の状態に戻る</li>
+                      <li className="neon-drawing-step-item">「進む→」ボタンで一つ前の状態に戻る</li>
                     </ol>
                   </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="36-63"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">キャンバス上の点を修正する</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「点修正」ボタンで選択した点を修正</li>
+                      <li className="neon-drawing-step-item">ステータスが「点修正モードアクティブ中」に</li>
+                      <li className="neon-drawing-step-item">左クリック＋ドラッグで点を修正</li>
+                      <li className="neon-drawing-step-item">もう一度「点修正」ボタンを押して修正ツールを解除</li>
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="63-86"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">キャンバス上の点を削除する</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「点削除」ボタンで選択した点を削除</li>
+                      <li className="neon-drawing-step-item">ステータスが「点削除モードアクティブ中」に</li>
+                      <li className="neon-drawing-step-item">左クリックで点を削除</li>
+                      <li className="neon-drawing-step-item">もう一度「点削除」ボタンを押して削除ツールを解除</li>
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="86-96"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">キャンバス上のパスを削除する</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「パス削除」ボタンで選択した点を削除</li>
+                      <li className="neon-drawing-step-item">ステータスが「パス削除モードアクティブ中」に</li>
+                      <li className="neon-drawing-step-item">左クリックでパスを削除</li>
+                      <li className="neon-drawing-step-item">もう一度「パス削除」ボタンを押して削除ツールを解除</li>
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
+                    </ol>
+                  </div>
+
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="77-99"
+                    data-time="96-108"
                     onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">保存機能</h4>
-                    <ul className="neon-drawing-tips-list">
-                      <li className="neon-drawing-tips-item">保存ボタンで作品を保存</li>
-                      <li className="neon-drawing-tips-item">読み込みボタンで作品を復元</li>
-                    </ul>
+                    <h4 className="neon-drawing-container-title">新たなパスを描画</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「新しいパス」ボタンを押して新たなパスを描画</li>
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス2描画中」に</li>
+                      <li className="neon-drawing-step-item">キャンバス上に右クリックで新たなパスの点を描画</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="108-114"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">キャンバス上の全ての要素を削除する</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「すべてクリア」ボタンを押してキャンバスのすべての要素をクリア</li>
+                    </ol>
                   </div>
                 </div>
               </div>

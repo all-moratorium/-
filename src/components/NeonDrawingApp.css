@@ -1840,6 +1840,7 @@
     backdrop-filter: blur(4px);
     z-index: 10;
     transition: right 0.3s ease;
+    box-sizing: border-box;
 }
 
 /* サイドバー非表示時の位置調整 */
