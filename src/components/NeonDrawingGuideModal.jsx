@@ -160,10 +160,21 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if (currentTime >= 0 && currentTime < 12) return 1;
-    if (currentTime >= 12 && currentTime < 49) return 2;
-    if (currentTime >= 49 && currentTime < 77) return 3;
-    if (currentTime >= 77) return 4;
+    if (currentPage === 1) {
+      if (currentTime >= 0 && currentTime < 11) return 1;
+      if (currentTime >= 11 && currentTime < 15) return 2;
+      if (currentTime >= 15 && currentTime < 37) return 3;
+      if (currentTime >= 37 && currentTime < 63) return 4;
+      if (currentTime >= 63 && currentTime < 86) return 5;
+      if (currentTime >= 86 && currentTime < 97) return 6;
+      if (currentTime >= 97 && currentTime < 109) return 7;
+      if (currentTime >= 109) return 8;
+      return 1;
+    } else if (currentPage === 2) {
+      if (currentTime >= 0 && currentTime < 35) return 1;
+      if (currentTime >= 35 && currentTime < 111) return 2;
+      return 1;
+    }
     return 1;
   };
 
@@ -171,11 +182,22 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
     const video = getCurrentVideo();
     if (video) {
       let targetTime = 0;
-      switch(containerNumber) {
-        case 1: targetTime = 0; break;
-        case 2: targetTime = 12; break;
-        case 3: targetTime = 49; break;
-        case 4: targetTime = 77; break;
+      if (currentPage === 1) {
+        switch(containerNumber) {
+          case 1: targetTime = 0; break;
+          case 2: targetTime = 11; break;
+          case 3: targetTime = 15; break;
+          case 4: targetTime = 37; break;
+          case 5: targetTime = 63; break;
+          case 6: targetTime = 86; break;
+          case 7: targetTime = 97; break;
+          case 8: targetTime = 109; break;
+        }
+      } else if (currentPage === 2) {
+        switch(containerNumber) {
+          case 1: targetTime = 0; break;
+          case 2: targetTime = 35; break;
+        }
       }
       video.currentTime = targetTime;
       setCurrentTime(targetTime);
@@ -294,7 +316,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-10"
+                    data-time="0-11"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -309,7 +331,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="10-15"
+                    data-time="11-15"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -326,24 +348,24 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="15-36"
+                    data-time="15-37"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">キャンバスに描画する</h4>
+                    <h4 className="neon-drawing-container-title">キャンバスに描画</h4>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">キャンバス上に右クリックで点を描画</li>
+                      <li className="neon-drawing-step-item">キャンバス上に左クリックで点を描画</li>
                       <li className="neon-drawing-step-item">「←戻る」ボタンで一つ前の状態に戻る</li>
                       <li className="neon-drawing-step-item">「進む→」ボタンで一つ前の状態に戻る</li>
                     </ol>
                   </div>
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="36-63"
-                    onClick={() => handleContainerClick(3)}
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
+                    data-time="37-63"
+                    onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">キャンバス上の点を修正する</h4>
+                    <h4 className="neon-drawing-container-title">キャンバス上の点を修正</h4>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-step-item">「点修正」ボタンで選択した点を修正</li>
                       <li className="neon-drawing-step-item">ステータスが「点修正モードアクティブ中」に</li>
@@ -353,12 +375,12 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
                     data-time="63-86"
-                    onClick={() => handleContainerClick(3)}
+                    onClick={() => handleContainerClick(5)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">キャンバス上の点を削除する</h4>
+                    <h4 className="neon-drawing-container-title">キャンバス上の点を削除</h4>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-step-item">「点削除」ボタンで選択した点を削除</li>
                       <li className="neon-drawing-step-item">ステータスが「点削除モードアクティブ中」に</li>
@@ -368,12 +390,12 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="86-96"
-                    onClick={() => handleContainerClick(3)}
+                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`} 
+                    data-time="86-97"
+                    onClick={() => handleContainerClick(6)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">キャンバス上のパスを削除する</h4>
+                    <h4 className="neon-drawing-container-title">キャンバス上のパスを削除</h4>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-step-item">「パス削除」ボタンで選択した点を削除</li>
                       <li className="neon-drawing-step-item">ステータスが「パス削除モードアクティブ中」に</li>
@@ -383,24 +405,24 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
 
-                  
+
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="96-108"
-                    onClick={() => handleContainerClick(4)}
+                    className={`neon-drawing-content-container ${getActiveContainer() === 7 ? 'active' : ''}`} 
+                    data-time="97-109"
+                    onClick={() => handleContainerClick(7)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">新たなパスを描画</h4>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-step-item">「新しいパス」ボタンを押して新たなパスを描画</li>
                       <li className="neon-drawing-step-item">ステータスが「チューブパス2描画中」に</li>
-                      <li className="neon-drawing-step-item">キャンバス上に右クリックで新たなパスの点を描画</li>
+                      <li className="neon-drawing-step-item">キャンバス上に左クリックで新たなパスの点を描画</li>
                     </ol>
                   </div>
                   <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="108-114"
-                    onClick={() => handleContainerClick(3)}
+                    className={`neon-drawing-content-container ${getActiveContainer() === 8 ? 'active' : ''}`} 
+                    data-time="109-114"
+                    onClick={() => handleContainerClick(8)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">キャンバス上の全ての要素を削除する</h4>
@@ -457,21 +479,36 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     <div className="neon-drawing-step-number">2</div>
                     <div className="neon-drawing-step-text">PAGE 2</div>
                   </div>
-                  <h3 className="neon-drawing-guide-title">応用操作ガイド</h3>
-                  
+                  <h3 className="neon-drawing-guide-title">ネオンチューブパスを描画する</h3>
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-12"
+                    data-time="0-35"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">応用テクニック1</h4>
-                    <p className="neon-drawing-container-description">より高度な描画テクニックを学びます。</p>
-                    <ul className="neon-drawing-tips-list">
-                      <li className="neon-drawing-tips-item">応用テクニック1の説明</li>
-                      <li className="neon-drawing-tips-item">応用テクニック2の説明</li>
-                    </ul>
+                    <h4 className="neon-drawing-container-title">背景画像を追加</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「背景画像」ボタンで背景画像を追加</li>
+                      <li className="neon-drawing-step-item">「画像サイズ」スライダーで画像の大きさを最大に</li>
+                      <li className="neon-drawing-step-item">「X / Y 位置」スライダーで画像の位置を移動</li>
+                      <li className="neon-drawing-step-item">「透明度」スライダーで画像の透明度を変更</li>
+                      <li className="neon-drawing-step-item">「適用」ボタンで背景画像設定を完了</li>
+                    </ol>
                   </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                    data-time="35-111"
+                    onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">ネオンパスを描画</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」であることを確認</li>
+                      <li className="neon-drawing-step-item">ネオンチューブパスを描画開始</li>
+                    </ol>
+                  </div>
+                  
+                  
                 </div>
               </div>
             </div>
@@ -521,21 +558,86 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     <div className="neon-drawing-step-number">3</div>
                     <div className="neon-drawing-step-text">PAGE 3</div>
                   </div>
-                  <h3 className="neon-drawing-guide-title">エフェクト設定</h3>
+                  <h3 className="neon-drawing-guide-title">土台を描画～下絵完成</h3>
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-12"
+                    data-time="0-26"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">ネオンエフェクト</h4>
-                    <p className="neon-drawing-container-description">ネオンエフェクトの設定方法を学びます。</p>
-                    <ul className="neon-drawing-tips-list">
-                      <li className="neon-drawing-tips-item">エフェクトの種類を選択</li>
-                      <li className="neon-drawing-tips-item">強度を調整</li>
+                    <h4 className="neon-drawing-container-title">土台描画モードに切り替え</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「背景画像」ボタンで背景画像を追加</li>
+                      <li className="neon-drawing-step-item">「適用」ボタンで背景画像設定を完了</li>
+                      <li className="neon-drawing-step-item">「土台」ボタンで土台描画モードに切り替え</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
+                    data-time="26-99"
+                    onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">土台描画モードの種類</h4>
+                    <p className="neon-drawing-container-description">「土台」ボタンで土台の描画タイプを選択できます、描画タイプは以下の4通りです。</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-tips-item">スプライン : 配置した点をを曲線で結ぶ面の土台を作成</li>
+                      <li className="neon-drawing-tips-item">直線 : 配置した点をを直線で結ぶ面の土台を作成</li>
+                      <li className="neon-drawing-tips-item">自動(長方形) : 全てのネオンパスを囲む長方形の土台を自動で作成</li>
+                      <li className="neon-drawing-tips-item">自動(形状) : 全てのネオンパスを囲む形状の土台を自動で作成</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
+                    data-time="99-118"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「拡大縮小」ボタンでネオンサイン全体のスケールを調整</h4>
+                    <p className="neon-drawing-container-description">最大サイズの画像で下絵を描いた後、こちらで最終的な商品寸法を調整します</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-tips-item">「倍率」スライダーでスケール調整</li>
+                      <li className="neon-drawing-tips-item">数値ボックスに直接入力でスケール調整</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
+                    data-time="118-133"
+                    onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「太さプレビュー」セレクタで完成品のチューブの太さを確認</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-tips-item">下絵で描画したチューブを実際のスケールで確認</li>
+                    </ol>
+                  </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
+                    data-time="133-147"
+                    onClick={() => handleContainerClick(5)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">下絵を保存</h4>
+                    <p className="neon-drawing-container-description">下絵を保存することで、次回の作業で同じ設定を再現できます。</p>
+                    <ul className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「保存」ボタンで下絵を保存</li>
+                      <li className="neon-drawing-step-item">保存するファイルの名前を入力</li>
                     </ul>
                   </div>
+                  <div 
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
+                    data-time="147-151"
+                    onClick={() => handleContainerClick(5)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">色 / 仕様のカスタマイズへ進む</h4>
+                    <ul className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「カスタマイズへ進む」ボタンで色 / 仕様のカスタマイズへ進む</li>
+                    </ul>
+                  </div>
+
+
                 </div>
               </div>
             </div>

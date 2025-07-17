@@ -444,6 +444,7 @@
   line-height: 1.5;
   margin-bottom: 12px;
   transition: color 0.3s ease;
+  text-align: left;
 }
 
 .neon-drawing-content-container.active .neon-drawing-container-description {

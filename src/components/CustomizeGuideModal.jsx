@@ -396,14 +396,11 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   >
                     <h4 className="customize-container-title">色 / 仕様の情報を保存</h4>
                     <p className="customize-container-description">色 / 仕様の情報を保存することで、次回の作業で同じ設定を再現できます。</p>
-                    <ul className="customize-tips-list">
-                      <li className="customize-tips-item">「保存」ボタンで下絵と色 / 仕様の保存を保存</li>
-                      <li className="customize-tips-item">保存するファイルの名前を入力</li>
+                    <ul className="customize-steps-list">
+                      <li className="customize-step-item">「保存」ボタンで下絵と色 / 仕様の保存を保存</li>
+                      <li className="customize-step-item">保存するファイルの名前を入力</li>
                     </ul>
                   </div>
-                 
- 
-                  
                   <div 
                     className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
                     data-time="12-24"
@@ -411,7 +408,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">3Dモデルを生成</h4>
-                    <p className="customize-container-description">「3Dモデル生成」ボタンを押すと3Dモデルが生成され、レンダリング完了後3Dプレビューページに移動します。</p>
+                    <ul className="customize-steps-list">
+                      <li className="customize-step-item">「3Dモデル生成」ボタンを押すと3Dモデルが生成され、レンダリング完了後3Dプレビューページに移動</li>
+                    </ul>
                   </div>
                   <div className="customize-supplement-container">
                     <h4 className="customize-supplement-title">📝 保存ファイルについて</h4>
