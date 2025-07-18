@@ -2,6 +2,7 @@
   "name": "laser-cut-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://all-moratorium.github.io/-",
   "dependencies": {
     "culori": "^4.0.1",
     "esm-potrace-wasm": "^0.4.1",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.4",
     "tailwindcss": "^3.3.3"
   }
