@@ -231,7 +231,7 @@
   color: #ffffff;
   border-color: #ffffff;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
-  /* animation: extruder-glow-pulse 2s ease-in-out infinite */ alternate;
+  /*/* animation: extruder-glow-pulse 2s ease-in-out infinite alternate; */
 }
 
 .controls-panel.collapsed .sidebar-toggle-button:hover {

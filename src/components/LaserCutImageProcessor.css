@@ -361,7 +361,7 @@
   background: white;
   border-radius: 50%;
   opacity: 0.6;
-  /* animation: float 14s infinite */ linear;
+  /*/* animation: float 14s infinite linear; */
   transform: translateY(calc(100vh + 50px));
 }
 
@@ -668,7 +668,7 @@
     border: none;
     outline: none;
     /* アニメーションの追加 */
-    /* animation: glow-pulse 2s infinite */ alternate; /* glow-pulseアニメーションを2秒間、無限に、交互に実行 */
+    /*/* animation: glow-pulse 2s infinite alternate; */ /* glow-pulseアニメーションを2秒間、無限に、交互に実行 */
 }
 
 @keyframes glow-pulse {
@@ -2855,7 +2855,7 @@ canvas {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  /* animation: shine 2s infinite */ ease-in-out;
+  /*/* animation: shine 2s infinite ease-in-out; */
 }
 
 @keyframes shine {
@@ -2966,7 +2966,7 @@ canvas {
 /* 処理ボタンのアニメーション */
 .process-button.processing {
   background: linear-gradient(45deg, #00ffff, #0099ff);
-  /* animation: pulseButton 2s infinite */ ease-in-out;
+  /*/* animation: pulseButton 2s infinite ease-in-out; */
   cursor: not-allowed;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
@@ -3128,7 +3128,7 @@ canvas {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  /* animation: progressShine 2s infinite */ ease-in-out;
+  /*/* animation: progressShine 2s infinite ease-in-out; */
 }
 
 @keyframes progressShine {
