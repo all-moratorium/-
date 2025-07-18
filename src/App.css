@@ -9,7 +9,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear; /* これを変えると：ユーザーがアニメーションを減らす設定をしていない場合のAppロゴの回転アニメーションの速さや動き方が変わります */
+    /* animation: App-logo-spin infinite */ 20s linear; /* これを変えると：ユーザーがアニメーションを減らす設定をしていない場合のAppロゴの回転アニメーションの速さや動き方が変わります */
   }
 }
 

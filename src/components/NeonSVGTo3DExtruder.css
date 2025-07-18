@@ -231,7 +231,7 @@
   color: #ffffff;
   border-color: #ffffff;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
-  animation: extruder-glow-pulse 2s ease-in-out infinite alternate;
+  /* animation: extruder-glow-pulse 2s ease-in-out infinite */ alternate;
 }
 
 .controls-panel.collapsed .sidebar-toggle-button:hover {
@@ -304,7 +304,7 @@
   font-size: 17px;
   background: white;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  animation: neon3d-lightning-flash 1.5s infinite;
+  /* animation: neon3d-lightning-flash 1.5s infinite */;
   overflow: visible;
   transition: all 0.3s ease;
   position: absolute;
@@ -323,7 +323,7 @@
   font-style: italic;
   font-family: 'Times New Roman', serif;
   color: #333;
-  animation: neon3d-lightning-flicker 1.5s infinite;
+  /* animation: neon3d-lightning-flicker 1.5s infinite */;
 }
 
 .neon3d-guide-button::after {
@@ -336,7 +336,7 @@
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  animation: neon3d-ripple-wave 1.5s infinite;
+  /* animation: neon3d-ripple-wave 1.5s infinite */;
   pointer-events: none;
 }
 

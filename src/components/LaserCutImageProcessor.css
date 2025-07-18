@@ -361,7 +361,7 @@
   background: white;
   border-radius: 50%;
   opacity: 0.6;
-  animation: float 14s infinite linear;
+  /* animation: float 14s infinite */ linear;
   transform: translateY(calc(100vh + 50px));
 }
 
@@ -668,7 +668,7 @@
     border: none;
     outline: none;
     /* アニメーションの追加 */
-    animation: glow-pulse 2s infinite alternate; /* glow-pulseアニメーションを2秒間、無限に、交互に実行 */
+    /* animation: glow-pulse 2s infinite */ alternate; /* glow-pulseアニメーションを2秒間、無限に、交互に実行 */
 }
 
 @keyframes glow-pulse {
@@ -789,7 +789,7 @@
   color: #333;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   /* 波紋電光アニメーション */
-  animation: lightning-flash 1.5s infinite;
+  /* animation: lightning-flash 1.5s infinite */;
   overflow: visible;
   transition: all 0.3s ease;
 }
@@ -806,7 +806,7 @@
   font-style: italic;
   font-family: 'Times New Roman', serif;
   color: #333;
-  animation: lightning-flicker 1.5s infinite;
+  /* animation: lightning-flicker 1.5s infinite */;
 }
 
 .info-button::after {
@@ -819,7 +819,7 @@
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  animation: ripple-wave 1.5s infinite;
+  /* animation: ripple-wave 1.5s infinite */;
 }
 
 /* エフェクト停止用 */
@@ -1986,7 +1986,7 @@ canvas {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     /* 波紋電光アニメーション */
     
-    animation: lightning-flash 1.5s infinite;
+    /* animation: lightning-flash 1.5s infinite */;
     overflow: visible;
     transition: all 0.3s ease;
     z-index: 1000;
@@ -2007,7 +2007,7 @@ canvas {
     font-style: italic;
     font-family: 'Times New Roman', serif;
     color: #333;
-    animation: lightning-flicker 1.5s infinite;
+    /* animation: lightning-flicker 1.5s infinite */;
   }
   
   .info-button2::after {
@@ -2020,7 +2020,7 @@ canvas {
     border: 2px solid rgba(255,255,255,0.5);
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0);
-    animation: ripple-wave 1.5s infinite;
+    /* animation: ripple-wave 1.5s infinite */;
   }
   
   /* エフェクト停止用 */
@@ -2809,7 +2809,7 @@ canvas {
   border: 5px solid rgba(0, 255, 255, 0.2);
   border-top: 5px solid #00ffff;
   border-radius: 50%;
-  animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  /* animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite */;
   margin: 0 auto 25px;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
@@ -2855,7 +2855,7 @@ canvas {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  animation: shine 2s infinite ease-in-out;
+  /* animation: shine 2s infinite */ ease-in-out;
 }
 
 @keyframes shine {
@@ -2942,7 +2942,7 @@ canvas {
   font-weight: bold;
   margin-right: 12px;
   opacity: 0.7;
-  animation: pulse 2s ease-in-out infinite;
+  /* animation: pulse 2s ease-in-out infinite */;
 }
 
 @keyframes pulse {
@@ -2966,7 +2966,7 @@ canvas {
 /* 処理ボタンのアニメーション */
 .process-button.processing {
   background: linear-gradient(45deg, #00ffff, #0099ff);
-  animation: pulseButton 2s infinite ease-in-out;
+  /* animation: pulseButton 2s infinite */ ease-in-out;
   cursor: not-allowed;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
@@ -3082,7 +3082,7 @@ canvas {
   border: 5px solid rgba(0, 255, 255, 0.2);
   border-top: 5px solid #00ffff;
   border-radius: 50%;
-  animation: spin-svg 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  /* animation: spin-svg 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite */;
   margin: 0 auto 25px;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
@@ -3128,7 +3128,7 @@ canvas {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  animation: progressShine 2s infinite ease-in-out;
+  /* animation: progressShine 2s infinite */ ease-in-out;
 }
 
 @keyframes progressShine {
@@ -3215,7 +3215,7 @@ canvas {
   font-weight: bold;
   margin-right: 12px;
   opacity: 0.7;
-  animation: pulse 2s ease-in-out infinite;
+  /* animation: pulse 2s ease-in-out infinite */;
 }
 
 @keyframes pulse {
@@ -3309,7 +3309,7 @@ canvas {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 4s ease infinite;
+  /* animation: gradientShift 4s ease infinite */;
   text-shadow: 0 0 30px rgba(204, 204, 204, 0.5);
   max-width: 60%;
   text-align: center;
@@ -3397,7 +3397,7 @@ canvas {
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top: 3px solid #ffff00;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  /* animation: spin 1s linear infinite */;
 }
 
 @keyframes spin {
@@ -3578,7 +3578,7 @@ input:checked + .sample-slider:before {
   background: white;
   color: #333;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  animation: lightning-flash 1.5s infinite;
+  /* animation: lightning-flash 1.5s infinite */;
   overflow: visible;
   transition: all 0.3s ease;
 }
@@ -3603,7 +3603,7 @@ input:checked + .sample-slider:before {
   font-style: italic;
   font-family: 'Times New Roman', serif;
   color: #333;
-  animation: lightning-flicker 1.5s infinite;
+  /* animation: lightning-flicker 1.5s infinite */;
 }
 
 .bottom-center-container .info-button::after {
@@ -3616,7 +3616,7 @@ input:checked + .sample-slider:before {
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  animation: ripple-wave 1.5s infinite;
+  /* animation: ripple-wave 1.5s infinite */;
 }
 
 .bottom-center-container .info-button.stopped {
