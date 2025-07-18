@@ -959,8 +959,8 @@ const Gallery3D = ({ models = [] }) => {
         // ライティング
         setupLighting();
 
-        // プリロード無効化（軽量化のため）
-        // preloadAllModels().then(() => {
+        // プリロード開始
+        preloadAllModels().then(() => {
             // モデル作成
             createModels();
             updateModelPositions();
@@ -972,7 +972,7 @@ const Gallery3D = ({ models = [] }) => {
             recordUserInteraction();
             
             setLoading(false);
-        // });
+        });
 
         // イベントリスナー
         const handleMouseMove = (event) => {
