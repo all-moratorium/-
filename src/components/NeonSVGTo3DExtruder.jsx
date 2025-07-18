@@ -1284,121 +1284,120 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const gltfLoader = new GLTFLoader();
     gltfLoader.setDRACOLoader(dracoLoader);
     
-    // const modelPath = '/models/room.black.neon.glb'; // 無効化
+    const modelPath = '/models/room.black.neon.glb';
 
-    // GLB loading disabled for performance testing
-    // gltfLoader.load(
-    //   modelPath,
-    //   (gltf) => {
-    //     if (loadedRoomModelRef.current) {
-    //       scene.remove(loadedRoomModelRef.current);
-    //     }
+    gltfLoader.load(
+      modelPath,
+      (gltf) => {
+        if (loadedRoomModelRef.current) {
+          scene.remove(loadedRoomModelRef.current);
+        }
 
-    //     const loadedScene = gltf.scene;
+        const loadedScene = gltf.scene;
 
-    //     // Remove any cameras from the loaded GLB scene
-    //     const camerasToRemove = [];
-    //     loadedScene.traverse((object) => {
-    //       if (object.isCamera) {
-    //         camerasToRemove.push(object);
-    //       }
-    //     });
-    //     camerasToRemove.forEach(cam => {
-    //       if (cam.parent) {
-    //         cam.parent.remove(cam);
-    //       }
-    //     });
+        // Remove any cameras from the loaded GLB scene
+        const camerasToRemove = [];
+        loadedScene.traverse((object) => {
+          if (object.isCamera) {
+            camerasToRemove.push(object);
+          }
+        });
+        camerasToRemove.forEach(cam => {
+          if (cam.parent) {
+            cam.parent.remove(cam);
+          }
+        });
 
-    //     loadedRoomModelRef.current = loadedScene;
-    //     scene.add(loadedRoomModelRef.current);
-    //     const model = loadedRoomModelRef.current;
+        loadedRoomModelRef.current = loadedScene;
+        scene.add(loadedRoomModelRef.current);
+        const model = loadedRoomModelRef.current;
 
-    //     // Rotate the model to orient the dark back wall correctly
-    //     model.rotation.y = -Math.PI / 2;
-    //     model.updateMatrixWorld(true);
+        // Rotate the model to orient the dark back wall correctly
+        model.rotation.y = -Math.PI / 2;
+        model.updateMatrixWorld(true);
 
-    //     // Get model's size after rotation for scaling purposes
-    //     const initialModelBoxForScaling = new THREE.Box3().setFromObject(model);
-    //     const modelSizeForScaling = new THREE.Vector3();
-    //     initialModelBoxForScaling.getSize(modelSizeForScaling);
+        // Get model's size after rotation for scaling purposes
+        const initialModelBoxForScaling = new THREE.Box3().setFromObject(model);
+        const modelSizeForScaling = new THREE.Vector3();
+        initialModelBoxForScaling.getSize(modelSizeForScaling);
 
-    //     // Get grid dimensions
-    //     const currentWallPlane = wallPlaneRef.current;
-    //     let gridWidth = currentWallPlane.geometry.parameters.width;
-    //     let gridHeight = currentWallPlane.geometry.parameters.height;
+        // Get grid dimensions
+        const currentWallPlane = wallPlaneRef.current;
+        let gridWidth = currentWallPlane.geometry.parameters.width;
+        let gridHeight = currentWallPlane.geometry.parameters.height;
         
-    //     if (!gridWidth) gridWidth = 1000; 
-    //     if (!gridHeight) gridHeight = 600;
+        if (!gridWidth) gridWidth = 1000; 
+        if (!gridHeight) gridHeight = 600;
 
-    //     // Calculate scaleFactor
-    //     let scaleFactor = 1;
-    //     if (modelSizeForScaling.x > 0.001 && modelSizeForScaling.y > 0.001) {
-    //       const scaleX = gridWidth / modelSizeForScaling.x;
-    //       const scaleY = gridHeight / modelSizeForScaling.y;
-    //       scaleFactor = Math.min(scaleX, scaleY) * 0.9;
-    //     } else if (modelSizeForScaling.z > 0.001) {
-    //       const arbitraryGridDepth = Math.min(gridWidth, gridHeight);
-    //       scaleFactor = (arbitraryGridDepth / modelSizeForScaling.z) * 0.9;
-    //     }
-    //     if (scaleFactor <= 0 || !isFinite(scaleFactor)) {
-    //       console.warn("Calculated scaleFactor is invalid, defaulting to 0.1. Model size:", modelSizeForScaling);
-    //       scaleFactor = 0.1; 
-    //     }
+        // Calculate scaleFactor
+        let scaleFactor = 1;
+        if (modelSizeForScaling.x > 0.001 && modelSizeForScaling.y > 0.001) {
+          const scaleX = gridWidth / modelSizeForScaling.x;
+          const scaleY = gridHeight / modelSizeForScaling.y;
+          scaleFactor = Math.min(scaleX, scaleY) * 0.9;
+        } else if (modelSizeForScaling.z > 0.001) {
+          const arbitraryGridDepth = Math.min(gridWidth, gridHeight);
+          scaleFactor = (arbitraryGridDepth / modelSizeForScaling.z) * 0.9;
+        }
+        if (scaleFactor <= 0 || !isFinite(scaleFactor)) {
+          console.warn("Calculated scaleFactor is invalid, defaulting to 0.1. Model size:", modelSizeForScaling);
+          scaleFactor = 0.1; 
+        }
 
-    //     // User Defined Scale Adjustment
-    //     const currentVisualRepresentsCm = 270.0;
-    //     const modelPartTrueSizeCm = 910.0;
-    //     const finalScaleFactor = scaleFactor * (modelPartTrueSizeCm / currentVisualRepresentsCm);
+        // User Defined Scale Adjustment
+        const currentVisualRepresentsCm = 270.0;
+        const modelPartTrueSizeCm = 910.0;
+        const finalScaleFactor = scaleFactor * (modelPartTrueSizeCm / currentVisualRepresentsCm);
 
-    //     model.scale.set(finalScaleFactor, finalScaleFactor, finalScaleFactor);
-    //     model.updateMatrixWorld(true);
+        model.scale.set(finalScaleFactor, finalScaleFactor, finalScaleFactor);
+        model.updateMatrixWorld(true);
 
-    //     // For X/Y centering: Bounding box of the entire scaled and rotated model
-    //     const overallScaledRotatedModelBox = new THREE.Box3().setFromObject(model);
-    //     const overallModelCenter = new THREE.Vector3();
-    //     overallScaledRotatedModelBox.getCenter(overallModelCenter);
+        // For X/Y centering: Bounding box of the entire scaled and rotated model
+        const overallScaledRotatedModelBox = new THREE.Box3().setFromObject(model);
+        const overallModelCenter = new THREE.Vector3();
+        overallScaledRotatedModelBox.getCenter(overallModelCenter);
 
-    //     // Find RoomBackWall
-    //     let roomBackWallObject = null;
-    //     model.traverse((child) => {
-    //       if (child.isMesh && child.name === 'RoomBackWall') {
-    //         roomBackWallObject = child;
-    //       }
-    //     });
+        // Find RoomBackWall
+        let roomBackWallObject = null;
+        model.traverse((child) => {
+          if (child.isMesh && child.name === 'RoomBackWall') {
+            roomBackWallObject = child;
+          }
+        });
 
-    //     const gridSurfaceZ = wallPlaneRef.current.position.z;
+        const gridSurfaceZ = wallPlaneRef.current.position.z;
 
-    //     // Position model
-    //     model.position.x = -overallModelCenter.x;
-    //     model.position.y = -overallModelCenter.y - 480; 
+        // Position model
+        model.position.x = -overallModelCenter.x;
+        model.position.y = -overallModelCenter.y - 480; 
 
-    //     if (roomBackWallObject) {
-    //       const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
-    //       const fineTuneZOffset = 86.5;
-    //       model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
-    //     } else {
-    //       console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
-    //       const overallModelMinZ = overallScaledRotatedModelBox.min.z; 
-    //       model.position.z = gridSurfaceZ - overallModelMinZ;
-    //     }
+        if (roomBackWallObject) {
+          const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
+          const fineTuneZOffset = 86.5;
+          model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
+        } else {
+          console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
+          const overallModelMinZ = overallScaledRotatedModelBox.min.z; 
+          model.position.z = gridSurfaceZ - overallModelMinZ;
+        }
 
-    //     // Hide the original preview wall if the room model is loaded
-    //     if (wallPlaneRef.current) {
-    //       wallPlaneRef.current.visible = false;
-    //     }
+        // Hide the original preview wall if the room model is loaded
+        if (wallPlaneRef.current) {
+          wallPlaneRef.current.visible = false;
+        }
         
-    //     // Set room model to not bloom
-    //     loadedScene.traverse((child) => {
-    //       if (child.isMesh) {
-    //         child.layers.set(ENTIRE_SCENE_LAYER);
-    //       }
-    //     });
-    //   },
-    //   undefined, // onProgress
-    //   (error) => {
-    //     console.error('Error loading room.black.neon.glb:', error);
-    //   }
-    // );
+        // Set room model to not bloom
+        loadedScene.traverse((child) => {
+          if (child.isMesh) {
+            child.layers.set(ENTIRE_SCENE_LAYER);
+          }
+        });
+      },
+      undefined, // onProgress
+      (error) => {
+        console.error('Error loading room.black.neon.glb:', error);
+      }
+    );
 
     return () => {
       // Room model specific cleanup is handled in disposeResources
