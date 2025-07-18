@@ -741,10 +741,22 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [layers, setLayers] = useState([]);
   const [colorCount, setColorCount] = useState(5);
 
-// 使用されていないカウンター関数は削除
-  const [minRegionSize] = useState(100);
-  const [borderWidth] = useState(1);
-  const [borderColor] = useState('#000000');
+// カウンター変更関数を useCallback でメモ化
+const handleColorCountChange = useCallback((newValue) => {
+  const clampedValue = Math.max(2, Math.min(12, parseInt(newValue) || 2));
+  setColorCount(clampedValue);
+}, []);
+
+const incrementCount = useCallback(() => {
+  setColorCount(prev => Math.min(12, prev + 1));
+}, []);
+
+const decrementCount = useCallback(() => {
+  setColorCount(prev => Math.max(2, prev - 1));
+}, []);
+  const [minRegionSize, setMinRegionSize] = useState(100);
+  const [borderWidth, setBorderWidth] = useState(1);
+  const [borderColor, setBorderColor] = useState('#000000');
   const [showBorders, setShowBorders] = useState(false);
   const [currentLayerIndex, setCurrentLayerIndex] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);

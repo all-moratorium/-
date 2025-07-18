@@ -819,7 +819,7 @@
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  /* animation: ripple-wave 1.5s infinite; */
+  animation: ripple-wave 1.5s infinite;
 }
 
 /* エフェクト停止用 */
@@ -2020,7 +2020,7 @@ canvas {
     border: 2px solid rgba(255,255,255,0.5);
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0);
-    /* animation: ripple-wave 1.5s infinite; */
+    animation: ripple-wave 1.5s infinite;
   }
   
   /* エフェクト停止用 */
@@ -3616,7 +3616,7 @@ input:checked + .sample-slider:before {
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  /* animation: ripple-wave 1.5s infinite; */
+  animation: ripple-wave 1.5s infinite;
 }
 
 .bottom-center-container .info-button.stopped {

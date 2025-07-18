@@ -27,7 +27,8 @@
       "Bash(git push:*)",
       "Bash(git config:*)",
       "Bash(npx gh-pages:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
