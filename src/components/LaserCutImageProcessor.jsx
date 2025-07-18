@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, createRef, memo } from 'react';
 import './LaserCutImageProcessor.css'; // 通常のCSSファイルをインポート
-import Gallery3D from './Gallery3D';
+// import Gallery3D from './Gallery3D';
 import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネントをインポート
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート
 import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
@@ -2981,7 +2981,7 @@ const quantizeColors = (pixels, k) => {
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
-              <Gallery3D />
+              {/* <Gallery3D /> */}
             </div>
             
             <input
