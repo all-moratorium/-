@@ -6,6 +6,7 @@ import Costomize from './Costomize'; // カスタマイズコンポーネント�
 import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
 import TextGenerator from './TextGenerator'; // テキスト生成コンポーネントをインポート
 import GuideModal from './GuideModal'; // ガイドモーダルコンポーネントをインポート
+import HomeLeftBottom from './HomeLeftBottm'; // レビューコンポーネントをインポート
 import { lab as culoriLabConverter, differenceEuclidean } from 'culori';
 
 // Canvasプールの実装 - メモリリーク対策
@@ -3006,11 +3007,7 @@ const quantizeColors = (pixels, k) => {
             <div className="home-bottom-layout">
               {/* 左下の大きなコンテナ */}
               <div className="bottom-left-container">
-                <div className="guide-slides-content">
-                  ガイド動画・画像コンテナ
-                  <br />
-                  （後で動画や画像を追加予定）
-                </div>
+                <HomeLeftBottom />
               </div>
               
               {/* 真ん中下の大きなコンテナ */}
