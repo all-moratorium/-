@@ -5,8 +5,8 @@ import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネ
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート
 import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエクストルーダーコンポーネントをインポート
 import TextGenerator from './TextGenerator'; // テキスト生成コンポーネントをインポート
-import GuideModal from './GuideModal'; // ガイドモーダルコンポーネントをインポート
-import HomeLeftBottom from './HomeLeftBottm'; // レビューコンポーネントをインポート
+import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポーネントをインポート
+import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
 import { lab as culoriLabConverter, differenceEuclidean } from 'culori';
 
 // Canvasプールの実装 - メモリリーク対策
@@ -3007,7 +3007,7 @@ const quantizeColors = (pixels, k) => {
             <div className="home-bottom-layout">
               {/* 左下の大きなコンテナ */}
               <div className="bottom-left-container">
-                <HomeLeftBottom />
+                <HomeLeftBottm />
               </div>
               
               {/* 真ん中下の大きなコンテナ */}

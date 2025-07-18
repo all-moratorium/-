@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './TextGenerator.css';
-import TextGeneratorGuideModal from './TextGeneratorGuideModal';
+import TextGeneratorGuideModal from './TextGeneratorGuideModal.jsx';
 
 // SessionStorageからデータを安全に読み込む関数
 const safeGetFromSessionStorage = (key, fallback = null) => {

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './NeonDrawingApp.css';
 import { calculateSvgSizeCm, calculateTotalLength, scalePathsToSize } from '../utils/sizeCalculations';
-import NeonDrawingGuideModal from './NeonDrawingGuideModal';
+import NeonDrawingGuideModal from './NeonDrawingGuideModal.jsx';
 
 // Catmull-Rom補間関数
 const getCatmullRomPt = (p0, p1, p2, p3, t) => {

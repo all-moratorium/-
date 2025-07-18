@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './Costomize.css';
-import CustomizeGuideModal from './CustomizeGuideModal';
+import CustomizeGuideModal from './CustomizeGuideModal.jsx';
 
 /* 背景色設定 */
 
