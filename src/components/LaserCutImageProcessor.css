@@ -3268,10 +3268,10 @@ canvas {
 }
 
 .bottom-left-container {
-  width: 26%;
+  width: 25%;
   padding-top: 0px;
-  padding-left: 3%;
-  padding-right: 3.7%;
+  padding-left: 3.7%;
+  padding-right: 5%;
 
   border-radius: 10px;
   height: 100%;
@@ -3576,7 +3576,7 @@ input:checked + .sample-slider:before {
   border-radius: 25px;
   cursor: pointer;
   position: absolute;
-  left: calc(50% - 170px);
+  left: calc(50% - 160px);
   bottom: 27%;
   font-size: 25px;
   background: white;
@@ -3589,8 +3589,8 @@ input:checked + .sample-slider:before {
 
 .bottom-center-container .bottom-explanation{
   position:absolute;
-  left: calc(50% - 270px);
-  font-size:12px;
+  left: calc(50% - 260px);
+  font-size:11px;
   bottom:calc(27% - 30px);  
   width:200px;
   color: #ffffff;
