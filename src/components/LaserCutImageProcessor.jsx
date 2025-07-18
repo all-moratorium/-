@@ -3741,7 +3741,7 @@ const quantizeColors = (pixels, k) => {
       {/* Background image - 3Dプレビューページ以外で表示 */}
       {currentPage !== 'neonSvg3dPreview' && (
         <div className="background">
-          <div className="particles" id="particles"></div>
+          {/* <div className="particles" id="particles"></div> */}
         </div>
       )}
       
