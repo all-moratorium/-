@@ -28,7 +28,9 @@
       "Bash(git config:*)",
       "Bash(npx gh-pages:*)",
       "Bash(gh auth:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(vercel:*)",
+      "Bash(npx vercel:*)"
     ],
     "deny": []
   }
