@@ -70,11 +70,35 @@ const HomeLeftBottom = () => {
   );
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % totalReviews);
-    }, 8000); // 40秒アニメーション ÷ 5個のレビュー = 8秒ごと
+    const track = trackRef.current;
+    if (track) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const index = parseInt(entry.target.dataset.index);
+              if (!isNaN(index)) {
+                setCurrentIndex(index % totalReviews);
+              }
+            }
+          });
+        },
+        {
+          root: track.parentElement,
+          threshold: 0.5,
+        }
+      );
 
-    return () => clearInterval(interval);
+      const items = track.querySelectorAll('.hlb-review-item');
+      items.forEach((item, index) => {
+        item.setAttribute('data-index', index.toString());
+        observer.observe(item);
+      });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
   }, [totalReviews]);
 
   return (

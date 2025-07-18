@@ -154,5 +154,5 @@
 
 @keyframes hlb-auto-scroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-1060px); }
+    100% { transform: translateX(-200%); }
 }
