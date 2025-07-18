@@ -149,7 +149,7 @@
 }
 
 .hlb-auto-scroll {
-    /* animation: hlb-auto-scroll 40s linear infinite */;
+    animation: hlb-auto-scroll 40s linear infinite;
 }
 
 @keyframes hlb-auto-scroll {
