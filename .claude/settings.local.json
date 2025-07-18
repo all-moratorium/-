@@ -30,7 +30,9 @@
       "Bash(gh auth:*)",
       "Bash(cp:*)",
       "Bash(vercel:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run:*)"
     ],
     "deny": []
   }
