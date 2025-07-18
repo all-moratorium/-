@@ -2993,7 +2993,7 @@ const quantizeColors = (pixels, k) => {
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
-              <Gallery3D />
+              {/* <Gallery3D /> */}
             </div>
             
             <input
