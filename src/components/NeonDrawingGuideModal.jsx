@@ -341,7 +341,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   <div className="neon-drawing-video-container" ref={containerRef}>
                     <video 
                       ref={videoRef}
-                      src="#disabled-mp4"
+                      src="/ネオン下絵　ガイドモーダル/ネオンガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
@@ -508,7 +508,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   <div className="neon-drawing-video-container" ref={containerRef2}>
                     <video 
                       ref={videoRef2}
-                      src="#disabled-mp4"
+                      src="/ネオン下絵　ガイドモーダル/ネオンガイド2.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
@@ -587,7 +587,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   <div className="neon-drawing-video-container" ref={containerRef3}>
                     <video 
                       ref={videoRef3}
-                      src="#disabled-mp4"
+                      src="/ネオン下絵　ガイドモーダル/ネオンガイド3.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
@@ -716,7 +716,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   <div className="neon-drawing-video-container" ref={containerRef4}>
                     <video 
                       ref={videoRef4}
-                      src="#disabled-mp4"
+                      src="/ネオン下絵　ガイドモーダル/ネオンガイド4.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
