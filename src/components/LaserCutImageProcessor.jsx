@@ -3150,7 +3150,7 @@ const quantizeColors = (pixels, k) => {
               pointerEvents: 'none'
             }}
           >
-            <source src="/layer-settings-guide.mp4" type="video/mp4" />
+            <source src="#disabled-mp4" type="video/mp4" />
             お使いのブラウザは動画の再生に対応していません。
           </video>
         </div>

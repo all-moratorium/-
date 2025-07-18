@@ -277,7 +277,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   <div className="customize-video-container" ref={containerRef}>
                     <video 
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/カスタマイズガイド1.mp4"
+                      src="#disabled-mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
@@ -387,7 +387,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                   <div className="customize-video-container" ref={containerRef2}>
                     <video 
                       ref={videoRef2}
-                      src="/ネオン下絵　ガイドモーダル/カスタマイズガイド2.mp4"
+                      src="#disabled-mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop

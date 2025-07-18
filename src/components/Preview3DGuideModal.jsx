@@ -264,7 +264,7 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                   <div className="preview3d-video-container" ref={containerRef}>
                     <video 
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4"
+                      src="#disabled-mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
