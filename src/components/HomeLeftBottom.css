@@ -97,14 +97,14 @@
     aspect-ratio: 1;
     height: calc(100% - 15px);
     flex: 0 0 auto;
-    padding: 12px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
     border: 1px solid #333;
     border-radius: 8px;
-    margin: 15px 7px 7px 7px;
+    margin: 17px 7px 7px 7px;
     box-sizing: border-box;
 }
 
@@ -121,17 +121,17 @@
 
 .hlb-star {
     color: #ffcc00;
-    font-size: 12px;
+    font-size: 0.8vw;
 }
 
 .hlb-review-date {
     color: #888;
-    font-size: 11px;
+    font-size: 0.7vw;
 }
 
 .hlb-review-image {
     width: 100%;
-    height: 120px;
+    height: 60%;
     border-radius: 6px;
     object-fit: cover;
     border: 2px solid #333;
@@ -139,9 +139,10 @@
 
 .hlb-review-text {
     color: #ccc;
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 0.65vw;
+    line-height: 1.3;
     overflow: hidden;
+    text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
