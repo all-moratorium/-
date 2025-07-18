@@ -70,18 +70,11 @@ const HomeLeftBottom = () => {
   );
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (track) {
-      const handleAnimationIteration = () => {
-        setCurrentIndex((prev) => (prev + 1) % totalReviews);
-      };
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % totalReviews);
+    }, 8000); // 40秒アニメーション ÷ 5個のレビュー = 8秒ごと
 
-      track.addEventListener('animationiteration', handleAnimationIteration);
-      
-      return () => {
-        track.removeEventListener('animationiteration', handleAnimationIteration);
-      };
-    }
+    return () => clearInterval(interval);
   }, [totalReviews]);
 
   return (
