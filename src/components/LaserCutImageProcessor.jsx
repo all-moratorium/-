@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, createRef } from 'react';
-import './LaserCutImageProcessor.css'; // 通常のCSSファイルをインポート
+import './LaserCutImageProcessor_cleaned.css'; // 通常のCSSファイルをインポート
 import Gallery3D from './Gallery3D';
 import NeonDrawingApp from './NeonDrawingApp'; // ネオン下絵コンポーネントをインポート
 import Costomize from './Costomize'; // カスタマイズコンポーネントをインポート

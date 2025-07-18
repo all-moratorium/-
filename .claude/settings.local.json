@@ -32,7 +32,10 @@
       "Bash(vercel:*)",
       "Bash(npx vercel:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "WebFetch(domain:theta-smoky.vercel.app)"
     ],
     "deny": []
   }
