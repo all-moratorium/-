@@ -41,31 +41,6 @@ const HomeLeftBottom = () => {
   ];
 
 
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-    const offset = -index * 200;
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(${offset}px)`;
-    }
-  };
-
-  const prevReview = () => {
-    const newIndex = (currentIndex - 1 + totalReviews) % totalReviews;
-    setCurrentIndex(newIndex);
-    const offset = -newIndex * 200;
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(${offset}px)`;
-    }
-  };
-
-  const nextReview = () => {
-    const newIndex = (currentIndex + 1) % totalReviews;
-    setCurrentIndex(newIndex);
-    const offset = -newIndex * 200;
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(${offset}px)`;
-    }
-  };
 
   const renderStars = (rating) => {
     const stars = [];
@@ -98,15 +73,16 @@ const HomeLeftBottom = () => {
     const track = trackRef.current;
     if (track) {
       const handleAnimationIteration = () => {
-        if (isAutoScrolling) {
-          setCurrentIndex((prev) => (prev + 1) % totalReviews);
-        }
+        setCurrentIndex((prev) => (prev + 1) % totalReviews);
       };
 
       track.addEventListener('animationiteration', handleAnimationIteration);
-      return () => track.removeEventListener('animationiteration', handleAnimationIteration);
+      
+      return () => {
+        track.removeEventListener('animationiteration', handleAnimationIteration);
+      };
     }
-  }, [isAutoScrolling, totalReviews]);
+  }, [totalReviews]);
 
   return (
     <div className="hlb-wrapper">
@@ -114,17 +90,14 @@ const HomeLeftBottom = () => {
         <div className="hlb-header">
           <div className="hlb-header-title">お客様のレビューを抜粋</div>
           <div className="hlb-controls">
-            <button className="hlb-nav-button" onClick={prevReview}>‹</button>
             <div className="hlb-indicator">
               {[...Array(totalReviews)].map((_, index) => (
                 <div
                   key={index}
                   className={`hlb-dot ${index === currentIndex ? 'hlb-active' : ''}`}
-                  onClick={() => goToSlide(index)}
                 />
               ))}
             </div>
-            <button className="hlb-nav-button" onClick={nextReview}>›</button>
           </div>
         </div>
         
@@ -135,7 +108,7 @@ const HomeLeftBottom = () => {
           >
             {reviews.map((review, index) => renderReviewItem(review, index))}
             {/* 無限スクロール用複製 */}
-            {reviews.slice(0, 2).map((review, index) => renderReviewItem(review, `duplicate-${index}`))}
+            {reviews.map((review, index) => renderReviewItem(review, `duplicate-${index}`))}
           </div>
         </div>
       </div>

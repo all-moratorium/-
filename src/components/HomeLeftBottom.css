@@ -1,14 +1,11 @@
 .hlb-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
 }
 
 .hlb-review-container {
-    width: 465px;
-    height: 321px;
+    width: 100%;
+    height: 100%;
     background: #111111;
     border-radius: 12px;
     overflow: hidden;
@@ -69,12 +66,12 @@
     height: 6px;
     border-radius: 50%;
     background: #555;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .hlb-dot.hlb-active {
     background: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
     transform: scale(1.2);
 }
 
@@ -153,5 +150,5 @@
 
 @keyframes hlb-auto-scroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-1250px); }
+    100% { transform: translateX(-1060px); }
 }
