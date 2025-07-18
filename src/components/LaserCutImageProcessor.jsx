@@ -3637,8 +3637,8 @@ const quantizeColors = (pixels, k) => {
                 </div>
         
                 <div className="features-section">
-                  <div className="feature-card" style={{maxWidth: '500px', margin: '0 auto'}}>
-                    <div className="feature-icon">🛡️</div>
+                  <div className="product-info-feature-card" style={{maxWidth: '350px', margin: '0 auto'}}>
+                    <div className="product-info-feature-icon">🛡️</div>
                     <h4>品質保証</h4>
                     <p>厳格な品質管理のもと、不良品は無償で再製作いたします。安心してご利用ください。</p>
                   </div>

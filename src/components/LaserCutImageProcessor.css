@@ -2634,7 +2634,7 @@ canvas {
   margin-top: 60px;
 }
 
-.feature-card {
+.product-info-feature-card {
   background: linear-gradient(145deg, #1a1a1a, #262626);
   border-radius: 15px;
   padding: 25px;
@@ -2643,24 +2643,20 @@ canvas {
   transition: all 0.3s ease;
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
 
-.feature-icon {
+.product-info-feature-icon {
   font-size: 2.5rem;
   margin-bottom: 15px;
   color: #00ffff;
 }
 
-.feature-card h4 {
+.product-info-feature-card h4 {
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: #ffffff;
 }
 
-.feature-card p {
+.product-info-feature-card p {
   color: #cccccc;
   font-size: 0.95rem;
 }
