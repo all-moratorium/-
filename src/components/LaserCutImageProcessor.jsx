@@ -398,7 +398,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
   
   
-  // カスタマイズページへの遷移イベントリスナー
+  // ページ遷移イベントリスナー統合
   useEffect(() => {
     const handleShowCustomize = (event) => {
       // 🔥 ネオン3Dプレビューから離れる時にカメラ状態を保存
@@ -442,16 +442,6 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setCurrentPage('neonDrawing');
     };
 
-    window.addEventListener('showCustomize', handleShowCustomize);
-    window.addEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
-    return () => {
-      window.removeEventListener('showCustomize', handleShowCustomize);
-      window.removeEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
-    };
-  }, []);
-
-  // 3Dプレビューページへの遷移イベントリスナー
-  useEffect(() => {
     const handleShow3DPreview = (event) => {
       if (event.detail) {
         // ネオン3Dプレビュー用のデータを保存
@@ -542,25 +532,20 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       }
     };
 
-    window.addEventListener('show3DPreview', handleShow3DPreview);
-
     const handleRequestPageTransition = () => {
       // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
       setCurrentPage('neonSvg3dPreview');
     };
-    window.addEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
 
     const handleRequestInfoPageTransition = () => {
       setCurrentPage('info'); // 商品情報ページに移動
     };
-    window.addEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
 
     const handleCustomizeCanvasImage = (event) => {
       if (event.detail && event.detail.canvasImageDataURL) {
         setCustomizeCanvasImageDataURL(event.detail.canvasImageDataURL);
       }
     };
-    window.addEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
     
     // カスタマイズコンポーネントからのファイル読み込みデータを受け取る
     const handleSharedFileData = (event) => {
@@ -568,15 +553,24 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         setSharedFileData(event.detail.fileData);
       }
     };
-    window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
     
     // カスタマイズで新しいファイルが読み込まれたときにcustomizeSvgDataをクリア
     const handleClearCustomizeState = () => {
       setCustomizeSvgData(null); // ネオン下絵からのデータもクリア
     };
+
+    window.addEventListener('showCustomize', handleShowCustomize);
+    window.addEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
+    window.addEventListener('show3DPreview', handleShow3DPreview);
+    window.addEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
+    window.addEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
+    window.addEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
+    window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
     window.addEventListener('clearCustomizeState', handleClearCustomizeState);
 
     return () => {
+      window.removeEventListener('showCustomize', handleShowCustomize);
+      window.removeEventListener('navigateToNeonDrawing', handleNavigateToNeonDrawing);
       window.removeEventListener('show3DPreview', handleShow3DPreview);
       window.removeEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
       window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
