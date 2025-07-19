@@ -44,6 +44,7 @@
     box-sizing: border-box;
     max-width: 380px !important;
     word-wrap: break-word;
+    will-change: transform;
 }
 
 .control-group {
@@ -110,6 +111,7 @@
 .color-preset:hover {
   border-color: #9ca3af;
   transform: scale(1.1);
+  will-change: auto;
 }
 
 .slider {
@@ -162,6 +164,7 @@
 .control-button:hover {
   background: linear-gradient(to bottom right, #6b7280, #4b5563);
   transform: translateY(-2px);
+  will-change: auto;
 }
 
 .control-button:active {
@@ -249,6 +252,10 @@
   }
 }
 
+.controls-panel.collapsed .sidebar-toggle-button {
+  will-change: transform, box-shadow;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 320px) {
   .controls-panel {
@@ -315,6 +322,7 @@
 .neon3d-guide-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  will-change: auto;
 }
 
 .neon3d-guide-button::before {
@@ -663,6 +671,7 @@
 .neon3d-proceed-button:hover {
   background-color: #FFFF00;
   box-shadow: 0 0 20px rgba(255, 255, 0, 0.75);
+  will-change: auto;
 }
 
 /* 照明スイッチ専用スタイル（コンテナ内用） */

@@ -2805,6 +2805,15 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             setProcessing3DProgress(65);
                             setProcessing3DMessage('プリロード中...');
                             
+                            // RectAreaLight初期化をここで実行
+                            try {
+                                const { RectAreaLightUniformsLib } = await import('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
+                                RectAreaLightUniformsLib.init();
+                                console.log('RectAreaLight プリロード完了');
+                            } catch (error) {
+                                console.warn('RectAreaLight プリロード失敗:', error);
+                            }
+                            
                             const blob = new Blob([customizedSvg], { type: 'image/svg+xml' });
                             const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
                             

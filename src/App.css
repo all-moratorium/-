@@ -22,6 +22,7 @@
   justify-content: center; /* これを変えると：Appヘッダー内の要素の縦方向の位置が変わります */
   font-size: calc(10px + 2vmin); /* これを変えると：Appヘッダー内の文字の大きさが変わります（10pxに画面の高さの2%を足した値） */
   color: white; /* これを変えると：Appヘッダー内の文字色が変わります */
+  will-change: auto;
 }
 
 .App-link {
@@ -35,6 +36,10 @@
   to {
     transform: rotate(360deg); /* これを変えると：Appロゴの回転アニメーションの終了角度が変わります */
   }
+}
+
+.App-logo {
+  will-change: transform;
 }
 
 /* スマートフォン向けのスタイル */

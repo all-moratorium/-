@@ -929,8 +929,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     sceneRef.current = scene;
     console.log('Scene background set to: 0x242424');
 
-    // RectAreaLight サポートを初期化
-    RectAreaLightUniformsLib.init();
+    // RectAreaLight サポート（プリロード済みをチェック）
+    // RectAreaLightUniformsLib.init(); // Costomize.jsxでプリロード済み
 
     // Camera setup - match SVGTo3DExtruder settings
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
@@ -975,9 +975,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // Post-processing setup for selective bloom
     const renderPass = new RenderPass(scene, camera);
 
-    // ブルーム効果の解像度を高くしてズームアウト時もシャープに
+    // ブルーム効果の解像度を標準に（パフォーマンス重視）
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth * 3.0, window.innerHeight * 3.0),
+      new THREE.Vector2(window.innerWidth * 1.0, window.innerHeight * 1.0),
       glowValue, 0, 0
     );
     unrealBloomPassRef.current = bloomPass;
