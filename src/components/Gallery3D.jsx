@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import animationManager from '../utils/AnimationManager';
 import './Gallery3D.css';
 
 const Gallery3D = ({ models = [] }) => {
@@ -23,6 +24,7 @@ const Gallery3D = ({ models = [] }) => {
     const resizeTimeoutRef = useRef(null); // リサイズのデバウンス用
     const cachedModelsRef = useRef({}); // 複数GLBモデルをキャッシュ
     const preloadStatusRef = useRef({}); // プリロード状況を管理
+    const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
 
     const [loading, setLoading] = useState(true);
     const [modelScales, setModelScales] = useState({});
@@ -888,8 +890,6 @@ const Gallery3D = ({ models = [] }) => {
 
     const animate = useCallback(() => {
         if (!isInitializedRef.current) return;
-        
-        requestAnimationFrame(animate);
 
         const currentCenterModel = getCenterModel();
 
@@ -961,7 +961,8 @@ const Gallery3D = ({ models = [] }) => {
             // スマホ：プリロードなし、直接モデル作成
             createModels();
             updateModelPositions();
-            animate();
+            // アニメーションをAnimationManagerに登録
+            animationCleanupRef.current = animationManager.addCallback(animate, 'Gallery3D');
             recordUserInteraction();
             setLoading(false);
         } else {
@@ -971,8 +972,8 @@ const Gallery3D = ({ models = [] }) => {
             createModels();
             updateModelPositions();
             
-            // アニメーションループ開始
-            animate();
+            // アニメーションをAnimationManagerに登録
+            animationCleanupRef.current = animationManager.addCallback(animate, 'Gallery3D');
             
             // 自動切り替えタイマー開始
             recordUserInteraction();
@@ -1132,6 +1133,12 @@ const Gallery3D = ({ models = [] }) => {
 
         return () => {
             isInitializedRef.current = false;
+            
+            // AnimationManagerからのクリーンアップ
+            if (animationCleanupRef.current) {
+                animationCleanupRef.current();
+                animationCleanupRef.current = null;
+            }
             
             // クリーンアップ
             document.removeEventListener('mousemove', handleMouseMove);

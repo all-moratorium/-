@@ -10,6 +10,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import animationManager from '../utils/AnimationManager';
 import './NeonSVGTo3DExtruder.css';
 
 const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData, onNavigateToInfo, isGuideEffectStopped, onGuideEffectStop }, ref) => {
@@ -28,6 +29,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const loadedRoomModelRef = useRef(null);
   const wallPlaneRef = useRef(null);
   const backgroundColorRef = useRef(backgroundColor);
+  const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
   
   // マウント状態とカメラ状態保持用
   const isMountedRef = useRef(false);
@@ -1113,7 +1115,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // Animation loop
     const animate = () => {
-      animationIdRef.current = requestAnimationFrame(animate);
       
       if (controls.enableDamping) {
         controls.update();
@@ -1182,7 +1183,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       }
     };
 
-    animate();
+    // アニメーションをAnimationManagerに登録
+    animationCleanupRef.current = animationManager.addCallback(animate, 'NeonSVGTo3DExtruder');
 
     // Handle window resize
     const handleResize = () => {
@@ -1201,6 +1203,12 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // Cleanup
     return () => {
+      // AnimationManagerからのクリーンアップ
+      if (animationCleanupRef.current) {
+        animationCleanupRef.current();
+        animationCleanupRef.current = null;
+      }
+      
       window.removeEventListener('resize', handleResize);
       isMountedRef.current = false;
       if (animationIdRef.current) {
