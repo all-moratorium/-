@@ -369,7 +369,7 @@ const LaserCutImageProcessor = () => {
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
   const [showCreationModal, setShowCreationModal] = useState(false); // 作成方法選択モーダル
-  const [sampleImagesLoaded, setSampleImagesLoaded] = useState(false); // サンプル画像のロード状態
+  const [sampleImagesLoaded, setSampleImagesLoaded] = useState(true); // サンプル画像のロード状態
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
@@ -1637,10 +1637,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productQuantity, currentPage]); // Assuming updateEstimate is stable or memoized
 
-  // サンプル画像は Gallery3D でプリロードされるため、初期化時に true に設定
-  useEffect(() => {
-    setSampleImagesLoaded(true);
-  }, []);
+  // サンプル画像は即座に表示
 
   // パーティクル生成コードを削除
   

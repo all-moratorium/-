@@ -896,18 +896,13 @@ const Gallery3D = ({ models = [] }) => {
         allModelsRef.current.forEach(model => {
             const isImagePlane = model.userData.isImage;
             
-            if (model === currentCenterModel && !isImagePlane) {
-                // 中央の3Dモデルのみアニメーション（マウス追従を高速化）
+            if (model === currentCenterModel && !isImagePlane && !isTransitioningRef.current) {
+                // 中央の3Dモデルのみアニメーション（切り替え中は停止）
                 model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
                 model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
-                model.position.y = 0; // 中央モデルも同じ高さに固定
-            } else if (!isImagePlane) {
-                // 3Dモデルは回転をリセット（高速化）
-                model.rotation.y += (0 - model.rotation.y) * 0.10;
-                model.rotation.x += (0 - model.rotation.x) * 0.10;
-                model.position.y = 0; // 他のモデルも同じ高さに固定
+                model.position.y = 0;
             }
-            // 画像プレーンは完全に静止
+            // 他のモデルは完全に静止（処理しない）
         });
 
         updateModelPositions();
