@@ -367,6 +367,7 @@ const LaserCutImageProcessor = () => {
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [expandedModels, setExpandedModels] = useState([]);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
   const [showCreationModal, setShowCreationModal] = useState(false); // 作成方法選択モーダル
@@ -721,6 +722,57 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // Toggle mobile sidebar
   const toggleMobileSidebar = () => {
     setMobileSidebarOpen(!mobileSidebarOpen);
+  };
+
+  const sampleModels = [
+    {
+      name: "蝶々",
+      image: "/neon sample pictures/蝶々2d.png",
+      description: "美しい蝶々のデザイン。色とりどりの羽根が印象的で、現代的な空間にエレガンスを添えます。シンプルな光の色味と、まるで本当に羽ばたいているようなそうい優雅さ、繊細、オレンジの光彩が幻想的な雰囲気を醸し出しています。"
+    },
+    {
+      name: "ユニコーン",
+      image: "/neon sample pictures/ユニコーン2d.png",
+      description: "幻想的なユニコーンのネオンサイン。美しいデザインが特徴的です。"
+    },
+    {
+      name: "バラ",
+      image: "/neon sample pictures/バラ2d.png",
+      description: "エレガントなバラのデザイン。ロマンチックな雰囲気を演出します。"
+    },
+    {
+      name: "コーヒー",
+      image: "/neon sample pictures/コーヒー2d.png",
+      description: "カフェにぴったりなコーヒーカップのデザイン。温かみのある光が魅力的です。"
+    },
+    {
+      name: "スポーツカー",
+      image: "/neon sample pictures/スポーツカー2d.png",
+      description: "スタイリッシュなスポーツカーのシルエット。モダンな空間にぴったりです。"
+    },
+    {
+      name: "ラーメン",
+      image: "/neon sample pictures/ラーメン2d.png",
+      description: "ラーメン店におすすめの温かみのあるデザイン。食欲をそそる光が特徴です。"
+    }
+  ];
+
+  const toggleModelDescription = (index) => {
+    setExpandedModels(prev => {
+      const newExpanded = [...prev];
+      newExpanded[index] = !newExpanded[index];
+      return newExpanded;
+    });
+  };
+
+  const downloadProjectFile = (modelName) => {
+    // プロジェクトファイルのダウンロード機能
+    const link = document.createElement('a');
+    link.href = `/neon sample json/${modelName}　プロジェクトファイル.json`;
+    link.download = `${modelName}_プロジェクトファイル.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Navigate to page
@@ -1392,10 +1444,39 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               
               {/* Sample Models Section */}
               <div style={{margin: '20px 15px', color: 'white'}}>
-                <h3 style={{marginBottom: '15px'}}>サンプルモデル</h3>
-                {/* Add sample model cards here */}
-                <div style={{background: '#333', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
-                  サンプルモデルリスト<br />（実装予定）
+                <h3 style={{marginBottom: '15px', fontSize: '18px', fontWeight: 'bold'}}>サンプルモデル</h3>
+                <div className="mobile-sample-models-grid">
+                  {sampleModels.map((model, index) => (
+                    <div key={index} className="mobile-sample-model-item">
+                      <div className="mobile-sample-image-container">
+                        <img 
+                          src={model.image}
+                          alt={model.name}
+                          className="mobile-sample-image"
+                        />
+                      </div>
+                      <div className="mobile-sample-bottom-row">
+                        <div className="mobile-sample-title">{model.name}</div>
+                        <button 
+                          className="mobile-sample-toggle"
+                          onClick={() => toggleModelDescription(index)}
+                        >
+                          {expandedModels[index] ? '▲' : '▼'}
+                        </button>
+                      </div>
+                      {expandedModels[index] && (
+                        <div className="mobile-sample-description">
+                          {model.description}
+                        </div>
+                      )}
+                      <button 
+                        className="download-project-btn"
+                        onClick={() => downloadProjectFile(model.name)}
+                      >
+                        プロジェクトファイルをダウンロード
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

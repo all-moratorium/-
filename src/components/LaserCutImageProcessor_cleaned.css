@@ -1853,6 +1853,108 @@ canvas {
     font-size: 11px !important;
   }
 
+  /* Mobile Sample Models Styles */
+  .mobile-sample-models-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .mobile-sample-model-item {
+    background: #111111;
+    width: 85%;
+    border-radius: 12px;
+    padding: 12px;
+    margin: 0 auto;
+    border: 1px solid #333;
+  }
+
+  .mobile-sample-image-container {
+    margin-bottom: 8px;
+  }
+
+  .mobile-sample-image {
+    width: 100%;
+    height: 25vh;
+    border-radius: 8px;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .mobile-sample-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .mobile-sample-title {
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    flex: 1;
+    white-space: nowrap;
+    margin-left: 20px;
+    text-align: left;
+  }
+
+  .mobile-sample-toggle {
+    width: 28px;
+    height: 28px;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    margin-right: 20px;
+  }
+
+  .mobile-sample-toggle:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+    transform: scale(1.05);
+  }
+
+  .mobile-sample-description {
+    color: #ccc;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    padding: 0 16px;
+    background: #111111;
+    border-radius: 8px;
+    animation: slideDown 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: top;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scaleY(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
+  }
+
+  /* Override download button size for mobile samples */
+  .mobile-sample-model-item .download-project-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+    padding: 8px 16px !important;
+    width: 80% !important;
+    margin: 16px auto 8px auto !important;
+    display: block !important;
+    white-space: nowrap !important;
+  }
+
 
 /* Fix review item bottom margin for desktop */
 .hlb-review-item {
