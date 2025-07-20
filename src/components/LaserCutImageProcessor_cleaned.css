@@ -2032,6 +2032,8 @@ canvas {
     height: calc(100vh - 60px);
     z-index: 1500;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
   }
 
   /* Mobile sidebar when header is minimal */
@@ -2050,6 +2052,9 @@ canvas {
 
   .sidebar-content {
     flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100% !important;
   }
 
   .sidebar-toggle {
