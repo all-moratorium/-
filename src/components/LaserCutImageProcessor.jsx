@@ -1871,6 +1871,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       <div className="layout-container">
         {/* Mobile Header */}
         <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
+          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && (
+            <div className="rotation-message">
+              <div className="rotation-icon"></div>
+              <div className="rotation-text">横画面でご利用ください</div>
+            </div>
+          )}
           <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
             ☰
           </button>

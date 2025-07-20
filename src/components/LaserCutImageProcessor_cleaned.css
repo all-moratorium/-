@@ -1764,6 +1764,71 @@ canvas {
     display: none;
   }
 
+  /* Force landscape overlay for minimal header in portrait mode */
+  .mobile-header.mobile-header-minimal::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    z-index: 9999;
+    pointer-events: auto;
+  }
+
+  /* Rotation message */
+  .rotation-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10000;
+  }
+
+  .rotation-icon {
+    width: 60px;
+    height: 40px;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    margin: 0 auto 30px;
+    animation: rotateDevice 2s ease-in-out infinite;
+  }
+
+  .rotation-text {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  @keyframes rotateDevice {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+  }
+
+  /* Keep sidebar button and sidebar visible on rotation screen */
+  .mobile-header.mobile-header-minimal .mobile-menu-button {
+    z-index: 10001;
+  }
+
+  .mobile-header.mobile-header-minimal ~ .sidebar {
+    z-index: 10001;
+  }
+
+  .mobile-header.mobile-header-minimal ~ .mobile-sidebar-overlay {
+    z-index: 10000;
+  }
+
+  /* Hide rotation overlay in landscape mode */
+  @media (orientation: landscape) {
+    .mobile-header.mobile-header-minimal::before,
+    .rotation-message {
+      display: none;
+    }
+  }
+
   /* Mobile Content */
   .mobile-content {
     padding-top: 60px;
@@ -2027,7 +2092,7 @@ canvas {
   .sidebar {
     position: fixed !important;
     top: 60px;
-    left: -250px;
+    left: -260px;
     width: 250px !important;
     height: calc(100vh - 60px);
     z-index: 1500;
