@@ -1334,14 +1334,72 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   </div>
 )}
             
+            {/* Desktop Layout */}
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
               <Gallery3D />
             </div>
             
+            {/* Mobile Layout */}
+            <div className="mobile-content">
+              {/* Hero Section - Placeholder for animation/video */}
+              <div className="mobile-hero-section">
+                <div>アニメーション/動画エリア<br />（未実装）</div>
+              </div>
+              
+              {/* Title */}
+              <div className="mobile-title">Image To LED Neon Sign</div>
+              
+              {/* Guide Button */}
+              <div style={{textAlign: 'center', margin: '20px 0'}}>
+                <button 
+                  onClick={handleOpenModal}
+                  className={`info-button ${isEffectStopped ? 'stopped' : ''}`}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    fontSize: '16px',
+                    display: 'inline-block',
+                    marginRight: '5px'
+                  }}
+                >
+                </button>
+                <span style={{color: 'white', fontSize: '14px', verticalAlign: 'middle'}}>
+                  一度お読みください
+                </span>
+              </div>
+              
+              {/* Create Button */}
+              <button
+                onClick={() => setShowCreationModal(true)}
+                className="mobile-create-button"
+              >
+                さっそく作成する
+              </button>
+              
+              
+              {/* Review Section */}
+              <div style={{
+                margin: '20px 15px',
+                width: 'calc(100% - 30px)',
+                height: 'calc(100vw - 30px)',
+                maxHeight: '350px',
+                overflow: 'visible'
+              }}>
+                <HomeLeftBottm />
+              </div>
+              
+              {/* Sample Models Section */}
+              <div style={{margin: '20px 15px', color: 'white'}}>
+                <h3 style={{marginBottom: '15px'}}>サンプルモデル</h3>
+                {/* Add sample model cards here */}
+                <div style={{background: '#333', padding: '20px', borderRadius: '12px', textAlign: 'center'}}>
+                  サンプルモデルリスト<br />（実装予定）
+                </div>
+              </div>
+            </div>
 
-            
             <div className="home-bottom-layout">
               {/* 左下の大きなコンテナ */}
               <div className="bottom-left-container">
@@ -1724,10 +1782,13 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       
       {/* Main layout */}
       <div className="layout-container">
-        {/* Mobile Menu Button */}
-        <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
-          ☰
-        </button>
+        {/* Mobile Header */}
+        <div className="mobile-header">
+          <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
+            ☰
+          </button>
+          <div className="mobile-header-logo">ロゴ</div>
+        </div>
 
         {/* Mobile Sidebar Overlay */}
         {mobileSidebarOpen && <div className="mobile-sidebar-overlay" onClick={toggleMobileSidebar}></div>}
