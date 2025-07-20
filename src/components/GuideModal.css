@@ -62,12 +62,12 @@
 
 .guide-modal-header {
   background: rgba(255, 255, 255, 0.05);
-  padding: 10px 40px;
+  padding: 10px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 50px;
+  min-height: 40px;
 }
 
 .guide-modal-close {
@@ -78,12 +78,12 @@
   color: #9ca3af;
   background: none;
   border: none;
-  font-size: 32px;
+  font-size: 24px;
   cursor: pointer;
   transition: color 0.2s;
   line-height: 1;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +120,7 @@
 }
 
 .guide-modal-header .guide-title {
-  font-size: 28px;
+  font-size: 20px;
   margin: 0;
   color: #fff;
   font-weight: 600;
@@ -132,24 +132,25 @@
 }
 
 .guide-subtitle {
-  font-size: 30px;
+  font-size: 18px;
   margin: 0;
   color: #fff;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .guide-section-title {
   text-align: center;
-  font-size: 28px;
-  margin: 20px 0 30px 0;
+  font-size: 18px;
+  margin: 20px 0 20px 0;
   color: #fff;
   font-weight: 600;
 }
 
 /* ページ1のスタイル */
 .guide-hero-image {
-  width: 70%;
-  height: 270px;
+  width: 95%;
+  height: 180px;
   background: #111;
   border-radius: 15px;
   margin: 20px auto;
@@ -443,7 +444,7 @@
 .guide-navigation {
   background: rgba(255, 255, 255, 0.05);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px 40px;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -477,7 +478,8 @@
   gap: 10px;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .dot {
@@ -497,10 +499,7 @@
 .page-text {
   color: #ccc;
   font-size: 14px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-left: 50px;
+  margin-left: 8px;
 }
 
 /* レスポンシブ対応 */
@@ -508,7 +507,11 @@
   .guide-modal-content {
     width: 95%;
     height: 90vh;
-    padding: 20px;
+    padding: 0;
+  }
+  
+  .guide-modal-header {
+    padding: 8px 15px;
   }
   
   .guide-features {
@@ -543,9 +546,7 @@
   }
   
   .guide-navigation {
-    left: 20px;
-    right: 20px;
-    padding: 0;
+    padding: 15px 15px;
   }
   
   .nav-button {
