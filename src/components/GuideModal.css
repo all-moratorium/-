@@ -360,7 +360,7 @@
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  /* animation: guide-ripple-wave 1.5s infinite; */
+  animation: guide-ripple-wave 1.5s infinite;
 }
 
 /* アニメーション定義 */
@@ -592,12 +592,44 @@
   }
   
   .guide-getting-started {  
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+    align-items: center;
   }
   
   .guide-info-section {
+    width: 37vh;
     max-width: none;
+    padding: 15px;
+    margin: 0 auto;
+  }
+  
+  .guide-info-title {
+    font-size: 1.6vh;
+  }
+  
+  .guide-info-text {
+    font-size: 1.6vh;
+  }
+  
+  .creation-section {
+    width: 37vh;
+    padding: 15px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+  }
+  
+  .creation-title {
+    font-size: 1.6vh;
+  }
+  
+  .creation-image {
+    height: 55vh;
+  }
+  
+  .creation-text {
+    font-size:1.6vh ;
   }
   
   .guide-navigation {
