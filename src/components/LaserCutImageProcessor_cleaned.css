@@ -2261,3 +2261,79 @@ canvas {
   animation: none;
   opacity: 0;
 }
+
+/* スマホ版 - 作成モーダル */
+@media (max-width: 768px) {
+  .creation-modal-content {
+    width: 95%;
+    max-width: 450px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .creation-modal-inner {
+    padding: 20px;
+    padding-top: 60px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  
+  .creation-modal-close-button {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    z-index: 1001;
+  }
+  
+  .creation-modal-header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    padding:  3px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    min-height: 50px;
+    z-index: 1000;
+  }
+  
+  .creation-modal-header-title {
+    font-size: 20px;
+    margin: 0;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .creation-modal-title {
+    display: none;
+  }
+  
+  .creation-modal-process-title {
+    font-size: 4vw;
+    margin-bottom: 20px;
+  }
+  
+  .creation-modal-choice-title {
+    font-size: 4vw;
+  }
+  
+  .creation-modal-choice-step {
+    font-size: 5vw;
+  }
+  
+  .creation-modal-choice-description {
+    font-size: 3vw;
+  }
+  
+  .creation-modal-choice-feature-text {
+    font-size: 3vw;
+  }
+  
+  .creation-modal-choice-note {
+    font-size: 2.5vw;
+  }
+}

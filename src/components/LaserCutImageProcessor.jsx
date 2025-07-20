@@ -131,10 +131,13 @@ function CreationModal({ isOpen, onSelect, onClose }) {
     return (
         <div className="creation-modal-overlay" onClick={handleOverlayClick}>
             <div className="creation-modal-content">
-                <div className="creation-modal-inner">
+                <div className="creation-modal-header">
+                    <h2 className="creation-modal-header-title">作成方法を選択</h2>
                     <button onClick={onClose} className="creation-modal-close-button">
                         ×
                     </button>
+                </div>
+                <div className="creation-modal-inner">
                     <h2 className="creation-modal-title">作成方法を選択</h2>
                     <ProcessRoute />
                     <div className="creation-modal-choices">
