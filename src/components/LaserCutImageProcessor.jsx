@@ -366,6 +366,7 @@ const LaserCutImageProcessor = () => {
   
   const [previewBgColor, setPreviewBgColor] = useState('rgba(0, 0, 0, 0)'); // プレビュー背景色（初期値は透明）
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
   const [showCreationModal, setShowCreationModal] = useState(false); // 作成方法選択モーダル
@@ -715,6 +716,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // Toggle sidebar
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
+  };
+
+  // Toggle mobile sidebar
+  const toggleMobileSidebar = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen);
   };
 
   // Navigate to page
@@ -1718,8 +1724,16 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       
       {/* Main layout */}
       <div className="layout-container">
+        {/* Mobile Menu Button */}
+        <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
+          ☰
+        </button>
+
+        {/* Mobile Sidebar Overlay */}
+        {mobileSidebarOpen && <div className="mobile-sidebar-overlay" onClick={toggleMobileSidebar}></div>}
+
         {/* Sidebar */}
-        <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"}`}>
+        <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"} ${mobileSidebarOpen ? "mobile-open" : ""}`}>
             <div className="sidebar-content">
                 <div className="logo-container">
                     <div className="logo">ロゴ</div>
@@ -1728,7 +1742,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     </button>
                 </div>
                 <nav className="sidebar-nav">
-                    <button className={currentPage === 'home' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('home')}>
+                    <button className={currentPage === 'home' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('home'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             <svg viewBox="0 0 24 24">
                                 <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -1737,14 +1751,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         <span className="nav-text">ホーム</span>
                         <div className="tooltip">ホーム</div>
                     </button>
-                    <button className={currentPage === 'textGeneration' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('textGeneration')}>
+                    <button className={currentPage === 'textGeneration' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('textGeneration'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             A
                         </div>
                         <span className="nav-text">テキストから生成</span>
                         <div className="tooltip">テキストから生成</div>
                     </button>
-                    <button className={currentPage === 'neonDrawing' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('neonDrawing')}>
+                    <button className={currentPage === 'neonDrawing' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('neonDrawing'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             <svg viewBox="0 0 24 24">
                             <path d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/>
@@ -1753,7 +1767,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         <span className="nav-text">ネオン下絵</span>
                         <div className="tooltip">ネオン下絵</div>
                     </button>
-                    <button className={currentPage === 'customize' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('customize')}>
+                    <button className={currentPage === 'customize' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('customize'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <circle cx="12" cy="12" r="3"/>
@@ -1763,7 +1777,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         <span className="nav-text">色 / 仕様のカスタマイズ</span>
                         <div className="tooltip">色 / 仕様のカスタマイズ</div>
                     </button>
-                    <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('neonSvg3dPreview')}>
+                    <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('neonSvg3dPreview'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                         <path d="M20.5 7.27783L12 12.0001M12 12.0001L3.49997 7.27783M12 12.0001L12 21.5001M21 16.0586V7.94153C21 7.59889 21 7.42757 20.9495 7.27477C20.9049 7.13959
@@ -1774,7 +1788,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         <span className="nav-text">3Dプレビュー</span>
                         <div className="tooltip">3Dプレビュー</div>
                     </button>
-                    <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => setCurrentPage('info')}>
+                    <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('info'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             <svg viewBox="0 0 24 24">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
