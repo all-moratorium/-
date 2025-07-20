@@ -511,6 +511,35 @@
   
   .guide-modal-header {
     padding: 8px 15px;
+    min-height: 40px;
+  }
+  
+  .guide-modal-header .guide-title {
+    font-size: 20px;
+  }
+  
+  .guide-modal-close {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .page-text {
+    margin-left: 8px;
+  }
+  
+  .guide-subtitle {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+  
+  .guide-section-title {
+    font-size: 18px;
+  }
+  
+  .guide-hero-image {
+    width: 95%;
+    height: 180px;
   }
   
   .guide-features {
