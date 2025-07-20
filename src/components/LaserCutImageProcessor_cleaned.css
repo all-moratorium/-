@@ -1729,6 +1729,31 @@ canvas {
     white-space: nowrap;
   }
 
+  /* Mobile Header Minimal Mode - Only show toggle button */
+  .mobile-header.mobile-header-minimal {
+    background: transparent;
+    border-bottom: none;
+    justify-content: flex-start;
+    padding: 15px;
+    height: auto !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    width: auto;
+    right: auto;
+  }
+
+  .mobile-header.mobile-header-minimal .mobile-header-logo {
+    display: none;
+  }
+
+  .mobile-header.mobile-header-minimal .mobile-menu-button {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
   /* Mobile Content */
   .mobile-content {
     padding-top: 60px;
