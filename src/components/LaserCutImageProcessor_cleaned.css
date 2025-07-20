@@ -1674,9 +1674,12 @@ canvas {
 
 /* Hide mobile elements on desktop */
 .mobile-menu-button,
-.mobile-sidebar-overlay,
 .mobile-header,
 .mobile-content {
+  display: none;
+}
+
+.mobile-sidebar-overlay {
   display: none;
 }
 
@@ -1754,6 +1757,11 @@ canvas {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     pointer-events: auto;
+  }
+
+  /* Hide toggle button when minimal header sidebar is open */
+  .mobile-header.mobile-header-minimal.sidebar-open .mobile-menu-button {
+    display: none;
   }
 
   /* Mobile Content */
@@ -2068,13 +2076,14 @@ canvas {
 
   /* Mobile Overlay */
   .mobile-sidebar-overlay {
+    display: block;
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: 250px;
+    width: calc(100vw - 250px);
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1400;
+    background: transparent;
+    z-index: 1600;
   }
 
   /* Main content adjustment */

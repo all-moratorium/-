@@ -1870,7 +1870,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       {/* Main layout */}
       <div className="layout-container">
         {/* Mobile Header */}
-        <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''}`}>
+        <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
           <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
             ☰
           </button>
