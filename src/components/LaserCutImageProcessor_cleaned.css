@@ -1742,6 +1742,7 @@ canvas {
     z-index: 2000;
     width: auto;
     right: auto;
+    pointer-events: none;
   }
 
   .mobile-header.mobile-header-minimal .mobile-header-logo {
@@ -1752,6 +1753,7 @@ canvas {
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: auto;
   }
 
   /* Mobile Content */
@@ -2022,6 +2024,12 @@ canvas {
     height: calc(100vh - 60px);
     z-index: 1500;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Mobile sidebar when header is minimal */
+  .sidebar.mobile-header-minimal-sidebar {
+    top: 0 !important;
+    height: 100vh !important;
   }
 
   .sidebar.mobile-open {

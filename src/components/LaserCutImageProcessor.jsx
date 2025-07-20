@@ -1881,7 +1881,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         {mobileSidebarOpen && <div className="mobile-sidebar-overlay" onClick={toggleMobileSidebar}></div>}
 
         {/* Sidebar */}
-        <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"} ${mobileSidebarOpen ? "mobile-open" : ""}`}>
+        <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"} ${mobileSidebarOpen ? "mobile-open" : ""} ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal-sidebar' : ''}`}>
             <div className="sidebar-content">
                 <div className="logo-container">
                     <div className="logo">ロゴ</div>
