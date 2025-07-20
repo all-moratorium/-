@@ -2262,8 +2262,32 @@ canvas {
   opacity: 0;
 }
 
+/* パソコン版でモバイルヘッダーを非表示、元の×ボタンはそのまま */
+.creation-modal-header {
+  display: none;
+}
+
+/* パソコン版の元の×ボタンを確実に表示 */
+.creation-modal-close-button {
+  display: flex !important;
+}
+
+
 /* スマホ版 - 作成モーダル */
 @media (max-width: 768px) {
+  .creation-modal-header {
+    display: flex;
+  }
+  
+  /* スマホ版では元の×ボタンを非表示にしてヘッダーの×ボタンのみ表示 */
+  .creation-modal-close-button {
+    display: none !important;
+  }
+  
+  /* スマホ版でヘッダー内の×ボタンを確実に表示 */
+  .creation-modal-header .creation-modal-close-button {
+    display: flex !important;
+  }
   .creation-modal-content {
     width: 95%;
     max-width: 450px;
@@ -2279,7 +2303,21 @@ canvas {
     flex: 1;
   }
   
-  .creation-modal-close-button {
+  .creation-modal-header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+    z-index: 1000;
+    position: relative;
+  }
+  
+  .creation-modal-header .creation-modal-close-button {
     position: absolute;
     top: 50%;
     right: 16px;
@@ -2299,22 +2337,8 @@ canvas {
     z-index: 10;
   }
   
-  .creation-modal-close-button:hover {
+  .creation-modal-header .creation-modal-close-button:hover {
     color: white;
-  }
-  
-  .creation-modal-header {
-    position: sticky;
-    top: 0;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 3px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 50px;
-    z-index: 1000;
-    position: relative;
   }
   
   .creation-modal-header-title {
@@ -2351,5 +2375,26 @@ canvas {
   
   .creation-modal-choice-note {
     font-size: 2.5vw;
+  }
+  
+  .creation-modal-choice-box {
+    margin: 0 10px;
+  }
+  
+  /* スマホ版でタップ時にホバー効果を適用 */
+  .creation-modal-choice-box:active {
+    border-color: #4b5563;
+    background-color: rgba(17, 24, 39, 0.8);
+    transform: translateY(-4px);
+  }
+  
+  .creation-modal-choice-box-yellow:active {
+    border-color: rgba(255, 255, 0, 0.5);
+    box-shadow: 0 0 30px 0px rgba(255, 255, 0, 0.2);
+  }
+  
+  .creation-modal-choice-box-cyan:active {
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.2);
   }
 }

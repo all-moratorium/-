@@ -137,6 +137,9 @@ function CreationModal({ isOpen, onSelect, onClose }) {
                         ×
                     </button>
                 </div>
+                <button onClick={onClose} className="creation-modal-close-button">
+                    ×
+                </button>
                 <div className="creation-modal-inner">
                     <h2 className="creation-modal-title">作成方法を選択</h2>
                     <ProcessRoute />
