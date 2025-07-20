@@ -2290,7 +2290,7 @@ canvas {
   }
   .creation-modal-content {
     width: 95%;
-    max-width: 450px;
+    max-width: none;
     height: 90vh;
     display: flex;
     flex-direction: column;
@@ -2396,5 +2396,10 @@ canvas {
   .creation-modal-choice-box-cyan:active {
     border-color: rgba(0, 255, 255, 0.5);
     box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.2);
+  }
+  
+  /* STEP1ボタン（cyan）の下にマージン追加 */
+  .creation-modal-choice-box-cyan {
+    margin-bottom: 10px;
   }
 }
