@@ -1819,6 +1819,7 @@ canvas {
 
   .mobile-create-button {
     width: calc(100% - 30px);
+    max-width: 650px;
     height: 50px;
     background: #FFFF00;
     color: black;
