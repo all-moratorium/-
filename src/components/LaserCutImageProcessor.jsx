@@ -1404,7 +1404,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               <div className="mobile-title">Image To LED Neon Sign</div>
               
               {/* Guide Button */}
-              <div style={{textAlign: 'center', margin: '20px 0'}}>
+              <div style={{textAlign: 'center', margin: '30px 0'}}>
                 <button 
                   onClick={handleOpenModal}
                   className={`info-button ${isEffectStopped ? 'stopped' : ''}`}
@@ -1413,7 +1413,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     height: '28px',
                     fontSize: '16px',
                     display: 'inline-block',
-                    marginRight: '5px'
+                    marginRight: '2px'
                   }}
                 >
                 </button>

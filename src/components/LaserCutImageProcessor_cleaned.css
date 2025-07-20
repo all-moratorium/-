@@ -1687,7 +1687,7 @@ canvas {
     top: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 60px !important;
     background-color: #0a0a0a;
     color: white;
     z-index: 2000;
@@ -1695,6 +1695,7 @@ canvas {
     align-items: center;
     justify-content: flex-start;
     padding: 0 15px;
+    box-sizing: border-box;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
@@ -1730,8 +1731,7 @@ canvas {
 
   /* Mobile Content */
   .mobile-content {
-    padding-top: 80px;
-    padding-bottom: 20px;
+    padding-top: 60px;
     min-height: 100vh;
     overflow-y: auto;
     width: 100%;
@@ -1743,13 +1743,15 @@ canvas {
   /* Mobile Title */
   .mobile-title {
     text-align: center;
-    font-size: 24px;
+    font-size: 6vw;
     font-weight: bold;
     color: #FFFF00;
     text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
     margin: 20px 0;
     padding: 0 15px;
-    word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Main content sections */
@@ -1824,7 +1826,7 @@ canvas {
     border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
-    margin: 20px 15px;
+    margin: 0px 15px 20px 15px;
     cursor: pointer;
   }
 
@@ -1863,6 +1865,7 @@ canvas {
   .mobile-sample-model-item {
     background: #111111;
     width: 85%;
+    max-width: 400px;
     border-radius: 12px;
     padding: 12px;
     margin: 0 auto;
