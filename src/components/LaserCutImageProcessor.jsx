@@ -1396,7 +1396,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
-              <Gallery3D />
+              {!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && <Gallery3D />}
             </div>
             
             {/* Mobile Layout */}
@@ -1853,18 +1853,31 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         zIndex: currentPage === 'neonSvg3dPreview' ? 100 : -1,
         pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
       }}>
-        <NeonSVGTo3DExtruder 
-          ref={neonSvgTo3DExtruderRef} 
-          neonSvgData={neonSvgData}
-          onNavigateToInfo={(modelData) => {
-            if (modelData) {
-              setNeonCalculatedModelData(modelData);
-            }
-            setCurrentPage('info');
-          }}
-          isGuideEffectStopped={isPreview3DGuideEffectStopped}
-          onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
-        />
+        {!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? (
+          <NeonSVGTo3DExtruder 
+            ref={neonSvgTo3DExtruderRef} 
+            neonSvgData={neonSvgData}
+            onNavigateToInfo={(modelData) => {
+              if (modelData) {
+                setNeonCalculatedModelData(modelData);
+              }
+              setCurrentPage('info');
+            }}
+            isGuideEffectStopped={isPreview3DGuideEffectStopped}
+            onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
+          />
+        ) : (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '18px',
+            height: '100%'
+          }}>
+            3Dプレビューはデスクトップでご利用ください
+          </div>
+        )}
       </div>
       
       {/* Main layout */}
