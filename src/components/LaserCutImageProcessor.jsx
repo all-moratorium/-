@@ -1413,11 +1413,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     height: '28px',
                     fontSize: '16px',
                     display: 'inline-block',
-                    marginRight: '2px'
+                    marginRight: '1px'
                   }}
                 >
                 </button>
-                <span style={{color: 'white', fontSize: '14px', verticalAlign: 'middle'}}>
+                <span style={{color: 'white', fontSize: '15px', verticalAlign: 'middle'}}>
                   一度お読みください
                 </span>
               </div>
