@@ -451,6 +451,37 @@
     .customize-sidebar {
         width: 300px;
         max-width: 300px;
+        border-radius: 0;
+        height: 100vh;
+        right: 0;
+        transform: translateX(0);
+        top: 0;
+        margin:0;
+        padding:5px;
+    }
+    
+    .customize-toggle-sidebar-button {
+        position: fixed;
+        right: 25px;
+        top: 25px;
+        width: 32px;
+        height: 32px;
+        background-color: #0a0a0a;
+        color: rgb(255, 255, 255);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        z-index: 1001;
+    }
+    
+    .customize-toggle-sidebar-button:hover {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
     }
     
     .customize-canvas-area {
