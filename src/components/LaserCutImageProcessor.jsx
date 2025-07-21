@@ -397,6 +397,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isPreview3DGuideEffectStopped, setIsPreview3DGuideEffectStopped] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
 
@@ -585,6 +586,22 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
       window.removeEventListener('sharedFileDataLoaded', handleSharedFileData);
       window.removeEventListener('clearCustomizeState', handleClearCustomizeState);
+    };
+  }, []);
+
+  // モバイルデバイス検出
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                            window.innerWidth <= 768;
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
   
@@ -1584,7 +1601,54 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
           onGuideEffectStop={() => setIsCustomizeGuideEffectStopped(true)}
         />;
       case 'neonSvg3dPreview':
-        return null; // NeonSVGTo3DExtruderはルートレベルで表示
+        if (isMobile) {
+          return (
+            <div className="main-content" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              padding: '20px',
+              textAlign: 'center'
+            }}>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                color: '#333'
+              }}>
+                3Dプレビュー機能について
+              </div>
+              <div style={{
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                marginBottom: '30px',
+                color: '#666',
+                maxWidth: '400px'
+              }}>
+                3Dプレビュー機能はパフォーマンスの関係上、PC版でのみご利用いただけます。
+                <br /><br />
+                PCでアクセスしていただくと、リアルタイムでネオンサインの3Dモデルをご確認いただけます。
+              </div>
+              <button 
+                onClick={() => setCurrentPage('info')}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '1rem',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                商品情報ページへ
+              </button>
+            </div>
+          );
+        }
+        return null; // デスクトップではNeonSVGTo3DExtruderがルートレベルで表示
         case 'info':
           return (
             <div className="main-content">
@@ -1842,30 +1906,32 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         }
       `}</style>
       
-      {/* NeonSVGTo3DExtruder - Always rendered but controlled by visibility */}
-      <div style={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
-        visibility: currentPage === 'neonSvg3dPreview' ? 'visible' : 'hidden',
-        zIndex: currentPage === 'neonSvg3dPreview' ? 100 : -1,
-        pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
-      }}>
-        <NeonSVGTo3DExtruder 
-          ref={neonSvgTo3DExtruderRef} 
-          neonSvgData={neonSvgData}
-          onNavigateToInfo={(modelData) => {
-            if (modelData) {
-              setNeonCalculatedModelData(modelData);
-            }
-            setCurrentPage('info');
-          }}
-          isGuideEffectStopped={isPreview3DGuideEffectStopped}
-          onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
-        />
-      </div>
+      {/* NeonSVGTo3DExtruder - Only rendered on desktop */}
+      {!isMobile && (
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          visibility: currentPage === 'neonSvg3dPreview' ? 'visible' : 'hidden',
+          zIndex: currentPage === 'neonSvg3dPreview' ? 100 : -1,
+          pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
+        }}>
+          <NeonSVGTo3DExtruder 
+            ref={neonSvgTo3DExtruderRef} 
+            neonSvgData={neonSvgData}
+            onNavigateToInfo={(modelData) => {
+              if (modelData) {
+                setNeonCalculatedModelData(modelData);
+              }
+              setCurrentPage('info');
+            }}
+            isGuideEffectStopped={isPreview3DGuideEffectStopped}
+            onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
+          />
+        </div>
+      )}
       
       {/* Main layout */}
       <div className="layout-container">
@@ -1931,7 +1997,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         <span className="nav-text">色 / 仕様のカスタマイズ</span>
                         <div className="tooltip">色 / 仕様のカスタマイズ</div>
                     </button>
-                    <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('neonSvg3dPreview'); setMobileSidebarOpen(false); }}>
+                    <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => { 
+                      if (isMobile) {
+                        alert('3Dプレビュー機能はパフォーマンスの関係上、PC版でのみご利用いただけます。');
+                        return;
+                      }
+                      setCurrentPage('neonSvg3dPreview'); 
+                      setMobileSidebarOpen(false); 
+                    }}>
                         <div className="nav-icon">
                         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                         <path d="M20.5 7.27783L12 12.0001M12 12.0001L3.49997 7.27783M12 12.0001L12 21.5001M21 16.0586V7.94153C21 7.59889 21 7.42757 20.9495 7.27477C20.9049 7.13959
