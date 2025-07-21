@@ -461,9 +461,9 @@
     }
     
     .customize-toggle-sidebar-button {
-        position: fixed;
-        right: 25px;
-        top: 25px;
+        position: fixed !important;
+        right: 25px !important;
+        top: 25px !important;
         width: 32px;
         height: 32px;
         background-color: #0a0a0a;
@@ -477,6 +477,9 @@
         font-size: 12px;
         transition: all 0.2s ease;
         z-index: 1001;
+        transform: none !important;
+        left: auto !important;
+        bottom: auto !important;
     }
     
     .customize-toggle-sidebar-button:hover {
@@ -496,18 +499,21 @@
     
     .customize-sidebar-title {
         font-size: 19px;
+        padding-top: 2px;
+        padding-bottom: 2px;
         margin-left: 0px;
         flex-shrink: 0;
+        margin-left: 23px;
     }
     
     .customize-header .customize-guide-button {
         position: absolute;
-        left: calc(175px + 8px);
-        top: 50%;
+        left: 167px;
+        top: 32px;
         transform: translateY(-50%);
-        width: 22px;
-        height: 22px;
-        font-size: 16px;
+        width: 25.2px;
+        height: 25.2px;
+        font-size: 17px;
         flex-shrink: 0;
         border: 2px solid #ddd;
         border-radius: 50%;
