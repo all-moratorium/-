@@ -556,6 +556,33 @@
     .customize-color-palette {
         grid-template-columns: repeat(3, 1fr);
     }
+    
+    .canvas-size-display {
+        position: fixed !important;
+        bottom: 20px !important;
+        left: 20px !important;
+        top: auto !important;
+        right: auto !important;
+        min-width: 90px !important;
+        padding: 5px !important;
+        font-size: 10px !important;
+        border-radius: 5px !important;
+    }
+    
+    .canvas-size-title {
+        font-size: 10px !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .canvas-size-item {
+        font-size: 9px !important;
+        margin-bottom: 2px !important;
+    }
+    
+    .canvas-size-label,
+    .canvas-size-value {
+        font-size: 9px !important;
+    }
 }
 
 /* すべての要素にbox-sizingを適用 */
