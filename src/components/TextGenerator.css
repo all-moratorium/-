@@ -612,6 +612,27 @@
         opacity: 0;
         visibility: hidden;
     }
+
+    /* モバイル版 テキスト入力エリア */
+    .text-input-tools-title {
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 10px;
+    }
+
+    .text-input {
+        height: 60px !important;
+        font-size: 16px;
+        padding: 5px;
+
+    }
+
+    .text-input-help {
+        font-size: 9px;
+        white-space: nowrap;
+        padding: 6px 8px;
+        border-radius: 4px;
+    }
 }
 
 /* モバイル用固定トグルボタン - サイドバー内ボタンと同じ位置 */
