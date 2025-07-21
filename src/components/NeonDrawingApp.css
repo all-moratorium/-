@@ -2270,11 +2270,12 @@
     }
     
     .view-reset-button {
-        padding: 8px 0px !important;
+        padding: 0 !important;
         font-size: 12px !important;
         border-radius: 4px !important;
-        min-height: 20px !important;
+        min-height: 30px !important;
         margin:0 !important;
+        height: 32px !important;
     }
     
     /* グリッド・背景コントロール */
@@ -2311,11 +2312,15 @@
     
     .project-save-btn,
     .project-load-btn {
-        padding: 8px 0px !important;
-        font-size: 8px !important;
+        padding: 0 !important;
+        font-size: 12px !important;
         border-radius: 4px !important;
-        min-height: 20px !important;
+        min-height: 30px !important;
         margin:0 !important;
+        height: 32px !important;
+    }
+    .project-controls {
+        margin-bottom: 37px !important;
     }
 
     .grid-spacing-container {
