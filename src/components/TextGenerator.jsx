@@ -39,6 +39,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const textAreaRef = useRef(null);
     const isInitialized = useRef(false);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+    const [isMobileSidebarVisible, setIsMobileSidebarVisible] = useState(true);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -626,8 +627,21 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                 </button>
             </div>
 
+            {/* サイドバー閉じた時のみ表示するトグルボタン */}
+            {!isMobileSidebarVisible && (
+                <button 
+                    className="text-generator-mobile-toggle-fixed"
+                    onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
+                    style={{
+                        display: window.innerWidth <= 768 ? 'flex' : 'none'
+                    }}
+                >
+                    ▼
+                </button>
+            )}
+
             {/* 右サイドバー */}
-            <div className="text-generator-sidebar">
+            <div className={`text-generator-sidebar ${!isMobileSidebarVisible ? 'hidden' : ''}`}>
                 <div className="text-generator-header">
                     <h2 className="text-generator-title">テキストから生成</h2>
                     <div 
@@ -639,6 +653,12 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                             }, 150);
                         }}
                     ></div>
+                    <button 
+                        className="text-generator-mobile-toggle"
+                        onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
+                    >
+                        ▲
+                    </button>
                 </div>
                 <div className="text-input-tools-title">テキスト入力</div>
                 <div className="text-generator-control-group">

@@ -553,6 +553,99 @@
         padding: 8px 12px;
         font-size: 9px;
     }
+
+    .text-generator-sidebar {
+        width: 300px;
+        max-width: 300px;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .text-generator-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding: 15px 15px 0 15px;
+    }
+
+    .text-generator-title {
+        font-size: 16px;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .text-generator-guide-button {
+        position: static;
+        transform: none;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        margin: 0 8px;
+        flex-shrink: 0;
+    }
+
+    .text-generator-mobile-toggle {
+        width: 32px;
+        height: 32px;
+        background-color: #0a0a0a;
+        color: rgb(255, 255, 255);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .text-generator-mobile-toggle:hover {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .text-generator-sidebar.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* モバイル用固定トグルボタン - サイドバー内ボタンと同じ位置 */
+@media (max-width: 768px) {
+    .text-generator-mobile-toggle-fixed {
+        position: fixed;
+        right: 25px;
+        top: 25px;
+        width: 32px;
+        height: 32px;
+        background-color: #0a0a0a;
+        color: rgb(255, 255, 255);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        z-index: 1001;
+    }
+
+    .text-generator-mobile-toggle-fixed:hover {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* パソコン版ではトグルボタンを非表示 */
+@media (min-width: 769px) {
+    .text-generator-mobile-toggle,
+    .text-generator-mobile-toggle-fixed {
+        display: none;
+    }
 }
 
 
