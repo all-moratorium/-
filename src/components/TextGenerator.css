@@ -678,6 +678,41 @@
         margin-top: 3px;
     }
 
+    /* モバイル版フォントタグ */
+    .font-tags {
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1px;
+        z-index: 10;
+    }
+
+    .font-tag {
+        font-size: 6px;
+        padding: 1px 2px;
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffffff;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+        text-transform: uppercase;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(4px);
+    }
+
+    .font-tag.popular {
+        background: rgba(0, 122, 255, 0.9);
+        color: #ffffff;
+    }
+
+    .font-tag.japanese {
+        background: rgba(255, 59, 48, 0.9);
+        color: #ffffff;
+    }
+
     /* モバイル版 文字間隔調整 */
     .letter-spacing-label {
         font-size: 13px;
