@@ -1853,31 +1853,18 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         zIndex: currentPage === 'neonSvg3dPreview' ? 100 : -1,
         pointerEvents: currentPage === 'neonSvg3dPreview' ? 'auto' : 'none'
       }}>
-        {!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? (
-          <NeonSVGTo3DExtruder 
-            ref={neonSvgTo3DExtruderRef} 
-            neonSvgData={neonSvgData}
-            onNavigateToInfo={(modelData) => {
-              if (modelData) {
-                setNeonCalculatedModelData(modelData);
-              }
-              setCurrentPage('info');
-            }}
-            isGuideEffectStopped={isPreview3DGuideEffectStopped}
-            onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
-          />
-        ) : (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '18px',
-            height: '100%'
-          }}>
-            3Dプレビューはデスクトップでご利用ください
-          </div>
-        )}
+        <NeonSVGTo3DExtruder 
+          ref={neonSvgTo3DExtruderRef} 
+          neonSvgData={neonSvgData}
+          onNavigateToInfo={(modelData) => {
+            if (modelData) {
+              setNeonCalculatedModelData(modelData);
+            }
+            setCurrentPage('info');
+          }}
+          isGuideEffectStopped={isPreview3DGuideEffectStopped}
+          onGuideEffectStop={() => setIsPreview3DGuideEffectStopped(true)}
+        />
       </div>
       
       {/* Main layout */}
