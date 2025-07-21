@@ -558,6 +558,7 @@
         width: 300px;
         max-width: 300px;
         transition: opacity 0.3s ease, visibility 0.3s ease;
+        padding: 10px 5px;
     }
 
     .text-generator-header {
@@ -578,7 +579,7 @@
 
     .text-generator-guide-button {
         position: absolute;
-        left: calc(170px + 8px);
+        left: calc(175px + 8px);
         top: 32px;
         transform: translateY(-50%);
         width: 22px;
@@ -601,6 +602,7 @@
         font-size: 12px;
         transition: all 0.2s ease;
         flex-shrink: 0;
+        margin-right: 5px;
     }
 
     .text-generator-mobile-toggle:hover {
@@ -615,15 +617,16 @@
 
     /* モバイル版 テキスト入力エリア */
     .text-input-tools-title {
-        font-size: 14px;
-        margin-top: 12px;
+        font-size: 17px;
+        margin-top: 0px;
         margin-bottom: 10px;
     }
 
     .text-input {
-        height: 60px !important;
+        height: 70px !important;
         font-size: 16px;
         padding: 5px;
+        border-radius: 4px;
 
     }
 
@@ -632,6 +635,61 @@
         white-space: nowrap;
         padding: 6px 8px;
         border-radius: 4px;
+    }
+
+    /* モバイル版 文字数制限警告 */
+    .character-limit-warning {
+        font-size: 9px;
+        padding: 4px 6px;
+        border-radius: 4px;
+    }
+
+    /* モバイル版 フォントプレビュー */
+    .font-preview-tools-title {
+        font-size: 15px;
+        margin-top: 12px;
+        margin-bottom: 10px;
+    }
+
+    .font-preview-grid {
+        height: 120px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        padding: 6px;
+    }
+
+    .font-preview-item {
+        height: 35px;
+    }
+
+    .font-preview-text {
+        font-size: 12px;
+    }
+
+    .font-name {
+        font-size: 8px;
+        margin-top: 3px;
+    }
+
+    /* モバイル版 文字間隔調整 */
+    .letter-spacing-label {
+        font-size: 13px;
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+
+    .letter-spacing-slider {
+        width: 90%;
+        margin-bottom: 15px;
+    }
+
+    /* モバイル版 下絵作成ボタン */
+    .text-generator-export-button {
+        width: 95%;
+        margin: 20px auto 25px auto;
+        font-size: 14px;
+        padding: 10px 16px;
+        height: auto;
     }
 }
 
