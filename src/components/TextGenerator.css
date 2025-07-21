@@ -571,15 +571,15 @@
     }
 
     .text-generator-title {
-        font-size: 16px;
-        margin: 0;
+        font-size: 18px;
+        margin-left: 10px;
         flex-shrink: 0;
     }
 
     .text-generator-guide-button {
         position: absolute;
         left: calc(170px + 8px);
-        top: 30px;
+        top: 32px;
         transform: translateY(-50%);
         width: 22px;
         height: 22px;
