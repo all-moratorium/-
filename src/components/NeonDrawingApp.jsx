@@ -172,6 +172,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+    
+    // タッチ操作用のstate
+    const [lastTouchDistance, setLastTouchDistance] = useState(0);
+    const [touchStartScale, setTouchStartScale] = useState(1);
+    const [lastTouchCenter, setLastTouchCenter] = useState({ x: 0, y: 0 });
 
     // ドラッグと編集
     const [activePoint, setActivePoint] = useState(null);
@@ -2991,6 +2996,85 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setActivePoint(null); // アクティブな点をリセット
     }, [activePoint, paths, currentPathIndex, drawMode, drawingType, saveToHistory]);
 
+    // タッチイベントハンドラー
+    const getTouchDistance = (touches) => {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const getTouchCenter = (touches) => {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+    };
+
+    const handleTouchStart = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 2) {
+            // 2本指: パン・ズーム開始
+            const distance = getTouchDistance(e.touches);
+            const center = getTouchCenter(e.touches);
+            
+            setLastTouchDistance(distance);
+            setTouchStartScale(scale);
+            setLastTouchCenter(center);
+            setIsPanning(true);
+        }
+    }, [scale]);
+
+    const handleTouchMove = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 2 && isPanning) {
+            const distance = getTouchDistance(e.touches);
+            const center = getTouchCenter(e.touches);
+            
+            // ピンチズーム
+            if (lastTouchDistance > 0) {
+                const scaleChange = distance / lastTouchDistance;
+                let newScale = touchStartScale * scaleChange;
+                newScale = Math.max(0.18, Math.min(newScale, 20));
+                
+                const canvas = canvasRef.current;
+                const rect = canvas.getBoundingClientRect();
+                const zoomCenterX = center.x - rect.left;
+                const zoomCenterY = center.y - rect.top;
+                
+                const scaleRatio = newScale / scale;
+                const newOffsetX = zoomCenterX - (zoomCenterX - offsetX) * scaleRatio;
+                const newOffsetY = zoomCenterY - (zoomCenterY - offsetY) * scaleRatio;
+                
+                setScale(newScale);
+                setOffsetX(newOffsetX);
+                setOffsetY(newOffsetY);
+            }
+            
+            // パン移動
+            if (lastTouchCenter.x !== 0 && lastTouchCenter.y !== 0) {
+                const deltaX = center.x - lastTouchCenter.x;
+                const deltaY = center.y - lastTouchCenter.y;
+                
+                setOffsetX(prev => prev + deltaX);
+                setOffsetY(prev => prev + deltaY);
+            }
+            
+            setLastTouchCenter(center);
+        }
+    }, [isPanning, lastTouchDistance, touchStartScale, lastTouchCenter, scale, offsetX, offsetY]);
+
+    const handleTouchEnd = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length < 2) {
+            setIsPanning(false);
+            setLastTouchDistance(0);
+            setLastTouchCenter({ x: 0, y: 0 });
+        }
+    }, []);
+
     const handleMouseLeave = useCallback(() => {
         // モーダル表示中でもパン操作終了は許可
         
@@ -3316,6 +3400,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     onMouseUp={handleMouseUp}
                     onContextMenu={(e) => e.preventDefault()} // 右クリックメニューを無効化
                     onMouseLeave={handleMouseLeave}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    style={{ touchAction: 'none' }}
                 />
                 
                 {/* キャンバス右上のサイズ表示 */}
