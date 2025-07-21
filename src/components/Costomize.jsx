@@ -2557,10 +2557,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 disabled={neonPaths.length === 0}
                                 title="現在の色仕様設定をJSONファイルとしてダウンロード"
                             >
-                                📤 保存
+                                📥 保存
                             </button>
                             <label className="project-load-btn">
-                                📥 読み込む
+                                📤 読み込む
                                 <input
                                     type="file"
                                     accept=".json"
