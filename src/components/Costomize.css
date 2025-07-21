@@ -457,7 +457,7 @@
         transform: translateX(0);
         top: 0;
         margin:0;
-        padding:5px;
+        padding: 10px 5px;
     }
     
     .customize-toggle-sidebar-button {
@@ -500,18 +500,27 @@
         flex-shrink: 0;
     }
     
-    .customize-guide-button {
+    .customize-header .customize-guide-button {
         position: absolute;
         left: calc(175px + 8px);
-        top: 32px;
+        top: 50%;
         transform: translateY(-50%);
         width: 22px;
         height: 22px;
         font-size: 16px;
         flex-shrink: 0;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        background: white;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
-    .customize-mobile-toggle {
+    .customize-header .customize-mobile-toggle {
         width: 32px;
         height: 32px;
         background-color: #0a0a0a;
@@ -526,9 +535,10 @@
         transition: all 0.2s ease;
         flex-shrink: 0;
         margin-right: 5px;
+        position: relative;
     }
     
-    .customize-mobile-toggle:hover {
+    .customize-header .customize-mobile-toggle:hover {
         color: #ffffff;
         border-color: rgba(255, 255, 255, 0.2);
     }

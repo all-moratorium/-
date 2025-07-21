@@ -2005,7 +2005,7 @@
         top: 0;
         margin:0;
         gap:9px;
-        padding:5px;
+        padding: 10px 5px;
     }
     
     .neon-toggle-sidebar-button {
@@ -2044,23 +2044,37 @@
     
     .neon-sidebar-title {
         font-size: 19px;
+        padding-top: 2px;
+        padding-bottom: 2px;
         margin-left: 0px;
         flex-shrink: 0;
+        margin-left: 60px;
     }
     
-    .neon-guide-button {
+    .neon-header .neon-guide-button {
         position: absolute;
-        left: calc(175px + 8px);
+        left: 167px;
         top: 32px;
         transform: translateY(-50%);
-        width: 22px;
-        height: 22px;
-        font-size: 16px;
+        width: 25.2px;
+        height: 25.2px;
+        font-size: 17px;
         flex-shrink: 0;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        background: white;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
-    .neon-mobile-toggle {
+.neon-mobile-toggle {
         width: 32px;
+        top:25px;
+        right:25px;
         height: 32px;
         background-color: #0a0a0a;
         color: rgb(255, 255, 255);
@@ -2074,9 +2088,10 @@
         transition: all 0.2s ease;
         flex-shrink: 0;
         margin-right: 5px;
+        position: absolute;
     }
     
-    .neon-mobile-toggle:hover {
+.neon-mobile-toggle:hover {
         color: #ffffff;
         border-color: rgba(255, 255, 255, 0.2);
     }
