@@ -1992,3 +1992,11 @@
     font-size: 12px;
     font-weight: 500;
 }
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .neon-sidebar {
+        width: 300px;
+        max-width: 300px;
+    }
+}

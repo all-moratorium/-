@@ -449,7 +449,8 @@
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .customize-sidebar {
-        width: 320px;
+        width: 300px;
+        max-width: 300px;
     }
     
     .customize-canvas-area {
