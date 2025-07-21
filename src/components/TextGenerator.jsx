@@ -242,15 +242,29 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const textHeight = fontSize;
         
         // 表示領域の定義（キャンバス内の四角形エリア）
-        const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
-        const leftSidebarWidth = 250; // 左サイドバー（固定幅）
-        const availableCanvasWidth = canvas.width - rightSidebarWidth - leftSidebarWidth;
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
-        // 表示領域を利用可能幅の70%に設定し、中央配置
-        const displayAreaWidth = availableCanvasWidth * 0.7;
-        const displayAreaHeight = canvas.height * 0.7;
-        const displayAreaLeft = leftSidebarWidth + (availableCanvasWidth - displayAreaWidth) / 2;
-        const displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+        let displayAreaWidth, displayAreaHeight, displayAreaLeft, displayAreaTop;
+        
+        if (isMobile) {
+            // スマホ: 画面中央に配置
+            displayAreaWidth = canvas.width * 0.6;
+            displayAreaHeight = canvas.height * 0.6;
+            displayAreaLeft = (canvas.width - displayAreaWidth) / 2;
+            displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+        } else {
+            // デスクトップ: サイドバーを考慮した配置
+            const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
+            const leftSidebarWidth = 250; // 左サイドバー（固定幅）
+            const availableCanvasWidth = canvas.width - rightSidebarWidth - leftSidebarWidth;
+            
+            // 表示領域を利用可能幅の70%に設定し、中央配置
+            displayAreaWidth = availableCanvasWidth * 0.7;
+            displayAreaHeight = canvas.height * 0.7;
+            displayAreaLeft = leftSidebarWidth + (availableCanvasWidth - displayAreaWidth) / 2;
+            displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+        }
+        
         const displayAreaRight = displayAreaLeft + displayAreaWidth;
         const displayAreaBottom = displayAreaTop + displayAreaHeight;
         
