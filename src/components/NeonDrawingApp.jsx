@@ -3011,9 +3011,18 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     };
 
     const handleTouchStart = useCallback((e) => {
-        e.preventDefault();
         
-        if (e.touches.length === 2) {
+        if (e.touches.length === 1) {
+            // 1本指: 左クリック相当
+            const touch = e.touches[0];
+            const mouseEvent = {
+                button: 0,
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                preventDefault: () => {}
+            };
+            handleMouseDown(mouseEvent);
+        } else if (e.touches.length === 2) {
             // 2本指: パン・ズーム開始
             const distance = getTouchDistance(e.touches);
             const center = getTouchCenter(e.touches);
@@ -3023,10 +3032,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             setLastTouchCenter(center);
             setIsPanning(true);
         }
-    }, [scale]);
+    }, [scale, handleMouseDown]);
 
     const handleTouchMove = useCallback((e) => {
-        e.preventDefault();
         
         if (e.touches.length === 2 && isPanning) {
             const distance = getTouchDistance(e.touches);
@@ -3062,18 +3070,34 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
             
             setLastTouchCenter(center);
+        } else if (e.touches.length === 1 && !isPanning) {
+            // 1本指: マウスムーブ相当
+            const touch = e.touches[0];
+            const mouseEvent = {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                preventDefault: () => {}
+            };
+            handleMouseMove(mouseEvent);
         }
-    }, [isPanning, lastTouchDistance, touchStartScale, lastTouchCenter, scale, offsetX, offsetY]);
+    }, [isPanning, lastTouchDistance, touchStartScale, lastTouchCenter, scale, offsetX, offsetY, handleMouseMove]);
 
     const handleTouchEnd = useCallback((e) => {
-        e.preventDefault();
         
         if (e.touches.length < 2) {
             setIsPanning(false);
             setLastTouchDistance(0);
             setLastTouchCenter({ x: 0, y: 0 });
         }
-    }, []);
+        
+        if (e.touches.length === 0) {
+            // 全タッチ終了: マウスアップ相当
+            const mouseEvent = {
+                preventDefault: () => {}
+            };
+            handleMouseUp(mouseEvent);
+        }
+    }, [handleMouseUp]);
 
     const handleMouseLeave = useCallback(() => {
         // モーダル表示中でもパン操作終了は許可
