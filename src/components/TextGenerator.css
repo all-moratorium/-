@@ -572,8 +572,8 @@
     }
 
     .text-generator-title {
-        font-size: 18px;
-        margin-left: 10px;
+        font-size: 19px;
+        margin-left: 0px;
         flex-shrink: 0;
     }
 
@@ -652,7 +652,7 @@
     }
 
     .font-preview-grid {
-        height: 120px;
+        height: 160px;
         grid-template-columns: repeat(3, 1fr);
         gap: 4px;
         padding: 6px;
@@ -674,7 +674,7 @@
     /* モバイル版 文字間隔調整 */
     .letter-spacing-label {
         font-size: 13px;
-        margin-top: 12px;
+        margin-top: 0px;
         margin-bottom: 8px;
     }
 
@@ -685,8 +685,8 @@
 
     /* モバイル版 下絵作成ボタン */
     .text-generator-export-button {
-        width: 95%;
-        margin: 20px auto 25px auto;
+        width: 75%;
+        margin: 0 auto;
         font-size: 14px;
         padding: 10px 16px;
         height: auto;
