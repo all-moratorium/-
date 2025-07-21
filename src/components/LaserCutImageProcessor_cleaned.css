@@ -2213,16 +2213,7 @@ canvas {
     position: fixed !important;
   }
 
-  /* Reposition bottom layout on mobile */
-  .home-bottom-layout {
-    position: static !important;
-    height: auto !important;
-    bottom: auto !important;
-    left: auto !important;
-    right: auto !important;
-    display: block !important;
-    margin: 20px 0 !important;
-  }
+  /* Remove bottom layout completely on mobile */
 
   .bottom-left-container,
   .bottom-right-container {
