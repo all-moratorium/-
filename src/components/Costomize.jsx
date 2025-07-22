@@ -1085,6 +1085,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             }
             
             if (svgData.canvasData) {
+                // デバッグ：initialStateの値を確認
+                console.log('【デバッグ】initialState:', initialState);
                 // 実際に保存された視点かデフォルト値かを判定
                 const hasCustomView = initialState && initialState.scale !== undefined && 
                     !(initialState.scale === 1 && initialState.offsetX === 0 && initialState.offsetY === 0);
@@ -1092,11 +1094,16 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 if (hasCustomView) {
                     console.log('カスタマイズされた視点を使用:', initialState);
                     const canvasSettings = {
-                        ...svgData.canvasData,
                         scale: initialState.scale,
                         offsetX: initialState.offsetX,
                         offsetY: initialState.offsetY,
-                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30
+                        segmentsPerCurve: svgData.canvasData.segmentsPerCurve || 30,
+                        canvasWidth: svgData.canvasData.canvasWidth,
+                        canvasHeight: svgData.canvasData.canvasHeight,
+                        gridSize: svgData.canvasData.gridSize,
+                        gridOpacity: svgData.canvasData.gridOpacity,
+                        showGrid: svgData.canvasData.showGrid,
+                        gridColor: svgData.canvasData.gridColor
                     };
                     setCanvasSettings(canvasSettings);
                 } else {
@@ -1373,20 +1380,12 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             setCanvasWidth(newWidth);
             setCanvasHeight(newHeight);
             
-            // 初期表示時は原点を中央に配置（オフセットが初期値の場合のみ）
-            if (canvasSettings.offsetX === 0 && canvasSettings.offsetY === 0) {
-                setCanvasSettings(prev => ({
-                    ...prev,
-                    offsetX: newWidth / 2,
-                    offsetY: newHeight / 2
-                }));
-            }
         };
 
         window.addEventListener('resize', handleResize);
         handleResize(); // 初回ロード時に実行
         return () => window.removeEventListener('resize', handleResize);
-    }, [canvasSettings.offsetX, canvasSettings.offsetY]);
+    }, []);
 
     // マウスイベントハンドラー（ズーム・パン機能）
     const [isPanning, setIsPanning] = useState(false);
