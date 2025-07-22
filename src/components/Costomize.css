@@ -937,10 +937,14 @@
         height: 8px !important;
     }
 
-    /* 色選択ボタン */
-    .bulk-modal-content div[style*="repeat(4, 1fr)"] {
+    /* 色選択グリッド */
+    .bulk-modal-content div[style*="repeat(4, 1fr)"],
+    .bulk-modal-content div[style*="grid-template-columns: 'repeat(4, 1fr)'"],
+    .bulk-modal-content div[style*="gridTemplateColumns: 'repeat(4, 1fr)'"] {
+        display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 8px !important;
+        gap: 6px !important;
+        margin-top: 16px !important;
     }
 
     .bulk-modal-content button[style*="48px"] {
@@ -959,6 +963,7 @@
         padding: 4px !important;
         font-size: 12px !important;
         border-radius: 4px !important;
+        margin-top: 0px !important;
     }
 
     /* 太さ選択セクション */
