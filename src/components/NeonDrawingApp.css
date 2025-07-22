@@ -2544,4 +2544,75 @@
         text-align: center !important;
     }
 
+    /* サイドバー閉じているときの機能バー */
+    .mobile-function-bar {
+        display: none !important;
+        height: 100vh !important;
+        position: fixed !important;
+        background-color: rgba(30, 30, 30, 0.95) !important;
+        right: 0 !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 50px !important;
+        z-index: 1001 !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .app-container:has(.neon-sidebar.collapsed) .mobile-function-bar {
+        display: flex !important;
+    }
+
+    .mobile-function-btn {
+        width: 40px !important;
+        margin: 0 auto !important;
+        height: 40px !important;
+        background-color: rgb(29, 29, 29) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 6px !important;
+        color: white !important;
+        font-size: 12px !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .mobile-function-btn:hover {
+        background-color: rgba(50, 50, 50, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .mobile-function-btn.new-path {
+        background-color: #FFFF00 !important;
+        margin-top: 80px !important;    
+        color: #000 !important;
+        box-shadow: 0 0 10px rgba(255, 255, 0, 0.5) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mobile-function-btn.modify-points {
+        background-color: #2563eb !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mobile-function-btn.undo {
+        background-color: rgb(29, 29, 29) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mobile-function-btn.redo {
+        background-color: rgb(29, 29, 29) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mobile-function-btn.scale {
+        background-color: #2563eb !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
 }

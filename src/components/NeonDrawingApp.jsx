@@ -3446,6 +3446,43 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <span className="canvas-size-value">{modelSize.totalLength.toFixed(1)}cm</span>
                     </div>
                 </div>
+
+                {/* モバイル機能バー（サイドバー閉じている時のみ表示） */}
+                <div className="mobile-function-bar">
+                    <button
+                        className="mobile-function-btn new-path"
+                        onClick={startNewPath}
+                        disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
+                    >
+                        新しい<br/>パス
+                    </button>
+                    <button
+                        className="mobile-function-btn modify-points"
+                        onClick={() => setIsModifyingPoints(!isModifyingPoints)}
+                    >
+                        点修正
+                    </button>
+                    <button
+                        className="mobile-function-btn undo"
+                        onClick={handleUndo}
+                        disabled={historyIndex <= 0}
+                    >
+                        ←戻る
+                    </button>
+                    <button
+                        className="mobile-function-btn redo"
+                        onClick={handleRedo}
+                        disabled={historyIndex >= history.length - 1}
+                    >
+                        進む→
+                    </button>
+                    <button
+                        className="mobile-function-btn scale"
+                        onClick={openScaleModal}
+                    >
+                        拡大<br/>縮小
+                    </button>
+                </div>
             </div>
 
             {/* サイドバー - オーバーレイ */}
