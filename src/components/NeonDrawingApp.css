@@ -2595,7 +2595,7 @@
     .mobile-function-btn.new-path {
         background-color: #FFFF00 !important;
         white-space: nowrap !important;
-        margin-top: 40px !important;    
+        margin-top: 30px !important;    
         color: #000 !important;
         font-size: 10px !important;
         box-shadow: 0 0 10px rgba(255, 255, 0, 0.5) !important;
@@ -2665,7 +2665,7 @@
         border-radius: 6px !important;
         font-size: 14px !important;
         padding: 9px !important;
-        margin-top: 20px !important;
+        margin-top: 15px !important;
         width: 35px !important;
         height: 35px !important;
     }
