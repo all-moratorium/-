@@ -502,14 +502,13 @@
         font-size: 19px;
         padding-top: 2px;
         padding-bottom: 2px;
-        margin-left: 0px;
         flex-shrink: 0;
-        margin-left: 23px;
+        margin-left: 35px;
     }
     
     .customize-header .customize-guide-button {
         position: absolute;
-        left: 167px;
+        left: 178px;
         top: 32px;
         transform: translateY(-50%);
         width: 25.2px;
@@ -895,6 +894,90 @@
     .bulk-action-button {
         padding: 6px !important;
         font-size: 11px !important;
+    }
+
+    /* 一括色設定モーダルのモバイル対応 */
+    .bulk-modal-content {
+        width: 200px !important;
+        right: 0 !important;
+        box-sizing: border-box !important;
+        padding:5px !important;
+        border-radius: 0px !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow-y: auto !important;
+    }
+
+    .bulk-modal-content h3 {
+        font-size: 16px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .bulk-modal-content h4 {
+        font-size: 12px !important;
+        margin-bottom: 6px !important;
+    }
+
+    /* 選択されたチューブの表示 */
+    .bulk-modal-content div[style*="gridTemplateColumns"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 4px !important;
+        padding: 6px !important;
+        max-height: 100px !important;
+    }
+
+    .bulk-modal-content div[style*="チューブ"] {
+        padding: 3px 5px !important;
+        font-size: 10px !important;
+        min-height: 20px !important;
+    }
+
+    .bulk-modal-content div[style*="width: '10px'"] {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    /* 色選択ボタン */
+    .bulk-modal-content div[style*="repeat(4, 1fr)"] {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    .bulk-modal-content button[style*="48px"] {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 6px !important;
+    }
+
+    .bulk-modal-content span[style*="10px"] {
+        font-size: 9px !important;
+        max-width: 45px !important;
+    }
+
+    /* 色サンプルボタン */
+    .bulk-color-sample-button {
+        padding: 8px !important;
+        font-size: 12px !important;
+        border-radius: 4px !important;
+    }
+
+    /* 太さ選択ボタン */
+    .bulk-modal-content .thickness-buttons-container {
+        gap: 8px !important;
+    }
+
+    .bulk-modal-content button[style*="minWidth"] {
+        padding: 8px 16px !important;
+        font-size: 11px !important;
+        min-width: 60px !important;
+    }
+
+    /* 完了・キャンセルボタン */
+    .bulk-modal-complete-button,
+    .bulk-modal-cancel-button {
+        padding: 8px !important;
+        font-size: 12px !important;
+        border-radius: 4px !important;
     }
 }
 
