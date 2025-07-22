@@ -799,8 +799,6 @@
     border: 1px solid #6b7280;
     font-weight: bold;
     border-radius: 10px;
-    border: 1px solidrgb(255, 255, 255);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.2s;
     margin: 0 auto;
@@ -1237,8 +1235,8 @@
     flex: 1;
     padding: 10px 16px;
     background-color:rgb(80, 80, 80);
-    border: 1px solidrgb(128, 128, 128);
     border-radius: 6px;
+    border: none;
     color: #ffffff;
     font-size: 16px;
     font-weight: 500;
