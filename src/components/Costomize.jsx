@@ -514,7 +514,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
-                            const padding = 200; // 周囲の余白
+                            const isMobile = window.innerWidth <= 768;
+                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                             const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -1001,7 +1002,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             // 画面サイズに対してモデルが適切に収まるスケールを計算
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
-            const padding = 200; // 周囲の余白
+            const isMobile = window.innerWidth <= 768;
+            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
             
             const scaleX = (screenWidth - padding * 2) / modelWidth;
             const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -2604,7 +2606,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                                             const screenWidth = window.innerWidth;
                                             const screenHeight = window.innerHeight;
-                                            const padding = 200; // 周囲の余白
+                                            const isMobile = window.innerWidth <= 768;
+                                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                                             
                                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                                             const scaleY = (screenHeight - padding * 2) / modelHeight;
