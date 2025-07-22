@@ -242,6 +242,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     
     // 拡大縮小モーダル関連の状態
     const [showScaleModal, setShowScaleModal] = useState(false);
+    const [openedFromFunctionBar, setOpenedFromFunctionBar] = useState(false);
     const [scaleFactor, setScaleFactor] = useState(1.0);
     const [originalPaths, setOriginalPaths] = useState(null);
     
@@ -1099,7 +1100,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setShowScaleModal(false);
         setOriginalPaths(null);
         setScaleFactor(1.0);
-        setSidebarVisible(true);
+        
+        // 機能バーから開いた場合はサイドバーを開かない
+        if (!openedFromFunctionBar) {
+            setSidebarVisible(true);
+        }
+        setOpenedFromFunctionBar(false);
     }, [originalPaths, scaleFactor, paths, currentPathIndex, drawMode, drawingType, saveToHistory, 
         saveToLocalStorage, onStateChange, scale, offsetX, offsetY, backgroundImage, 
         initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, 
@@ -3484,7 +3490,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         className="mobile-function-btn scale"
-                        onClick={openScaleModal}
+                        onClick={() => {
+                            setOpenedFromFunctionBar(true);
+                            openScaleModal();
+                        }}
                     >
                         拡大<br/>縮小
                     </button>

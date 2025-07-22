@@ -2531,10 +2531,10 @@
     .neon-sidebar.collapsed .status-message-area {
         display: block !important;
         position: fixed !important;
-        right: 180px !important;
-        bottom: 22px !important;
+        right: 158px !important;
+        bottom: 16px !important;
         transform: translateX(50%) !important;
-        width: 190px !important;
+        width: 180px !important;
         z-index: 1000 !important;
         background-color: rgba(30, 30, 30, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
