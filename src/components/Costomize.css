@@ -1015,6 +1015,63 @@
         border-radius: 4px !important;
         margin-bottom: 12px !important;
     }
+
+    /* 色選択モーダルのモバイル対応 */
+    .color-selection-modal {
+        width: 200px !important;
+        min-width: 200px !important;
+        max-width: 200px !important;
+        right: 0 !important;
+        top: 0 !important;
+        height: 100vh !important;
+        padding: 5px !important;
+        border-radius: 0px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
+    }
+
+    .color-selection-modal h3 {
+        font-size: 13px !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* 色選択モーダル内のグリッド */
+    .color-selection-modal div[style*="repeat(4, 1fr)"] {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 4px !important;
+        padding: 4px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* 色選択モーダル内のボタン */
+    .color-selection-modal button[style*="48px"] {
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 4px !important;
+    }
+
+    /* 色選択モーダル内のテキスト */
+    .color-selection-modal span[style*="10px"] {
+        font-size: 8px !important;
+        max-width: 35px !important;
+    }
+
+    /* 色選択モーダルの色サンプルボタン */
+    .color-selection-modal .tube-color-sample-button {
+        padding: 4px !important;
+        font-size: 10px !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+    }
+
+    /* 色選択モーダルのキャンセルボタン */
+    .tube-color-modal-cancel-button {
+        padding: 4px !important;
+        font-size: 10px !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+    }
 }
 
 /* すべての要素にbox-sizingを適用 */

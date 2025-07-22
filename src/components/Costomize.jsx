@@ -2959,7 +2959,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     zIndex: 1000,
                     pointerEvents: 'none'
                 }}>
-                    <div style={{
+                    <div 
+                        className="color-selection-modal"
+                        style={{
                         backgroundColor: 'rgb(29, 29, 29)',
                         padding: '24px',
                         borderRadius: '12px',
