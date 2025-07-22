@@ -1380,6 +1380,11 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
+    
+    // タッチ操作用の状態
+    const [lastTouchDistance, setLastTouchDistance] = useState(0);
+    const [touchStartScale, setTouchStartScale] = useState(1);
+    const [lastTouchCenter, setLastTouchCenter] = useState({ x: 0, y: 0 });
 
     // パスのヒット判定を行う関数（stroke と fill の両方に対応）
     const getPathAtPosition = useCallback((x, y) => {
@@ -1683,6 +1688,119 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     const handleMouseLeave = useCallback(() => {
         setIsPanning(false);
     }, []);
+
+    // タッチイベント用のヘルパー関数
+    const getTouchDistance = (touches) => {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const getTouchCenter = (touches) => {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+    };
+
+    // タッチイベントハンドラー
+    const handleTouchStart = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 1) {
+            // 1本指: 左クリック相当
+            const touch = e.touches[0];
+            const mouseEvent = {
+                button: 0,
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                preventDefault: () => {}
+            };
+            handleMouseDown(mouseEvent);
+        } else if (e.touches.length === 2) {
+            // 2本指: パン・ズーム開始
+            const distance = getTouchDistance(e.touches);
+            const center = getTouchCenter(e.touches);
+            
+            setLastTouchDistance(distance);
+            setTouchStartScale(canvasSettings.scale);
+            setLastTouchCenter(center);
+            setIsPanning(true);
+        }
+    }, [canvasSettings.scale, handleMouseDown]);
+
+    const handleTouchMove = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 2 && isPanning) {
+            const distance = getTouchDistance(e.touches);
+            const center = getTouchCenter(e.touches);
+            
+            // ピンチズーム
+            if (lastTouchDistance > 0) {
+                const scaleChange = distance / lastTouchDistance;
+                let newScale = touchStartScale * scaleChange;
+                newScale = Math.max(0.18, Math.min(newScale, 20));
+                
+                const canvas = canvasRef.current;
+                const rect = canvas.getBoundingClientRect();
+                const zoomCenterX = center.x - rect.left;
+                const zoomCenterY = center.y - rect.top;
+                
+                const scaleRatio = newScale / canvasSettings.scale;
+                const newOffsetX = zoomCenterX - (zoomCenterX - canvasSettings.offsetX) * scaleRatio;
+                const newOffsetY = zoomCenterY - (zoomCenterY - canvasSettings.offsetY) * scaleRatio;
+                
+                setCanvasSettings(prev => ({
+                    ...prev,
+                    scale: newScale,
+                    offsetX: newOffsetX,
+                    offsetY: newOffsetY
+                }));
+            }
+            
+            // パン移動
+            if (lastTouchCenter.x !== 0 && lastTouchCenter.y !== 0) {
+                const deltaX = center.x - lastTouchCenter.x;
+                const deltaY = center.y - lastTouchCenter.y;
+                
+                setCanvasSettings(prev => ({
+                    ...prev,
+                    offsetX: prev.offsetX + deltaX,
+                    offsetY: prev.offsetY + deltaY
+                }));
+            }
+            
+            setLastTouchCenter(center);
+        } else if (e.touches.length === 1 && !isPanning) {
+            // 1本指: マウスムーブ相当
+            const touch = e.touches[0];
+            const mouseEvent = {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                preventDefault: () => {}
+            };
+            handleMouseMove(mouseEvent);
+        }
+    }, [isPanning, lastTouchDistance, touchStartScale, lastTouchCenter, canvasSettings.scale, canvasSettings.offsetX, canvasSettings.offsetY, handleMouseMove]);
+
+    const handleTouchEnd = useCallback((e) => {
+        e.preventDefault();
+        
+        if (e.touches.length < 2) {
+            setIsPanning(false);
+            setLastTouchDistance(0);
+            setLastTouchCenter({ x: 0, y: 0 });
+        }
+        
+        if (e.touches.length === 0) {
+            // 全タッチ終了: マウスアップ相当
+            const mouseEvent = {
+                preventDefault: () => {}
+            };
+            handleMouseUp(mouseEvent);
+        }
+    }, [handleMouseUp]);
 
     // アニメーション用の描画ループ
     const draw = () => {
@@ -1997,8 +2115,12 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
                     onContextMenu={(e) => e.preventDefault()}
                     onMouseLeave={handleMouseLeave}
+                    style={{ touchAction: 'none' }}
                 />
                 
                 {/* キャンバス右上のサイズ表示 */}
