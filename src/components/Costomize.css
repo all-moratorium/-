@@ -970,9 +970,11 @@
     .bulk-modal-content .thickness-buttons-container {
         gap: 6px !important;
         justify-content: center !important;
+        
     }
     .thickness-buttons-container {
         margin-bottom: 25px !important;
+        margin-top: 12px !important;
     }
 
     /* 6mmと8mmボタン */
