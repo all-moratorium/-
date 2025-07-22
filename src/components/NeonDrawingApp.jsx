@@ -683,15 +683,22 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const textX = canvas.width / 2;
             const textY = 16;
             
+            // モバイル判定
+            const isMobile = window.innerWidth <= 768;
+            const fontSize = isMobile ? '10px' : '14px';
+            const boxWidth = isMobile ? 60 : 80;
+            const boxHeight = isMobile ? 18 : 24;
+            const boxOffsetX = isMobile ? 30 : 40;
+            
             // 背景の半透明ボックス（中央揃えのため少し左にずらす）
             ctx.globalAlpha = 0.7;
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            ctx.fillRect(textX - 40, textY - 4, 80, 24);
+            ctx.fillRect(textX - boxOffsetX, textY - 4, boxWidth, boxHeight);
             ctx.globalAlpha = 1;
             
             // テキストを描画（中央揃え）
             ctx.fillStyle = '#ffffff';
-            ctx.font = '14px Arial';
+            ctx.font = `${fontSize} Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             ctx.fillText(`1マス = ${gridSize / 25}cm`, textX, textY);
