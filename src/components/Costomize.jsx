@@ -1362,19 +1362,29 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         URL.revokeObjectURL(url);
     };
 
-    // キャンバスのサイズを画面サイズの100%に設定
+    // キャンバスのサイズを画面サイズに合わせる
     useEffect(() => {
         const handleResize = () => {
             const newWidth = window.innerWidth;
             const newHeight = window.innerHeight;
+            
             setCanvasWidth(newWidth);
             setCanvasHeight(newHeight);
+            
+            // 初期表示時は原点を中央に配置（オフセットが初期値の場合のみ）
+            if (canvasSettings.offsetX === 0 && canvasSettings.offsetY === 0) {
+                setCanvasSettings(prev => ({
+                    ...prev,
+                    offsetX: newWidth / 2,
+                    offsetY: newHeight / 2
+                }));
+            }
         };
 
         window.addEventListener('resize', handleResize);
-        handleResize();
+        handleResize(); // 初回ロード時に実行
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [canvasSettings.offsetX, canvasSettings.offsetY]); // オフセットが初期値でない場合はリサイズ時に中央に移動しない
 
     // マウスイベントハンドラー（ズーム・パン機能）
     const [isPanning, setIsPanning] = useState(false);
