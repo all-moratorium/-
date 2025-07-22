@@ -1054,7 +1054,7 @@
     /* 色選択モーダル内のテキスト */
     .color-selection-modal span[style*="10px"] {
         font-size: 8px !important;
-        max-width: 35px !important;
+        max-width: 60px !important;
     }
 
     /* 色選択モーダルの色サンプルボタン */
