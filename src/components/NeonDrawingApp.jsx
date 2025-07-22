@@ -1702,7 +1702,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
                             const isMobile = window.innerWidth <= 768;
-                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
+                            const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                             const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -1777,7 +1777,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     const screenWidth = window.innerWidth;
                                     const screenHeight = window.innerHeight;
                                     const isMobile = window.innerWidth <= 768;
-                                    const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
+                                    const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                                     
                                     const scaleX = (screenWidth - padding * 2) / modelWidth;
                                     const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -2744,7 +2744,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         const isMobile = window.innerWidth <= 768;
-        const minScale = isMobile ? 0.05 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
+        const minScale = isMobile ? 0.1 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
         newScale = Math.max(minScale, Math.min(newScale, 20));
 
         // ズームの中心をマウスカーソルに合わせる
@@ -3063,7 +3063,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 const scaleChange = distance / lastTouchDistance;
                 let newScale = touchStartScale * scaleChange;
                 const isMobile = window.innerWidth <= 768;
-                const minScale = isMobile ? 0.05 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
+                const minScale = isMobile ? 0.1 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
                 newScale = Math.max(minScale, Math.min(newScale, 20));
                 
                 const canvas = canvasRef.current;

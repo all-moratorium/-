@@ -515,7 +515,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
                             const isMobile = window.innerWidth <= 768;
-                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
+                            const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                             const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -1574,7 +1574,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             newScale = canvasSettings.scale / (1 + scaleAmount);
         }
 
-        newScale = Math.max(0.18, Math.min(newScale, 10)); // 最小0.18倍、最大10倍に制限
+        const isMobile = window.innerWidth <= 768;
+        const minScale = isMobile ? 0.1 : 0.18;
+        newScale = Math.max(minScale, Math.min(newScale, 10)); // スマホは最小0.1倍、PCは0.18倍
 
         // ズームの中心をマウスカーソルに合わせる
         const newOffsetX = mouseX - (mouseX - canvasSettings.offsetX) * (newScale / canvasSettings.scale);
@@ -1752,7 +1754,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             if (lastTouchDistance > 0) {
                 const scaleChange = distance / lastTouchDistance;
                 let newScale = touchStartScale * scaleChange;
-                newScale = Math.max(0.18, Math.min(newScale, 20));
+                const isMobile = window.innerWidth <= 768;
+                const minScale = isMobile ? 0.1 : 0.18;
+                newScale = Math.max(minScale, Math.min(newScale, 20));
                 
                 const canvas = canvasRef.current;
                 const rect = canvas.getBoundingClientRect();
@@ -2607,7 +2611,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             const screenWidth = window.innerWidth;
                                             const screenHeight = window.innerHeight;
                                             const isMobile = window.innerWidth <= 768;
-                                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
+                                            const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                                             
                                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                                             const scaleY = (screenHeight - padding * 2) / modelHeight;
