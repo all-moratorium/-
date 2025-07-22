@@ -904,7 +904,7 @@
     position: fixed;
     right: 15px;
     top: 50%;
-    transform: translateY(-50%) !important;
+    transform: translateY(-50%) ;
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
@@ -926,7 +926,7 @@
     position: fixed;
     right: 15px;
     top: 55%;
-    transform: translateY(-50%) !important;
+    transform: translateY(-50%) ;
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
@@ -2345,13 +2345,12 @@
         border-radius: 4px !important;
     }
 
-
     .modal-content-right {
         width: 300px !important;
         height: 100% !important;
         position: absolute !important;
         right: 0 !important;
-        top: 50% !important;
+        top: 0 !important;
         transform: translateY(-50%) !important;
         left: auto !important;
         transform: none !important;
@@ -2429,6 +2428,9 @@
         font-size: 12px !important;
         min-width: 50px !important;
     }
+    .scale-setting-item {
+        margin-bottom: 2px !important;
+    }
 
     .direct-number-input {
         padding: 8px 12px !important;
@@ -2445,6 +2447,7 @@
     .scale-label {
         font-size: 14px !important;
         margin-bottom: 6px !important;
+        margin-top: 6px !important;
     }
 
     .scale-range-input {
@@ -2452,28 +2455,39 @@
     }
 
     .model-size-info {
-        padding: 12px !important;
-        margin-top: 8px !important;
+        padding: 9px !important;
+        margin-top: 6px !important;
     }
 
     .size-info-title {
         font-size: 14px !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 0px !important;
     }
 
     .size-info-item {
-        padding: 8px 0 !important;
+        padding: 5px 0 !important;
+        border:none !important;
         gap: 8px !important;
+    }
+    .direct-input-label {
+        margin-top: 0px !important;
     }
 
     .size-value {
         font-size: 16px !important;
         min-width: 60px !important;
     }
+    .size-info-grid {
+       gap: 0px !important;
+       margin-top: 6px !important;
+    }
 
     .modal-close-btn {
         font-size: 20px !important;
         padding: 4px !important;
+    }
+    .scale-input-container {
+        margin-top: 6px !important;
     }
 
     .modal-apply-btn {
@@ -2512,4 +2526,6 @@
         font-size: 12px !important;
         min-height: 32px !important;
     }
+
+
 }
