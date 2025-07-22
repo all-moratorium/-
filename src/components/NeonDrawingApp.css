@@ -2344,4 +2344,134 @@
         min-height: 30px !important;
         border-radius: 4px !important;
     }
+
+
+    .modal-content-right {
+        width: 300px !important;
+        height: 100% !important;
+        position: absolute !important;
+        right: 0 !important;
+        top: 50% !important;
+        left: auto !important;
+        transform: none !important;
+        border-radius: 0 !important;
+        padding: 9px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        max-height: 100vh !important;
+    }
+    .modal-content-inner {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .modal-title {
+        font-size: 18px !important;
+        margin-bottom: 0px !important;
+        padding: auto !important;
+    }
+
+    .modal-label {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    .modal-setting-item {
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .toggle-button {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-height: 32px !important;
+    }
+
+    .range-input {
+        height: 6px !important;
+    }
+
+    .file-input {
+        padding: 6px !important;
+        font-size: 12px !important;
+        min-height: 36px !important;
+    }
+
+    .clear-image-button,
+    .reset-size-button,
+    .reset-position-button,
+    .rectangle-generate-button,
+    .rectangle-cancel-button {
+        padding: 8px !important;
+        font-size: 13px !important;
+        min-height: 36px !important;
+        border-radius: 4px !important;
+    }
+
+    .direct-input-container,
+    .scale-input-container {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+    }
+
+    .direct-input-label {
+        font-size: 12px !important;
+        min-width: 50px !important;
+    }
+
+    .direct-number-input {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        min-width: 80px !important;
+        max-width: 120px !important;
+        height: 36px !important;
+    }
+
+    .input-unit {
+        font-size: 12px !important;
+    }
+
+    .scale-label {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .scale-range-input {
+        height: 6px !important;
+    }
+
+    .model-size-info {
+        padding: 12px !important;
+        margin-top: 8px !important;
+    }
+
+    .size-info-title {
+        font-size: 14px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .size-info-item {
+        padding: 8px 0 !important;
+        gap: 8px !important;
+    }
+
+    .size-value {
+        font-size: 16px !important;
+        min-width: 60px !important;
+    }
+
+    .modal-close-btn {
+        font-size: 20px !important;
+        padding: 4px !important;
+    }
+
+    .modal-apply-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-height: 32px !important;
+    }
 }
