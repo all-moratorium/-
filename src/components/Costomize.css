@@ -944,11 +944,6 @@
         box-sizing: border-box !important;
     }
 
-    .bulk-modal-content div[style*="width: '10px'"] {
-        width: 8px !important;
-        height: 8px !important;
-    }
-
     /* 色選択グリッド */
     .bulk-modal-content div[style*="repeat(4, 1fr)"],
     .bulk-modal-content div[style*="grid-template-columns: 'repeat(4, 1fr)'"],
@@ -957,7 +952,7 @@
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 4px !important;
         margin-top: 16px !important;
-        padding: 0 8px !important;
+        padding: 0 4px !important;
     }
 
     .bulk-modal-content button[style*="48px"] {
@@ -966,9 +961,9 @@
         border-radius: 4px !important;
     }
 
-    .bulk-modal-content span[style*="10px"] {
-        font-size: 9px !important;
-        max-width: 45px !important;
+    .bulk-modal-content span {
+        font-size: 8px !important;
+        max-width: 80px !important;
     }
 
     /* 色サンプルボタン */
@@ -1056,21 +1051,24 @@
         font-size: 8px !important;
         max-width: 60px !important;
     }
+    
 
     /* 色選択モーダルの色サンプルボタン */
     .color-selection-modal .tube-color-sample-button {
         padding: 4px !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         border-radius: 4px !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
+        margin-top: 0px !important;
     }
 
     /* 色選択モーダルのキャンセルボタン */
     .tube-color-modal-cancel-button {
         padding: 4px !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         border-radius: 4px !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
+        margin-top: 0px !important;
     }
 }
 
