@@ -919,17 +919,29 @@
     }
 
     /* 選択されたチューブの表示 */
-    .bulk-modal-content div[style*="gridTemplateColumns"] {
+    .bulk-modal-content div[style*="repeat(3, 1fr)"] {
+        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 4px !important;
-        padding: 6px !important;
+        padding: 4px !important;
         max-height: 100px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: auto !important;
     }
 
-    .bulk-modal-content div[style*="チューブ"] {
-        padding: 3px 5px !important;
-        font-size: 10px !important;
-        min-height: 20px !important;
+
+    .bulk-modal-content .selected-tube-item {
+        padding: 2px 13px !important;
+        font-size: 9px !important;
+        min-height: 25px !important;
+        width: 90px !important;
+        gap: 4px !important;
+        border-radius: 4px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
     }
 
     .bulk-modal-content div[style*="width: '10px'"] {
@@ -943,14 +955,15 @@
     .bulk-modal-content div[style*="gridTemplateColumns: 'repeat(4, 1fr)'"] {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 6px !important;
+        gap: 4px !important;
         margin-top: 16px !important;
+        padding: 0 8px !important;
     }
 
     .bulk-modal-content button[style*="48px"] {
-        width: 36px !important;
-        height: 36px !important;
-        border-radius: 6px !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 4px !important;
     }
 
     .bulk-modal-content span[style*="10px"] {
@@ -963,6 +976,7 @@
         padding: 4px !important;
         font-size: 12px !important;
         border-radius: 4px !important;
+        margin-bottom: 6px !important;
         margin-top: 0px !important;
     }
 
@@ -978,7 +992,7 @@
         
     }
     .thickness-buttons-container {
-        margin-bottom: 25px !important;
+        margin-bottom: 30px !important;
         margin-top: 12px !important;
     }
 

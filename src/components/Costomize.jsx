@@ -3092,6 +3092,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     return (
                                         <div
                                             key={index}
+                                            className="selected-tube-item"
                                             style={{
                                                 padding: '4px 6px',
                                                 backgroundColor: '#374151',
