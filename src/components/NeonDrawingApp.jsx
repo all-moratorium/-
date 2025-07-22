@@ -3450,10 +3450,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 {/* モバイル機能バー（サイドバー閉じている時のみ表示） */}
                 <div className="mobile-function-bar">
                     <button
-                        className="neon-toggle-sidebar-button"
+                        className="mobile-function-btn mobile-toggle"
                         onClick={() => setSidebarVisible(!sidebarVisible)}
                     >
-                        ▲
+                        {sidebarVisible ? '▲' : '▼'}
                     </button>
                     <button
                         className="mobile-function-btn new-path"

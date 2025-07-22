@@ -2007,8 +2007,8 @@
     }
     
     .neon-toggle-sidebar-button {
-        position: fixed !important;
-        right: 8px !important;
+        position: absolute !important;
+        right: 10px !important;
         top: 25px !important;
         width: 32px;
         height: 32px;
@@ -2590,7 +2590,7 @@
     .mobile-function-btn.new-path {
         background-color: #FFFF00 !important;
         white-space: nowrap !important;
-        margin-top: 80px !important;    
+        margin-top: 40px !important;    
         color: #000 !important;
         font-size: 10px !important;
         box-shadow: 0 0 10px rgba(255, 255, 0, 0.5) !important;
@@ -2651,6 +2651,17 @@
     .mobile-function-btn.scale {
         background-color: #2563eb !important;
         border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mobile-function-btn.mobile-toggle {
+        background-color: #0a0a0a !important;
+        color: rgb(255, 255, 255) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 6px !important;
+        font-size: 16px !important;
+        margin-top: 20px !important;
+        width: 35px !important;
+        height: 35px !important;
     }
 
 }
