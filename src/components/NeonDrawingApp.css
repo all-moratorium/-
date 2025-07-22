@@ -2527,5 +2527,21 @@
         min-height: 32px !important;
     }
 
+    /* サイドバー閉じているときのステータスメッセージ */
+    .neon-sidebar.collapsed .status-message-area {
+        display: block !important;
+        position: fixed !important;
+        right: 180px !important;
+        bottom: 22px !important;
+        transform: translateX(50%) !important;
+        width: 190px !important;
+        z-index: 1000 !important;
+        background-color: rgba(30, 30, 30, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        padding: 6px 1px !important;
+        border-radius: 4px !important;
+        text-align: center !important;
+    }
 
 }
