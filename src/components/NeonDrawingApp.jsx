@@ -3460,21 +3460,21 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         className="mobile-function-btn modify-points"
                         onClick={() => setIsModifyingPoints(!isModifyingPoints)}
                     >
-                        点修正
+                        点<br/>修正
                     </button>
                     <button
                         className="mobile-function-btn undo"
                         onClick={handleUndo}
                         disabled={historyIndex <= 0}
                     >
-                        ←戻る
+                        ←<br/>戻る
                     </button>
                     <button
                         className="mobile-function-btn redo"
                         onClick={handleRedo}
                         disabled={historyIndex >= history.length - 1}
                     >
-                        進む→
+                        →<br/>進む
                     </button>
                     <button
                         className="mobile-function-btn scale"

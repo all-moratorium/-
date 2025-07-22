@@ -2008,7 +2008,7 @@
     
     .neon-toggle-sidebar-button {
         position: fixed !important;
-        right: 25px !important;
+        right: 8px !important;
         top: 25px !important;
         width: 32px;
         height: 32px;
@@ -2589,8 +2589,10 @@
 
     .mobile-function-btn.new-path {
         background-color: #FFFF00 !important;
+        white-space: nowrap !important;
         margin-top: 80px !important;    
         color: #000 !important;
+        font-size: 10px !important;
         box-shadow: 0 0 10px rgba(255, 255, 0, 0.5) !important;
         border-color: rgba(255, 255, 255, 0.08) !important;
     }
@@ -2601,13 +2603,13 @@
     }
 
     .mobile-function-btn.undo {
-        background-color: rgb(29, 29, 29) !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: #4b5563 !important;
+        border-color: #6b7280 !important;
     }
 
     .mobile-function-btn.redo {
-        background-color: rgb(29, 29, 29) !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: #4b5563 !important;
+        border-color: #6b7280 !important;
     }
 
     .mobile-function-btn.scale {
