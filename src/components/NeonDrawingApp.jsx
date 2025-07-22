@@ -1701,7 +1701,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
-                            const padding = 200; // 周囲の余白
+                            const isMobile = window.innerWidth <= 768;
+                            const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
                             const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -1775,7 +1776,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     // 画面サイズに対してモデルが適切に収まるスケールを計算
                                     const screenWidth = window.innerWidth;
                                     const screenHeight = window.innerHeight;
-                                    const padding = 200; // 周囲の余白
+                                    const isMobile = window.innerWidth <= 768;
+                                    const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                                     
                                     const scaleX = (screenWidth - padding * 2) / modelWidth;
                                     const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -1954,7 +1956,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         // 画面サイズに対してモデルが適切に収まるスケールを計算
                         const screenWidth = window.innerWidth;
                         const screenHeight = window.innerHeight;
-                        const padding = 200; // 周囲の余白
+                        const isMobile = window.innerWidth <= 768;
+                        const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                         
                         const scaleX = (screenWidth - padding * 2) / modelWidth;
                         const scaleY = (screenHeight - padding * 2) / modelHeight;
@@ -2740,7 +2743,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             newScale = scale / (1 + scaleAmount);
         }
 
-        newScale = Math.max(0.18, Math.min(newScale, 20)); // 最小0.18倍、最大20倍に制限
+        const isMobile = window.innerWidth <= 768;
+        const minScale = isMobile ? 0.05 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
+        newScale = Math.max(minScale, Math.min(newScale, 20));
 
         // ズームの中心をマウスカーソルに合わせる
         setOffsetX(mouseX - (mouseX - offsetX) * (newScale / scale));
@@ -3057,7 +3062,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             if (lastTouchDistance > 0) {
                 const scaleChange = distance / lastTouchDistance;
                 let newScale = touchStartScale * scaleChange;
-                newScale = Math.max(0.18, Math.min(newScale, 20));
+                const isMobile = window.innerWidth <= 768;
+                const minScale = isMobile ? 0.05 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
+                newScale = Math.max(minScale, Math.min(newScale, 20));
                 
                 const canvas = canvasRef.current;
                 const rect = canvas.getBoundingClientRect();
@@ -3144,7 +3151,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 // 画面サイズに対してモデルが適切に収まるスケールを計算
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-                const padding = 200; // 周囲の余白
+                const isMobile = window.innerWidth <= 768;
+                const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                 
                 const scaleX = (screenWidth - padding * 2) / modelWidth;
                 const scaleY = (screenHeight - padding * 2) / modelHeight;

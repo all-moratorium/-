@@ -1362,7 +1362,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         URL.revokeObjectURL(url);
     };
 
-    // キャンバスのサイズを画面サイズに合わせる
+    // キャンバスのサイズを画面サイズに合わせる（NeonDrawingApp.jsxと同じ）
     useEffect(() => {
         const handleResize = () => {
             const newWidth = window.innerWidth;
@@ -1384,7 +1384,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         window.addEventListener('resize', handleResize);
         handleResize(); // 初回ロード時に実行
         return () => window.removeEventListener('resize', handleResize);
-    }, [canvasSettings.offsetX, canvasSettings.offsetY]); // オフセットが初期値でない場合はリサイズ時に中央に移動しない
+    }, [canvasSettings.offsetX, canvasSettings.offsetY]);
 
     // マウスイベントハンドラー（ズーム・パン機能）
     const [isPanning, setIsPanning] = useState(false);
