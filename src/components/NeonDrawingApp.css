@@ -2352,6 +2352,7 @@
         position: absolute !important;
         right: 0 !important;
         top: 50% !important;
+        transform: translateY(-50%) !important;
         left: auto !important;
         transform: none !important;
         border-radius: 0 !important;
@@ -2362,10 +2363,12 @@
     }
     .modal-content-inner {
         flex: 1 !important;
+        max-height: 100% !important;
         overflow-y: auto !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 8px !important;
+        padding:0 9px !important;margin:0 !important;
     }
 
     .modal-title {
@@ -2383,7 +2386,6 @@
         gap: 8px !important;
         margin-bottom: 12px !important;
     }
-
     .toggle-button {
         padding: 6px 12px !important;
         font-size: 12px !important;
@@ -2396,8 +2398,10 @@
 
     .file-input {
         padding: 6px !important;
+        border-radius: 4px !important;
         font-size: 12px !important;
         min-height: 36px !important;
+        margin-top: 6px !important;
     }
 
     .clear-image-button,
@@ -2405,10 +2409,13 @@
     .reset-position-button,
     .rectangle-generate-button,
     .rectangle-cancel-button {
-        padding: 8px !important;
-        font-size: 13px !important;
-        min-height: 36px !important;
+        padding: 6px !important;
+        font-size: 12px !important;
+        min-height: 25px !important;
         border-radius: 4px !important;
+        width: 95% !important;
+        margin: 0 auto !important;
+        margin-bottom: 4px !important;
     }
 
     .direct-input-container,
@@ -2471,6 +2478,37 @@
 
     .modal-apply-btn {
         padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-height: 32px !important;
+        border-radius: 4px !important;
+    }
+
+    .modal-header {
+        margin-bottom: 9px !important;
+        padding: 0 !important;
+    }
+    .modal-title {
+        font-size: 18px !important;
+        margin-bottom: 0px !important;
+        margin-top: 0px !important;
+    }
+
+    .modal-buttons-container {
+        gap: 8px !important;
+        margin-top: 16px !important;
+    }
+
+    .setting-description {
+        font-size: 12px !important;
+        margin-top: 2px !important;
+    }
+
+    .color-input {
+        height: 32px !important;
+    }
+
+    .reset-colors-button {
+        padding: 6px !important;
         font-size: 12px !important;
         min-height: 32px !important;
     }
