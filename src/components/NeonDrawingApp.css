@@ -2007,8 +2007,8 @@
     }
     
     .neon-toggle-sidebar-button {
-        position: absolute !important;
-        right: 10px !important;
+        position:fixed !important;
+        right: 25px !important;
         top: 25px !important;
         width: 32px;
         height: 32px;
@@ -2658,10 +2658,20 @@
         color: rgb(255, 255, 255) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
         border-radius: 6px !important;
-        font-size: 16px !important;
+        font-size: 14px !important;
         margin-top: 20px !important;
         width: 35px !important;
         height: 35px !important;
+    }
+
+    /* スマホ版では元のトグルボタンを非表示 */
+    .neon-toggle-sidebar-button {
+        display: none !important;
+    }
+
+    /* サイドバー開いている時のみ閉じるボタンを表示 */
+    .neon-sidebar:not(.collapsed) .neon-toggle-sidebar-button {
+        display: flex !important;
     }
 
 }
