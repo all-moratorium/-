@@ -909,12 +909,12 @@
     }
 
     .bulk-modal-content h3 {
-        font-size: 16px !important;
-        margin-bottom: 12px !important;
+        font-size: 13px !important;
+        margin-bottom: 24px !important;
     }
 
     .bulk-modal-content h4 {
-        font-size: 12px !important;
+        font-size: 10px !important;
         margin-bottom: 6px !important;
     }
 
@@ -956,7 +956,7 @@
 
     /* 色サンプルボタン */
     .bulk-color-sample-button {
-        padding: 8px !important;
+        padding: 4px !important;
         font-size: 12px !important;
         border-radius: 4px !important;
     }
@@ -967,7 +967,7 @@
     }
 
     .bulk-modal-content button[style*="minWidth"] {
-        padding: 8px 16px !important;
+        padding: 6px 12px !important;
         font-size: 11px !important;
         min-width: 60px !important;
     }
@@ -978,6 +978,7 @@
         padding: 8px !important;
         font-size: 12px !important;
         border-radius: 4px !important;
+        margin-bottom: 12px !important;
     }
 }
 
