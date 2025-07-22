@@ -3450,6 +3450,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 {/* モバイル機能バー（サイドバー閉じている時のみ表示） */}
                 <div className="mobile-function-bar">
                     <button
+                        className="neon-toggle-sidebar-button"
+                        onClick={() => setSidebarVisible(!sidebarVisible)}
+                    >
+                        ▲
+                    </button>
+                    <button
                         className="mobile-function-btn new-path"
                         onClick={startNewPath}
                         disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
@@ -3457,20 +3463,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         新しい<br/>パス
                     </button>
                     <button
-                        className="mobile-function-btn modify-points"
+                        className={`mobile-function-btn modify-points ${isModifyingPoints ? 'button-active' : ''}`}
                         onClick={() => setIsModifyingPoints(!isModifyingPoints)}
                     >
                         点<br/>修正
                     </button>
                     <button
-                        className="mobile-function-btn undo"
+                        className={`mobile-function-btn undo ${historyIndex <= 0 ? 'button-disabled' : ''}`}
                         onClick={handleUndo}
                         disabled={historyIndex <= 0}
                     >
                         ←<br/>戻る
                     </button>
                     <button
-                        className="mobile-function-btn redo"
+                        className={`mobile-function-btn redo ${historyIndex >= history.length - 1 ? 'button-disabled' : ''}`}
                         onClick={handleRedo}
                         disabled={historyIndex >= history.length - 1}
                     >

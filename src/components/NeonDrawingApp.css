@@ -2598,18 +2598,54 @@
     }
 
     .mobile-function-btn.modify-points {
+        background-color: #374151 !important;
+        border-color: #4b5563 !important;
+        color: #d1d5db !important;
+    }
+
+    .mobile-function-btn.modify-points.button-active {
         background-color: #2563eb !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: #3b82f6 !important;
+        color: white !important;
     }
 
     .mobile-function-btn.undo {
-        background-color: #4b5563 !important;
+        background-color: #7c3aed !important;
+        border-color: #8b5cf6 !important;
+        color: white !important;
+    }
+
+    .mobile-function-btn.undo.button-disabled {
+        background-color: rgb(29, 29, 29) !important;
+        color: #9ca3af !important;
         border-color: #6b7280 !important;
     }
 
     .mobile-function-btn.redo {
-        background-color: #4b5563 !important;
+        background-color: #7c3aed !important;
+        border-color: #8b5cf6 !important;
+        color: white !important;
+    }
+
+    .mobile-function-btn.redo.button-disabled {
+        background-color: rgb(29, 29, 29) !important;
+        color: #9ca3af !important;
         border-color: #6b7280 !important;
+    }
+
+    /* サイドバー閉じているときの光る効果を削除 */
+    .neon-sidebar.collapsed .neon-toggle-sidebar-button {
+        background-color: #0a0a0a !important;
+        color: rgb(255, 255, 255) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: none !important;
+        animation: none !important;
+    }
+
+    .neon-sidebar.collapsed .neon-toggle-sidebar-button:hover {
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: none !important;
     }
 
     .mobile-function-btn.scale {
