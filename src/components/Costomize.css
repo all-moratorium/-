@@ -559,8 +559,8 @@
     
     .canvas-size-display {
         position: fixed !important;
-        bottom: 20px !important;
-        left: 20px !important;
+        bottom: 15px !important;
+        left: 15px !important;
         top: auto !important;
         right: auto !important;
         min-width: 90px !important;
