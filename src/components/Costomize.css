@@ -450,6 +450,7 @@
 @media (max-width: 768px) {
     .customize-sidebar {
         width: 300px;
+        gap: 9px;
         max-width: 300px;
         border-radius: 0;
         height: 100vh;
@@ -457,7 +458,7 @@
         transform: translateX(0);
         top: 0;
         margin:0;
-        padding: 10px 5px;
+        padding: 10px 6px;
     }
     
     .customize-toggle-sidebar-button {
@@ -582,6 +583,318 @@
     .canvas-size-label,
     .canvas-size-value {
         font-size: 9px !important;
+    }
+
+    /* カスタマイズ要素のモバイル対応 */
+    .customize-setting-group {
+        margin-bottom: 16px !important;
+        padding-bottom: 16px !important;
+    }
+    .grid-toggle-container {
+        width: 132px !important;
+    }
+    .customize-setting-title {
+        font-size: 14px !important;
+        font-weight: bold !important;
+        color: #d1d5db !important;
+        margin-bottom: 12px !important;
+    }
+    .base-settings {
+        margin-bottom: 0px !important;
+    }
+    
+
+    .customize-setting-label {
+        font-size: 14px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .customize-color-palette {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 4px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .customize-color-preset {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .neon-tube-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 21px !important;
+    }
+
+    .customize-custom-color-section {
+        gap: 6px !important;
+    }
+
+    .customize-custom-color-input {
+        height: 28px !important;
+    }
+
+    .customize-path-color-section {
+        border-radius: 6px !important;
+        padding: 8px !important;
+        width: 90% !important;
+        margin: 0px auto !important;
+        margin-bottom: 8px !important;
+    }
+
+    .customize-path-color-controls {
+        gap: 6px !important;
+        margin-bottom: 6px !important;
+    }
+    .neon-tube-title {
+        font-size: 13px !important;
+        font-weight: bold !important;
+        color: #d1d5db !important;
+        margin-left: 20px !important;
+    }
+    .tube-total-length-subtitle {
+        font-size: 13px !important;
+        color: #d1d5db !important;
+        font-weight: normal !important;
+        opacity: 1 !important;
+    }
+
+    .customize-path-color-input {
+        width: 35px !important;
+        height: 20px !important;
+    }
+
+    .customize-path-preset-colors {
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 3px !important;
+    }
+    .tube-minimized-message {
+        padding: 20px  !important;
+        margin-top: 25px !important;
+        margin-bottom: 5px !important;
+        text-align: center !important;
+        color: #9ca3af !important;
+        font-size: 13px !important;
+        font-style: italic !important;
+    }
+    .base-item {
+        margin-bottom: 0px !important;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 88% !important;
+        margin: 0px auto !important;
+    }
+
+    .customize-path-preset {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .customize-slider-container {
+        gap: 6px !important;
+        padding-left: 30px !important;
+        padding-top: 12px !important;
+    }
+
+    .customize-slider-value {
+        min-width: 35px !important;
+        font-size: 11px !important;
+    }
+
+    .customize-checkbox-container {
+        margin-bottom: 8px !important;
+        font-size: 12px !important;
+    }
+
+    .customize-checkmark {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .customize-download-button {
+        width: 90% !important;
+        margin: 0px auto !important;
+        margin-bottom: 10px !important;
+        font-size: 14px !important;
+        padding:8px 12px !important;
+        height: auto !important;
+    }
+    .base-color-label {
+        font-size: 12px !important;
+        color: #d1d5db !important;
+        margin-bottom: 6px !important;
+    }
+
+    .customize-reset-button {
+        padding: 10px !important;
+        font-size: 14px !important;
+    }
+    .installation-environment-button {
+        background-color: #6b7280;
+        box-sizing: border-box;
+        color: white;
+        border: 1px solid #6b7280;
+        border-radius: 4px !important;
+        padding: 10px 20px !important;
+        font-size: 12px !important;
+    }
+
+    .tube-title {
+        font-size: 16px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .color-setting-section {
+        margin-bottom: 12px !important;
+        margin-top: 16px !important;
+        gap: 8px !important;
+    }
+
+    .color-setting-label {
+        font-size: 13px !important;
+        min-width: 50px !important;
+        margin-left: 30px !important;
+    }
+    .neon-tube-actions {
+        display: flex;
+        gap: 6px !important;
+        margin-right: 6px !important;
+        margin-top: 12px !important;
+    }
+    .neon-tube-settings {
+        margin-bottom: 0px !important;
+    }
+
+    .color-setting-controls {
+        gap: 6px !important;
+        padding-left: 30px !important;
+    }
+
+    .color-preview {
+        width: 28px !important;
+        height: 28px !important;
+        margin:0 !important;
+    }
+
+    .color-select-button {
+        padding: 6px 8px !important;
+        margin-left: 8px !important;
+        font-size: 10px !important;
+        width: 60px !important;
+        border-radius: 4px !important;
+    }
+
+    .thickness-setting-section {
+        margin-top: 12px !important;
+        margin-bottom: 4px !important;
+        gap: 8px !important;
+    }
+
+    .thickness-setting-label {
+        font-size: 13px !important;
+        min-width: 50px !important;
+        margin-left: 36px !important;
+    }
+
+    .thickness-button-group {
+        gap: 6px !important;
+        margin-left: 25px !important;
+    }
+
+    .thickness-button {
+        padding: 3px 6px !important;
+        font-size: 12px !important;
+        width: 50px !important;
+        height: 28px !important;
+        border-radius: 4px !important;
+    }
+
+    .neon-power-section {
+        padding-top: 10px !important;
+        padding-bottom: 20px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .neon-power-controls {
+        gap: 12px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .neon-power-status {
+        gap: 8px !important;
+        padding-left: 15px !important;
+    }
+
+    .neon-status-text {
+        width: 50px !important;
+        font-size: 14px !important;
+    }
+
+    .status-dot {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .neon-power-switch {
+        width: 70px !important;
+        height: 35px !important;
+        font-size: 14px !important;
+    }
+
+    .neon-switch-handle {
+        width: 26px !important;
+        height: 26px !important;
+        top: 3px !important;
+    }
+
+    .neon-switch-handle.on {
+        left: 38px !important;
+    }
+
+    .neon-background-controls {
+        gap: 6px !important;
+        padding-right: 20px !important;
+    }
+
+    .background-label {
+        font-size: 11px !important;
+    }
+
+    .background-color-preview,
+    .background-color-input {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .neon-status-description {
+        font-size: 11px !important;
+    }
+
+    .bulk-setting-section {
+        margin-bottom: 30px !important;
+    }
+
+    .bulk-select-button {
+        width: 65% !important;
+        padding: 8px !important;
+        font-size: 12px !important;
+        border-radius: 4px !important;
+    }
+
+    .bulk-selection-active {
+        margin-bottom: 10px !important;
+        font-size: 13px !important;
+    }
+
+    .bulk-action-buttons {
+        gap: 6px !important;
+    }
+
+    .bulk-action-button {
+        padding: 6px !important;
+        font-size: 11px !important;
     }
 }
 
