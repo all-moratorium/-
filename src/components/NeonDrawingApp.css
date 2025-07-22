@@ -794,7 +794,7 @@
 .settings-button {
     width: 30%;
     padding: 12px 0;
-    background-color: #6b7280;
+    background-color:rgb(20, 20, 20);
     color: white;
     border: 1px solid #6b7280;
     font-weight: bold;
@@ -2129,6 +2129,8 @@
         padding: 8px 12px !important;
         margin-bottom: 12px !important;
         border-radius: 4px !important;
+        width: 82% !important;
+        margin: 0px auto !important;
     }
     
     .status-message {
@@ -2248,12 +2250,13 @@
     
     /* 設定ボタン */
     .settings-button {
-        width: 40% !important;
-        padding: 10px 8px !important;
+        width: 80px !important;
         font-size: 12px !important;
+        padding:0 !important;
         min-height: 40px !important;
-        margin-top: 6px !important;
         margin-bottom: 6px !important;
+        margin:4px auto !important;
+        background-color:rgb(20, 20, 20) !important;
     }
     
     /* リセットボタン関連 */
