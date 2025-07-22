@@ -2547,7 +2547,9 @@
     /* サイドバー閉じているときの機能バー */
     .mobile-function-bar {
         display: none !important;
-        height: 100vh !important;
+        height: auto !important;
+        max-height: 100vh !important;
+        min-height: 100vh !important;
         position: fixed !important;
         background-color: rgba(30, 30, 30, 0.95) !important;
         right: 0 !important;
@@ -2557,6 +2559,8 @@
         z-index: 1001 !important;
         flex-direction: column !important;
         gap: 8px !important;
+        padding: 10px 0 !important;
+        overflow-y: auto !important;
     }
 
     .app-container:has(.neon-sidebar.collapsed) .mobile-function-bar {
@@ -2576,6 +2580,7 @@
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         display: flex !important;
+        padding: 6px !important;
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
@@ -2659,6 +2664,7 @@
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
         border-radius: 6px !important;
         font-size: 14px !important;
+        padding: 9px !important;
         margin-top: 20px !important;
         width: 35px !important;
         height: 35px !important;
