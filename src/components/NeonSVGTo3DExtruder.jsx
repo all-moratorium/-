@@ -736,53 +736,93 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
                     neonGroupRef.current = new THREE.Group();
                     
-                    updateProgress(65, 'ネオンチューブを生成中...');
+                    updateProgress(65, 'ネオンチューブ準備中...');
                     
                     setTimeout(() => {
-                      updateProgress(75, 'ネオンチューブを構築中...');
-                
+                      updateProgress(68, 'ネオンチューブ形状を解析中...');
+                      
                       setTimeout(() => {
-                        updateProgress(82, 'ネオンチューブとベースを配置中...');
-                        
-                        elementsData.forEach((elementData, index) => {
-                          if (elementData.type === 'base') {
-                            if (elementData.points.length > 2) {
-                              const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
-                              const baseMesh = createBase(elementData.points, correctFillColor);
-                              if (baseMesh) {
-                                neonGroupRef.current.add(baseMesh);
-                              }
-                            }
-                          } else if (elementData.type === 'neon') {
-                            if (elementData.points.length > 1) {
-                              const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
-                              if (neonTubeGroup) {
-                                neonGroupRef.current.add(neonTubeGroup);
-                              }
-                            }
-                          }
-                        });
-                        
-                        sceneRef.current.add(neonGroupRef.current);
-                        
-                        const box = new THREE.Box3().setFromObject(neonGroupRef.current);
-                        const center = box.getCenter(new THREE.Vector3());
-                        const size = box.getSize(new THREE.Vector3());
-                        
-                        neonGroupRef.current.position.sub(center);
-
-                        const maxDim = Math.max(size.x, size.y, size.z);
-                        const distance = maxDim * 1.8;
-                        cameraRef.current.position.z = distance;
-                        
-                        updateProgress(92, 'マテリアルを適用中...');
+                        updateProgress(72, 'ネオンチューブを生成中...');
                         
                         setTimeout(() => {
-                          updateEmissive();
+                          updateProgress(75, 'ネオンチューブを構築中...');
+                
+                      setTimeout(() => {
+                        updateProgress(76, 'ベースプレート形状を解析中...');
+                        
+                        setTimeout(() => {
+                          updateProgress(78, 'ベースプレートを生成中...');
                           
-                          updateProgress(100, '3Dモデル生成完了');
+                          // ベースプレート作成
+                          elementsData.forEach((elementData, index) => {
+                            if (elementData.type === 'base') {
+                              if (elementData.points.length > 2) {
+                                const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
+                                const baseMesh = createBase(elementData.points, correctFillColor);
+                                if (baseMesh) {
+                                  neonGroupRef.current.add(baseMesh);
+                                }
+                              }
+                            }
+                          });
+                          
+                          setTimeout(() => {
+                            updateProgress(80, 'ベースプレート配置完了...');
+                            
+                            setTimeout(() => {
+                              updateProgress(81, 'ネオンチューブ準備中...');
+                              
+                              setTimeout(() => {
+                                updateProgress(82, 'ネオンチューブを生成中...');
+                              
+                              // ネオンチューブ作成
+                              elementsData.forEach((elementData, index) => {
+                                if (elementData.type === 'neon') {
+                                  if (elementData.points.length > 1) {
+                                    const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
+                                    if (neonTubeGroup) {
+                                      neonGroupRef.current.add(neonTubeGroup);
+                                    }
+                                  }
+                                }
+                              });
+                              
+                                setTimeout(() => {
+                                  updateProgress(85, 'ネオンチューブ配置中...');
+                                  
+                                  setTimeout(() => {
+                                    updateProgress(88, '3Dモデルを配置中...');
+                            
+                            sceneRef.current.add(neonGroupRef.current);
+                            
+                            const box = new THREE.Box3().setFromObject(neonGroupRef.current);
+                            const center = box.getCenter(new THREE.Vector3());
+                            const size = box.getSize(new THREE.Vector3());
+                            
+                            neonGroupRef.current.position.sub(center);
+
+                            const maxDim = Math.max(size.x, size.y, size.z);
+                            const distance = maxDim * 1.8;
+                            cameraRef.current.position.z = distance;
+                            
+                                setTimeout(() => {
+                                  updateProgress(95, 'マテリアルを適用中...');
+                                  
+                                  setTimeout(() => {
+                                    updateEmissive();
+                                    
+                                    updateProgress(100, '3Dモデル生成完了');
+                                  }, 10);
+                                    }, 10);
+                                  }, 10);
+                                }, 10);
+                              }, 10);
+                            }, 10);
+                          }, 10);
                         }, 10);
                       }, 8);
+                        }, 10);
+                      }, 10);
                     }, 10);
                   }, 10);
                 }, 10);
