@@ -922,7 +922,7 @@
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 4px !important;
         padding: 4px !important;
-        max-height: 100px !important;
+        max-height: 75px !important;
         width: 100% !important;
         box-sizing: border-box !important;
         overflow: auto !important;
