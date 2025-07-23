@@ -2119,7 +2119,6 @@ html, body {
     height: 100%;
     background: #FFFF00;
     border-radius: 4px;
-    transition: width 0.3s ease;
     position: relative;
     box-shadow: 0 0 8px rgba(255, 255, 0, 0.4);
 }

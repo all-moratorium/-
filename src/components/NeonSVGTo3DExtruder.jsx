@@ -663,73 +663,105 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         console.log('フォールバック計算 - スケール:', calculatedScale);
       }
       
-      const elementsData = SimpleSVGLoader.extractElements(svgDoc, calculatedScale);
+      // 処理開始 - 0%
+      window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+        detail: { progress: 0, message: '処理を開始しています...' }
+      }));
       
-      // 元のloadFromFileのコールバック処理を実行
-      if (neonGroupRef.current) {
-        sceneRef.current.remove(neonGroupRef.current);
-        neonGroupRef.current.children.forEach(child => {
-          if (child.geometry) child.geometry.dispose();
-          if (child.material) {
-            if (Array.isArray(child.material)) {
-              child.material.forEach(m => m.dispose());
-            } else {
-              child.material.dispose();
+      // SVGデータ解析開始 - 30%
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+          detail: { progress: 30, message: 'SVGパスデータを解析中...' }
+        }));
+        
+        const elementsData = SimpleSVGLoader.extractElements(svgDoc, calculatedScale);
+        
+        // 3Dジオメトリ生成開始 - 60%
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+            detail: { progress: 60, message: '3Dモデルを構築中...' }
+          }));
+          
+          // ジオメトリ生成処理を非同期化
+          requestAnimationFrame(() => {
+            // 元のloadFromFileのコールバック処理を実行
+            if (neonGroupRef.current) {
+              sceneRef.current.remove(neonGroupRef.current);
+              neonGroupRef.current.children.forEach(child => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) {
+                  if (Array.isArray(child.material)) {
+                    child.material.forEach(m => m.dispose());
+                  } else {
+                    child.material.dispose();
+                  }
+                }
+              });
             }
-          }
+            neonMaterialsRef.current = [];
+
+            neonGroupRef.current = new THREE.Group();
+            
+            elementsData.forEach((elementData, index) => {
+              if (elementData.type === 'base') {
+                // 土台の処理
+                if (elementData.points.length > 2) {
+                  // Use the correct baseColor from calculatedModelData instead of elementData.fill
+                  const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
+                  const baseMesh = createBase(elementData.points, correctFillColor);
+                  if (baseMesh) {
+                    neonGroupRef.current.add(baseMesh);
+                  }
+                }
+              } else if (elementData.type === 'neon') {
+                // ネオンチューブの処理
+                if (elementData.points.length > 1) {
+                  const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
+                  if (neonTubeGroup) {
+                    neonGroupRef.current.add(neonTubeGroup);
+                  }
+                }
+              }
+            });
+            
+            sceneRef.current.add(neonGroupRef.current);
+            
+            const box = new THREE.Box3().setFromObject(neonGroupRef.current);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            
+            neonGroupRef.current.position.sub(center);
+
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const distance = maxDim * 1.8;
+            cameraRef.current.position.z = distance;
+            
+            // デバッグ: 処理された要素数をログ出力
+            console.log(`SimpleSVGLoader processed ${elementsData.length} elements:`);
+            elementsData.forEach((element, index) => {
+              console.log(`  Element ${index}: type=${element.type}, points=${element.points.length}, stroke=${element.stroke}, fill=${element.fill}`);
+              // 最初の5つのポイントをログ出力して形状を確認
+              if (element.points.length > 0) {
+                const firstFewPoints = element.points.slice(0, Math.min(5, element.points.length));
+                console.log(`    First points:`, firstFewPoints.map(p => `(${p.x.toFixed(2)}, ${p.y.toFixed(2)}, ${p.z.toFixed(2)})`));
+              }
+            });
+
+            // マテリアル適用 - 90%
+            window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+              detail: { progress: 90, message: 'ネオンマテリアルを適用中...' }
+            }));
+            
+            updateEmissive();
+            
+            // レンダリング完了 - 100%
+            window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+              detail: { progress: 100, message: '3Dモデル生成完了' }
+            }));
+          });
         });
-      }
-      neonMaterialsRef.current = [];
-
-      neonGroupRef.current = new THREE.Group();
-      
-      elementsData.forEach((elementData, index) => {
-        if (elementData.type === 'base') {
-          // 土台の処理
-          if (elementData.points.length > 2) {
-            // Use the correct baseColor from calculatedModelData instead of elementData.fill
-            const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
-            const baseMesh = createBase(elementData.points, correctFillColor);
-            if (baseMesh) {
-              neonGroupRef.current.add(baseMesh);
-            }
-          }
-        } else if (elementData.type === 'neon') {
-          // ネオンチューブの処理
-          if (elementData.points.length > 1) {
-            const neonTubeGroup = createNeonTube(elementData.points, index, elementData.stroke, elementData.strokeWidth);
-            if (neonTubeGroup) {
-              neonGroupRef.current.add(neonTubeGroup);
-            }
-          }
-        }
       });
       
-      sceneRef.current.add(neonGroupRef.current);
-      
-      const box = new THREE.Box3().setFromObject(neonGroupRef.current);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      
-      neonGroupRef.current.position.sub(center);
-
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const distance = maxDim * 1.8;
-      cameraRef.current.position.z = distance;
-      
-      // デバッグ: 処理された要素数をログ出力
-      console.log(`SimpleSVGLoader processed ${elementsData.length} elements:`);
-      elementsData.forEach((element, index) => {
-        console.log(`  Element ${index}: type=${element.type}, points=${element.points.length}, stroke=${element.stroke}, fill=${element.fill}`);
-        // 最初の5つのポイントをログ出力して形状を確認
-        if (element.points.length > 0) {
-          const firstFewPoints = element.points.slice(0, Math.min(5, element.points.length));
-          console.log(`    First points:`, firstFewPoints.map(p => `(${p.x.toFixed(2)}, ${p.y.toFixed(2)}, ${p.z.toFixed(2)})`));
-        }
-      });
-
-      // レンダリング完了イベントを即座に発行
-      updateEmissive();
       window.dispatchEvent(new CustomEvent('NeonRenderingCompleted'));
     };
     reader.readAsText(file);
@@ -908,6 +940,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     isMountedRef.current = true;
     console.log('Initializing Three.js scene...');
     
+    // リアルタイム進捗イベント: 初期化開始
+    window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+      detail: { stage: '初期化開始', progress: 10, message: 'WebGL初期化中...' }
+    }));
+    
     // Clear any existing content
     while (mountRef.current.firstChild) {
       mountRef.current.removeChild(mountRef.current.firstChild);
@@ -918,6 +955,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     scene.background = new THREE.Color(0x242424);
     sceneRef.current = scene;
     console.log('Scene background set to: 0x242424');
+    
+    // リアルタイム進捗イベント: シーン作成完了
+    window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+      detail: { stage: 'シーン作成', progress: 30, message: 'Three.jsシーン構築完了' }
+    }));
 
     // RectAreaLight サポート（プリロード済みをチェック）
     // RectAreaLightUniformsLib.init(); // Costomize.jsxでプリロード済み
@@ -961,6 +1003,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     renderer.localClippingEnabled = true; // クリッピングプレーンを有効化
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
+    
+    // 実際のDOM追加完了を待って進捗更新
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+        detail: { stage: 'レンダラー設定', progress: 25, message: 'WebGLレンダラー初期化完了' }
+      }));
+    });
 
     // Post-processing setup for selective bloom
     const renderPass = new RenderPass(scene, camera);
@@ -1008,6 +1057,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     finalComposer.addPass(finalPass);
 
     composerRef.current = { bloom: bloomComposer, final: finalComposer };
+    
+    // エフェクト初期化完了を待って進捗更新
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+        detail: { stage: 'エフェクト設定', progress: 40, message: 'ブルームエフェクト初期化完了' }
+      }));
+    }, 100);
     
     // Lighting - match SVGTo3DExtruder settings (before controls)
 
@@ -1175,6 +1231,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // アニメーションをAnimationManagerに登録
     animationCleanupRef.current = animationManager.addCallback(animate, 'NeonSVGTo3DExtruder');
+    
+    // アニメーションループ開始完了を待って進捗更新
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
+        detail: { stage: 'アニメーション開始', progress: 60, message: 'レンダリングループ開始完了' }
+      }));
+    }, 200);
 
     // Handle window resize
     const handleResize = () => {
@@ -1419,16 +1482,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   useEffect(() => {
     if (neonSvgData && neonSvgData.svgContent) {
       console.log('SVGデータを自動ロード中...');
-      // 少し遅延を入れてロード
-      const timer = setTimeout(() => {
-        const blob = new Blob([neonSvgData.svgContent], { type: 'image/svg+xml' });
-        const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
-        
-        // SVGファイルをロード
-        loadSVGFile(file);
-      }, 100);
       
-      return () => clearTimeout(timer);
+      // すぐにロード開始
+      const blob = new Blob([neonSvgData.svgContent], { type: 'image/svg+xml' });
+      const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
+      
+      // SVGファイルをロード
+      loadSVGFile(file);
     }
   }, [neonSvgData, loadSVGFile]);
 

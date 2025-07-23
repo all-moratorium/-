@@ -7,6 +7,7 @@ import NeonSVGTo3DExtruder from './NeonSVGTo3DExtruder'; // ネオンSVG3Dエク
 import TextGenerator from './TextGenerator'; // テキスト生成コンポーネントをインポート
 import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポーネントをインポート
 import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
+import RealTime3DProgressModal from './RealTime3DProgressModal.jsx'; // リアルタイム3D進捗モーダル
 
 
 
@@ -396,6 +397,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isCustomizeGuideEffectStopped, setIsCustomizeGuideEffectStopped] = useState(false);
   // スマホ版3Dプレビュー動的マウント制御
   const [isMobile3DPreviewMounted, setIsMobile3DPreviewMounted] = useState(false);
+  // リアルタイム3D進捗モーダル制御
+  const [isRealTime3DProgressVisible, setIsRealTime3DProgressVisible] = useState(false);
   const [isPreview3DGuideEffectStopped, setIsPreview3DGuideEffectStopped] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
@@ -550,6 +553,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       if (isMobileNow) {
         setIsMobile3DPreviewMounted(true);
       }
+      
+      // リアルタイム進捗モーダルを表示
+      setIsRealTime3DProgressVisible(true);
+      
       // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
       setCurrentPage('neonSvg3dPreview');
     };
@@ -603,7 +610,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     if (isMobile && currentPage !== 'neonSvg3dPreview' && isMobile3DPreviewMounted) {
       setIsMobile3DPreviewMounted(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted]);
+    // 3Dプレビューページ以外に遷移した時は進捗モーダルを閉じる
+    if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
+      setIsRealTime3DProgressVisible(false);
+    }
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isRealTime3DProgressVisible]);
 
   // モバイルデバイス検出
   useEffect(() => {
@@ -1948,6 +1959,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
           />
         </div>
       )}
+      
+      {/* リアルタイム3D進捗モーダル */}
+      <RealTime3DProgressModal 
+        isVisible={isRealTime3DProgressVisible}
+        onComplete={() => setIsRealTime3DProgressVisible(false)}
+      />
       
       {/* Main layout */}
       <div className="layout-container">
