@@ -544,8 +544,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
 
     const handleRequestPageTransition = () => {
-      // スマホ版では3Dコンポーネントを動的マウント
-      if (isMobile) {
+      // リアルタイムでモバイル判定（stateに依存しない）
+      const isMobileNow = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      
+      if (isMobileNow) {
         setIsMobile3DPreviewMounted(true);
       }
       // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
@@ -593,7 +595,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('sharedFileDataLoaded', handleSharedFileData);
       window.removeEventListener('clearCustomizeState', handleClearCustomizeState);
     };
-  }, []);
+  }, [isMobile]);
 
   // スマホ版3Dプレビューのアンマウント処理
   useEffect(() => {
@@ -1615,7 +1617,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
           onGuideEffectStop={() => setIsCustomizeGuideEffectStopped(true)}
         />;
       case 'neonSvg3dPreview':
-        if (isMobile) {
+        if (isMobile && !isMobile3DPreviewMounted) {
           return (
             <div className="main-content" style={{
               display: 'flex',
