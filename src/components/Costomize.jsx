@@ -230,7 +230,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             // 軽量1層shadowBlurグロー（メインキャンバスと統一）
                             cleanCtx.save();
                             cleanCtx.shadowColor = color;
-                            cleanCtx.shadowBlur = 15;
+                            cleanCtx.shadowBlur = 15 * (window.devicePixelRatio || 1);
                             cleanCtx.strokeStyle = adjustBrightness(color, Math.min(currentBrightness * 1.2, 200));
                             cleanCtx.globalAlpha = 1.0;
                             cleanCtx.lineWidth = thickness;
@@ -755,7 +755,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         // shadowBlurでグロー効果（GPUアクセラレーションが効く）
         ctx.shadowColor = color;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 15 * (window.devicePixelRatio || 1);
         ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.3, 255));
         ctx.globalAlpha = 1.0;
         ctx.lineWidth = thickness;
