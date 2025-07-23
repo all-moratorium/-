@@ -1,7 +1,7 @@
 /* アプリケーション全体のコンテナ */
 .app-container {
     display: flex;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
     background-color: #000000;
     overflow: hidden;
@@ -112,7 +112,7 @@
     top: 0;
     right: 0;
     width: 380px;
-    height: 100vh;
+    height: 100%;
     background-color:rgb(29, 29, 29);
     border-radius: 12px;
     overflow-y: hidden;
@@ -1995,7 +1995,7 @@
         width: 300px;
         max-width: 300px;
         border-radius: 0;
-        height: 100vh;
+        height: 100%;
         right: 0;
         transform: translateX(0);
         top: 0;
@@ -2356,7 +2356,7 @@
         padding: 9px !important;
         margin: 0 !important;
         box-sizing: border-box !important;
-        max-height: 100vh !important;
+        max-height: 100% !important;
     }
     .modal-content-inner {
         flex: 1 !important;
@@ -2546,8 +2546,8 @@
     .mobile-function-bar {
         display: none !important;
         height: auto !important;
-        max-height: 100vh !important;
-        min-height: 100vh !important;
+        max-height: 100% !important;
+        min-height: 100% !important;
         position: fixed !important;
         background-color: rgba(30, 30, 30, 0.95) !important;
         right: 0 !important;

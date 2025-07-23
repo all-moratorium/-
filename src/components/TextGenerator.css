@@ -36,7 +36,7 @@
     box-sizing: border-box;
     width: 24%;
     max-width: 500px;
-    height: 100vh;
+    height: 100%;
     background-color: #242424;
     border-left: 1px solid #333;
     padding: 10px;
@@ -276,7 +276,9 @@
 
 .font-preview-text {
     color:rgb(0, 0, 0);
-    font-size: 26px;
+    font-size: 27px;
+    box-sizing: border-box;
+    padding: 8px;
     line-height: 1.9;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -284,7 +286,7 @@
     transition: all 0.2s ease;
     text-align: center;
     overflow: hidden;
-    width: 113px;
+    width: 100%;
    
     
 }

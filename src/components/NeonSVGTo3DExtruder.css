@@ -12,7 +12,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background-color: #242424;
   z-index: 1;
   pointer-events: auto;
@@ -23,7 +23,7 @@
     top: 0;
     right: 0;
     width: 320px;
-    height: 100vh;
+    height: 100%;
     background-color:rgb(29, 29, 29);
     border-radius: 12px;
     overflow-y: hidden;

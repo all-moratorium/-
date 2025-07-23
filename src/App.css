@@ -15,7 +15,7 @@
 
 .App-header {
   background-color: #282c34; /* これを変えると：Appヘッダーの背景色が変わります */
-  min-height: 100vh; /* これを変えると：Appヘッダーの最小高さが変わります（画面の高さの100%） */
+  min-height: 100dvh; /* これを変えると：Appヘッダーの最小高さが変わります（画面の高さの100%） */
   display: flex; /* これを変えると：Appヘッダー内の要素の並び方が変わります */
   flex-direction: column; /* これを変えると：Appヘッダー内の要素が縦に並ぶか横に並ぶかが変わります */
   align-items: center; /* これを変えると：Appヘッダー内の要素の横方向の位置が変わります */
