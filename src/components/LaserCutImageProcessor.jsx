@@ -394,6 +394,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isTextGeneratorGuideEffectStopped, setIsTextGeneratorGuideEffectStopped] = useState(false);
   const [isNeonDrawingGuideEffectStopped, setIsNeonDrawingGuideEffectStopped] = useState(false);
   const [isCustomizeGuideEffectStopped, setIsCustomizeGuideEffectStopped] = useState(false);
+  // スマホ版3Dプレビュー動的マウント制御
+  const [isMobile3DPreviewMounted, setIsMobile3DPreviewMounted] = useState(false);
   const [isPreview3DGuideEffectStopped, setIsPreview3DGuideEffectStopped] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
@@ -542,6 +544,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
 
     const handleRequestPageTransition = () => {
+      // スマホ版では3Dコンポーネントを動的マウント
+      if (isMobile) {
+        setIsMobile3DPreviewMounted(true);
+      }
       // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
       setCurrentPage('neonSvg3dPreview');
     };
@@ -588,6 +594,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('clearCustomizeState', handleClearCustomizeState);
     };
   }, []);
+
+  // スマホ版3Dプレビューのアンマウント処理
+  useEffect(() => {
+    // 3Dプレビューページ以外に遷移した時はスマホ版3Dコンポーネントをアンマウント
+    if (isMobile && currentPage !== 'neonSvg3dPreview' && isMobile3DPreviewMounted) {
+      setIsMobile3DPreviewMounted(false);
+    }
+  }, [currentPage, isMobile, isMobile3DPreviewMounted]);
 
   // モバイルデバイス検出
   useEffect(() => {
@@ -1906,8 +1920,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         }
       `}</style>
       
-      {/* NeonSVGTo3DExtruder - Only rendered on desktop */}
-      {!isMobile && (
+      {/* NeonSVGTo3DExtruder - Desktop: Always mounted, Mobile: Dynamically mounted */}
+      {(!isMobile || (isMobile && isMobile3DPreviewMounted)) && (
         <div style={{ 
           position: 'absolute', 
           top: 0, 
