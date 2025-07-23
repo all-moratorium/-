@@ -3374,46 +3374,6 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 </div>
             )}
 
-            {/* 3D処理進捗モーダル */}
-            {isProcessing3D && (
-                <div className="processing-overlay">
-                    <div className="processing-modal">
-                        <div className="processing-content">
-                            <div className="processing-spinner"></div>
-                            
-                            <h3>3Dモデル生成中...</h3>
-                            
-                            <div className="progress-bar-container">
-                                <div className="progress-bar">
-                                    <div
-                                        className="progress-fill"
-                                        style={{ width: `${processing3DProgress}%` }}
-                                    ></div>
-                                </div>
-                                <div className="progress-text">
-                                    {Math.round(processing3DProgress)}% 完了
-                                </div>
-                            </div>
-                            
-                            <div className="processing-message">
-                                {processing3DMessage}
-                            </div>
-                            
-                            <div className="processing-tips">
-                                <h4>処理時間について</h4>
-                                <ul className="tips-list">
-                                    <li className="tip-item">より複雑なモデルは、処理時間が長くなります。</li>
-                                    <li className="tip-item">3dモデルは表示用に最適化されております</li>
-                                    <li className="tip-item">ご不明な点があれば、お気軽にお問い合わせください。</li>
-                                    
-                                    
-                                    
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* ガイドモーダル */}
             <CustomizeGuideModal 
