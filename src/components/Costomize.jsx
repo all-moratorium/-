@@ -2752,25 +2752,6 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 alert('3Dモデルを生成するには少なくとも2点が必要です。');
                                 return;
                             }
-
-                            // 進捗モーダルを表示
-                            setIsProcessing3D(true);
-                            setProcessing3DProgress(0);
-                            setProcessing3DMessage('3Dモデル生成を開始しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 30));
-
-                            // 実際のデータ処理開始
-                            setProcessing3DProgress(5);
-                            setProcessing3DMessage('土台データを解析しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 60));
-
-                            // サイズ情報を計算（4cm基準）
-                            setProcessing3DProgress(10);
-                            setProcessing3DMessage('境界ボックスを計算しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 50));
                             
                             // neonPathsから境界ボックスを計算
                             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -2785,13 +2766,6 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         maxY = Math.max(maxY, point.y);
                                     });
                                 }
-                                
-                                // 境界ボックス計算の進捗
-                                if (i % 2 === 0) {
-                                    const progress = 10 + (i / neonPaths.length) * 5;
-                                    setProcessing3DProgress(Math.round(progress));
-                                    await new Promise(resolve => setTimeout(resolve, 15));
-                                }
                             }
                             
                             const svgWidth = maxX - minX;
@@ -2799,22 +2773,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             const svgWidthCm = (svgWidth / 100) * 4; // 固定: 100px = 4cm (25px = 1cm)
                             const svgHeightCm = (svgHeight / 100) * 4;
                             
-                            setProcessing3DProgress(20);
-                            setProcessing3DMessage('サイズ計算完了...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 40));
-                            
-                            // SVGファイル内容を生成（既存のロジックを使用）
-                            setProcessing3DProgress(25);
-                            setProcessing3DMessage('SVGデータを生成しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 50));
-                            
                             let strokePathData = '';
                             let fillPathData = '';
-
-                            let processedPaths = 0;
-                            const totalPaths = neonPaths.length;
                             
                             for (let pathIndex = 0; pathIndex < neonPaths.length; pathIndex++) {
                                 const pathObj = neonPaths[pathIndex];
@@ -2900,44 +2860,21 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     const strokeColor = customColor || neonColors.fillBorder;
                                     fillPathData += `<path class="base-stroke" data-type="base" d="${currentFillSegment}" fill="${fillColor}" stroke="none" stroke-width="0"/>\n    `;
                                 }
-                                
-                                // 各パス処理完了時に進捗更新
-                                processedPaths++;
-                                const progressPercent = 25 + (processedPaths / totalPaths) * 10; // 25-35%
-                                setProcessing3DProgress(Math.round(progressPercent));
-                                setProcessing3DMessage(`パス処理中... (${processedPaths}/${totalPaths})`);
-                                
-                                // 非同期処理のため少し待機
-                                await new Promise(resolve => setTimeout(resolve, 30));
                             }
                             
-                            setProcessing3DProgress(35);
-                            setProcessing3DMessage('パスデータ調整中...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 100));
-                            
                             // パスデータの座標を調整（全ての数値座標を対象）
-                            setProcessing3DProgress(40);
-                            setProcessing3DMessage('ストロークデータを調整中...');
                             
                             const adjustedStrokePathData = strokePathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
                                 const adjustedX = parseFloat(x) - minX;
                                 const adjustedY = parseFloat(y) - minY;
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
-                            
-                            await new Promise(resolve => setTimeout(resolve, 100));
-                            
-                            setProcessing3DProgress(45);
-                            setProcessing3DMessage('フィルデータを調整中...');
 
                             const adjustedFillPathData = fillPathData.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (match, x, y) => {
                                 const adjustedX = parseFloat(x) - minX;
                                 const adjustedY = parseFloat(y) - minY;
                                 return `${adjustedX.toFixed(2)},${adjustedY.toFixed(2)}`;
                             });
-                            
-                            await new Promise(resolve => setTimeout(resolve, 100));
 
                             const customizedSvg = `
 <svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -2957,56 +2894,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     ${adjustedFillPathData}${adjustedStrokePathData}
 </svg>
                             `.trim();
-                            
-                            setProcessing3DProgress(50);
-                            setProcessing3DMessage('データ生成完了...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 80));
-                            
-                            // 3Dモデルデータ生成完了
-                            setProcessing3DProgress(55);
-                            setProcessing3DMessage('3Dモデルデータを構築しています...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 80));
-                            
-                            setProcessing3DProgress(60);
-                            setProcessing3DMessage('3Dモデル事前生成中...');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 80));
-                            
-                            // SVGデータをプリロード処理
-                            setProcessing3DProgress(65);
-                            setProcessing3DMessage('プリロード中...');
-                            
-                            // RectAreaLight初期化をここで実行
-                            try {
-                                const { RectAreaLightUniformsLib } = await import('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
-                                RectAreaLightUniformsLib.init();
-                                console.log('RectAreaLight プリロード完了');
-                            } catch (error) {
-                                console.warn('RectAreaLight プリロード失敗:', error);
-                            }
-                            
-                            const blob = new Blob([customizedSvg], { type: 'image/svg+xml' });
-                            const file = new File([blob], 'neon_sign.svg', { type: 'image/svg+xml' });
-                            
-                            await new Promise(resolve => setTimeout(resolve, 80));
-                            
-                            // DOMParserで事前解析
-                            setProcessing3DProgress(70);
-                            setProcessing3DMessage('DOM解析中...');
-                            
-                            const parser = new DOMParser();
-                            const svgDoc = parser.parseFromString(customizedSvg, 'image/svg+xml');
-                            const svgElement = svgDoc.querySelector('svg');
-                            const viewBoxAttr = svgElement ? svgElement.getAttribute('viewBox') : null;
-                            
-                            await new Promise(resolve => setTimeout(resolve, 80));
-                            
-                            setProcessing3DProgress(75);
-                            setProcessing3DMessage('3Dモデルのレンダリングを待っています...');
 
-                            
                             window.dispatchEvent(new CustomEvent('show3DPreview', {
                                 detail: {
                                     paths: neonPaths,
@@ -3026,48 +2914,6 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     offTubeColor: offTubeColor
                                 }
                             }));
-                            
-                            // NeonRenderingCompleted イベントを待つ（進捗を刻みながら）
-                            await new Promise(resolve => {
-                                let currentProgress = 75;
-                                const handleNeonRenderingComplete = () => {
-                                    window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
-                                    clearInterval(progressInterval);
-                                    resolve();
-                                };
-                                window.addEventListener('NeonRenderingCompleted', handleNeonRenderingComplete, { once: true });
-                                
-                                // 進捗を徐々に上げる
-                                const progressInterval = setInterval(() => {
-                                    if (currentProgress < 95) {
-                                        currentProgress += 2;
-                                        setProcessing3DProgress(currentProgress);
-                                        if (currentProgress <= 80) {
-                                            setProcessing3DMessage('3Dモデルを構築中...');
-                                        } else if (currentProgress <= 85) {
-                                            setProcessing3DMessage('マテリアルを適用中...');
-                                        } else if (currentProgress <= 90) {
-                                            setProcessing3DMessage('ライティングを設定中...');
-                                        } else {
-                                            setProcessing3DMessage('最終調整中...');
-                                        }
-                                    }
-                                }, 100);
-                                
-                                setTimeout(() => {
-                                    window.removeEventListener('NeonRenderingCompleted', handleNeonRenderingComplete);
-                                    clearInterval(progressInterval);
-                                    console.warn('NeonRenderingCompleted event timed out.');
-                                    resolve(); 
-                                },2500);
-                            });
-
-                            setProcessing3DProgress(100);
-                            setProcessing3DMessage('生成完了');
-                            
-                            await new Promise(resolve => setTimeout(resolve, 400));
-                            
-                            setIsProcessing3D(false);
                             
                             // 状態をバックアップしてから3Dプレビューに移行
                             const stateBackup = {
