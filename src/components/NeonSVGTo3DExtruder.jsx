@@ -728,21 +728,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         }
       });
 
-      // レンダリング完了イベントを発行（実際のレンダリング後）
-      setTimeout(() => {
-        // 複数フレームレンダリングが完了するまで待機
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                // レンダリング完了後にupdateEmissiveを実行して色を正しく反映
-                updateEmissive();
-                window.dispatchEvent(new CustomEvent('NeonRenderingCompleted'));
-              });
-            });
-          });
-        });
-      }, 1500);
+      // レンダリング完了イベントを即座に発行
+      updateEmissive();
+      window.dispatchEvent(new CustomEvent('NeonRenderingCompleted'));
     };
     reader.readAsText(file);
   }, [createNeonTube, createBase, neonSvgData]);

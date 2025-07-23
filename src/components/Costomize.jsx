@@ -3059,7 +3059,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     clearInterval(progressInterval);
                                     console.warn('NeonRenderingCompleted event timed out.');
                                     resolve(); 
-                                }, 500);
+                                },2500);
                             });
 
                             setProcessing3DProgress(100);
