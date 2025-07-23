@@ -531,8 +531,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     }
 
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.1);
-    const radialSegments = 12;
-    const tubularSegments = Math.max(100, points.length * 6);
+    // スマホ版では解像度を大幅削減
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const radialSegments = isMobile ? 6 : 12;
+    const tubularSegments = isMobile ? Math.max(20, points.length * 2) : Math.max(100, points.length * 6);
     
     const geometry = new THREE.TubeGeometry(curve, tubularSegments, actualTubeSizeMm, radialSegments, false);
 
