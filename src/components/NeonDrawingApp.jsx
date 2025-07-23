@@ -172,6 +172,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+    const [showPoints, setShowPoints] = useState(true); // 点の表示/非表示
     
     // タッチ操作用のstate
     const [lastTouchDistance, setLastTouchDistance] = useState(0);
@@ -811,47 +812,49 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         });
 
         // 3. 最後に全ての制御点を描画（土台、チューブの順で色分け）
-        paths.forEach((pathObj, pathIdx) => {
-            if (!pathObj || !Array.isArray(pathObj.points)) {
-                return;
-            }
+        if (showPoints) {
+            paths.forEach((pathObj, pathIdx) => {
+                if (!pathObj || !Array.isArray(pathObj.points)) {
+                    return;
+                }
 
-            const pathPoints = pathObj.points;
-            const pathMode = pathObj.mode;
+                const pathPoints = pathObj.points;
+                const pathMode = pathObj.mode;
 
-            // 制御点を描画
-            pathPoints.forEach((p, ptIdx) => {
-                ctx.beginPath();
-                let pointFillStyle;
-                
-                // 点修正モードの場合は全ての点を青色で表示
-                if (isModifyingPoints) {
-                    pointFillStyle = '#3b82f6'; // 点修正モード時は青
-                } else {
-                    // パスのモードに応じて点の色を変更
-                    if (pathMode === 'fill') {
-                        pointFillStyle = colors.fillPoint; // 土台（fill）の点の色
+                // 制御点を描画
+                pathPoints.forEach((p, ptIdx) => {
+                    ctx.beginPath();
+                    let pointFillStyle;
+                    
+                    // 点修正モードの場合は全ての点を青色で表示
+                    if (isModifyingPoints) {
+                        pointFillStyle = '#3b82f6'; // 点修正モード時は青
                     } else {
-                        pointFillStyle = colors.strokePoint; // チューブ（stroke）の点の色
-                    }
+                        // パスのモードに応じて点の色を変更
+                        if (pathMode === 'fill') {
+                            pointFillStyle = colors.fillPoint; // 土台（fill）の点の色
+                        } else {
+                            pointFillStyle = colors.strokePoint; // チューブ（stroke）の点の色
+                        }
 
-                    // アクティブな点の色
-                    if (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx) {
-                        pointFillStyle = '#3b82f6'; // アクティブ時は青
+                        // アクティブな点の色
+                        if (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx) {
+                            pointFillStyle = '#3b82f6'; // アクティブ時は青
+                        }
+                        
+                        // 削除モードの場合は赤色で表示
+                        if (isPathDeleteMode || isPointDeleteMode) { // 点削除モード時も赤
+                            pointFillStyle = '#ef4444'; // 削除モード時は赤
+                        }
                     }
                     
-                    // 削除モードの場合は赤色で表示
-                    if (isPathDeleteMode || isPointDeleteMode) { // 点削除モード時も赤
-                        pointFillStyle = '#ef4444'; // 削除モード時は赤
-                    }
-                }
-                
-                ctx.fillStyle = pointFillStyle;
+                    ctx.fillStyle = pointFillStyle;
 
-                ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
-                ctx.fill();
+                    ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                    ctx.fill();
+                });
             });
-        });
+        }
 
         // 長方形土台プレビューの描画
         if (showRectangleModal) {
@@ -902,7 +905,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, showRectangleModal, rectangleSize]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, showRectangleModal, rectangleSize, showPoints]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -3537,6 +3540,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     >
                         拡大<br/>縮小
                     </button>
+                    <button
+                        className={`mobile-function-btn points-toggle ${!showPoints ? 'button-active' : ''}`}
+                        onClick={() => setShowPoints(!showPoints)}
+                        dangerouslySetInnerHTML={{
+                            __html: showPoints ? '点<br/>非表示' : '点<br/>表示'
+                        }}
+                    ></button>
                 </div>
             </div>
 

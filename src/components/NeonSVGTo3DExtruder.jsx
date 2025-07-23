@@ -698,18 +698,18 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       updateProgress(2, '処理を開始しています...');
       
       setTimeout(() => {
-        updateProgress(8, 'SVGファイルを読み込み中...');
+        updateProgress(8, 'ファイルを読み込み中...');
         
         setTimeout(() => {
-          updateProgress(15, 'SVGデータを解析中...');
+          updateProgress(15, 'データを解析中...');
           
           setTimeout(() => {
-            updateProgress(25, 'SVGパスデータを処理中...');
+            updateProgress(25, 'パスデータを処理中...');
             
             const elementsData = SimpleSVGLoader.extractElements(svgDoc, calculatedScale);
             
             setTimeout(() => {
-              updateProgress(35, '3Dジオメトリを準備中...');
+              updateProgress(35, 'ジオメトリを準備中...');
               
               setTimeout(() => {
                 updateProgress(45, '3Dモデル構造を構築中...');

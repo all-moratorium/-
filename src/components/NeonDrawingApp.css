@@ -2656,6 +2656,21 @@
         border-color: rgba(255, 255, 255, 0.08) !important;
     }
 
+    .mobile-function-btn.points-toggle {
+        background-color:rgb(16, 185, 129)!important;
+        border-color:rgb(16, 185, 129)!important;
+        color: #d1d5db !important;
+        font-size: 10px !important;
+        white-space: nowrap !important;
+    }
+
+    .mobile-function-btn.points-toggle.button-active {
+        background-color:rgb(16, 185, 129) !important;
+        border-color:rgb(16, 185, 129) !important;
+        color: white !important;
+        
+    }
+
     .mobile-function-btn.mobile-toggle {
         background-color: #0a0a0a !important;
         color: rgb(255, 255, 255) !important;
