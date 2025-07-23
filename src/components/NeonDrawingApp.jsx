@@ -617,7 +617,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // キャンバスをクリア
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight); // キャンバスをクリア（CSS座標系で）
 
         // 無限背景とグリッドの描画
         ctx.save();
@@ -626,8 +626,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         const visibleLeft = -offsetX / scale;
         const visibleTop = -offsetY / scale;
-        const visibleRight = (canvas.width - offsetX) / scale;
-        const visibleBottom = (canvas.height - offsetY) / scale;
+        const visibleRight = (canvasWidth - offsetX) / scale;
+        const visibleBottom = (canvasHeight - offsetY) / scale;
 
         // 背景色を描画
         ctx.fillStyle = colors.background;
@@ -680,7 +680,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.save();
             
             // 画面の横の真ん中（50%）、上側に表示
-            const textX = canvas.width / 2;
+            const textX = canvasWidth / 2;
             const textY = 16;
             
             // モバイル判定
@@ -2100,6 +2100,33 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         return () => window.removeEventListener('resize', handleResize);
     }, [offsetX, offsetY]); // offsetX, offsetYが初期値でない場合はリサイズ時に中央に移動しない
 
+    // キャンバスのdevicePixelRatio対応設定
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const pixelRatio = window.devicePixelRatio || 1;
+        
+        // CSS上のサイズを取得
+        const displayWidth = canvasWidth;
+        const displayHeight = canvasHeight;
+        
+        // 物理解像度を設定（pixelRatio倍）
+        canvas.width = displayWidth * pixelRatio;
+        canvas.height = displayHeight * pixelRatio;
+        
+        // CSS上のサイズは変更しない
+        canvas.style.width = displayWidth + 'px';
+        canvas.style.height = displayHeight + 'px';
+        
+        // 描画コンテキストをpixelRatio倍にスケール
+        ctx.scale(pixelRatio, pixelRatio);
+        
+        // 再描画をトリガー
+        drawSpline();
+    }, [canvasWidth, canvasHeight, drawSpline]);
+
     // 描画モード (チューブ/土台) を設定
     const handleSetDrawMode = useCallback((mode) => {
         // 土台モードで既に土台面が存在する場合はブロック
@@ -3435,8 +3462,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             <div className="canvas-area">
                 <canvas
                     ref={canvasRef}
-                    width={canvasWidth}
-                    height={canvasHeight}
                     className={`main-canvas ${getCursorClass()}`}
                     onClick={handleMouseClick}
                     onWheel={handleWheel}

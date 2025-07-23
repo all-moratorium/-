@@ -1823,7 +1823,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
         // 初期化中は何も表示しない（ちらつき防止）
         if (isInitializing) {
@@ -1833,8 +1833,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
         if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
             // 画面の真の中央位置（サイドバー分を考慮して65px左に調整）
-            const canvasCenterX = canvas.width / 2 - 72;
-            const canvasCenterY = canvas.height / 2;
+            const canvasCenterX = canvasWidth / 2 - 72;
+            const canvasCenterY = canvasHeight / 2;
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '24px Arial';
@@ -1851,8 +1851,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         if (!hasValidData) {
             // データはあるが空の場合も、メッセージを表示（サイドバー分を考慮して65px左に調整）
-            const canvasCenterX = canvas.width / 2 - 72;
-            const canvasCenterY = canvas.height / 2;
+            const canvasCenterX = canvasWidth / 2 - 72;
+            const canvasCenterY = canvasHeight / 2;
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '24px Arial';
@@ -1869,8 +1869,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
 
         const visibleLeft = -canvasSettings.offsetX / canvasSettings.scale;
         const visibleTop = -canvasSettings.offsetY / canvasSettings.scale;
-        const visibleRight = (canvas.width - canvasSettings.offsetX) / canvasSettings.scale;
-        const visibleBottom = (canvas.height - canvasSettings.offsetY) / canvasSettings.scale;
+        const visibleRight = (canvasWidth - canvasSettings.offsetX) / canvasSettings.scale;
+        const visibleBottom = (canvasHeight - canvasSettings.offsetY) / canvasSettings.scale;
 
         // 背景色（ON/OFF時で切り替え）
         const currentBgColor = neonPower ? backgroundColor : backgroundColorOff;
@@ -1914,7 +1914,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             ctx.save();
             
             // 画面の横の真ん中（50%）、上側に表示
-            const textX = canvas.width / 2;
+            const textX = canvasWidth / 2;
             const textY = 16;
             
             // モバイル判定
@@ -2117,14 +2117,42 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         };
     }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes, offTubeColor]);
 
+    // キャンバスのdevicePixelRatio対応設定
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const pixelRatio = window.devicePixelRatio || 1;
+        
+        // CSS上のサイズを取得
+        const displayWidth = canvasWidth;
+        const displayHeight = canvasHeight;
+        
+        // 物理解像度を設定（pixelRatio倍）
+        canvas.width = displayWidth * pixelRatio;
+        canvas.height = displayHeight * pixelRatio;
+        
+        // CSS上のサイズは変更しない
+        canvas.style.width = displayWidth + 'px';
+        canvas.style.height = displayHeight + 'px';
+        
+        // 描画コンテキストをpixelRatio倍にスケール
+        ctx.scale(pixelRatio, pixelRatio);
+        
+        // 再描画をトリガー
+        if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+        }
+        requestAnimationFrame(draw);
+    }, [canvasWidth, canvasHeight, draw]);
+
     return (
         <div className="customize-app-container">
             {/* メインキャンバスエリア */}
             <div className="customize-canvas-area">
                 <canvas
                     ref={canvasRef}
-                    width={canvasWidth}
-                    height={canvasHeight}
                     className="customize-main-canvas"
                     onWheel={handleWheel}
                     onMouseDown={handleMouseDown}
