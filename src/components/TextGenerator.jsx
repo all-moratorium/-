@@ -40,6 +40,10 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const isInitialized = useRef(false);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [isMobileSidebarVisible, setIsMobileSidebarVisible] = useState(true);
+    
+    // キャンバスサイズの状態
+    const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
+    const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -175,11 +179,11 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
 
     // キャンバスサイズを画面100%に設定
     const updateCanvasSize = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+        
+        setCanvasWidth(newWidth);
+        setCanvasHeight(newHeight);
     }, []);
 
     // テキストからSVGパスを生成する関数
@@ -190,7 +194,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const ctx = canvas.getContext('2d');
         
         // キャンバスを完全にクリア
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         
         // テキストが空の場合はSampleを表示
         const displayText = inputText.trim() || 'Sample';
@@ -198,13 +202,13 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         // テキストが空の場合は背景のみ描画
         if (!inputText.trim()) {
             // グラデーション背景を描画
-            const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height) * 0.7);
+            const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, Math.max(canvasWidth, canvasHeight) * 0.7);
             gradient.addColorStop(0, '#f8f9fa');
             gradient.addColorStop(0.3, '#e9ecef');
             gradient.addColorStop(0.7, '#dee2e6');
             gradient.addColorStop(1, '#adb5bd');
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             
             // 微細なパターンを追加
             ctx.save();
@@ -213,16 +217,16 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             ctx.lineWidth = 1;
             const lineSpacing = 50;
             // 斑の線パターン
-            for (let x = 0; x < canvas.width; x += lineSpacing) {
+            for (let x = 0; x < canvasWidth; x += lineSpacing) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
+                ctx.lineTo(x, canvasHeight);
                 ctx.stroke();
             }
-            for (let y = 0; y < canvas.height; y += lineSpacing) {
+            for (let y = 0; y < canvasHeight; y += lineSpacing) {
                 ctx.beginPath();
                 ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
+                ctx.lineTo(canvasWidth, y);
                 ctx.stroke();
             }
             ctx.restore();
@@ -249,21 +253,21 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         if (isMobile) {
             // スマホ: 画面中央に配置
-            displayAreaWidth = canvas.width * 0.6;
-            displayAreaHeight = canvas.height * 0.6;
-            displayAreaLeft = (canvas.width - displayAreaWidth) / 2;
-            displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+            displayAreaWidth = canvasWidth * 0.6;
+            displayAreaHeight = canvasHeight * 0.6;
+            displayAreaLeft = (canvasWidth - displayAreaWidth) / 2;
+            displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
         } else {
             // デスクトップ: サイドバーを考慮した配置
             const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
             const leftSidebarWidth = 250; // 左サイドバー（固定幅）
-            const availableCanvasWidth = canvas.width - rightSidebarWidth - leftSidebarWidth;
+            const availableCanvasWidth = canvasWidth - rightSidebarWidth - leftSidebarWidth;
             
             // 表示領域を利用可能幅の70%に設定し、中央配置
             displayAreaWidth = availableCanvasWidth * 0.7;
-            displayAreaHeight = canvas.height * 0.7;
+            displayAreaHeight = canvasHeight * 0.7;
             displayAreaLeft = leftSidebarWidth + (availableCanvasWidth - displayAreaWidth) / 2;
-            displayAreaTop = (canvas.height - displayAreaHeight) / 2;
+            displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
         }
         
         const displayAreaRight = displayAreaLeft + displayAreaWidth;
@@ -291,7 +295,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         // 背景を描画
         ctx.fillStyle = '#f5f5f5';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         
         
         
@@ -461,8 +465,9 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const textWidth = maxLineWidth + actualLeft;
         const textHeight = totalTextHeight + actualBottom;
         
-        // 高解像度対応（8倍サイズで描画）
-        const scale = 8;
+        // 高解像度対応（devicePixelRatioも考慮した8倍サイズで描画）
+        const pixelRatio = window.devicePixelRatio || 1;
+        const scale = 8 * pixelRatio;
         const minPadding = 2; // 最小限の余白（2px）
         exportCanvas.width = (textWidth + minPadding * 2) * scale;
         exportCanvas.height = (textHeight + minPadding * 2) * scale;
@@ -609,6 +614,33 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         updateCanvasSize();
         generateTextToSVG();
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, generateTextToSVG, updateCanvasSize]);
+
+    // キャンバスのdevicePixelRatio対応設定
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const pixelRatio = window.devicePixelRatio || 1;
+        
+        // CSS上のサイズを取得
+        const displayWidth = canvasWidth;
+        const displayHeight = canvasHeight;
+        
+        // 物理解像度を設定（pixelRatio倍）
+        canvas.width = displayWidth * pixelRatio;
+        canvas.height = displayHeight * pixelRatio;
+        
+        // CSS上のサイズは変更しない
+        canvas.style.width = displayWidth + 'px';
+        canvas.style.height = displayHeight + 'px';
+        
+        // 描画コンテキストをpixelRatio倍にスケール
+        ctx.scale(pixelRatio, pixelRatio);
+        
+        // 再描画をトリガー
+        generateTextToSVG();
+    }, [canvasWidth, canvasHeight, generateTextToSVG]);
 
     return (
         <div className="text-generator-app-container">
