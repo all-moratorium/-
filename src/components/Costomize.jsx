@@ -1832,16 +1832,22 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
         if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
-            // 画面の真の中央位置（サイドバー分を考慮して65px左に調整）
-            const canvasCenterX = canvasWidth / 2 - 72;
-            const canvasCenterY = canvasHeight / 2;
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '24px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
-            return;
+            // モバイル版ではHTMLオーバーレイを使用、パソコン版は従来のCanvasテキスト
+            if (window.innerWidth <= 768) {
+                // モバイル版：何も描画しない（HTMLオーバーレイが表示される）
+                return;
+            } else {
+                // パソコン版：従来のCanvasテキスト
+                const canvasCenterX = canvasWidth / 2 - 72;
+                const canvasCenterY = canvasHeight / 2;
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
+                return;
+            }
         }
         
         // 有効なパスデータがあるかチェック
@@ -1850,16 +1856,22 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         );
         
         if (!hasValidData) {
-            // データはあるが空の場合も、メッセージを表示（サイドバー分を考慮して65px左に調整）
-            const canvasCenterX = canvasWidth / 2 - 72;
-            const canvasCenterY = canvasHeight / 2;
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '24px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
-            return;
+            // モバイル版ではHTMLオーバーレイを使用、パソコン版は従来のCanvasテキスト
+            if (window.innerWidth <= 768) {
+                // モバイル版：何も描画しない（HTMLオーバーレイが表示される）
+                return;
+            } else {
+                // パソコン版：従来のCanvasテキスト
+                const canvasCenterX = canvasWidth / 2 - 72;
+                const canvasCenterY = canvasHeight / 2;
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
+                return;
+            }
         }
 
         // 背景とグリッドの描画
@@ -2165,6 +2177,76 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     onMouseLeave={handleMouseLeave}
                     style={{ touchAction: 'none' }}
                 />
+
+                {/* モバイル版のデータなし画面オーバーレイ */}
+                {window.innerWidth <= 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                    <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#000000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 10
+                    }}>
+                        <div style={{
+                            backgroundColor: '#000000',
+                            padding: '30px',
+                            paddingRight: '20%',
+                            height: '80%',
+                            paddingLeft: '20%',
+                            borderRadius: '12px',
+                            textAlign: 'center',
+                            maxWidth: '280px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                        }}>
+                            <div style={{
+                                fontSize: '1.3rem',
+                                fontWeight: 'bold',
+                                marginBottom: '18px',
+                                color: '#fff'
+                            }}>
+                                色 / 仕様のカスタマイズについて
+                            </div>
+                            <div style={{
+                                fontSize: '0.9rem',
+                                lineHeight: '1.6',
+                                marginBottom: '25px',
+                                color: '#ccc',
+                                maxWidth: '400px'
+                            }}>
+                                色 / 仕様のカスタマイズページを表示するには、ネオン下絵からデータを作成していただくか、右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                            </div>
+                            <button 
+                                onClick={() => {
+                                    // ネオン下絵ページへの遷移イベントを発火
+                                    window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
+                                }}
+                                style={{
+                                    padding: '10px 20px',
+                                    fontSize: '0.9rem',
+                                    backgroundColor: '#007bff',
+                                    width: '150px',
+                                    height: '40px',
+                                    textAlign: 'center',
+                                    margin: '0 auto',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                ネオン下絵へ
+                            </button>
+                        </div>
+                    </div>
+                )}
                 
                 {/* キャンバス右上のサイズ表示 */}
                 <div 

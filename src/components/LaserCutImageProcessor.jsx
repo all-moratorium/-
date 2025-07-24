@@ -571,6 +571,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setCurrentPage('info'); // 商品情報ページに移動
     };
 
+    const handleRequestNeonDrawingPageTransition = () => {
+      setCurrentPage('neonDrawing'); // ネオン下絵ページに移動
+    };
+
     const handleCustomizeCanvasImage = (event) => {
       if (event.detail && event.detail.canvasImageDataURL) {
         setCustomizeCanvasImageDataURL(event.detail.canvasImageDataURL);
@@ -594,6 +598,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     window.addEventListener('show3DPreview', handleShow3DPreview);
     window.addEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
     window.addEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
+    window.addEventListener('RequestPageTransitionToNeonDrawing', handleRequestNeonDrawingPageTransition);
     window.addEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
     window.addEventListener('sharedFileDataLoaded', handleSharedFileData);
     window.addEventListener('clearCustomizeState', handleClearCustomizeState);
@@ -604,6 +609,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('show3DPreview', handleShow3DPreview);
       window.removeEventListener('RequestPageTransitionTo3DPreview', handleRequestPageTransition);
       window.removeEventListener('RequestPageTransitionToInfo', handleRequestInfoPageTransition);
+      window.removeEventListener('RequestPageTransitionToNeonDrawing', handleRequestNeonDrawingPageTransition);
       window.removeEventListener('customizeCanvasImage', handleCustomizeCanvasImage);
       window.removeEventListener('sharedFileDataLoaded', handleSharedFileData);
       window.removeEventListener('clearCustomizeState', handleClearCustomizeState);
