@@ -35,7 +35,7 @@
 
 .text-generator-guide-modal-overlay .text-generator-guide-modal-content {
   background: #000 !important;
-  border-radius: 20px !important;
+  border-radius: 20px;
   width: 98% !important;
   max-width: 1400px !important;
   height: 90vh !important;
@@ -614,45 +614,172 @@
 /* レスポンシブ対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .text-generator-guide-modal-content {
-    width: 95%;
-    height: 90vh;
-    padding: 20px;
-  }
-  
-  .text-generator-guide-navigation {
-    left: 20px;
-    right: 20px;
+    width: 98%;
+    height: 95vh;
+    border-radius: 12px !important;
     padding: 0;
-  }
-  
-  .text-generator-nav-button {
-    padding: 8px 15px;
-    font-size: 12px;
-  }
-
-  .text-generator-modal-content {
+    display: flex;
     flex-direction: column;
   }
   
-  .text-generator-video-section {
-    width: 100%;
-    padding: 15px;
-  }
-  
-  .text-generator-content-section {
-    width: 100%;
-    padding: 15px;
+  /* ヘッダー - モーダルサイズに応じて調整 */
+  .text-generator-guide-modal-header {
+    padding: 1vh 2vw !important;
+    min-height: 30px !important;
+    height: 4vh !important;
+    flex-shrink: 0;
   }
   
   .text-generator-guide-title {
-    font-size: 20px;
+    font-size: max(12px, 1.8vh) !important;
+  }
+  
+  .text-generator-guide-modal-close {
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* メインコンテンツエリア */
+  .text-generator-guide-modal-body {
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  /* ページコンテンツ */
+  .text-generator-guide-page {
+    height: 100%;
+  }
+  
+  .text-generator-guide-content {
+    height: 100%;
+  }
+  
+  /* モーダルコンテンツ - 横レイアウトを維持 */
+  .text-generator-modal-content {
+    flex-direction: row;
+    height: 100%;
+    gap: 0;
+  }
+  
+  /* 左側の動画エリア - 絶対にスクロールしない */
+  .text-generator-video-section {
+    width: 60%;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    box-sizing: border-box !important;
+  }
+  
+  .text-generator-video-container {
+    flex: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 0;
+    max-height: calc(100% - 32px); /* コントロール分を引く */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .text-generator-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* coverからcontainに変更 */
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .text-generator-video-controls {
+    margin-top: 4px;
+    padding: 4px;
+    flex-shrink: 0;
+    height: 28px;
+    box-sizing: border-box;
+  }
+  
+  /* 右側の説明エリア - スクロール可能 */
+  .text-generator-content-section {
+    width: 40%;
+    padding: 6px 8px;
+    overflow-y: auto;
+    box-sizing: border-box !important;
+    height: 100%;
+    background: rgba(26, 26, 26);
+  }
+  
+  /* ステップインジケーター */
+  .text-generator-step-indicator {
+    margin-bottom: 6px;
+  }
+  
+  .text-generator-step-number {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+  
+  .text-generator-step-text {
+    font-size: 10px;
+  }
+  
+  /* タイトルとコンテンツのフォントサイズ調整 */
+  .text-generator-content-section .text-generator-guide-title {
+    font-size: 14px;
+    margin-bottom: 8px;
   }
   
   .text-generator-container-title {
-    font-size: 14px;
+    font-size: 12px;
+    margin-bottom: 4px;
   }
   
-  .text-generator-container-description {
-    font-size: 12px;
+  .text-generator-step-item,
+  .text-generator-tips-item {
+    font-size: 10px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  
+  .text-generator-supplement-title,
+  .text-generator-warning-title {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  
+  .text-generator-supplement-item,
+  .text-generator-warning-item {
+    font-size: 9px;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  
+  .text-generator-content-container {
+    margin-bottom: 8px;
+    padding: 6px;
+  }
+  
+  /* フッター - 最小限の高さ */
+  .text-generator-guide-navigation {
+    padding: 2px 8px;
+    min-height: 30px;
+    flex-shrink: 0;
+  }
+  
+  .text-generator-nav-button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .text-generator-page-text {
+    font-size: 10px;
+  }
+  
+  .text-generator-dot {
+    width: 6px;
+    height: 6px;
   }
 }
