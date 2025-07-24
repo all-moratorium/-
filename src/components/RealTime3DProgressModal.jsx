@@ -6,9 +6,15 @@ const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
   const [stage, setStage] = useState('初期化開始');
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      // モーダルが非表示になった時に状態をリセット
+      setProgress(0);
+      setMessage('3Dモデル生成を開始しています...');
+      setStage('初期化開始');
+      return;
+    }
 
-    // モーダル表示時に強制的に0%にリセット
+    // モーダル表示時に即座に0%にリセット
     setProgress(0);
     setMessage('3Dモデル生成を開始しています...');
     setStage('初期化開始');
@@ -16,7 +22,9 @@ const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
     const handleProgressUpdate = (event) => {
       const { stage: newStage, progress: newProgress, message: newMessage } = event.detail;
       if (newStage) setStage(newStage);
-      setProgress(newProgress);
+      
+      // 進捗は絶対に戻らないようにする
+      setProgress(prev => Math.max(prev, newProgress));
       setMessage(newMessage);
       
       if (newProgress >= 100) {
@@ -27,9 +35,9 @@ const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
               detail: preview3DData
             }));
             onComplete?.();
-          }, 500);
+          }, 300);
         } else {
-          setTimeout(() => onComplete?.(), 500);
+          setTimeout(() => onComplete?.(), 300);
         }
       }
     };
