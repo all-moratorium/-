@@ -399,6 +399,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isMobile3DPreviewMounted, setIsMobile3DPreviewMounted] = useState(false);
   // リアルタイム3D進捗モーダル制御
   const [isRealTime3DProgressVisible, setIsRealTime3DProgressVisible] = useState(false);
+  const [isRemountingModel, setIsRemountingModel] = useState(false);
   const [isPreview3DGuideEffectStopped, setIsPreview3DGuideEffectStopped] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
@@ -560,6 +561,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         setIsMobile3DPreviewMounted(true);
       }
       
+      // 新規生成時はリマウントフラグをfalse
+      setIsRemountingModel(false);
       // リアルタイム進捗モーダルを表示
       setIsRealTime3DProgressVisible(true);
       
@@ -616,17 +619,26 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
   }, [isMobile]);
 
-  // スマホ版3Dプレビューのアンマウント処理
+  // スマホ版3Dプレビューのマウント/アンマウント処理
   useEffect(() => {
-    // 3Dプレビューページ以外に遷移した時はスマホ版3Dコンポーネントをアンマウント
-    if (isMobile && currentPage !== 'neonSvg3dPreview' && isMobile3DPreviewMounted) {
+    if (isMobile && currentPage === 'neonSvg3dPreview') {
+      // モバイルで3Dプレビューページに遷移した時
+      if (neonSvgData && !isMobile3DPreviewMounted) {
+        // 既存のモデルデータがある場合、進捗モーダルを表示してからリマウント
+        setIsRemountingModel(true);
+        setIsRealTime3DProgressVisible(true);
+        setIsMobile3DPreviewMounted(true);
+      }
+    } else if (isMobile && currentPage !== 'neonSvg3dPreview' && isMobile3DPreviewMounted) {
+      // 3Dプレビューページ以外に遷移した時はスマホ版3Dコンポーネントをアンマウント
       setIsMobile3DPreviewMounted(false);
     }
+    
     // 3Dプレビューページ以外に遷移した時は進捗モーダルを閉じる
     if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
       setIsRealTime3DProgressVisible(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted, isRealTime3DProgressVisible]);
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData]);
 
   // モバイルデバイス検出
   useEffect(() => {
@@ -1991,8 +2003,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       {/* リアルタイム3D進捗モーダル */}
       <RealTime3DProgressModal 
         isVisible={isRealTime3DProgressVisible}
-        onComplete={() => setIsRealTime3DProgressVisible(false)}
+        onComplete={() => {
+          setIsRealTime3DProgressVisible(false);
+          setIsRemountingModel(false);
+        }}
         preview3DData={tempMobile3DData}
+        isRemounting={isRemountingModel}
       />
       
       {/* Main layout */}

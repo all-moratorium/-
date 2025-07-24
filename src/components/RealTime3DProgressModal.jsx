@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
+const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData, isRemounting }) => {
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState('3Dモデル生成を開始しています...');
   const [stage, setStage] = useState('初期化開始');
@@ -54,7 +54,7 @@ const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
         <div className="processing-content">
           <div className="processing-spinner"></div>
           
-          <h3>3Dモデル生成中...</h3>
+          <h3>{isRemounting ? '3Dモデルを再構築中...' : '3Dモデル生成中...'}</h3>
           
           <div className="progress-bar-container">
             <div className="progress-bar">
