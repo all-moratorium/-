@@ -612,7 +612,7 @@
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .preview3d-guide-modal-content {
     width: 95%;
     height: 90vh;

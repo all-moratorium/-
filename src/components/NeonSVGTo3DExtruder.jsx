@@ -532,9 +532,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.1);
     // スマホ版では解像度を大幅削減
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const radialSegments = isMobile ? 6 : 12;
-    const tubularSegments = isMobile ? Math.max(20, points.length * 2) : Math.max(100, points.length * 6);
+    const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
+    const radialSegments = isMobile ? 8 : 12;
+    const tubularSegments = isMobile ? Math.max(50, points.length * 3) : Math.max(100, points.length * 6);
     
     const geometry = new THREE.TubeGeometry(curve, tubularSegments, actualTubeSizeMm, radialSegments, false);
 
@@ -1417,7 +1417,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const modelPath = '/models/room.black.neon.glb';
 
     // Skip room model loading on mobile devices
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    if (window.innerWidth <= 1280 || navigator.maxTouchPoints > 0) {
       console.log('Skipping room model loading on mobile device');
       return;
     }

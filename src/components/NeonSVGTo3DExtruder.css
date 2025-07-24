@@ -259,7 +259,7 @@
 /* ===== モバイル版3Dプレビュー専用CSS ===== */
 
 /* モバイル版サイドバー（Customize.cssからコピー、クラス名変更） */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .controls-panel {
     width: 270px !important;
     gap: 9px !important;
@@ -515,14 +515,14 @@
   }
 }
 
-@media (max-width: 640px) and (min-width: 321px) {
+@media (max-width:1280px) and (min-width: 321px) {
   .controls-panel {
     width: 250px;
     right: 10px;
   }
 }
 
-@media (max-width: 1024px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .controls-panel {
     right: 10px;
   }

@@ -955,7 +955,7 @@ const Gallery3D = ({ models = [] }) => {
         setupLighting();
 
         // デバイス判定でプリロード制御
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;;
         
         if (isMobile) {
             // スマホ：プリロードなし、直接モデル作成

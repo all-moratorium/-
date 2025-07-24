@@ -555,7 +555,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 
     const handleRequestPageTransition = () => {
       // リアルタイムでモバイル判定（stateに依存しない）
-      const isMobileNow = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      const isMobileNow = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
       
       if (isMobileNow) {
         setIsMobile3DPreviewMounted(true);
@@ -643,8 +643,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // モバイルデバイス検出
   useEffect(() => {
     const checkMobile = () => {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                            window.innerWidth <= 768;
+      const isMobileDevice = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
       setIsMobile(isMobileDevice);
     };
     
@@ -1464,7 +1463,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
-              {!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && <Gallery3D />}
+            {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D />}
             </div>
             
             {/* Mobile Layout */}

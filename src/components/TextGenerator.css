@@ -548,7 +548,7 @@
 }
 
 /* Mobile adjustments */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
     .text-generator-canvas-download-button {
         left: 50%;
         transform: translateX(-50%);
@@ -748,7 +748,7 @@
 }
 
 /* モバイル用固定トグルボタン - サイドバー内ボタンと同じ位置 */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
     .text-generator-mobile-toggle-fixed {
         position: fixed;
         right: 25px;
@@ -775,7 +775,7 @@
 }
 
 /* パソコン版ではトグルボタンを非表示 */
-@media (min-width: 769px) {
+@media screen and (min-width: 1280px), (pointer: fine) {
     .text-generator-mobile-toggle,
     .text-generator-mobile-toggle-fixed {
         display: none;

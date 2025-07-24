@@ -1563,7 +1563,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
     .neon-guide-modal-content {
         width: 95%;
         padding: 24px;
@@ -2022,7 +2022,7 @@
 }
 
 /* レスポンシブデザイン */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
     .neon-sidebar {
         width: 300px;
         max-width: 300px;

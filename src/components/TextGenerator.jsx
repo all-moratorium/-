@@ -247,7 +247,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const textHeight = fontSize;
         
         // 表示領域の定義（キャンバス内の四角形エリア）
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
         
         let displayAreaWidth, displayAreaHeight, displayAreaLeft, displayAreaTop;
         
@@ -665,7 +665,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     className="text-generator-mobile-toggle-fixed"
                     onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
                     style={{
-                        display: window.innerWidth <= 768 ? 'flex' : 'none'
+                        display: window.innerWidth <= 1280 || navigator.maxTouchPoints > 0 ? 'flex' : 'none'
                     }}
                 >
                     ▼

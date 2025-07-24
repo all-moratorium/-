@@ -43,7 +43,7 @@
 }
 
 /* スマートフォン向けのスタイル */
-@media (max-width: 767px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   body {
     overflow-x: hidden;
   }

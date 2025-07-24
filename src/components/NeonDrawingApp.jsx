@@ -685,7 +685,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const textY = 16;
             
             // モバイル判定
-            const isMobile = window.innerWidth <= 768;
+            const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
             const fontSize = isMobile ? '10px' : '14px';
             const boxWidth = isMobile ? 60 : 80;
             const boxHeight = isMobile ? 18 : 24;
@@ -1696,7 +1696,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
-                            const isMobile = window.innerWidth <= 768;
+                            const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                             const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
@@ -1771,7 +1771,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     // 画面サイズに対してモデルが適切に収まるスケールを計算
                                     const screenWidth = window.innerWidth;
                                     const screenHeight = window.innerHeight;
-                                    const isMobile = window.innerWidth <= 768;
+                                    const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                                     const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                                     
                                     const scaleX = (screenWidth - padding * 2) / modelWidth;
@@ -1951,7 +1951,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         // 画面サイズに対してモデルが適切に収まるスケールを計算
                         const screenWidth = window.innerWidth;
                         const screenHeight = window.innerHeight;
-                        const isMobile = window.innerWidth <= 768;
+                        const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                         const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                         
                         const scaleX = (screenWidth - padding * 2) / modelWidth;
@@ -2765,7 +2765,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             newScale = scale / (1 + scaleAmount);
         }
 
-        const isMobile = window.innerWidth <= 768;
+        const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
         const minScale = isMobile ? 0.1 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
         newScale = Math.max(minScale, Math.min(newScale, 20));
 
@@ -3084,7 +3084,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             if (lastTouchDistance > 0) {
                 const scaleChange = distance / lastTouchDistance;
                 let newScale = touchStartScale * scaleChange;
-                const isMobile = window.innerWidth <= 768;
+                const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                 const minScale = isMobile ? 0.1 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
                 newScale = Math.max(minScale, Math.min(newScale, 20));
                 
@@ -3173,7 +3173,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 // 画面サイズに対してモデルが適切に収まるスケールを計算
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-                const isMobile = window.innerWidth <= 768;
+                const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                 const padding = isMobile ? 20 : 200; // スマホは20px、PCは200pxの余白
                 
                 const scaleX = (screenWidth - padding * 2) / modelWidth;
