@@ -1074,7 +1074,7 @@
         width: 90vw !important;
         max-width: 350px !important;
         max-height: 90vh !important;
-        padding: 15px !important;
+        padding: 18px !important;
         border-radius: 15px !important;
         margin: 0 20px !important;
         overflow-y: auto !important;
@@ -1107,7 +1107,8 @@
 
     .progress-text {
         font-size: 1rem !important;
-        margin-top: 12px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
     }
 
     .processing-message {
