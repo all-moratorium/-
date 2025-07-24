@@ -2328,6 +2328,7 @@
     .download-button {
         width: 90% !important;
         margin: 0px auto !important;
+        border-radius: 4px !important;
         margin-bottom: 10px !important;
         font-size: 14px !important;
         padding:8px 12px !important;

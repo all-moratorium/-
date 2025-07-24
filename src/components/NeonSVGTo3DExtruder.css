@@ -256,6 +256,232 @@
   will-change: transform, box-shadow;
 }
 
+/* ===== モバイル版3Dプレビュー専用CSS ===== */
+
+/* モバイル版サイドバー（Customize.cssからコピー、クラス名変更） */
+@media (max-width: 768px) {
+  .controls-panel {
+    width: 300px !important;
+    gap: 9px !important;
+    max-width: 300px !important;
+    border-radius: 0 !important;
+    height: 100% !important;
+    right: 0 !important;
+    transform: translateX(0) !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 10px 6px !important;
+    background-color: rgb(29, 29, 29);
+  }
+  
+  /* モバイル版トグルボタン（Customize.cssからコピー、クラス名変更） */
+  .sidebar-toggle-button {
+    position: fixed !important;
+    right: 25px !important;
+    top: 25px !important;
+    width: 32px;
+    height: 32px;
+    background-color: #0a0a0a;
+    color: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    z-index: 1001;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+  
+  .sidebar-toggle-button:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* モバイル版サイドバー閉じた時のトグルボタンのグロー効果 */
+  .controls-panel.collapsed .sidebar-toggle-button {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
+    animation: neon3d-mobile-glow-pulse 2s ease-in-out infinite alternate;
+  }
+
+  .controls-panel.collapsed .sidebar-toggle-button:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+  }
+
+  @keyframes neon3d-mobile-glow-pulse {
+    0% {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  /* モバイル版ヘッダー（Customize.cssからコピー、クラス名変更） */
+  .neon3d-model-details-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: relative !important;
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    padding: 15px 15px 0 15px !important;
+  }
+  
+  .neon3d-info-section-title {
+    font-size: 19px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    flex-shrink: 0 !important;
+    margin-left: 20px !important;
+  }
+  
+  .neon3d-model-details-header .neon3d-guide-button {
+    position: absolute !important;
+    left: 181px !important;
+    top: 32px !important;
+    transform: translateY(-50%) !important;
+    width: 25.2px !important;
+    height: 25.2px !important;
+    font-size: 17px !important;
+    flex-shrink: 0;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    background: white;
+    color: #333;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+  }
+
+  /* モバイル版詳細情報項目 */
+  .neon3d-dimension-item {
+    margin-bottom: 0px !important;
+    padding: 12px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    width: 88% !important;
+    margin: 0px auto !important;
+    margin-top: 25px !important;
+  }
+
+  .neon3d-dimension-label {
+    font-size: 14px !important;
+    color: rgb(255, 255, 255) !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    flex: 1 !important;
+  }
+
+  /* モバイル版詳細情報コンテナ */
+  .neon3d-details-info-container {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+    padding: 0px !important;
+    border-radius: 0px !important;
+    opacity: 0;
+    right: 0px !important;
+    animation: neon3d-slideInFromRight 0.3s ease-out forwards;
+  }
+
+  /* モバイル版商品情報へ進むボタン */
+  .neon3d-proceed-button {
+    width: 90% !important;
+    margin: 0px auto !important;
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+    padding:8px 12px !important;
+    height: auto !important;
+    border-radius: 4px !important;
+  }
+
+  /* モバイル版グローパワーセクション - canvas-size-displayと同じ位置 */
+  .neon3d-glow-power-section {
+    position: fixed !important;
+    bottom: -18px !important;
+    left: 20px !important;
+    border-radius: 4px !important;
+    width: 130px !important;
+    height: 80px !important;
+    transform: translateY(-50%) !important;
+    min-width: 100px !important;
+    padding: 4px 4px !important;
+    box-sizing: border-box !important;
+    gap: 10px !important;
+  }
+
+  .neon3d-glow-power-controls {
+    gap: 10px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .neon3d-glow-power-status {
+    gap: 6px !important;
+  }
+
+  .neon3d-glow-status-text {
+    font-size: 12px !important;
+  }
+
+  .neon3d-status-dot {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  .neon3d-glow-power-switch {
+    width: 50px !important;
+    height: 26px !important;
+  }
+
+  .neon3d-glow-switch-handle {
+    width: 20px !important;
+    height: 20px !important;
+    top: 1px !important;
+  }
+
+  .neon3d-glow-switch-handle.on {
+    left: 27px !important;
+  }
+
+  .neon3d-glow-switch-handle.off {
+    left: 1px !important;
+  }
+
+  .neon3d-lighting-controls {
+    gap: 6px !important;
+  }
+
+  .neon3d-lighting-label {
+    font-size: 10px !important;
+  }
+
+  .neon3d-lighting-toggle {
+    padding: 3px 6px !important;
+    font-size: 9px !important;
+    min-width: 25px !important;
+  }
+
+  /* モバイル版エクスポートボタン */
+  .neon3d-export-button {
+    padding: 10px 20px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+  }
+
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 320px) {
   .controls-panel {
