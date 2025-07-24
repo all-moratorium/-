@@ -261,9 +261,9 @@
 /* モバイル版サイドバー（Customize.cssからコピー、クラス名変更） */
 @media (max-width: 768px) {
   .controls-panel {
-    width: 300px !important;
+    width: 270px !important;
     gap: 9px !important;
-    max-width: 300px !important;
+    max-width: 270px !important;
     border-radius: 0 !important;
     height: 100% !important;
     right: 0 !important;
@@ -342,12 +342,12 @@
     padding-top: 2px !important;
     padding-bottom: 2px !important;
     flex-shrink: 0 !important;
-    margin-left: 20px !important;
+    margin-left: 1px !important;
   }
   
   .neon3d-model-details-header .neon3d-guide-button {
     position: absolute !important;
-    left: 181px !important;
+    left: 165px !important;
     top: 32px !important;
     transform: translateY(-50%) !important;
     width: 25.2px !important;
@@ -362,8 +362,11 @@
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    animation: neon3d-lightning-flash 1.5s infinite !important;
+    overflow: visible !important;
+    transition: all 0.3s ease !important;
   }
+
 
   /* モバイル版詳細情報項目 */
   .neon3d-dimension-item {
@@ -404,7 +407,7 @@
     font-size: 14px !important;
     padding:8px 12px !important;
     height: auto !important;
-    border-radius: 4px !important;
+
   }
 
   /* モバイル版グローパワーセクション - canvas-size-displayと同じ位置 */
@@ -610,7 +613,7 @@
     border-color: rgba(255,255,255,0.7);
   }
   100% { 
-    transform: translate(-50%, -50%) scale(2);
+    transform: translate(-50%, -50%) scale(2.5);
     opacity: 0;
     border-color: rgba(255,255,255,0);
   }
