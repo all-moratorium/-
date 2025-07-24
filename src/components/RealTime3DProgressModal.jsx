@@ -63,7 +63,6 @@ const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
             <ul className="tips-list">
               <li className="tip-item">より複雑なモデルは、処理時間が長くなります</li>
               <li className="tip-item">3Dモデルは表示用に最適化されております</li>
-              <li className="tip-item">ご不明な点があれば、お気軽にお問い合わせください</li>
             </ul>
           </div>
         </div>

@@ -1068,6 +1068,74 @@
         margin-bottom: 8px !important;
         margin-top: 0px !important;
     }
+
+    /* 3D進捗モーダル - モバイル専用 */
+    .processing-modal {
+        width: 90vw !important;
+        max-width: 350px !important;
+        max-height: 90vh !important;
+        padding: 15px !important;
+        border-radius: 15px !important;
+        margin: 0 20px !important;
+        overflow-y: auto !important;
+    }
+
+    .processing-content h3 {
+        font-size: 1.2rem !important;
+        margin-bottom: 15px !important;
+    }
+
+    .processing-spinner {
+        width: 40px !important;
+        height: 40px !important;
+        border-width: 3px !important;
+        margin: 0 auto 10px auto !important;
+    }
+
+    .progress-bar-container {
+        margin: 5px 0 !important;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 7px !important; 
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-text {
+        font-size: 1rem !important;
+        margin-top: 12px !important;
+    }
+
+    .processing-message {
+        font-size: 0.85rem !important;
+        margin-top: 12px !important;
+        line-height: 1.3 !important;
+    }
+
+    .processing-tips {
+        margin-top: 10px !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    .processing-tips h4 {
+        font-size: 0.9rem !important;
+        margin-bottom: 10px !important;
+    }
+
+    .tip-item {
+        font-size: 0.75rem !important;
+        line-height: 1.3 !important;
+        padding: 4px 0 !important;
+    }
+
+    .tip-item::before {
+        margin-right: 6px !important;
+    }
 }
 
 /* すべての要素にbox-sizingを適用 */
