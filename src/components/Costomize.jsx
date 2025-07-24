@@ -2201,10 +2201,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
                                 }}
                                 style={{
-                                    padding: '10px 20px',
                                     fontSize: '0.9rem',
                                     backgroundColor: '#007bff',
-                                    width: '150px',
+                                    width: '135px',
                                     height: '40px',
                                     textAlign: 'center',
                                     margin: '0 auto',
