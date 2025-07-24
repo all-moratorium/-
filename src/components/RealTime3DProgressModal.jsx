@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const RealTime3DProgressModal = ({ isVisible, onComplete }) => {
+const RealTime3DProgressModal = ({ isVisible, onComplete, preview3DData }) => {
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState('3Dモデル生成を開始しています...');
   const [stage, setStage] = useState('初期化開始');
@@ -20,7 +20,17 @@ const RealTime3DProgressModal = ({ isVisible, onComplete }) => {
       setMessage(newMessage);
       
       if (newProgress >= 100) {
-        setTimeout(() => onComplete?.(), 500);
+        // モバイル版で3Dプレビューデータがある場合、完了後にshow3DPreviewイベントを再発火
+        if (preview3DData) {
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('show3DPreview', {
+              detail: preview3DData
+            }));
+            onComplete?.();
+          }, 500);
+        } else {
+          setTimeout(() => onComplete?.(), 500);
+        }
       }
     };
 

@@ -405,6 +405,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
+  
+  // モバイル版用：3Dプレビューデータを一時保存
+  const [tempMobile3DData, setTempMobile3DData] = useState(null);
 
   const handleDimensionsUpdate = useCallback((width, height, thickness) => {
     setProductDimensions({ width, height, thickness });
@@ -460,6 +463,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       if (event.detail) {
         // ネオン3Dプレビュー用のデータを保存
         setNeonSvgData(event.detail);
+        
+        // モバイル版用にデータを一時保存
+        setTempMobile3DData(event.detail);
         
         // ネオンサイン画像を生成
         generateNeonPreviewImage(event.detail);
@@ -1964,6 +1970,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       <RealTime3DProgressModal 
         isVisible={isRealTime3DProgressVisible}
         onComplete={() => setIsRealTime3DProgressVisible(false)}
+        preview3DData={tempMobile3DData}
       />
       
       {/* Main layout */}
