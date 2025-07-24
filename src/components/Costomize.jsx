@@ -2151,7 +2151,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 />
 
                 {/* モバイル版のデータなし画面オーバーレイ */}
-                {window.innerWidth <= 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {window.innerWidth <= 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div style={{
                         position: 'absolute',
                         top: 0,
@@ -2220,7 +2220,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 )}
 
                 {/* デスクトップ版のデータなし画面オーバーレイ */}
-                {window.innerWidth > 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {window.innerWidth > 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div 
                         ref={(el) => {
                             if (el) {
