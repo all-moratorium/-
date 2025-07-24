@@ -1271,15 +1271,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setIsPointDeleteMode(false); 
         setIsNewPathDisabled(false);
         
-        // 背景画像もクリア
-        setBackgroundImage(null);
-        setLoadedBackgroundImage(null);
-        setInitialBgImageWidth(0);
-        setInitialBgImageHeight(0);
-        setBgImageScale(1.0);
-        setBgImageX(0);
-        setBgImageY(0);
-        setBgImageOpacity(1.0);
+        // 背景画像はクリアしない（描画要素のみクリア）
         
         const initialHistory = [{
             paths: JSON.parse(JSON.stringify(initialPaths)),

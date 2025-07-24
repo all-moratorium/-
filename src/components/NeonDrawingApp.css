@@ -2356,6 +2356,26 @@
         margin-bottom: 37px !important;
     }
 
+    .points-toggle-sidebar {
+        background-color: rgb(16, 185, 129);
+        color: white;
+        border: 1px solid rgb(16, 185, 129);
+        border-radius: 4px;
+        padding: 8px 10px !important;
+        font-size: 10px !important;
+        font-weight: bold;
+        cursor: pointer;
+        margin-right: 16px;
+        height: 35px !important;
+        width: 35px !important; 
+        margin-top: 2.5px !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
     .grid-spacing-container {
         margin-left: 38px !important;
         margin-bottom: 0px !important;
