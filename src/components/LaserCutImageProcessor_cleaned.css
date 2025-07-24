@@ -1200,7 +1200,7 @@
 
 /* Product Info Page Styles */
 .product-info-container {
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -2295,11 +2295,31 @@ canvas {
     font-size: 2rem;
   }
 
-  .product-form-section, .price-summary {
+ .price-summary {
     padding: 20px;
     max-width: 100%;
+    width: 60% !important;
+    margin: 0 auto;
     box-sizing: border-box;
   }
+
+  /* 商品情報セクション - ヘッダー重複回避 */
+  .product-info-container {
+    margin-top: 60px !important;
+    padding: 0px !important;
+    width: 100% !important;
+  }
+
+  .product-form-section {
+    padding: 20px !important;
+    max-width: 100%;
+    width: 80% !important;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+}
+.form-group {
+  margin-bottom: 15px !important;
 }
 
 /* Home screen specific styles for info button */
