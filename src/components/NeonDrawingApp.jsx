@@ -3489,6 +3489,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 </div>
 
                 {/* モバイル機能バー（サイドバー閉じている時のみ表示） */}
+                {!isInitializing && (
                 <div className="mobile-function-bar">
                     <button
                         className="mobile-function-btn mobile-toggle"
@@ -3542,6 +3543,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     
                 </div>
+                )}
             </div>
 
             {/* サイドバー - オーバーレイ */}

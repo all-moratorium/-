@@ -2151,7 +2151,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 />
 
                 {/* モバイル版のデータなし画面オーバーレイ */}
-                {window.innerWidth <= 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {window.innerWidth <= 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div style={{
                         position: 'absolute',
                         top: 0,
@@ -2193,7 +2193,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 color: '#ccc',
                                 maxWidth: '400px'
                             }}>
-                                色 / 仕様のカスタマイズページを表示するには、ネオン下絵からデータを作成していただくか、右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                                このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
                             </div>
                             <button 
                                 onClick={() => {
@@ -2221,7 +2221,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 )}
 
                 {/* デスクトップ版のデータなし画面オーバーレイ */}
-                {window.innerWidth > 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {window.innerWidth > 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div 
                         ref={(el) => {
                             if (el) {
@@ -2258,7 +2258,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             color: '#ccc',
                             maxWidth: '480px'
                         }}>
-                            色 / 仕様のカスタマイズページを表示するには、ネオン下絵からデータを作成していただくか、右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                            このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
                         </div>
                         <button 
                             onClick={() => {
