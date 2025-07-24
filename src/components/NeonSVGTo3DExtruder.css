@@ -333,7 +333,7 @@
     justify-content: space-between !important;
     position: relative !important;
     margin-top: 0 !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 42px !important;
     padding: 15px 15px 0 15px !important;
   }
   
@@ -370,22 +370,30 @@
 
   /* モバイル版詳細情報項目 */
   .neon3d-dimension-item {
-    margin-bottom: 0px !important;
-    padding: 12px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    width: 88% !important;
+    padding: 8px 8px !important;
+    border-bottom: 1px solid #4a4a4a !important;
+    width: 93% !important;
     margin: 0px auto !important;
-    margin-top: 25px !important;
+    margin-top: 12px !important;
+    background: none !important;
+    box-sizing: border-box !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
   }
 
   .neon3d-dimension-label {
-    font-size: 14px !important;
+    font-size: 12px !important;
     color: rgb(255, 255, 255) !important;
     font-weight: 500 !important;
     text-align: left !important;
     flex: 1 !important;
+  }
+
+  /* モバイル版での改行テキスト対応 */
+  .neon3d-dimension-label {
+    white-space: pre-line !important;
   }
 
   /* モバイル版詳細情報コンテナ */
@@ -398,12 +406,25 @@
     right: 0px !important;
     animation: neon3d-slideInFromRight 0.3s ease-out forwards;
   }
+  .neon3d-dimension-value {
+    font-size: 17px !important;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: right;
+    min-width: 60px !important;
+  }
+
+  /* 特定の3つの項目のフォントサイズを小さく */
+  .neon3d-dimension-value.neon3d-small-text {
+    font-size: 13px !important;
+  }
 
   /* モバイル版商品情報へ進むボタン */
   .neon3d-proceed-button {
     width: 90% !important;
     margin: 0px auto !important;
     margin-bottom: 10px !important;
+    margin-top: 45px !important;
     font-size: 14px !important;
     padding:8px 12px !important;
     height: auto !important;
