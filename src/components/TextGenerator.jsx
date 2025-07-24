@@ -660,13 +660,10 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             </div>
 
             {/* サイドバー閉じた時のみ表示するトグルボタン */}
-            {!isMobileSidebarVisible && (
+            {(navigator.maxTouchPoints > 0) && !isMobileSidebarVisible && (
                 <button 
                     className="text-generator-mobile-toggle-fixed"
                     onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
-                    style={{
-                        display: window.innerWidth <= 1280 || navigator.maxTouchPoints > 0 ? 'flex' : 'none'
-                    }}
                 >
                     ▼
                 </button>
