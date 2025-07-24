@@ -1188,7 +1188,7 @@
   left: 3px;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .home-sample-switch-handle.on {
     left: 28px !important;
   }
@@ -1580,6 +1580,32 @@
   font-size: 0.95rem;
 }
 
+/* Product Info Feature Card Max Width */
+.product-info-feature-card-centered {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+/* Product Form H2 Styling */
+.product-form-h2 {
+  margin-bottom: 25px;
+  color: #ffff00;
+}
+
+/* Price Item Total Styling */
+.price-item-total {
+  font-size: 1.5rem;
+  color: #00ff80;
+}
+
+/* Price Summary Note */
+.price-summary-note {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 10px;
+  text-align: center;
+}
+
 /* Contact Section */
 .contact-section {
   background: linear-gradient(145deg, #1a1a1a, #262626);
@@ -1646,7 +1672,7 @@ canvas {
 }
 
 /* Media Queries */
-@media (max-width: 640px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .modal-content {
     width: 95%;
     padding: 24px;
@@ -1683,7 +1709,7 @@ canvas {
   display: none;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   /* Mobile Header - Same color as sidebar */
   .mobile-header {
     position: fixed;
@@ -2299,6 +2325,7 @@ canvas {
     padding: 20px;
     max-width: 100%;
     width: 60% !important;
+    min-width: 350px !important;
     margin: 0 auto;
     box-sizing: border-box;
   }
@@ -2311,11 +2338,35 @@ canvas {
   }
 
   .product-form-section {
-    padding: 20px !important;
+    padding: 10px !important;
     max-width: 100%;
+    min-width: 350px !important;
     width: 80% !important;
     margin: 0 auto;
     box-sizing: border-box;
+  }
+
+  /* モバイル版 - インラインスタイル用クラス */
+  .product-info-feature-card {
+    min-width:350px !important;
+    width: 80% !important;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .product-form-h2 {
+    margin-bottom: 15px !important;
+    font-size: 1.3rem !important;
+    
+  }
+
+  .price-item-total {
+    font-size: 1.2rem !important;
+  }
+
+  .price-summary-note {
+    font-size: 0.7rem !important;
+    margin-top: 8px !important;
   }
 }
 .form-group {
@@ -2397,7 +2448,7 @@ canvas {
 
 
 /* スマホ版 - 作成モーダル */
-@media (max-width: 768px) {
+@media screen and (max-width: 1280px), (pointer: coarse) {
   .creation-modal-header {
     display: flex;
   }
@@ -2458,6 +2509,20 @@ canvas {
     align-items: center;
     justify-content: center;
     z-index: 10;
+  }
+  .contact-section {
+    background: linear-gradient(145deg, #1a1a1a, #262626);
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 60px;
+    margin-bottom: 20px !important;
+    width: 90%;
+    min-width: 350px;
+    margin: 0 auto;
+    margin-top: 50px;
+    text-align: center;
+    border: 1px solid #333;
+    box-sizing: border-box;
   }
   
   .creation-modal-header .creation-modal-close-button:hover {
