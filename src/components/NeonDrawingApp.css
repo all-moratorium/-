@@ -53,6 +53,38 @@
     border-radius: 8px;
 }
 
+/* サイドバー内の点表示ボタン */
+.points-toggle-sidebar {
+    background-color: rgb(16, 185, 129);
+    color: white;
+    border: 1px solid rgb(16, 185, 129);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 16px;
+    height: 40px;
+    width: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.points-toggle-sidebar:hover {
+    background-color: rgb(20, 200, 140);
+    border-color: rgb(20, 200, 140);
+}
+
+.points-toggle-sidebar.button-active {
+    background-color: rgb(20, 200, 140);
+    border-color: rgb(20, 200, 140);
+    color: white;
+}
+
 .tube-thickness-title {
     font-size: 16px;
     font-weight: bold;
