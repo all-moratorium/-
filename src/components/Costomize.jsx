@@ -1832,22 +1832,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         // データロード状態をチェック - svgDataまたはneonPathsがあれば描画処理に進む
         if (!isDataLoaded || (!svgData && neonPaths.length === 0)) {
-            // モバイル版ではHTMLオーバーレイを使用、パソコン版は従来のCanvasテキスト
-            if (window.innerWidth <= 768) {
-                // モバイル版：何も描画しない（HTMLオーバーレイが表示される）
-                return;
-            } else {
-                // パソコン版：従来のCanvasテキスト
-                const canvasCenterX = canvasWidth / 2 - 72;
-                const canvasCenterY = canvasHeight / 2;
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
-                return;
-            }
+            // モバイル版・デスクトップ版ともにHTMLオーバーレイを使用するため、Canvas描画は不要
+            return;
         }
         
         // 有効なパスデータがあるかチェック
@@ -1856,22 +1842,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         );
         
         if (!hasValidData) {
-            // モバイル版ではHTMLオーバーレイを使用、パソコン版は従来のCanvasテキスト
-            if (window.innerWidth <= 768) {
-                // モバイル版：何も描画しない（HTMLオーバーレイが表示される）
-                return;
-            } else {
-                // パソコン版：従来のCanvasテキスト
-                const canvasCenterX = canvasWidth / 2 - 72;
-                const canvasCenterY = canvasHeight / 2;
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('ネオン下絵からデータを作成するか、ファイルデータを読み込んでください', canvasCenterX, canvasCenterY);
-                return;
-            }
+            // モバイル版・デスクトップ版ともにHTMLオーバーレイを使用するため、Canvas描画は不要
+            return;
         }
 
         // 背景とグリッドの描画
@@ -2245,6 +2217,70 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 ネオン下絵へ
                             </button>
                         </div>
+                    </div>
+                )}
+
+                {/* デスクトップ版のデータなし画面オーバーレイ */}
+                {window.innerWidth > 768 && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                    <div 
+                        ref={(el) => {
+                            if (el) {
+                                el.style.setProperty('min-width', '500px', 'important');
+                                el.style.setProperty('max-width', '760px', 'important');
+                            }
+                        }}
+                        style={{
+                        position: 'absolute',
+                        left: `${canvasWidth / 2 - 72}px`,
+                        top: `${canvasHeight / 2}px`,
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#000000',
+                        padding: '50px 60px',
+                        borderRadius: '12px',
+                        textAlign: 'center',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center'
+                    }}>
+                        <div style={{
+                            fontSize: '1.8rem',
+                            fontWeight: 'bold',
+                            marginBottom: '25px',
+                            color: '#fff'
+                        }}>
+                            色 / 仕様のカスタマイズについて
+                        </div>
+                        <div style={{
+                            fontSize: '1.1rem',
+                            lineHeight: '1.6',
+                            marginBottom: '35px',
+                            color: '#ccc',
+                            maxWidth: '480px'
+                        }}>
+                            色 / 仕様のカスタマイズページを表示するには、ネオン下絵からデータを作成していただくか、右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                        </div>
+                        <button 
+                            onClick={() => {
+                                // ネオン下絵ページへの遷移イベントを発火
+                                window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
+                            }}
+                            style={{
+                                padding: '10px 20px',
+                                fontSize: '1rem',
+                                backgroundColor: '#007bff',
+                                width: '180px',
+                                height: '50px',
+                                textAlign: 'center',
+                                margin: '20px auto',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            ネオン下絵へ
+                        </button>
                     </div>
                 )}
                 
