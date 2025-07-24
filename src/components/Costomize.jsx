@@ -24,7 +24,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     const [thickness, setThickness] = useState(initialState?.thickness || 20);
     const glowIntensity = 50; // 固定値
     // 点滅エフェクトを削除
-    const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : true);
+    const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : (window.innerWidth > 768));
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
     const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#191919'); // RGB(25,25,25)
     const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#e6e6e6'); // RGB(230,230,230)

@@ -36,7 +36,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [savedCameraState, setSavedCameraState] = useState(null);
 
   // State for UI controls
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(window.innerWidth > 768);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   
   // Model data state
