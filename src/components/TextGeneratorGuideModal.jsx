@@ -362,7 +362,6 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                   <div className="text-generator-warning-container">
                     <h4 className="text-generator-warning-title">⚠️ 注意事項</h4>
                     <ul className="text-generator-warning-list">
-                      <li className="text-generator-warning-item">AI生成のため、毎回異なる結果が出力されます</li>
                       <li className="text-generator-warning-item">著作権のあるキャラクターや商標の使用は避けてください</li>
                       <li className="text-generator-warning-item">不適切なテキストは生成をブロックする場合があります</li>
                     </ul>
