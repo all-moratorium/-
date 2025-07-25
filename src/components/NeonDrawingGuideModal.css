@@ -38,8 +38,7 @@
   border-radius: 20px !important;
   width: 98% !important;
   max-width: 1400px !important;
-  height: 90vh !important;
-  max-height: 900px !important;
+  height: 95dvh !important;
   position: relative !important;
   padding: 0 !important;
   color: white !important;
@@ -225,7 +224,7 @@
 
 .neon-drawing-video-section:fullscreen {
   width: 100vw;
-  height: 100%;
+  height: 100dvh;
   background: #000;
   display: flex;
   flex-direction: column;
@@ -462,9 +461,11 @@
   font-size: 14px;
   padding: 6px 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center !important;
   gap: 10px;
   transition: color 0.3s ease;
+  line-height: 1.4;
+  text-align: left !important;
 }
 
 .neon-drawing-content-container.active .neon-drawing-tips-item {
@@ -483,10 +484,12 @@
   font-size: 14px;
   padding: 6px 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center !important;
   gap: 10px;
   transition: color 0.3s ease;
   counter-increment: step-counter;
+  line-height: 1.4;
+  text-align: left !important;
 }
 
 .neon-drawing-step-item::before {
@@ -615,7 +618,7 @@
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .neon-drawing-guide-modal-content {
     width: 98%;
-    height: 95vh;
+    height: 98dvh;
     border-radius: 12px !important;
     padding: 0;
     display: flex;
@@ -775,6 +778,12 @@
     padding: 6px;
   }
   
+  .neon-drawing-warning-container,
+  .neon-drawing-supplement-container {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  
   /* フッター - 最小限の高さ */
   .neon-drawing-guide-navigation {
     padding: 2px 8px;
@@ -811,7 +820,7 @@
     width: 100% !important;
     height: auto !important;
     min-height: calc(100vw / 16 * 9 + 50px);
-    max-height: 60vh;
+    max-height: 60%;
     background: #000;
     padding: 8px;
     display: flex;
@@ -900,5 +909,11 @@
     font-size: 11px !important;
     line-height: 1.3;
     margin-bottom: 3px;
+  }
+  
+  .neon-drawing-warning-container,
+  .neon-drawing-supplement-container {
+    padding: 10px !important;
+    margin-bottom: 10px;
   }
 }

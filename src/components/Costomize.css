@@ -2055,7 +2055,7 @@ html, body {
     .customize-guide-modal-content {
         width: 95%;
         padding: 24px;
-        max-height: 85vh;
+        max-height: 95vh !important;
     }
     
     .customize-guide-modal-content h2 {

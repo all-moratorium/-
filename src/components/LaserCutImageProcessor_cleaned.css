@@ -1676,7 +1676,7 @@ canvas {
   .modal-content {
     width: 95%;
     padding: 24px;
-    max-height: 85vh;
+    max-height: 95vh !important;
   }
   
   .modal-content h2 {

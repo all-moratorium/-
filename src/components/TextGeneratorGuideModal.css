@@ -465,6 +465,7 @@
   gap: 10px;
   transition: color 0.3s ease;
   line-height: 1.4;
+  text-align: left !important;
 }
 
 .text-generator-content-container.active .text-generator-tips-item {
@@ -488,6 +489,7 @@
   transition: color 0.3s ease;
   counter-increment: step-counter;
   line-height: 1.4;
+  text-align: left !important;
 }
 
 .text-generator-step-item::before {
