@@ -397,6 +397,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isCustomizeGuideEffectStopped, setIsCustomizeGuideEffectStopped] = useState(false);
   // スマホ版3Dプレビュー動的マウント制御
   const [isMobile3DPreviewMounted, setIsMobile3DPreviewMounted] = useState(false);
+  const [isDesktop3DPreviewMounted, setIsDesktop3DPreviewMounted] = useState(false);
   // リアルタイム3D進捗モーダル制御
   const [isRealTime3DProgressVisible, setIsRealTime3DProgressVisible] = useState(false);
   const [isRemountingModel, setIsRemountingModel] = useState(false);
@@ -619,7 +620,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
   }, [isMobile]);
 
-  // スマホ版3Dプレビューのマウント/アンマウント処理
+  // 3Dプレビューのマウント/アンマウント処理（モバイル・デスクトップ共通）
   useEffect(() => {
     if (isMobile && currentPage === 'neonSvg3dPreview') {
       // モバイルで3Dプレビューページに遷移した時
@@ -634,11 +635,22 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setIsMobile3DPreviewMounted(false);
     }
     
+    // デスクトップ版の3Dプレビューマウント制御
+    if (!isMobile && currentPage === 'neonSvg3dPreview') {
+      // デスクトップで3Dプレビューページに遷移した時
+      if (neonSvgData && !isDesktop3DPreviewMounted) {
+        setIsDesktop3DPreviewMounted(true);
+      }
+    } else if (!isMobile && currentPage !== 'neonSvg3dPreview' && isDesktop3DPreviewMounted) {
+      // 3Dプレビューページ以外に遷移した時はデスクトップ版3Dコンポーネントをアンマウント
+      setIsDesktop3DPreviewMounted(false);
+    }
+    
     // 3Dプレビューページ以外に遷移した時は進捗モーダルを閉じる
     if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
       setIsRealTime3DProgressVisible(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData]);
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData]);
 
   // モバイルデバイス検出
   useEffect(() => {
@@ -1956,7 +1968,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   fontSize: '0.9rem',
                   lineHeight: '1.6',
                   marginBottom: '25px',
-                  color: '#ccc'
+                  color: '#ccc',
+                  maxWidth: '100%',
+                  width: '480px'
                 }}>
                   3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
                 </div>
@@ -1979,9 +1993,68 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 </button>
               </div>
             </div>
+          ) : !isMobile && !neonSvgData ? (
+            /* Desktop No-Model State */
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%',
+              backgroundColor: '#000000'
+            }}>
+              <div style={{
+                backgroundColor: '#000000',
+                padding: '50px 60px',
+                borderRadius: '12px',
+                textAlign: 'center',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                minWidth: '500px',
+                maxWidth: '760px'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  fontWeight: 'bold',
+                  marginBottom: '25px',
+                  color: '#fff'
+                }}>
+                  3Dプレビューについて
+                </div>
+                <div style={{
+                  fontSize: '1.1rem',
+                  lineHeight: '1.6',
+                  marginBottom: '35px',
+                  color: '#ccc',
+                  maxWidth: '100%'
+                }}>
+                  3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
+                </div>
+                <button 
+                  onClick={() => setCurrentPage('customize')}
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '1rem',
+                    backgroundColor: '#007bff',
+                    width: '250px',
+                    height: '50px',
+                    textAlign: 'center',
+                    margin: '10px auto',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  色 / 仕様のカスタマイズへ
+                </button>
+              </div>
+            </div>
           ) : (
             /* 3D Extruder Component */
-            (!isMobile || (isMobile && isMobile3DPreviewMounted)) && (
+            ((isMobile && isMobile3DPreviewMounted) || (!isMobile && isDesktop3DPreviewMounted)) && (
               <NeonSVGTo3DExtruder 
                 ref={neonSvgTo3DExtruderRef} 
                 neonSvgData={neonSvgData}
