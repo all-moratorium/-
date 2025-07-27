@@ -80,9 +80,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
             const containerBottom = scrollTop + containerHeight;
             
             if (elementTop < scrollTop || elementBottom > containerBottom) {
-              contentSection.scrollTo({
-                top: elementTop - containerHeight / 2 + elementHeight / 2,
-                behavior: 'smooth'
+              activeElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
               });
             }
           }
