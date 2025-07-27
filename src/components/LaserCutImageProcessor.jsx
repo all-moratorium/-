@@ -639,6 +639,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     if (!isMobile && currentPage === 'neonSvg3dPreview') {
       // デスクトップで3Dプレビューページに遷移した時
       if (neonSvgData && !isDesktop3DPreviewMounted) {
+        // 既存のモデルデータがある場合、進捗モーダルを表示してからマウント
+        setIsRemountingModel(true);
+        setIsRealTime3DProgressVisible(true);
         setIsDesktop3DPreviewMounted(true);
       }
     } else if (!isMobile && currentPage !== 'neonSvg3dPreview' && isDesktop3DPreviewMounted) {
