@@ -12,6 +12,32 @@ code {
     monospace; /* これを変えると：プログラムのコードを表示するときの文字の形（フォント）が変わります */
 }
 
+/* スマートフォン横画面でアドレスバーを隠す */
+@media (max-width: 767px) and (orientation: landscape) {
+  html {
+    height: 100vh;
+    height: 100svh; /* Safari用 */
+    height: 100dvh; /* Chrome用 */
+  }
+  
+  body {
+    height: 100vh;
+    height: 100svh; /* Safari用 */  
+    height: 100dvh; /* Chrome用 */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  
+  #root {
+    height: 100vh;
+    height: 100svh; /* Safari用 */
+    height: 100dvh; /* Chrome用 */
+  }
+}
+
 /* スマートフォン向けのスタイル */
 @media (max-width: 767px) {
   /* ここにスマートフォン向けのスタイルを記述します */
