@@ -193,6 +193,13 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
 
         const ctx = canvas.getContext('2d');
         
+        // キャンバスの変換をリセット
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
+        // devicePixelRatioを再適用
+        const pixelRatio = window.devicePixelRatio || 1;
+        ctx.scale(pixelRatio, pixelRatio);
+        
         // キャンバスを完全にクリア
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         
@@ -344,7 +351,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, canvasWidth, canvasHeight]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -569,12 +576,18 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         updateCanvasSize();
         const handleResize = () => {
             updateCanvasSize();
-            // リサイズ後にテキストを再描画
-            setTimeout(() => generateTextToSVG(), 10);
         };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [updateCanvasSize, generateTextToSVG]);
+    }, [updateCanvasSize]);
+
+    // キャンバスサイズ変更時にテキストを再描画
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            generateTextToSVG();
+        }, 50);
+        return () => clearTimeout(timeoutId);
+    }, [canvasWidth, canvasHeight, generateTextToSVG]);
 
     // LocalStorageに状態を保存する関数
     const saveToLocalStorage = useCallback(() => {
@@ -620,25 +633,21 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const canvas = canvasRef.current;
         if (!canvas) return;
         
-        const ctx = canvas.getContext('2d');
         const pixelRatio = window.devicePixelRatio || 1;
         
-        // CSS上のサイズを取得
-        const displayWidth = canvasWidth;
-        const displayHeight = canvasHeight;
-        
         // 物理解像度を設定（pixelRatio倍）
-        canvas.width = displayWidth * pixelRatio;
-        canvas.height = displayHeight * pixelRatio;
+        canvas.width = canvasWidth * pixelRatio;
+        canvas.height = canvasHeight * pixelRatio;
         
-        // CSS上のサイズは変更しない
-        canvas.style.width = displayWidth + 'px';
-        canvas.style.height = displayHeight + 'px';
+        // CSS上のサイズを設定
+        canvas.style.width = canvasWidth + 'px';
+        canvas.style.height = canvasHeight + 'px';
         
         // 描画コンテキストをpixelRatio倍にスケール
+        const ctx = canvas.getContext('2d');
         ctx.scale(pixelRatio, pixelRatio);
         
-        // 再描画をトリガー
+        // 即座に再描画
         generateTextToSVG();
     }, [canvasWidth, canvasHeight, generateTextToSVG]);
 
