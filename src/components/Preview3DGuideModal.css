@@ -669,7 +669,7 @@
   .preview3d-video-section {
     width: 60%;
     background: #000;
-    padding: 8px;
+    padding: 5px 6px !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -702,13 +702,33 @@
   }
   
   .preview3d-video-controls {
-    margin-top: 8px;
+    margin-top: 5px;
     display: flex;
     align-items: center;
     gap: 6px;
     width: 100%;
     z-index: 10;
     flex-shrink: 0;
+  }
+  .preview3d-video-time {
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    border: 1px solid #555;
+  }
+  .preview3d-fullscreen-btn {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 1px solid #555;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
   }
   
   /* 右側の説明エリア - スクロール可能 */
@@ -819,7 +839,7 @@
     min-height: calc(100vw / 16 * 9 + 50px);
     max-height: 60%;
     background: #000;
-    padding: 8px;
+    padding: 3px 6px !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -851,7 +871,7 @@
   }
   
   .preview3d-video-controls {
-    margin-top: 8px;
+    margin-top: 5px;
     display: flex;
     align-items: center;
     gap: 6px;
