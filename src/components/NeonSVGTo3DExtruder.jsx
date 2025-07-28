@@ -1416,11 +1416,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     
     const modelPath = '/models/room.black.neon.glb';
 
-    // Skip room model loading on mobile devices
-    if (window.innerWidth <= 1280 || navigator.maxTouchPoints > 0) {
-      console.log('Skipping room model loading on mobile device');
-      return;
-    }
+    // Load room model on all devices
+    console.log('Loading room model for all devices');
 
     gltfLoader.load(
       modelPath,
