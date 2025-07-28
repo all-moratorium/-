@@ -504,24 +504,30 @@
 /* レスポンシブ対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .guide-modal-content {
-    width: 95%;
-    height: 90vh;
+    width: 98% !important;
+    height: 98dvh !important;
+    border-radius: 12px !important;
     padding: 0;
+    display: flex;
+    flex-direction: column;
   }
   
+  /* ヘッダー - モーダルサイズに応じて調整 */
   .guide-modal-header {
-    padding: 8px 15px;
-    min-height: 40px;
+    padding: 1vh 2vw !important;
+    min-height: 30px !important;
+    height: 4vh !important;
+    flex-shrink: 0;
   }
   
-  .guide-modal-header .guide-title {
-    font-size: 20px;
+  .guide-title {
+    font-size: max(12px, 1.8vh) !important;
   }
   
   .guide-modal-close {
-    font-size: 24px;
-    width: 32px;
-    height: 32px;
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
   }
   
   .page-text {
@@ -632,12 +638,72 @@
     font-size:1.6vh ;
   }
   
+  /* フッター - 最小限の高さ */
   .guide-navigation {
-    padding: 15px 15px;
+    padding: 2px 8px;
+    min-height: 30px;
+    flex-shrink: 0;
   }
   
   .nav-button {
-    padding: 8px 15px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .page-text {
+    font-size: 10px;
+  }
+  
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* 縦向き時の追加調整 */
+@media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
+  .guide-modal-content {
+    width: 98% !important;
+    height: 98dvh !important;
+    border-radius: 12px !important;
+  }
+  
+  /* ヘッダー */
+  .guide-modal-header {
+    padding: 1vh 2vw !important;
+    min-height: 30px !important;
+    height: 4vh !important;
+    flex-shrink: 0;
+  }
+  
+  .guide-title {
+    font-size: max(12px, 1.8vh) !important;
+  }
+  
+  .guide-modal-close {
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* フッター */
+  .guide-navigation {
+    padding: 2px 8px;
+    min-height: 30px;
+    flex-shrink: 0;
+  }
+  
+  .nav-button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .page-text {
+    font-size: 10px;
+  }
+  
+  .dot {
+    width: 6px;
+    height: 6px;
   }
 }
