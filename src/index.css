@@ -51,7 +51,29 @@ code {
 
 /* スマートフォン向けのスタイル */
 @media (max-width: 767px) {
-  /* ここにスマートフォン向けのスタイルを記述します */
+  /* タッチ操作の改善 */
+  html {
+    touch-action: manipulation; /* ダブルタップズームを無効化 */
+  }
+  
+  /* テキスト選択を無効化（必要に応じて） */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* 入力フィールドでのズームを防ぐ */
+  input, textarea, select {
+    font-size: 16px; /* 16px以上でズームしない */
+    user-select: text; /* 入力フィールドではテキスト選択を有効に */
+  }
+  
+  /* スクロールの改善 */
+  * {
+    -webkit-overflow-scrolling: touch; /* iOSでのスムーズスクロール */
+  }
 }
 
 /* タブレット向けのスタイル */
