@@ -7,6 +7,17 @@ body {
   -moz-osx-font-smoothing: grayscale; /* これを変えると：Firefox（ファイアフォックス）ブラウザでの文字の表示がなめらかになったりギザギザになったりします */
 }
 
+/* タップ時の青い枠線を削除 */
+* {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+button, input, select, textarea, a {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace; /* これを変えると：プログラムのコードを表示するときの文字の形（フォント）が変わります */
