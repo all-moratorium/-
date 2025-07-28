@@ -36,9 +36,9 @@
 .text-generator-guide-modal-overlay .text-generator-guide-modal-content {
   background: #000 !important;
   border-radius: 20px;
-  width: 98% !important;
-  max-width: 1400px !important;
-  height: 95dvh !important;
+  width: 98%;
+  max-width: 1400px;
+  height: 95dvh;
   position: relative !important;
   padding: 0 !important;
   color: white !important;

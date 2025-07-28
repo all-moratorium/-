@@ -2053,7 +2053,7 @@ html, body {
 
 @media screen and (max-width: 1280px), (pointer: coarse) {
     .customize-guide-modal-content {
-        width: 95%;
+        width: 95% !important;
         padding: 24px;
         max-height: 95vh !important;
     }

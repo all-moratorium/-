@@ -505,7 +505,7 @@
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .guide-modal-content {
     width: 98% !important;
-    height: 98dvh !important;
+    height: 95dvh !important;
     border-radius: 12px !important;
     padding: 0;
     display: flex;
@@ -663,8 +663,8 @@
 /* 縦向き時の追加調整 */
 @media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
   .guide-modal-content {
-    width: 98% !important;
-    height: 98dvh !important;
+    width: 95% !important;
+    height: 95dvh !important;
     border-radius: 12px !important;
   }
   
