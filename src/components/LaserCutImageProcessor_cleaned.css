@@ -714,7 +714,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 50px;
-  margin-top: 10px;
+  margin-top: 30px;
   border: none;
   outline: none;
   animation: glow-pulse 2s infinite alternate;
@@ -758,7 +758,7 @@
   justify-content: center;
   background-color: transparent;
   position: fixed;
-  bottom: 1.2%;
+  bottom: 0%;
   transform: translateY(-50%);
   right: 0%;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1030,31 +1030,33 @@
 .process-button {
   width: 200px;
   padding: 15px 20px;
-  border: none;
-  border-radius: 5px;
-  background: #FFFF00;
-  color: #000;
+  border: 1px solid rgba(16, 185, 129, 0.7);
+  border-radius: 8px;
+  background:transparent;
+  background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
+  backdrop-filter: blur(10px);
+  color: rgb(255, 255, 255);
   cursor: pointer;
   font-weight: bold;
-  font-size: 19px;
+  font-size: 16px;
   margin-top: 20px;
-  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
-  transition: all 0.3s ease;
+  box-shadow: 
+    rgba(16, 185, 129, 0.5) 0px 0px 50px 0px;
   position: absolute;
-  bottom: 22%;
+  bottom: 24%;
   left: 50%;
   transform: translateX(-50%);
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 56px;
+  user-select: none;
 }
 
 .process-button:hover {
-  background-color: rgba(255, 255, 0, 1);
-  box-shadow: 0 0 20px rgba(255, 255, 0, 0.9);
+  box-shadow: 
+    rgba(16, 185, 129, 0.85) 0px 0px 40px 0px;
 }
 
-.process-button.processing {
-  background-color: #f0f0f0;
-  cursor: wait;
-}
 
 /* Home Bottom Layout */
 .home-bottom-layout {
@@ -1106,37 +1108,30 @@
 }
 
 .step-message {
-  color: #ffffff;
-  font-size: clamp(14px, 1.7vw, 35px);
+  color: #10b981;
+  font-size: clamp(20px, 1.5vw, 32px);
   position: absolute;
   left: 50%;
-  bottom: calc(35% + 110px);
+  bottom: 85%;
   transform: translate(-50%, -50%);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
-  background: linear-gradient(135deg, #00f5ff, #ff00aa, #ffaa00);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 4s ease infinite;
-  text-shadow: 0 0 30px rgba(204, 204, 204, 0.5);
-  max-width: 60%;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
   text-align: center;
   z-index: 10;
 }
 
 .order-message {
   color: rgb(243, 243, 243);
-  font-size: clamp(12px, 1.5vw, 30px);
+  font-size: clamp(12px, 1.5vw, 20px);
   position: absolute;
   left: 50%;
-  bottom: 36%;
+  bottom: calc(40% + 50px);
   transform: translate(-50%, -50%);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
   opacity: 0.9;
-  max-width: 60%;
+  max-width: 35%;
   text-align: center;
   z-index: 10;
 }

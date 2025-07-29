@@ -1579,8 +1579,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               {/* 真ん中下の大きなコンテナ */}
               <div className="bottom-center-container">
                 <div className="main-messages">
-                <h2 className="step-message">わずか3ステップで<br />理想のLEDネオンサインが完成!</h2>
-                <h2 className="order-message">作成したネオンサインは<br /><span className="highlight">そのまま注文可能!</span></h2>
+                <h2 className="step-message">理想のLEDネオンサインを作成</h2>
+                <h2 className="order-message">線を描いて、色を選んで、太さを決める。ネオンサインを<br />ゼロから作れるオーダーメイドLEDサインツール。</h2>
                 </div>
                 
                 <button

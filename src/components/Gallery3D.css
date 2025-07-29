@@ -82,7 +82,7 @@ body:active {
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     font-size: 12px;
     opacity: 0;
@@ -93,7 +93,7 @@ body:active {
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    top: 8%;
+    top: 12%;
 }
 
 .click-prompt.show {
@@ -241,4 +241,40 @@ body:active {
 .download-project-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+}
+
+.glass-btn-green {
+    display: inline-block;
+    padding: 12px 24px;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(0, 255, 150, 0.15), rgba(0, 255, 100, 0.1));
+    backdrop-filter: blur(10px) brightness(1.1);
+    border: 1px solid rgba(0, 255, 150, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 255, 150, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 12px;
+    width: 100%;
+}
+
+.glass-btn-green:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 150, 0.25), rgba(0, 255, 100, 0.15));
+    border: 1px solid rgba(0, 255, 150, 0.4);
+    box-shadow: 0 12px 40px rgba(0, 255, 150, 0.3);
+    transform: translateY(-2px);
+}
+
+.glass-btn-green:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 20px rgba(0, 255, 150, 0.2);
+}
+
+.create-neon-btn {
+    margin-top: 8px;
 }
