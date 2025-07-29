@@ -8,6 +8,7 @@ import TextGenerator from './TextGenerator'; // テキスト生成コンポー�
 import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポーネントをインポート
 import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
 import RealTime3DProgressModal from './RealTime3DProgressModal.jsx'; // リアルタイム3D進捗モーダル
+import { Home, Type, Edit3, Settings, Eye, Package } from 'lucide-react';
 
 
 
@@ -2107,9 +2108,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 
         {/* Sidebar */}
         <div className={`sidebar ${sidebarExpanded ? "expanded" : "collapsed"} ${mobileSidebarOpen ? "mobile-open" : ""} ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal-sidebar' : ''}`}>
+            <div className="floating-glow"></div>
             <div className="sidebar-content">
                 <div className="logo-container">
-                    <div className="logo">ロゴ</div>
+                    {sidebarExpanded && (
+                        <div className="logo-area">
+                            <span className="logo">NEON</span>
+                        </div>
+                    )}
                     <button className="sidebar-toggle" onClick={toggleSidebar}>
                         {sidebarExpanded ? '◀' : '▶'}
                     </button>
@@ -2117,62 +2123,60 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <nav className="sidebar-nav">
                     <button className={currentPage === 'home' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('home'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                            </svg>
+                            <Home />
                         </div>
                         <span className="nav-text">ホーム</span>
-                        <div className="tooltip">ホーム</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">ホーム</div>
+                        )}
                     </button>
                     <button className={currentPage === 'textGeneration' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('textGeneration'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
-                            A
+                            <Type />
                         </div>
                         <span className="nav-text">テキストから生成</span>
-                        <div className="tooltip">テキストから生成</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">テキストから生成</div>
+                        )}
                     </button>
                     <button className={currentPage === 'neonDrawing' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('neonDrawing'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
-                            <svg viewBox="0 0 24 24">
-                            <path d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/>
-                            </svg>
+                            <Edit3 />
                         </div>
                         <span className="nav-text">ネオン下絵</span>
-                        <div className="tooltip">ネオン下絵</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">ネオン下絵</div>
+                        )}
                     </button>
                     <button className={currentPage === 'customize' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('customize'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                            </svg>
+                            <Settings />
                         </div>
                         <span className="nav-text">色 / 仕様のカスタマイズ</span>
-                        <div className="tooltip">色 / 仕様のカスタマイズ</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">色 / 仕様のカスタマイズ</div>
+                        )}
                     </button>
                     <button className={currentPage === 'neonSvg3dPreview' ? "nav-item active" : "nav-item"} onClick={() => { 
                       setCurrentPage('neonSvg3dPreview'); 
                       setMobileSidebarOpen(false); 
                     }}>
                         <div className="nav-icon">
-                        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                        <path d="M20.5 7.27783L12 12.0001M12 12.0001L3.49997 7.27783M12 12.0001L12 21.5001M21 16.0586V7.94153C21 7.59889 21 7.42757 20.9495 7.27477C20.9049 7.13959
-                         20.8318 7.01551 20.7354 6.91082C20.6263 6.79248 20.4766 6.70928 20.177 6.54288L12.777 2.43177C12.4934 2.27421 12.3516 2.19543 12.2015 2.16454C12.0685 2.13721 11.9315 2.13721 11.7986 
-                         2.16454C11.6484 2.19543 11.5066 2.27421 11.223 2.43177L3.82297 6.54288C3.52345 6.70928 3.37369 6.79248 3.26463 6.91082C3.16816 7.01551 3.09515 7.13959 3.05048 7.27477C3 7.42757 3 7.59889 3 7.94153V16.0586C3 16.4013 3 16.5726 3.05048 16.7254C3.09515 16.8606 3.16816 16.9847 3.26463 17.0893C3.37369 17.2077 3.52345 17.2909 3.82297 17.4573L11.223 21.5684C11.5066 21.726 11.6484 21.8047 11.7986 21.8356C11.9315 21.863 12.0685 21.863 12.2015 21.8356C12.3516 21.8047 12.4934 21.726 12.777 21.5684L20.177 17.4573C20.4766 17.2909 20.6263 17.2077 20.7354 17.0893C20.8318 16.9847 20.9049 16.8606 20.9495 16.7254C21 16.5726 21 16.4013 21 16.0586Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+                            <Eye />
                         </div>
                         <span className="nav-text">3Dプレビュー</span>
-                        <div className="tooltip">3Dプレビュー</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">3Dプレビュー</div>
+                        )}
                     </button>
                     <button className={currentPage === 'info' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('info'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
-                            <svg viewBox="0 0 24 24">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                            </svg>
+                            <Package />
                         </div>
                         <span className="nav-text">商品情報</span>
-                        <div className="tooltip">商品情報</div>
+                        {!sidebarExpanded && (
+                            <div className="tooltip">商品情報</div>
+                        )}
                     </button>
                 </nav>
             </div>

@@ -8,6 +8,7 @@
     "esm-potrace-wasm": "^0.4.1",
     "file-saver": "^2.0.5",
     "imagetracerjs": "^1.2.6",
+    "lucide-react": "^0.532.0",
     "oslllo-potrace": "^4.0.0",
     "path-browserify": "^1.0.1",
     "potrace": "^2.1.8",
