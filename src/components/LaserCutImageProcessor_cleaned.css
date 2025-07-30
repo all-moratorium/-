@@ -1109,7 +1109,7 @@
 
 .step-message {
   color: #10b981;
-  font-size: clamp(20px, 1.5vw, 32px);
+  font-size: clamp(20px, 1.6vw, 40px);
   position: absolute;
   left: 50%;
   bottom: 85%;
@@ -1123,17 +1123,42 @@
 
 .order-message {
   color: rgb(243, 243, 243);
-  font-size: clamp(12px, 1.5vw, 20px);
+  font-size: clamp(12px, 1.4vw, 18px);
   position: absolute;
   left: 50%;
-  bottom: calc(40% + 50px);
+  top: 31%;
   transform: translate(-50%, -50%);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
   opacity: 0.9;
+  white-space: normal;
   max-width: 35%;
   text-align: center;
   z-index: 10;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  display: inline-block;
+  width: auto;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 0;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.triangle-icon {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 8px;
 }
 
 .highlight {
