@@ -170,10 +170,88 @@ function CreationModal({ isOpen, onSelect, onClose }) {
     );
 }
 
+// TypeWriter クラス
+class TypeWriter {
+  constructor(element, speed = 50) {
+    this.element = element;
+    this.speed = speed;
+    this.paused = false;
+    this.cancelled = false;
+  }
+  
+  async type(text) {
+    if (this.cancelled) return;
+    
+    this.element.innerHTML = '';
+    // 改行を分割して処理
+    const parts = text.split('\n');
+    
+    // カーソルを表示
+    const cursor = '<span class="typing-cursor"></span>';
+    this.element.innerHTML = cursor;
+    
+    for (let partIndex = 0; partIndex < parts.length; partIndex++) {
+      if (this.cancelled) return;
+      
+      const part = parts[partIndex];
+      
+      // 各文字をタイピング
+      for (let i = 0; i < part.length; i++) {
+        if (this.cancelled) return;
+        if (this.paused) await this.waitForResume();
+        
+        // カーソルを削除してから文字を追加し、再度カーソルを追加
+        this.element.innerHTML = this.element.innerHTML.replace(cursor, '') + part.charAt(i) + cursor;
+        await this.delay(this.speed);
+      }
+      
+      // 最後の部分でなければ改行を追加
+      if (partIndex < parts.length - 1) {
+        if (this.cancelled) return;
+        this.element.innerHTML = this.element.innerHTML.replace(cursor, '') + '<br />' + cursor;
+        await this.delay(this.speed);
+      }
+    }
+    
+    if (this.cancelled) return;
+    
+    // タイピング完了後、少し待ってからカーソルを削除
+    await this.delay(1200);
+    if (!this.cancelled) {
+      this.element.innerHTML = this.element.innerHTML.replace(cursor, '');
+    }
+  }
+  
+  cancel() {
+    this.cancelled = true;
+  }
+  
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  waitForResume() {
+    return new Promise(resolve => {
+      const checkResume = () => {
+        if (!this.paused) resolve();
+        else setTimeout(checkResume, 50);
+      };
+      checkResume();
+    });
+  }
+}
+
 const LaserCutImageProcessor = () => {
   // UI state variables
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'textGeneration', 'info', 'neonDrawing', 'customize', 'neonSvg3dPreview'
   const [customizeSvgData, setCustomizeSvgData] = useState(null); // カスタマイズ用SVGデータ
+  
+  // タイピングアニメーション用state
+  const [isTyping, setIsTyping] = useState(false);
+  const listRef1 = useRef(null);
+  const listRef2 = useRef(null);
+  const typewriter1Ref = useRef(null);
+  const typewriter2Ref = useRef(null);
   
   // NeonDrawingAppの状態を保存
   const [neonDrawingState, setNeonDrawingState] = useState(null);
@@ -418,6 +496,69 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
   
   
+  // タイピングアニメーション開始（ホームページ表示時毎回）
+  useEffect(() => {
+    let isCancelled = false;
+    
+    if (currentPage === 'home') {
+      const startTyping = async () => {
+        if (isCancelled) return;
+        setIsTyping(true);
+        
+        const text1 = '線を描いて、色を選んで、太さを決める。ネオンのカタチを \nゼロから作れる、オーダーメイドLEDサインツール。';
+        const text2 = 'ロゴや文字だけじゃ物足りない？完全オリジナルの形状を\n思い通りに作ってそのまま注文できます。';
+        
+        // 必ず両方をクリアしてから順番通りにタイピング
+        if (listRef1.current) listRef1.current.innerHTML = '';
+        if (listRef2.current) listRef2.current.innerHTML = '';
+        
+        // 1番目のテキストをタイピング
+        if (listRef1.current && !isCancelled) {
+          const typewriter1 = new TypeWriter(listRef1.current, 60);
+          typewriter1Ref.current = typewriter1;
+          await typewriter1.type(text1);
+        }
+        
+        // キャンセルされていなければ2番目のテキストに進む
+        if (isCancelled) return;
+        
+        // 500ms待機後、2番目のテキストをタイピング
+        await new Promise(resolve => setTimeout(resolve,300));
+        
+        if (listRef2.current && !isCancelled) {
+          const typewriter2 = new TypeWriter(listRef2.current, 60);
+          typewriter2Ref.current = typewriter2;
+          await typewriter2.type(text2);
+        }
+        
+        if (!isCancelled) {
+          setIsTyping(false);
+        }
+      };
+      
+      // 少し遅延してからタイピング開始
+      const timer = setTimeout(startTyping, 1000);
+      
+      return () => {
+        isCancelled = true;
+        clearTimeout(timer);
+        // 実行中のタイピングをキャンセル
+        if (typewriter1Ref.current) {
+          typewriter1Ref.current.cancel();
+          typewriter1Ref.current = null;
+        }
+        if (typewriter2Ref.current) {
+          typewriter2Ref.current.cancel();
+          typewriter2Ref.current = null;
+        }
+        // テキストを完全にクリア
+        if (listRef1.current) listRef1.current.innerHTML = '';
+        if (listRef2.current) listRef2.current.innerHTML = '';
+        setIsTyping(false);
+      };
+    }
+  }, [currentPage]);
+
   // ページ遷移イベントリスナー統合
   useEffect(() => {
     const handleShowCustomize = (event) => {
@@ -1582,10 +1723,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <h2 className="step-message">理想のLEDネオンサインを作成</h2>
                 <div className="order-message">
                   <ul className="feature-list">
-                    <li><span className="triangle-icon">▶</span>線を描いて、色を選んで、太さを決める。ネオンのカタチを <br />ゼロから作れる、オーダーメイドLEDサインツール。</li>
-                    <li><span className="triangle-icon">▶</span>ロゴや文字だけじゃ物足りない？完全オリジナルの形状を
-                      <br />思い通りに作ってそのまま注文できます。</li>
-                    
+                    <li><span className="triangle-icon">▶</span><span ref={listRef1}></span></li>
+                    <li><span className="triangle-icon">▶</span><span ref={listRef2}></span></li>
                   </ul>
                 </div>
                 </div>
