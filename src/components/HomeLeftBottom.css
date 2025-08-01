@@ -6,14 +6,19 @@
 .hlb-review-container {
     width: 100%;
     height: 100%;
-    background: #111111;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     margin: 0 auto;
     max-width: 600px;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(16, 185, 129, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .hlb-header {
@@ -21,8 +26,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .hlb-header-title {
@@ -54,8 +61,9 @@
 }
 
 .hlb-nav-button:hover {
-    background: #ffff00;
+    background: rgba(16, 185, 129, 0.8);
     color: #000;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
 .hlb-indicator {
@@ -69,17 +77,44 @@
     border-radius: 50%;
     background: #555;
     transition: all 0.2s ease;
+    animation: pulse-glow 2s infinite;
 }
 
 .hlb-dot.hlb-active {
-    background: #ffff00;
-    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    background: #10b981;
+    box-shadow: 
+        0 0 6px rgba(16, 185, 129, 0.5),
+        0 0 12px rgba(16, 185, 129, 0.3);
     transform: scale(1.2);
+    animation: active-pulse 1.5s ease-in-out infinite alternate;
 }
 
 .hlb-dot:hover {
-    background: #ffff00;
+    background: #10b981;
     opacity: 0.7;
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 1px rgba(16, 185, 129, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+}
+
+@keyframes active-pulse {
+    0% {
+        box-shadow: 
+            0 0 6px rgba(16, 185, 129, 0.5),
+            0 0 12px rgba(16, 185, 129, 0.3);
+    }
+    100% {
+        box-shadow: 
+            0 0 8px rgba(16, 185, 129, 0.6),
+            0 0 16px rgba(16, 185, 129, 0.4);
+    }
 }
 
 .hlb-reviews-wrapper {
@@ -103,11 +138,16 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
     margin: 17px 7px 7px 7px;
     box-sizing: border-box;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .hlb-review-top {
@@ -134,9 +174,10 @@
 .hlb-review-image {
     width: 100%;
     height: 60%;
-    border-radius: 6px;
+    border-radius: 8px;
     object-fit: cover;
-    border: 2px solid #333;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .hlb-review-text {
