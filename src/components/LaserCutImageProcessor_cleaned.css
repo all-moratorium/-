@@ -1099,7 +1099,7 @@
   height: 100%;
   overflow: visible;
   position: relative;
-  top: -50px;
+  top: -17%;
 }
 
 /* Main Messages */
@@ -1215,8 +1215,9 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 70%;
+  height: 76%;
   width: 100%;
+  margin-bottom: 0%;
 }
 
 .sample-image-placeholder {
@@ -1258,7 +1259,8 @@
 /* Sample Controls - CSS Variables for easy customization */
 .sample-controls {
   /* Layout Variables */
-  --controls-gap: 50px;
+  --controls-gap: 40px;
+
   
   display: flex;
   align-items: center;
@@ -1269,8 +1271,13 @@
   white-space: nowrap;
   min-width: max-content;
   margin-top: 0px;
-  padding: 0 30px 30px 0px;
-  width: 100%;
+  margin: 0 auto;
+  padding: 5px;
+  margin-top: 8px;
+  padding-right: 25px;
+  width: 40%;
+  transform: scale(0.78);
+  transform-origin: center top;
 }
 
 /* New Neon Controls - All customizable via CSS variables */
@@ -1363,8 +1370,8 @@
   --thumb-transition-duration: 0.4s;
   
   position: absolute;
-  top: 1px;
-  left: 0px;
+  top: 3px;
+  left: 1.5px;
   width: var(--thumb-width);
   height: var(--thumb-height);
   background: var(--thumb-background);
