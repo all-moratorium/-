@@ -1099,7 +1099,8 @@
   height: 100%;
   overflow: visible;
   position: relative;
-  top: -17%;
+  top: -12%;
+  margin-right: 3%;
 }
 
 /* Main Messages */
@@ -1215,7 +1216,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 76%;
+  height: 74%;
   width: 100%;
   margin-bottom: 0%;
 }
@@ -1493,9 +1494,10 @@
 .circle-thumb.on {
   border-color: var(--circle-border-color-active);
   box-shadow: 
-    0 0 12px var(--circle-glow-inner),
-    0 0 24px var(--circle-glow-outer),
-    inset 0 0 12px var(--circle-glow-inset);
+    0 0 20px var(--circle-glow-inner),
+    0 0 40px var(--circle-glow-outer),
+    0 0 60px rgba(16, 185, 129, 0.3),
+    inset 0 0 15px var(--circle-glow-inset);
 }
 
 .power-icon {
@@ -1516,7 +1518,7 @@
 
 .circle-thumb.on .power-icon {
   stroke: var(--power-icon-color-active);
-  filter: drop-shadow(0 0 5px var(--power-icon-glow));
+  filter: drop-shadow(0 0 8px var(--power-icon-glow)) drop-shadow(0 0 12px rgba(16, 185, 129, 0.6));
 }
 
 .power-label {
