@@ -1258,8 +1258,7 @@
 /* Sample Controls - CSS Variables for easy customization */
 .sample-controls {
   /* Layout Variables */
-  --controls-gap: 80px;
-  --controls-bottom-offset: -10px;
+  --controls-gap: 40px;
   
   display: flex;
   align-items: center;
@@ -1267,7 +1266,7 @@
   gap: var(--controls-gap);
   position: absolute;
   left: 50%;
-  bottom: var(--controls-bottom-offset);
+  bottom: -7%;
   transform: translateX(-50%);
   flex-wrap: nowrap;
   white-space: nowrap;
@@ -1577,7 +1576,8 @@
 /* Compact Layout Preset */
 .sample-controls.compact {
   --controls-gap: 30px;
-  --controls-bottom-offset: 5px;
+  --controls-bottom-offset: -90px;  /* コンパクト時は少し上に */
+  --controls-margin-top: 15px;      /* コンパクト時は間隔を狭く */
   --section-spacing: 0.6;
   --title-margin-bottom: 8px;
   --note-margin-bottom: 10px;
@@ -1588,6 +1588,8 @@
 @media screen and (max-width: 768px) {
   .sample-controls {
     --controls-gap: 30px;
+    --controls-bottom-offset: -100px;  /* モバイルでの位置調整 */
+    --controls-margin-top: 15px;
     --section-scale: 0.8;
     --section-spacing: 0.7;
     --track-width: 160px;
