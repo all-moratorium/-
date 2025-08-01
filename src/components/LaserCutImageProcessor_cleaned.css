@@ -1226,6 +1226,11 @@
   height: auto;
   object-fit: contain;
   border-radius: 8px;
+  transition: opacity 0.4s ease;
+}
+
+.sample-image-placeholder.fade-transition {
+  opacity: 0;
 }
 
 .sample-image-placeholder.loading {
@@ -1250,108 +1255,416 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Sample Controls */
+/* Sample Controls - CSS Variables for easy customization */
 .sample-controls {
+  /* Layout Variables */
+  --controls-gap: 80px;
+  --controls-bottom-offset: -10px;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--controls-gap);
   position: absolute;
   left: 50%;
-  bottom: -10px;
+  bottom: var(--controls-bottom-offset);
   transform: translateX(-50%);
   flex-wrap: nowrap;
   white-space: nowrap;
   min-width: max-content;
 }
 
-.sample-switch-text {
-  color: white;
-  font-size: 18px;
+/* New Neon Controls - All customizable via CSS variables */
+.control-section {
+  /* Control Section Variables */
+  --section-scale: 1;
+  --section-spacing: 1;
+  
+  text-align: center;
+  transform: scale(var(--section-scale));
 }
 
-/* Home Sample Power Status */
-.home-sample-power-status {
+.control-title {
+  /* Title Variables */
+  --title-color: #ffffff;
+  --title-font-size: 1.2rem;
+  --title-font-weight: 500;
+  --title-margin-bottom: calc(15px * var(--section-spacing));
+  --title-height: calc(30px * var(--section-spacing));
+  
+  color: var(--title-color);
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
+  margin-bottom: var(--title-margin-bottom);
+  height: var(--title-height);
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
 }
 
-.home-sample-status-text {
-  font-weight: bold;
-  line-height: 1.8;
-  display: inline-flex;
+.power-title {
+  --title-margin-bottom: calc(25px * var(--section-spacing));
+}
+
+.power-note {
+  /* Note Variables */
+  --note-color: #9ca3af;
+  --note-font-size: 0.9rem;
+  --note-margin-top: calc(5px * var(--section-spacing));
+  --note-margin-bottom: calc(20px * var(--section-spacing));
+  --note-height: calc(25px * var(--section-spacing));
+  
+  color: var(--note-color);
+  font-size: var(--note-font-size);
+  margin-top: var(--note-margin-top);
+  margin-bottom: var(--note-margin-bottom);
+  height: var(--note-height);
+  display: flex;
   align-items: center;
-  vertical-align: middle;
-  padding: 2px 0;
-  overflow: visible;
-  width: 30px;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
-.home-sample-status-text.on {
-  color: #10b981;
+/* ネオンスライド式セレクター - Fully customizable */
+.neon-track {
+  /* Track Variables */
+  --track-width: 200px;
+  --track-height: 40px;
+  --track-border-radius: 20px;
+  --track-border-width: 2px;
+  --track-border-color: rgba(16, 185, 129, 0.3);
+  --track-background: #000000;
+  --track-glow-color: rgba(16, 185, 129, 0.2);
+  --track-inner-glow: rgba(16, 185, 129, 0.1);
+  
+  position: relative;
+  background: var(--track-background);
+  border: var(--track-border-width) solid var(--track-border-color);
+  border-radius: var(--track-border-radius);
+  height: var(--track-height);
+  overflow: hidden;
+  box-shadow: 
+    0 0 10px var(--track-glow-color),
+    inset 0 0 10px var(--track-inner-glow);
+  width: var(--track-width);
+  margin: 0 auto;
 }
 
-.home-sample-status-text.off {
-  color: #6b7280;
+.neon-thumb {
+  /* Thumb Variables */
+  --thumb-width: calc(var(--track-width) * 0.48);
+  --thumb-height: calc(var(--track-height) - 6px);
+  --thumb-border-radius: calc(var(--track-border-radius) - 3px);
+  --thumb-translate-distance: calc(var(--track-width) * 0.5);
+  --thumb-background: rgba(16, 185, 129, 0.8);
+  --thumb-background-active: rgba(16, 185, 129, 1);
+  --thumb-glow: rgba(16, 185, 129, 0.6);
+  --thumb-glow-active: rgba(16, 185, 129, 0.8);
+  --thumb-inner-glow: rgba(255, 255, 255, 0.2);
+  --thumb-inner-glow-active: rgba(255, 255, 255, 0.3);
+  --thumb-transition-duration: 0.4s;
+  
+  position: absolute;
+  top: 1px;
+  left: 0px;
+  width: var(--thumb-width);
+  height: var(--thumb-height);
+  background: var(--thumb-background);
+  border-radius: var(--thumb-border-radius);
+  transition: all var(--thumb-transition-duration) ease;
+  box-shadow: 
+    0 0 15px var(--thumb-glow),
+    inset 0 0 10px var(--thumb-inner-glow);
 }
 
-/* Home Sample Power Switch */
-.home-sample-power-switch {
-  width: 80px;
-  height: 40px;
-  border-radius: 20px;
-  border: 2px solid;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
+.neon-thumb.color {
+  transform: translateX(var(--thumb-translate-distance));
+  background: var(--thumb-background-active);
+  box-shadow: 
+    0 0 20px var(--thumb-glow-active),
+    inset 0 0 10px var(--thumb-inner-glow-active);
+}
+
+.neon-option {
+  /* Option Variables */
+  --option-width: calc(var(--track-width) * 0.5);
+  --option-font-size: 0.8rem;
+  --option-font-weight: 600;
+  --option-color: #ffffff;
+  --option-gap: 5px;
+  --option-transition-duration: 0.3s;
+  
+  position: absolute;
+  top: 0;
+  width: var(--option-width);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--option-gap);
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: var(--option-font-size);
+  font-weight: var(--option-font-weight);
+  color: var(--option-color);
+  transition: all var(--option-transition-duration) ease;
+  z-index: 2;
+}
+
+.neon-option.left {
+  left: 0;
+}
+
+.neon-option.right {
+  right: 0;
+}
+
+.neon-tube-icon {
+  /* Tube Icon Variables */
+  --tube-icon-width: 16px;
+  --tube-icon-height: 4px;
+  --tube-icon-border-radius: 2px;
+  --tube-icon-glow-size: 5px;
+  
+  width: var(--tube-icon-width);
+  height: var(--tube-icon-height);
+  border-radius: var(--tube-icon-border-radius);
+  box-shadow: 0 0 var(--tube-icon-glow-size) currentColor;
+}
+
+/* Tube Icon Styles */
+.white-neon {
+  /* White Neon Variables */
+  --white-neon-background: #ffffff;
+  --white-neon-color: #ffffff;
+  
+  background: var(--white-neon-background);
+  color: var(--white-neon-color);
+}
+
+.color-neon {
+  /* Color Neon Variables */
+  --color-neon-gradient: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #88ff00, #00ff00, #00ff88, #00ffff, #0088ff, #0000ff, #8800ff, #ff00ff, #ff0088);
+  --color-neon-color: #ffffff;
+  
+  background: var(--color-neon-gradient);
+  color: var(--color-neon-color);
+}
+
+/* 円形ネオンパワーコントロール - Fully customizable */
+.circle-track {
+  /* Circle Track Variables */
+  --circle-size: 60px;
+  
+  width: var(--circle-size);
+  height: var(--circle-size);
+  margin: 0 auto;
   position: relative;
 }
 
-.home-sample-power-switch.on {
-  background-color: #10b981;
-  border-color: #10b981;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-}
-
-.home-sample-power-switch.off {
-  background-color: #374151;
-  border-color: #6b7280;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0);
-}
-
-.home-sample-switch-handle {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: white;
-  transition: left 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.home-sample-switch-handle.on {
-  left: 43px;
-}
-
-.home-sample-switch-handle.off {
-  left: 3px;
-}
-
-@media screen and (max-width: 1280px), (pointer: coarse) {
-  .home-sample-switch-handle.on {
-    left: 28px !important;
-  }
+.circle-thumb {
+  /* Circle Thumb Variables */
+  --circle-background: rgba(0, 0, 0, 0.8);
+  --circle-border-width: 2px;
+  --circle-border-color: rgba(16, 185, 129, 0.3);
+  --circle-border-color-active: rgba(16, 185, 129, 0.8);
+  --circle-glow-inner: rgba(16, 185, 129, 0.4);
+  --circle-glow-outer: rgba(16, 185, 129, 0.2);
+  --circle-glow-inset: rgba(16, 185, 129, 0.1);
+  --circle-transition-duration: 0.4s;
   
-  .home-sample-switch-handle.off {
-    left: 3px !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--circle-background);
+  border: var(--circle-border-width) solid var(--circle-border-color);
+  cursor: pointer;
+  transition: all var(--circle-transition-duration) ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-thumb.on {
+  border-color: var(--circle-border-color-active);
+  box-shadow: 
+    0 0 12px var(--circle-glow-inner),
+    0 0 24px var(--circle-glow-outer),
+    inset 0 0 12px var(--circle-glow-inset);
+}
+
+.power-icon {
+  /* Power Icon Variables */
+  --power-icon-size: 16px;
+  --power-icon-stroke-width: 2;
+  --power-icon-color: rgba(16, 185, 129, 0.6);
+  --power-icon-color-active: rgba(16, 185, 129, 1);
+  --power-icon-glow: rgba(16, 185, 129, 0.8);
+  --power-icon-transition-duration: 0.4s;
+  
+  width: var(--power-icon-size);
+  height: var(--power-icon-size);
+  stroke: var(--power-icon-color);
+  stroke-width: var(--power-icon-stroke-width);
+  transition: all var(--power-icon-transition-duration) ease;
+}
+
+.circle-thumb.on .power-icon {
+  stroke: var(--power-icon-color-active);
+  filter: drop-shadow(0 0 5px var(--power-icon-glow));
+}
+
+.power-label {
+  /* Power Label Variables */
+  --label-margin-top: 10px;
+  --label-font-size: 0.7rem;
+  --label-font-weight: 600;
+  --label-color-off: #9ca3af;
+  --label-color-on: #10b981;
+  --label-glow: rgba(16, 185, 129, 0.5);
+  --label-transition-duration: 0.3s;
+  
+  margin-top: var(--label-margin-top);
+  font-size: var(--label-font-size);
+  font-weight: var(--label-font-weight);
+  color: var(--label-color-off);
+  transition: all var(--label-transition-duration) ease;
+}
+
+/* ホバー効果 - Customizable */
+.neon-option:hover {
+  /* Hover Variables */
+  --option-hover-color: #ffffff;
+  
+  color: var(--option-hover-color);
+}
+
+/* ===== CUSTOMIZATION EXAMPLES AND PRESETS ===== */
+
+/* Small Size Preset */
+.sample-controls.small {
+  --controls-gap: 40px;
+  --section-scale: 0.7;
+  --section-spacing: 0.8;
+  --track-width: 140px;
+  --track-height: 28px;
+  --circle-size: 42px;
+  --title-font-size: 1rem;
+  --note-font-size: 0.75rem;
+  --option-font-size: 0.7rem;
+  --label-font-size: 0.6rem;
+  --power-icon-size: 12px;
+  --tube-icon-width: 12px;
+  --tube-icon-height: 3px;
+}
+
+/* Large Size Preset */
+.sample-controls.large {
+  --controls-gap: 120px;
+  --section-scale: 1.3;
+  --section-spacing: 1.2;
+  --track-width: 260px;
+  --track-height: 52px;
+  --circle-size: 78px;
+  --title-font-size: 1.4rem;
+  --note-font-size: 1.1rem;
+  --option-font-size: 0.9rem;
+  --label-font-size: 0.8rem;
+  --power-icon-size: 20px;
+  --tube-icon-width: 20px;
+  --tube-icon-height: 5px;
+}
+
+/* Compact Layout Preset */
+.sample-controls.compact {
+  --controls-gap: 30px;
+  --controls-bottom-offset: 5px;
+  --section-spacing: 0.6;
+  --title-margin-bottom: 8px;
+  --note-margin-bottom: 10px;
+  --label-margin-top: 6px;
+}
+
+/* Mobile Responsive Scaling */
+@media screen and (max-width: 768px) {
+  .sample-controls {
+    --controls-gap: 30px;
+    --section-scale: 0.8;
+    --section-spacing: 0.7;
+    --track-width: 160px;
+    --track-height: 32px;
+    --circle-size: 48px;
+    --title-font-size: 1rem;
+    --note-font-size: 0.8rem;
+    --option-font-size: 0.7rem;
+    --label-font-size: 0.6rem;
   }
 }
+
+/* Theme Customization Examples */
+
+/* Blue Theme */
+.sample-controls.blue-theme {
+  --track-border-color: rgba(59, 130, 246, 0.3);
+  --track-glow-color: rgba(59, 130, 246, 0.2);
+  --track-inner-glow: rgba(59, 130, 246, 0.1);
+  --thumb-background: rgba(59, 130, 246, 0.8);
+  --thumb-background-active: rgba(59, 130, 246, 1);
+  --thumb-glow: rgba(59, 130, 246, 0.6);
+  --thumb-glow-active: rgba(59, 130, 246, 0.8);
+  --circle-border-color: rgba(59, 130, 246, 0.3);
+  --circle-border-color-active: rgba(59, 130, 246, 0.8);
+  --circle-glow-inner: rgba(59, 130, 246, 0.4);
+  --circle-glow-outer: rgba(59, 130, 246, 0.2);
+  --circle-glow-inset: rgba(59, 130, 246, 0.1);
+  --power-icon-color: rgba(59, 130, 246, 0.6);
+  --power-icon-color-active: rgba(59, 130, 246, 1);
+  --power-icon-glow: rgba(59, 130, 246, 0.8);
+  --label-color-on: #3b82f6;
+  --label-glow: rgba(59, 130, 246, 0.5);
+}
+
+/* Purple Theme */
+.sample-controls.purple-theme {
+  --track-border-color: rgba(147, 51, 234, 0.3);
+  --track-glow-color: rgba(147, 51, 234, 0.2);
+  --track-inner-glow: rgba(147, 51, 234, 0.1);
+  --thumb-background: rgba(147, 51, 234, 0.8);
+  --thumb-background-active: rgba(147, 51, 234, 1);
+  --thumb-glow: rgba(147, 51, 234, 0.6);
+  --thumb-glow-active: rgba(147, 51, 234, 0.8);
+  --circle-border-color: rgba(147, 51, 234, 0.3);
+  --circle-border-color-active: rgba(147, 51, 234, 0.8);
+  --circle-glow-inner: rgba(147, 51, 234, 0.4);
+  --circle-glow-outer: rgba(147, 51, 234, 0.2);
+  --circle-glow-inset: rgba(147, 51, 234, 0.1);
+  --power-icon-color: rgba(147, 51, 234, 0.6);
+  --power-icon-color-active: rgba(147, 51, 234, 1);
+  --power-icon-glow: rgba(147, 51, 234, 0.8);
+  --label-color-on: #9333ea;
+  --label-glow: rgba(147, 51, 234, 0.5);
+}
+
+/* Custom Text Override Examples */
+.sample-controls.custom-text .control-title::before {
+  content: attr(data-custom-title);
+}
+
+.sample-controls.custom-text .power-note::before {
+  content: attr(data-custom-note);
+}
+
+.sample-controls.custom-text .neon-option span {
+  display: none;
+}
+
+.sample-controls.custom-text .neon-option.left::after {
+  content: attr(data-left-text);
+}
+
+.sample-controls.custom-text .neon-option.right::after {
+  content: attr(data-right-text);
+}
+
 
 /* Product Info Page Styles */
 .product-info-container {

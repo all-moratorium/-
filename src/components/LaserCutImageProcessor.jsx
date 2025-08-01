@@ -456,9 +456,11 @@ const LaserCutImageProcessor = () => {
   const [expandedModels, setExpandedModels] = useState([]);
   const [layerSvgs, setLayerSvgs] = useState([]);
   const [sampleNeonOn, setSampleNeonOn] = useState(true); // ネオンサンプルのON/OFF状態
+  const [isColorTube, setIsColorTube] = useState(false); // チューブタイプ（false: WHITE, true: COLOR）
   const [showCreationModal, setShowCreationModal] = useState(false); // 作成方法選択モーダル
   const [sampleImagesLoaded, setSampleImagesLoaded] = useState(true); // サンプル画像のロード状態
   const neonSvgTo3DExtruderRef = useRef(null); // NeonSVGTo3DExtruderへのrefを追加
+  const sampleImageRef = useRef(null); // サンプル画像への参照
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
@@ -494,6 +496,35 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     setProductDimensions({ width, height, thickness });
   }, []);
   
+  // フェード遷移でサンプル画像を切り替える関数
+  const handleSampleNeonToggle = useCallback(() => {
+    if (!sampleImageRef.current) return;
+    
+    // フェードアウト開始
+    sampleImageRef.current.classList.add('fade-transition');
+    
+    // 0.2秒後に画像を切り替え
+    setTimeout(() => {
+      setSampleNeonOn(prev => !prev);
+      
+      // フェードイン（fade-transitionクラスを削除）
+      if (sampleImageRef.current) {
+        sampleImageRef.current.classList.remove('fade-transition');
+      }
+    }, 200);
+  }, []);
+
+  // チューブタイプを切り替える関数
+  const handleSelectTubeType = useCallback((type) => {
+    const newIsColorTube = (type === 'color');
+    
+    // 同じ選択の場合は何もしない
+    if (newIsColorTube === isColorTube) {
+      return;
+    }
+    
+    setIsColorTube(newIsColorTube);
+  }, [isColorTube]);
   
   
   // タイピングアニメーション開始（ホームページ表示時毎回）
@@ -1752,6 +1783,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="sample-images">
                   {sampleImagesLoaded ? (
                     <img 
+                      ref={sampleImageRef}
                       src={sampleNeonOn ? '/sample.demo.on.png' : '/sample.demo.off.png'} 
                       alt={sampleNeonOn ? 'ネオンサンプル（発光中）' : 'ネオンサンプル（消灯中）'}
                       className="sample-image-placeholder"
@@ -1764,18 +1796,44 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 </div>
                 
                 <div className="sample-controls">
-                  <div className="sample-switch-text">発光サンプルを確認 →</div>
-                  <div className="home-sample-power-status">
-                    <span className={`home-sample-status-text ${sampleNeonOn ? 'on' : 'off'}`}>
-                      {sampleNeonOn ? 'ON' : 'OFF'}
-                    </span>
+                  {/* スライド式チューブタイプセレクター */}
+                  <div className="control-section">
+                    <div className="control-title" style={{marginBottom: '1px'}}>Tube Type</div>
+                    <div className="power-note" style={{marginBottom: '15px'}}>※電源OFF時</div>
+                    <div className="neon-track">
+                      <div className={`neon-thumb ${isColorTube ? 'color' : ''}`}></div>
+                      <div className="neon-option left" onClick={() => handleSelectTubeType('white')}>
+                        <div className="neon-tube-icon white-neon"></div>
+                        <span>WHITE</span>
+                      </div>
+                      <div className="neon-option right" onClick={() => handleSelectTubeType('color')}>
+                        <div className="neon-tube-icon color-neon"></div>
+                        <span>COLOR</span>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setSampleNeonOn(!sampleNeonOn)}
-                    className={`home-sample-power-switch ${sampleNeonOn ? 'on' : 'off'}`}
-                  >
-                    <div className={`home-sample-switch-handle ${sampleNeonOn ? 'on' : 'off'}`} />
-                  </button>
+
+                  {/* 円形パワーボタン */}
+                  <div className="control-section">
+                    <div className="control-title power-title" style={{marginBottom: '12px'}}>Power</div>
+                    <div className="circle-track">
+                      <div className={`circle-thumb ${sampleNeonOn ? 'on' : ''}`} onClick={handleSampleNeonToggle}>
+                        <svg className="power-icon" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                          <line x1="12" y1="2" x2="12" y2="12"></line>
+                        </svg>
+                      </div>
+                    </div>
+                    <div 
+                      className="power-label" 
+                      style={{
+                        color: sampleNeonOn ? '#10b981' : '#9ca3af', 
+                        textShadow: sampleNeonOn ? '0 0 5px rgba(16, 185, 129, 0.5)' : 'none'
+                      }}
+                    >
+                      {sampleNeonOn ? 'ON' : 'OFF'}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
