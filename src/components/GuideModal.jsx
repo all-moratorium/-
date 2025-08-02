@@ -153,7 +153,11 @@ const GuideModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="guide-info-section">
-                <h3 className="guide-info-title">全画面表示について<br />※モバイル版のみ</h3>
+                <h3 className="guide-info-title">全画面表示について</h3>
+                <div className="mobile-only-text">※モバイル版のみ</div>
+                <div className="mobile-screenshot">
+                  <div className="image-placeholder">スマホスクリーンショット</div>
+                </div>
                 <div className="guide-info-text">
                   検索バーを非表示にして全画面表示したい場合は、ブラウザの「ホーム画面に追加」機能をご利用ください。
                 </div>
