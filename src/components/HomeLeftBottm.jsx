@@ -123,9 +123,16 @@ const HomeLeftBottom = () => {
             className={`hlb-reviews-track ${isAutoScrolling ? 'hlb-auto-scroll' : ''}`} 
             ref={trackRef}
           >
-            {reviews.map((review, index) => renderReviewItem(review, index))}
-            {/* 無限スクロール用複製 */}
-            {reviews.map((review, index) => renderReviewItem(review, `duplicate-${index}`))}
+            {/* 第1セット */}
+            {reviews.map((review, index) => renderReviewItem(review, `set1-${index}`))}
+            {/* 第2セット（シームレス用） */}
+            {reviews.map((review, index) => renderReviewItem(review, `set2-${index}`))}
+            {/* 第3セット（さらなるスムーズさのため） */}
+            {reviews.map((review, index) => renderReviewItem(review, `set3-${index}`))}
+            {/* 第4セット（完全なシームレス用） */}
+            {reviews.map((review, index) => renderReviewItem(review, `set4-${index}`))}
+            {/* 第5セット（バッファ用） */}
+            {reviews.map((review, index) => renderReviewItem(review, `set5-${index}`))}
           </div>
         </div>
       </div>
