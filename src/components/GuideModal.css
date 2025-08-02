@@ -288,8 +288,10 @@
 /* メインレイアウト */
 .guide-getting-started {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr;
   height: 100%;
+  gap: 15px;
 }
 
 /* 共通のタイトルスタイル */
@@ -321,6 +323,8 @@
 /* 右セクション（作成開始） */
 .creation-section {
   width: 96%;
+  grid-row: 1 / span 2;
+  grid-column: 3;
 }
 
 /* ガイドボタン */

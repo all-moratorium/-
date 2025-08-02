@@ -138,32 +138,55 @@ const GuideModal = ({ isOpen, onClose }) => {
         <div className={`guide-page ${currentPage === 3 ? 'active' : ''}`}>
             
             <div className="guide-getting-started">
-              <div className="guide-section">
-                <div className="guide-info-section">
-                  <h3 className="guide-info-title">ガイドを開く</h3>
-                  <div className="info-icon">
-                    <div className="guide-info-button"></div>
-                  </div>
-                  <div className="guide-info-text">
-                    それぞれのページには「i」マークの<br />
-                    ガイドボタンが配置されています。<br />
-                    <br />
-                    こちらをクリックすることでガイドを<br />
-                    開くことができます。
-                  </div>
+              <div className="guide-info-section">
+                <h3 className="guide-info-title">ガイドを開く</h3>
+                <div className="info-icon">
+                  <div className="guide-info-button"></div>
+                </div>
+                <div className="guide-info-text">
+                  それぞれのページには「i」マークの<br />
+                  ガイドボタンが配置されています。<br />
+                  <br />
+                  こちらをクリックすることでガイドを<br />
+                  開くことができます。
                 </div>
               </div>
 
-              <div className="guide-section">
-                <div className="creation-section">
-                  <h3 className="creation-title">作成開始</h3>
-                  <div className="creation-image">
-                    <div className="image-placeholder">アプリスクリーンショット</div>
-                  </div>
-                  <div className="creation-text">
-                    画面真ん中下の「早速作成する」<br />
-                    ボタンを押して作成開始
-                  </div>
+              <div className="guide-info-section">
+                <h3 className="guide-info-title">全画面表示について<br />※モバイル版のみ</h3>
+                <div className="guide-info-text">
+                  検索バーを非表示にして全画面表示したい場合は、ブラウザの「ホーム画面に追加」機能をご利用ください。
+                </div>
+              </div>
+
+              <div className="creation-section">
+                <h3 className="creation-title">作成開始</h3>
+                <div className="creation-image">
+                  <div className="image-placeholder">アプリスクリーンショット</div>
+                </div>
+                <div className="creation-text">
+                  画面真ん中下の「早速作成する」<br />
+                  ボタンを押して作成開始
+                </div>
+              </div>
+
+              <div className="guide-info-section">
+                <h3 className="guide-info-title">データの保存について</h3>
+                <div className="guide-info-text">
+                  • 一時データはお使いのデバイスのセッションストレージに保存されます<br />
+                  <br />
+                  • ブラウザのタブを閉じると全てのデータが消失します<br />
+                  <br />
+                  • そのため作業中は定期的にプロジェクトファイルをダウンロードしてデバイスに保存することをお勧めします
+                </div>
+              </div>
+
+              <div className="guide-info-section">
+                <h3 className="guide-info-title">この説明セクションはまだ考え中</h3>
+                <div className="guide-info-text">
+                  <br />
+                  <br />
+                  とりあえず枠だけ作ってて
                 </div>
               </div>
             </div>
