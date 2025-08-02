@@ -44,11 +44,11 @@
   padding: 0;
   color: white;
   overflow: hidden;
-  border: 2px solid #ffff00;                         /* ボーダー色 */
+  border: 2px solid rgba(16, 185, 129, 0.7);                         /* ボーダー色 */
   box-shadow: 
-    0 0 10px rgba(255, 255, 0, 0.5),               /* 近くのグロー */
-    0 0 20px rgba(255, 255, 0, 0.3),               /* 中くらいのグロー */
-    0 0 30px rgba(255, 255, 0, 0.1);               /* 遠くのグロー */
+    0 0 10px rgba(16, 185, 129, 0.5),               /* 近くのグロー */
+    0 0 20px rgba(16, 185, 129, 0.3),               /* 中くらいのグロー */
+    0 0 30px rgba(16, 185, 129, 0.1);               /* 遠くのグロー */
   display: flex;
   flex-direction: column;
   animation: bookOpen 0.3s ease-out;                 /* 0.3秒でアニメーション */
@@ -283,14 +283,18 @@
   color: #fff;
 }
 
-/* ページ3のスタイル */
+/* ページ3のスタイル - 整理済み */
+
+/* メインレイアウト */
 .guide-getting-started {
   display: grid;
   grid-template-columns: 1fr 2fr;
   height: 100%;
 }
 
-.guide-info-section .guide-info-title {
+/* 共通のタイトルスタイル */
+.guide-info-title,
+.creation-title {
   text-align: center;
   font-size: 20px;
   margin-bottom: 20px;
@@ -298,25 +302,29 @@
   font-weight: 600;
 }
 
-.creation-section .creation-title {
-  text-align: center;
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: #fff;
-  font-weight: 600;
-}
-
-.guide-info-section {
+/* 共通のセクションスタイル */
+.guide-info-section,
+.creation-section {
   background: #111;
   border-radius: 15px;
   padding: 15px;
   text-align: center;
   border: 1px solid #222;
   height: fit-content;
+}
+
+/* 左セクション（ガイド情報） */
+.guide-info-section {
   width: 90%;
 }
 
-.info-icon .guide-info-button {
+/* 右セクション（作成開始） */
+.creation-section {
+  width: 96%;
+}
+
+/* ガイドボタン */
+.guide-info-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,64 +371,62 @@
   animation: guide-ripple-wave 1.5s infinite;
 }
 
-/* アニメーション定義 */
+/* ガイドボタンアニメーション */
 @keyframes guide-lightning-flash {
   0%, 90%, 100% { 
-      box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
-      border-color: #ffffff; 
+    box-shadow: 0 4px 15px rgba(255,255,255,0.3); 
+    border-color: #ffffff; 
   }
   5%, 10% { 
-      box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
-      border-color: #ffffff; 
-      background: #ffffff; 
+    box-shadow: 0 4px 30px rgba(255,255,255,0.8); 
+    border-color: #ffffff; 
+    background: #ffffff; 
   }
 }
 
 @keyframes guide-lightning-flicker {
   0%, 90%, 100% { 
-      text-shadow: 0 0 5px rgba(255,255,255,0.5); 
-      color: #333; 
+    text-shadow: 0 0 5px rgba(255,255,255,0.5); 
+    color: #333; 
   }
   5%, 10% { 
-      text-shadow: 0 0 18px rgba(255,255,255,0.9); 
-      color: #ffffff; 
+    text-shadow: 0 0 18px rgba(255,255,255,0.9); 
+    color: #ffffff; 
   }
 }
 
 @keyframes guide-ripple-wave {
   0% { 
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 1;
-      border-color: rgba(255,255,255,0.7);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-color: rgba(255,255,255,0.7);
   }
   10% { 
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0.8;
-      border-color: rgba(255,255,255,0.7);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+    border-color: rgba(255,255,255,0.7);
   }
   100% { 
-      transform: translate(-50%, -50%) scale(2.5);
-      opacity: 0;
-      border-color: rgba(255,255,255,0);
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+    border-color: rgba(255,255,255,0);
   }
 }
 
+/* テキストスタイル */
 .guide-info-text {
   font-size: 14px;
   line-height: 1.5;
   color: #ddd;
 }
 
-.creation-section {
-  background: #111;
-  border-radius: 15px;
-  padding: 15px;
-  height: fit-content;
-  text-align: center;
-  border: 1px solid #222;
-  width: 96%;
+.creation-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ddd;
 }
 
+/* 作成画像プレースホルダー */
 .creation-image {
   width: 100%;
   height: 505px;
@@ -431,12 +437,6 @@
   justify-content: center;
   margin-bottom: 20px;
   border: 2px dashed #333;
-}
-
-.creation-text {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #ddd;
 }
 
 /* ナビゲーション */
@@ -490,8 +490,8 @@
 }
 
 .dot.active {
-  background: #ffff00;                                /* 黄色に変化 */
-  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);      /* 黄色のグロー */
+  background: #10b981;                                /* 緑色に変化 */
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);      /* 緑色のグロー */
   transform: scale(1.2);                             /* 少し大きくする */
 }
 
@@ -500,6 +500,7 @@
   font-size: 14px;
   margin-left: 8px;
 }
+
 
 /* レスポンシブ対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
@@ -597,6 +598,7 @@
     height: 30vh;
   }
   
+  /* ページ3 - モバイル版レイアウト */
   .guide-getting-started {  
     display: flex;
     flex-direction: column;
@@ -604,38 +606,33 @@
     align-items: center;
   }
   
-  .guide-info-section {
-    width: 35vh;
-    max-width: none;
-    padding: 15px;
-    margin: 0 auto;
-  }
-  
-  .guide-info-title {
-    font-size: 1.6vh;
-  }
-  
-  .guide-info-text {
-    font-size: 1.6vh;
-  }
-  
+  /* モバイル版共通セクションスタイル */
+  .guide-info-section,
   .creation-section {
     width: 35vh;
     padding: 15px;
     margin: 0 auto;
+  }
+  
+  .creation-section {
     margin-bottom: 15px;
   }
   
+  /* モバイル版タイトル */
+  .guide-info-title,
   .creation-title {
     font-size: 1.6vh;
   }
   
-  .creation-image {
-    height: 55vh;
+  /* モバイル版テキスト */
+  .guide-info-text,
+  .creation-text {
+    font-size: 1.6vh;
   }
   
-  .creation-text {
-    font-size:1.6vh ;
+  /* モバイル版画像 */
+  .creation-image {
+    height: 55vh;
   }
   
   /* フッター - 最小限の高さ */
@@ -662,13 +659,14 @@
 
 /* 縦向き時の追加調整 */
 @media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
+  /* モーダル本体 */
   .guide-modal-content {
     width: 95% !important;
     height: 95dvh !important;
     border-radius: 12px !important;
   }
   
-  /* ヘッダー */
+  /* ヘッダー調整 */
   .guide-modal-header {
     padding: 1vh 2vw !important;
     min-height: 30px !important;
@@ -686,7 +684,7 @@
     height: 20px;
   }
   
-  /* フッター */
+  /* ナビゲーション調整 */
   .guide-navigation {
     padding: 2px 8px;
     min-height: 30px;

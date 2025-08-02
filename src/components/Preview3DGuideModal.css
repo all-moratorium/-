@@ -43,11 +43,11 @@
   padding: 0 !important;
   color: white !important;
   overflow: hidden !important;
-  border: 2px solid #ffff00 !important;
+  border: 2px solid rgba(16, 185, 129, 0.7) !important;
   box-shadow: 
-    0 0 10px rgba(255, 255, 0, 0.5),
-    0 0 20px rgba(255, 255, 0, 0.3),
-    0 0 30px rgba(255, 255, 0, 0.1) !important;
+    0 0 10px rgba(16, 185, 129, 0.5),
+    0 0 20px rgba(16, 185, 129, 0.3),
+    0 0 30px rgba(16, 185, 129, 0.1) !important;
   display: flex !important;
   flex-direction: column !important;
   animation: preview3d-bookOpen 0.3s ease-out !important;
@@ -179,8 +179,8 @@
 }
 
 .preview3d-dot.active {
-  background: #ffff00;
-  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+  background: #10b981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
   transform: scale(1.2);
 }
 
