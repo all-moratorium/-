@@ -10,7 +10,7 @@
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 570px;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
@@ -184,8 +184,7 @@
     font-size: 1.5vh;
     line-height: 1.7vh;
     overflow: hidden;
-    height: 100%;
-    flex: 1;
+    height: calc(1.7vh * 3);
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
