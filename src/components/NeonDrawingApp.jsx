@@ -2234,12 +2234,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         setPaths(prevPaths => {
             const newPaths = [...prevPaths];
-            // 新しいパスまたは現在の空パスのタイプを更新（履歴保存はしない - キャンバスに変化がないため）
+            // 新しいパスまたは現在の空パスのタイプのみを更新（履歴保存はしない - キャンバスに変化がないため）
+            // 既存のパス（点が既に追加されているパス）のタイプは変更しない
             if (!newPaths[currentPathIndex] || newPaths[currentPathIndex].points.length === 0) {
                 newPaths[currentPathIndex] = { points: [], mode: drawMode, type: type };
-            } else {
-                // 既存のパスに点を追加中の場合、そのパスのタイプを更新
-                newPaths[currentPathIndex] = { ...newPaths[currentPathIndex], type: type };
             }
             return newPaths;
         });
