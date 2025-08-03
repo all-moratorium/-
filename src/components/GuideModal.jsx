@@ -161,7 +161,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   <div className="image-placeholder">スマホスクリーンショット</div>
                 </div>
                 <div className="guide-info-text">
-                  検索バーを非表示にして全画面表示したい場合は、ブラウザの「ホーム画面に追加」機能をご利用ください。
+                  検索バーを非表示にして全画面表示したい<br />場合は、ブラウザの「ホーム画面に追加」<br />機能をご利用ください。
                 </div>
               </div>
 
@@ -176,14 +176,18 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section">
+              <div className="guide-info-section data-storage-section">
                 <h3 className="guide-info-title">データの保存について</h3>
                 <div className="guide-info-text">
-                  • 一時データはお使いのデバイスのセッションストレージに保存されます<br />
-                  <br />
-                  • ブラウザのタブを閉じると全てのデータが消失します<br />
-                  <br />
-                  • そのため作業中は定期的にプロジェクトファイルをダウンロードしてデバイスに保存することをお勧めします
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> 一時データはお使いのデバイスの<br />セッションストレージに保存されます。<br /><br />
+                  </div>
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> ブラウザのタブを閉じると全てのデータ<br />が消失します。<br /><br />
+                  </div>
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> そのため作業中は定期的にプロジェクト<br />ファイルをダウンロードしてデバイスに<br />保存することを推奨します。<br /><br />
+                  </div>
                 </div>
               </div>
 

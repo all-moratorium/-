@@ -128,13 +128,13 @@
 
 .guide-page .guide-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .guide-subtitle {
   font-size: 30px;
   margin: 0;
-  margin-top: 20px;
+  margin-top: 25px;
   color: #fff;
   font-weight: 600;
 }
@@ -437,6 +437,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: #ddd;
+  white-space: nowrap;
 }
 
 .creation-text {
@@ -445,11 +446,47 @@
   color: #ddd;
 }
 
+/* データ保存セクション専用 */
+.data-storage-section {
+
+}
+
+.data-storage-section .guide-info-title {
+  margin-bottom: 38px;
+}
+
+.data-storage-section .guide-info-text {
+  white-space: normal;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.data-storage-section .list-item {
+  display: flex;
+  margin-left: 15px;
+  white-space: nowrap;
+  align-items: flex-start;
+}
+
+.data-storage-section .triangle-icon {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
 /* 小さいテキスト */
 .mobile-only-text {
   font-size: 12px;
   color: #999;
   margin: 0px;
+  margin-bottom: 10px;
+}
+
+/* 全画面表示についてのタイトル専用 */
+.guide-info-section:nth-child(3) .guide-info-title {
   margin-bottom: 5px;
 }
 
