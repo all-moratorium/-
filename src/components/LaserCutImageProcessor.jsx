@@ -731,14 +731,17 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       // リアルタイムでモバイル判定（stateに依存しない）
       const isMobileNow = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
       
-      if (isMobileNow) {
-        setIsMobile3DPreviewMounted(true);
-      }
-      
-      // 新規生成時はリマウントフラグをfalse
+      // 新規生成時はリマウントフラグをfalse（これが優先される）
       setIsRemountingModel(false);
       // リアルタイム進捗モーダルを表示
       setIsRealTime3DProgressVisible(true);
+      
+      // マウント状態を設定（新規生成として扱うため）
+      if (isMobileNow) {
+        setIsMobile3DPreviewMounted(true);
+      } else {
+        setIsDesktop3DPreviewMounted(true);
+      }
       
       // ネオン3Dプレビューに移動 - カメラ状態を保存せずに適切な初期視点を設定
       setCurrentPage('neonSvg3dPreview');
@@ -797,8 +800,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   useEffect(() => {
     if (isMobile && currentPage === 'neonSvg3dPreview') {
       // モバイルで3Dプレビューページに遷移した時
-      if (neonSvgData && !isMobile3DPreviewMounted) {
-        // 既存のモデルデータがある場合、進捗モーダルを表示してからリマウント
+      if (neonSvgData && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible) {
+        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合のみ再構築
         setIsRemountingModel(true);
         setIsRealTime3DProgressVisible(true);
         setIsMobile3DPreviewMounted(true);
@@ -811,8 +814,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     // デスクトップ版の3Dプレビューマウント制御
     if (!isMobile && currentPage === 'neonSvg3dPreview') {
       // デスクトップで3Dプレビューページに遷移した時
-      if (neonSvgData && !isDesktop3DPreviewMounted) {
-        // 既存のモデルデータがある場合、進捗モーダルを表示してからマウント
+      if (neonSvgData && !isDesktop3DPreviewMounted && !isRealTime3DProgressVisible) {
+        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合のみ再構築
         setIsRemountingModel(true);
         setIsRealTime3DProgressVisible(true);
         setIsDesktop3DPreviewMounted(true);

@@ -2132,12 +2132,15 @@ html, body {
 }
 
 .processing-modal {
-    background: linear-gradient(160deg, #1a1a1a, #0d0d0d);
+    background: linear-gradient(160deg,rgb(20, 20, 20),rgb(10, 10, 10));
     border-radius: 25px;
     padding: 45px;
     width: 550px;
-    box-shadow: 0 15px 40px rgba(255, 255, 0, 0.2), 0 0 60px rgba(255, 255, 0, 0.1);
-    border: 1.5px solid #FFFF00;
+    border: 2px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+        0 0 10px rgba(16, 185, 129, 0.5),
+        0 0 20px rgba(16, 185, 129, 0.3),
+        0 0 30px rgba(16, 185, 129, 0.1);
     text-align: center;
     color: #e0e0e0;
     animation: scaleInModal 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
@@ -2153,18 +2156,18 @@ html, body {
     margin-bottom: 35px;
     font-size: 1.8rem;
     font-weight: 700;
-    text-shadow: 0 0 8px rgba(255, 255, 0, 0.3);
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
 }
 
 .processing-spinner {
     width: 70px;
     height: 70px;
-    border: 5px solid rgba(255, 255, 0, 0.2);
-    border-top: 5px solid #FFFF00;
+    border: 5px solid rgba(16, 185, 129, 0.2);
+    border-top: 5px solid #10b981;
     border-radius: 50%;
     animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
     margin: 0 auto 25px;
-    box-shadow: 0 0 15px rgba(255, 255, 0, 0.4);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
 @keyframes spin {
@@ -2188,10 +2191,10 @@ html, body {
 
 .progress-fill {
     height: 100%;
-    background: #FFFF00;
+    background: #10b981;
     border-radius: 4px;
     position: relative;
-    box-shadow: 0 0 8px rgba(255, 255, 0, 0.4);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
 .progress-fill::after {
@@ -2217,10 +2220,12 @@ html, body {
 
 .progress-text {
     margin-top: 20px;
-    color: #FFFF00;
+    color: #10b981;
     font-weight: 700;
     font-size: 1.3rem;
-    text-shadow: 0 0 6px rgba(255, 255, 0, 0.3);
+    text-shadow: 
+        0 0 3px rgba(16, 185, 129, 0.5),
+        0 0 6px rgba(16, 185, 129, 0.3);
 }
 
 .processing-message {
@@ -2237,7 +2242,7 @@ html, body {
     background: rgba(0, 0, 0, 0.3);
     padding: 25px;
     border-radius: 12px;
-    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     opacity: 0;
     animation: fadeInContainer 0.8s ease 0.3s forwards;
 }
@@ -2250,11 +2255,14 @@ html, body {
 
 .processing-tips h4 {
     margin: 0 0 20px 0;
-    color: #FFFF00;
+    color: #10b981;
     font-weight: 600;
     font-size: 1.1rem;
     opacity: 0;
     animation: fadeInTitle 0.6s ease forwards;
+    text-shadow: 
+        0 0 3px rgba(16, 185, 129, 0.5),
+        0 0 6px rgba(16, 185, 129, 0.3);
 }
 
 @keyframes fadeInTitle {
@@ -2274,7 +2282,7 @@ html, body {
     font-size: 0.9rem;
     line-height: 1.6;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.5s ease forwards;
