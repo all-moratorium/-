@@ -34,6 +34,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const [fontSize, setFontSize] = useState(initialState.fontSize);
     const [letterSpacing, setLetterSpacing] = useState(initialState.letterSpacing);
     const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
+    const [selectedNeonColor, setSelectedNeonColor] = useState(initialState.selectedNeonColor || '#00ffff');
     const canvasRef = useRef(null);
     const [generatedPaths, setGeneratedPaths] = useState([]);
     const textAreaRef = useRef(null);
@@ -300,17 +301,20 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const centerX = displayAreaLeft + displayAreaWidth / 2;
         const centerY = displayAreaTop + displayAreaHeight / 2;
         
-        // 背景を描画
-        ctx.fillStyle = '#f5f5f5';
+        // グラデーション背景を作成
+        const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+        gradient.addColorStop(0, '#000000');
+        gradient.addColorStop(0.5, '#111827');
+        gradient.addColorStop(1, '#000000');
+        ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         
         
         
-        // テキスト描画
+        // ネオン発光テキスト描画
         ctx.save();
         ctx.scale(scale, scale);
         ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = '#000000';
         
         // 改行対応のテキスト描画
         const scaledLineHeight = lineHeight * scale;
@@ -322,6 +326,19 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             const lineWidth = ctx.measureText(line).width;
             const lineCenterX = (centerX - (lineWidth * scale / 2)) / scale;
             const yPos = startYPos + (index * lineHeight);
+            
+            // ネオン発光エフェクト（元の太さを保持）
+            ctx.shadowColor = '#00ffff';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = '#00ffff';
+            ctx.fillText(line, lineCenterX, yPos);
+            
+            ctx.shadowBlur = 10;
+            ctx.fillText(line, lineCenterX, yPos);
+            
+            // メインテキスト（同じシアン色）
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#00ffff';
             ctx.fillText(line, lineCenterX, yPos);
         });
         ctx.restore();
