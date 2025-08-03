@@ -283,7 +283,7 @@
 }
 
 .customize-video-section:fullscreen .customize-progress-bar {
-  background: #ffeb3b;
+  background: #10b981;
 }
 
 .customize-play-button {
@@ -357,7 +357,7 @@
 
 .customize-progress-bar {
   height: 4px;
-  background: #ffeb3b;
+  background: #10b981;
   border-radius: 2px;
   transition: width 0.1s ease;
   position: absolute;
@@ -397,7 +397,7 @@
 /* コンテンツセクションのCSS */
 .customize-content-section {
   width: 40%;
-  background: #1a1a1a;
+  background: linear-gradient(to bottom right, #000000, #111827, #000000);
   padding: 20px;
   overflow-y: auto;
   display: flex;
@@ -415,7 +415,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #ffeb3b;
+  background: #10b981;
   color: #000;
   display: flex;
   align-items: center;
@@ -425,7 +425,7 @@
 }
 
 .customize-step-text {
-  color: #ffeb3b;
+  color: #10b981;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -433,8 +433,10 @@
 
 .customize-guide-title {
   font-size: 24px;
+  text-align: center;
   color: #fff;
-  margin-bottom: 24px;
+  margin-top: 15px;
+  margin-bottom: 40px;
   font-weight: 600;
 }
 
@@ -442,15 +444,19 @@
   border-radius: 8px;
   margin-bottom: 16px;
   padding: 20px;
-  background: #222;
-  border: 2px solid transparent;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(34, 197, 94, 0.15);
   transition: all 0.3s ease;
 }
 
 .customize-content-container.active {
-  border-color: #ffeb3b;
-  background: #2a2a1a;
-  box-shadow: 0 4px 16px rgba(255, 235, 59, 0.2);
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
 }
 
 .customize-container-title {
@@ -476,7 +482,7 @@
 }
 
 .customize-content-container.active .customize-container-title::before {
-  background: #ffeb3b;
+  background: #10b981;
 }
 
 .customize-content-container .customize-container-description {
@@ -535,9 +541,9 @@
 
 .customize-step-item::before {
   content: counter(step-counter);
-  background: #555;
+  background: rgb(45 45 45);
   color: #fff;
-  border-radius: 50%;
+  border-radius: 6px;
   width: 20px;
   height: 20px;
   display: flex;
@@ -554,12 +560,12 @@
 }
 
 .customize-content-container.active .customize-step-item::before {
-  background: #ffeb3b;
+  background: #10b981;
   color: #000;
 }
 
 .customize-tips-item::before {
-  content: '⚙️';
+  content: '🔧';
   font-size: 14px;
   margin-top: 2px;
   flex-shrink: 0;
@@ -570,8 +576,10 @@
   border-radius: 8px;
   margin-bottom: 16px;
   padding: 20px;
-  background: #1a2a2a;
-  border: 2px solid #00bcd4;
+  background: rgba(0, 188, 212, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid #00bcd4;
   box-shadow: 0 4px 16px rgba(0, 188, 212, 0.3);
 }
 
@@ -615,8 +623,10 @@
   border-radius: 8px;
   margin-bottom: 16px;
   padding: 20px;
-  background: #2a1a1a;
-  border: 2px solid #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid #ff4444;
   box-shadow: 0 4px 16px rgba(255, 68, 68, 0.3);
 }
 
