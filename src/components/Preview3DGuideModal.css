@@ -38,7 +38,8 @@
   border-radius: 20px !important;
   width: 98% !important;
   max-width: 1400px !important;
-  height: 95dvh !important;
+  height: 90vh !important;
+  max-height: 900px !important;
   position: relative !important;
   padding: 0 !important;
   color: white !important;

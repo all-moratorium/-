@@ -135,7 +135,7 @@ const GuideModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* ページ3 */}
-        <div className={`guide-page ${currentPage === 3 ? 'active' : ''}`}>
+        <div className={`guide-page guide-page-3 ${currentPage === 3 ? 'active' : ''}`}>
             
             <div className="guide-getting-started">
               <h3 className="guide-subtitle">その他事項</h3>
