@@ -881,7 +881,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                                 id="letterSpacingSlider"
                                 type="range"
                                 min="0"
-                                max="50"
+                                max="75"
                                 value={letterSpacing}
                                 onChange={(e) => setLetterSpacing(parseInt(e.target.value))}
                                 className="letter-spacing-slider"
