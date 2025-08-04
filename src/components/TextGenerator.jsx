@@ -22,7 +22,8 @@ const getInitialTextGeneratorState = () => {
         selectedFont: savedData?.selectedFont || 'cudi',
         fontSize: savedData?.fontSize || 60,
         letterSpacing: savedData?.letterSpacing || 0,
-        strokeWidth: savedData?.strokeWidth || 3
+        strokeWidth: savedData?.strokeWidth || 3,
+        selectedNeonColor: savedData?.selectedNeonColor || '#00ffff'
     };
 };
 
@@ -41,6 +42,8 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const isInitialized = useRef(false);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [isMobileSidebarVisible, setIsMobileSidebarVisible] = useState(true);
+    const [isFontSelectorOpen, setIsFontSelectorOpen] = useState(false);
+    const [isLetterSpacingSelectorOpen, setIsLetterSpacingSelectorOpen] = useState(false);
     
     // キャンバスサイズの状態
     const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
@@ -177,6 +180,29 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
 
     // 利用可能なフォント一覧を更新
     const availableFonts = allFonts.map(font => font.name);
+
+    // ネオン色パレット（Costomizeと同じ色）
+    const neonPresetColors = [
+        '#ff0000', '#ff8000', '#ffee00', '#ffff40',
+        '#00ff00', '#00ffff', '#0080ff', '#cc60ff',
+        '#ff00ff', '#ffffff', '#f5f5dc', '#fff5e6'
+    ];
+
+    // 色名のマッピング
+    const colorNameMap = {
+        '#fff5e6': 'ワームホワイト',
+        '#f5f5dc': 'ナチュラルホワイト',
+        '#ffffff': 'ホワイト',
+        '#ff0000': 'レッド',
+        '#ff00ff': 'ピンク',
+        '#ff8000': 'オレンジ',
+        '#ffee00': 'イエロー',
+        '#ffff40': 'レモンイエロー',
+        '#00ff00': 'グリーン',
+        '#00ffff': 'アイスブルー',
+        '#0080ff': 'ブルー',
+        '#cc60ff': 'パープル'
+    };
 
     // キャンバスサイズを画面100%に設定
     const updateCanvasSize = useCallback(() => {
@@ -328,17 +354,17 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             const yPos = startYPos + (index * lineHeight);
             
             // ネオン発光エフェクト（元の太さを保持）
-            ctx.shadowColor = '#00ffff';
+            ctx.shadowColor = selectedNeonColor;
             ctx.shadowBlur = 20;
-            ctx.fillStyle = '#00ffff';
+            ctx.fillStyle = selectedNeonColor;
             ctx.fillText(line, lineCenterX, yPos);
             
             ctx.shadowBlur = 10;
             ctx.fillText(line, lineCenterX, yPos);
             
-            // メインテキスト（同じシアン色）
+            // メインテキスト（選択された色）
             ctx.shadowBlur = 0;
-            ctx.fillStyle = '#00ffff';
+            ctx.fillStyle = selectedNeonColor;
             ctx.fillText(line, lineCenterX, yPos);
         });
         ctx.restore();
@@ -616,7 +642,8 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                 selectedFont,
                 fontSize,
                 letterSpacing,
-                strokeWidth
+                strokeWidth,
+                selectedNeonColor
             };
             sessionStorage.setItem('textGeneratorData', JSON.stringify(dataToSave));
         } catch (error) {
@@ -637,13 +664,13 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             }, 300); // 300ms デバウンス
             return () => clearTimeout(timeoutId);
         }
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, saveToLocalStorage]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, saveToLocalStorage]);
 
     // 入力値が変更されたら自動で再生成
     useEffect(() => {
         updateCanvasSize();
         generateTextToSVG();
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, generateTextToSVG, updateCanvasSize]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize]);
 
     // キャンバスのdevicePixelRatio対応設定
     useEffect(() => {
@@ -715,14 +742,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                         ▲
                     </button>
                 </div>
-                <div className="text-input-tools-title">テキスト入力</div>
+                <div className="text-input-tools-title">テキストを入力</div>
                 <div className="text-generator-control-group">
                     <textarea
                         ref={textAreaRef}
                         id="textInput"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="✨ネオンサインにしたいテキストを入力してください"
+                        placeholder="✨ここから入力してください..."
                         className="text-input"
                         autoComplete="off"
                         autoCorrect="off"
@@ -730,7 +757,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                         spellCheck="false"
                     />
                     <div className="text-input-help">
-                        Enterキーで改行できます。キャンバスにも改行が反映されます。
+                        Enter, Returnキーで改行できます。キャンバスにも改行が反映されます。
                     </div>
                     {inputText.length > 30 && (
                         <div className="character-limit-warning">
@@ -739,47 +766,106 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     )}
                 </div>
 
-                <div className="font-preview-tools-title">フォントプレビュー</div>
-                <div className="font-preview-container">
-                    <div className="font-preview-grid">
-                        {allFonts.map((fontItem) => (
-                            <div className="font-item-wrapper" key={fontItem.name}>
-                                <div 
-                                    className={`font-preview-item ${selectedFont === fontItem.name ? 'selected' : ''}`}
-                                    onClick={() => setSelectedFont(fontItem.name)}
-                                >
-                                    <div 
-                                        className="font-preview-text"
-                                        style={{ fontFamily: fontItem.font }}
-                                    >
-                                        {inputText || 'Sample'}
-                                    </div>
-                                    <div className="font-tags">
-                                        {fontItem.tags.filter(tag => tag === '人気' || tag === '日本語対応').map((tag, index) => (
-                                            <span key={index} className={`font-tag ${tag === '人気' ? 'popular' : tag === '日本語対応' ? 'japanese' : ''}`}>
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="font-name">{fontItem.name}</div>
+                <div className="font-preview-tools-title">フォントを選択</div>
+                <div className="font-selector-container">
+                    <div 
+                        className="font-selector-button"
+                        onClick={() => setIsFontSelectorOpen(!isFontSelectorOpen)}
+                    >
+                        <div className="selected-font-preview">
+                            <div 
+                                className="selected-font-text"
+                                style={{ fontFamily: getFontFamily(selectedFont) }}
+                            >
+                                {inputText || 'Sample'}
                             </div>
-                        ))}
+                            <div className="selected-font-name">{selectedFont}</div>
+                        </div>
+                        <div className={`font-selector-arrow ${isFontSelectorOpen ? 'open' : ''}`}>
+                            ▼
+                        </div>
                     </div>
+                    
+                    {isFontSelectorOpen && (
+                        <div className="font-preview-container">
+                            <div className="font-preview-grid">
+                                {allFonts.map((fontItem) => (
+                                    <div className="font-item-wrapper" key={fontItem.name}>
+                                        <div 
+                                            className={`font-preview-item ${selectedFont === fontItem.name ? 'selected' : ''}`}
+                                            onClick={() => setSelectedFont(fontItem.name)}
+                                        >
+                                            <div 
+                                                className="font-preview-text"
+                                                style={{ fontFamily: fontItem.font }}
+                                            >
+                                                {inputText || 'Sample'}
+                                            </div>
+                                            <div className="font-tags">
+                                                {fontItem.tags.filter(tag => tag === '人気' || tag === '日本語対応').map((tag, index) => (
+                                                    <span key={index} className={`font-tag ${tag === '人気' ? 'popular' : tag === '日本語対応' ? 'japanese' : ''}`}>
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="font-name">{fontItem.name}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
+                <div className="neon-color-tools-title">ネオン色選択</div>
+                <div className="neon-color-palette">
+                    {neonPresetColors.map((color) => (
+                        <div 
+                            key={color} 
+                            className={`neon-color-item-wrapper ${selectedNeonColor === color ? 'selected' : ''}`}
+                            onClick={() => setSelectedNeonColor(color)}
+                        >
+                            <div 
+                                className="neon-color-item"
+                                style={{ 
+                                    backgroundColor: color,
+                                    border: '2px solid #6b7280'
+                                }}
+                                title={colorNameMap[color] || color}
+                            />
+                            <div className="neon-color-name">{colorNameMap[color] || color}</div>
+                        </div>
+                    ))}
+                </div>
 
-                <div className="text-generator-control-group">
-                    <div className="letter-spacing-label">文字間隔調整: {letterSpacing}px</div>
-                    <input
-                        id="letterSpacingSlider"
-                        type="range"
-                        min="0"
-                        max="50"
-                        value={letterSpacing}
-                        onChange={(e) => setLetterSpacing(parseInt(e.target.value))}
-                        className="letter-spacing-slider"
-                    />
+                <div className="letter-spacing-selector-container">
+                    <div 
+                        className="letter-spacing-selector-button"
+                        onClick={() => setIsLetterSpacingSelectorOpen(!isLetterSpacingSelectorOpen)}
+                    >
+                        <div className="letter-spacing-preview">
+                            <span className="letter-spacing-label">文字間隔</span>
+                            <span className="letter-spacing-value">{letterSpacing}px</span>
+                        </div>
+                        <div className={`letter-spacing-arrow ${isLetterSpacingSelectorOpen ? 'open' : ''}`}>
+                            ▼
+                        </div>
+                    </div>
+                    
+                    {isLetterSpacingSelectorOpen && (
+                        <div className="letter-spacing-slider-container">
+                            <div className="letter-spacing-slider-label">文字間隔調整: {letterSpacing}px</div>
+                            <input
+                                id="letterSpacingSlider"
+                                type="range"
+                                min="0"
+                                max="50"
+                                value={letterSpacing}
+                                onChange={(e) => setLetterSpacing(parseInt(e.target.value))}
+                                className="letter-spacing-slider"
+                            />
+                        </div>
+                    )}
                 </div>
 
 
