@@ -777,9 +777,8 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                                 className="selected-font-text"
                                 style={{ fontFamily: getFontFamily(selectedFont) }}
                             >
-                                {inputText || 'Sample'}
+                                {selectedFont}
                             </div>
-                            <div className="selected-font-name">{selectedFont}</div>
                         </div>
                         <div className={`font-selector-arrow ${isFontSelectorOpen ? 'open' : ''}`}>
                             ▼
@@ -838,13 +837,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     ))}
                 </div>
 
+                <div className="font-preview-tools-title">文字間隔を調整</div>
                 <div className="letter-spacing-selector-container">
                     <div 
                         className="letter-spacing-selector-button"
                         onClick={() => setIsLetterSpacingSelectorOpen(!isLetterSpacingSelectorOpen)}
                     >
                         <div className="letter-spacing-preview">
-                            <span className="letter-spacing-label">文字間隔</span>
+                            <span className="letter-spacing-selector-label">スペース</span>
                             <span className="letter-spacing-value">{letterSpacing}px</span>
                         </div>
                         <div className={`letter-spacing-arrow ${isLetterSpacingSelectorOpen ? 'open' : ''}`}>
@@ -854,7 +854,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     
                     {isLetterSpacingSelectorOpen && (
                         <div className="letter-spacing-slider-container">
-                            <div className="letter-spacing-slider-label">文字間隔調整: {letterSpacing}px</div>
+                            <div className="letter-spacing-slider-label">スペース: {letterSpacing}px</div>
                             <input
                                 id="letterSpacingSlider"
                                 type="range"

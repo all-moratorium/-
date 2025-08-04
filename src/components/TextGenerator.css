@@ -210,7 +210,7 @@
     border: 2px solid #10b981;
     border-radius: 8px;
     width: 250px;
-    height: 90px;
+    height: 70px;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;
@@ -229,12 +229,12 @@
 
 .selected-font-text {
     color: #ffffff;
-    font-size: 32px;
-    padding-top: 5px;
+    font-size: 33px;
+    box-sizing: border-box;
     font-weight: 500;
-    height: 55px;
+    line-height: 1.9;
     align-items: center;
-    margin:0 auto;
+    margin:auto;
     margin-bottom: 0px;
     overflow: hidden;
     max-width: 200px;
@@ -282,7 +282,7 @@
 .letter-spacing-selector-button {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 12px;
     background: transparent;
     border: 2px solid #10b981;
@@ -291,6 +291,9 @@
     transition: all 0.3s ease;
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
     height: 60px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
     box-sizing: border-box;
 }
 
@@ -305,9 +308,11 @@
     align-items: center;
 }
 
-.letter-spacing-label {
+.letter-spacing-selector-label {
     color: #ffffff;
-    font-size: 16px;
+    font-size: 15px;
+    margin:0;
+    text-align: center;
     font-weight: 500;
 }
 
@@ -331,7 +336,7 @@
 .letter-spacing-slider-container {
     margin-top: 12px;
     padding: 16px;
-    background: rgba(16, 185, 129, 0.1);
+    background: transparent;
     border-radius: 8px;
     animation: slideDown 0.3s ease;
 }
@@ -364,7 +369,7 @@
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 9px;
     max-height: 600px;
-    height: 35vh;
+    height: 60vh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 8px;
