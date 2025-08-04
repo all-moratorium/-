@@ -327,11 +327,26 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const centerX = displayAreaLeft + displayAreaWidth / 2;
         const centerY = displayAreaTop + displayAreaHeight / 2;
         
+        // 選択した色の濃いバージョンを作成
+        const hexToRgb = (hex) => {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        };
+        
+        const rgb = hexToRgb(selectedNeonColor);
+        const darkerColor = rgb ? 
+            `rgb(${Math.floor(rgb.r * 0.085)}, ${Math.floor(rgb.g * 0.085)}, ${Math.floor(rgb.b * 0.085)})` : 
+            '#111827';
+        
         // グラデーション背景を作成
         const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
-        gradient.addColorStop(0, '#000000');
-        gradient.addColorStop(0.5, '#111827');
-        gradient.addColorStop(1, '#000000');
+        gradient.addColorStop(0, '#050505');
+        gradient.addColorStop(0.5, darkerColor);
+        gradient.addColorStop(1, '#050505');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         
@@ -394,7 +409,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, canvasWidth, canvasHeight]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -743,13 +758,16 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     </button>
                 </div>
                 <div className="text-input-tools-title">テキストを入力</div>
+                <div className="text-input-description">
+                    ネオンサインにしたいテキストを以下に入力
+                </div>
                 <div className="text-generator-control-group">
                     <textarea
                         ref={textAreaRef}
                         id="textInput"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="✨ここから入力してください..."
+                        placeholder="⚡ここから入力してください..."
                         className="text-input"
                         autoComplete="off"
                         autoCorrect="off"
@@ -816,7 +834,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     )}
                 </div>
 
-                <div className="neon-color-tools-title">ネオン色選択</div>
+                <div className="neon-color-tools-title">色を選択</div>
                 <div className="neon-color-palette">
                     {neonPresetColors.map((color) => (
                         <div 
@@ -835,6 +853,10 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                             <div className="neon-color-name">{colorNameMap[color] || color}</div>
                         </div>
                     ))}
+                </div>
+                
+                <div className="color-selection-note">
+                    ※ こちらの色はプレビュー用です。実際のご注文時には、ネオン下絵で画像に沿ったネオンパスを描画して、色仕様のカスタマイズで色や太さを細かく指定可能です。
                 </div>
 
                 <div className="font-preview-tools-title">文字間隔を調整</div>

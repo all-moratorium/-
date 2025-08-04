@@ -525,7 +525,7 @@
 }
 
 .text-generator-tips-item::before {
-  content: '🔧';
+  content: '⚡';
   font-size: 14px;
   margin-top: 2px;
   flex-shrink: 0;

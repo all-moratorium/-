@@ -6,8 +6,8 @@
     position: relative;
     height: 100vh;
     width: 100vw;
-    background-color: #1a1a1a;
-    color: #ffffff;
+    background-color:rgb(7, 7, 7);
+    color:rgb(0, 0, 0);
 }
 
 /* キャンバスエリア（画面100%固定、下層） */
@@ -35,11 +35,10 @@
     right: 0;
     box-sizing: border-box;
     width: 24%;
+    min-width: 340px;
     max-width: 500px;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgb(10, 10, 10);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     padding: 10px;
     display: flex;
@@ -182,7 +181,7 @@
     font-weight: bold;
     color: #d1d5db;
     margin-bottom: 12px;
-    margin-top: 36px;
+    margin-top: 50px;
     text-align: center;
 }
 
@@ -215,12 +214,12 @@
     margin-right: auto;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     box-sizing: border-box;
 }
 
 .font-selector-button:hover {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 19px rgba(16, 185, 129, 0.55);
 }
 
 .selected-font-preview {
@@ -276,7 +275,7 @@
 
 /* 文字間隔セレクタ */
 .letter-spacing-selector-container {
-    margin-bottom: 20px;
+    margin-bottom: 60px;
 }
 
 .letter-spacing-selector-button {
@@ -289,7 +288,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     height: 60px;
     width: 200px;
     margin-left: auto;
@@ -298,7 +297,7 @@
 }
 
 .letter-spacing-selector-button:hover {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 19px rgba(16, 185, 129, 0.55);
 }
 
 .letter-spacing-preview {
@@ -371,9 +370,9 @@
     max-height: 600px;
     height: 60vh;
     overflow-y: auto;
-    border: 1px solid #444;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    background: #2a2a2a;
+    background:rgba(19, 19, 19, 0);
     padding: 9px;
 }
 
@@ -383,9 +382,9 @@
     align-items: center;
 }
 
-.font-preview-item {
-    background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: 4px;
+.font-preview-item {    
+    background: linear-gradient(to right bottom,rgb(5, 5, 5),rgb(55, 55, 55),rgb(5, 5, 5));
+    border-radius: 4px; 
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
@@ -393,20 +392,11 @@
     height: 70px;
     display: flex;
     align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     justify-content: center;
     position: relative;
-    box-shadow: 
-        0 2px 8px rgba(0,0,0,0.04),
-        0 1px 3px rgba(0,0,0,0.06);
 }
 
-.font-preview-item:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 
-        0 8px 25px rgba(30, 58, 138, 0.15),
-        0 3px 10px rgba(30, 58, 138, 0.1),
-        0 1px 4px rgba(0,0,0,0.05);
-}
 
 .font-preview-item.selected {
     border-color: #1e3a8a;
@@ -418,19 +408,18 @@
 }
 
 .font-name {
-    color: #64748b;
+    color:rgb(197, 197, 197);
     font-size: 11px;
     margin-top: 8px;
     margin-bottom: 0;
     font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 500;
     letter-spacing: 0.3px;
-    text-transform: uppercase;
     text-align: center;
 }
 
 .font-preview-text {
-    color:rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
     font-size: 27px;
     box-sizing: border-box;
     padding: 8px;
@@ -444,11 +433,6 @@
     width: 100%;
    
     
-}
-
-.font-preview-item:hover .font-preview-text {
-    color: #0f172a;
-    text-shadow: 0 2px 4px rgba(66, 133, 244, 0.1);
 }
 
 .font-preview-item.selected .font-preview-text {
@@ -531,7 +515,7 @@
     font-size: 22px;
     font-weight: 500;
     height: 100px !important;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     letter-spacing: 0.2px;
     resize: none;
     width: 95%;
@@ -547,7 +531,7 @@
     outline: none;
     border-color: #10b981;
     background: transparent;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 19px rgba(16, 185, 129, 0.55);
     transform: none;
 }
 
@@ -694,14 +678,22 @@
     left: calc(150px + (100vw - min(24vw, 500px) - 50px) / 2);
     padding: 10px 16px;
     transform: translateX(-50%);
-    border: none;
+    border: 2px solid #10b981;
     border-radius: 6px;
     font-size: 10px;
     font-weight: bold;
     cursor: pointer;
-    background-color:rgb(15, 15, 15);
-    color: rgb(255, 255, 255);
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease;
     z-index: 1000;
+}
+
+.text-generator-canvas-download-button:hover {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    background: #000000;
+    border-color: #10b981;
 }
 
 /* Mobile adjustments */
@@ -709,10 +701,12 @@
     .text-generator-canvas-download-button {
         left: 50%;
         bottom: 5%;
-        background-color:rgb(15, 15, 15);
+        background: #000000;
+        border: 2px solid #10b981;
+        color: #ffffff;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
         transform: translateX(-50%);
         border-radius: 4px;
-        border: none;
         padding: 6px 8px !important;
         font-size: 9px !important;
     }
@@ -1072,11 +1066,12 @@
 
 /* ネオン色選択 - ゼロから再構築 */
 .neon-color-tools-title {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: bold;
+    color: #d1d5db;
+    margin-bottom: 12px;
+    margin-top: 30px;
     text-align: center;
-    margin: 20px 0 15px 0;
 }
 
 .neon-color-palette {
@@ -1123,5 +1118,25 @@
     white-space: nowrap;
     font-weight: 600;
     width: 100%;
+}
+
+.color-selection-note {
+    font-size: 10px;
+    color:rgb(190, 190, 190);
+    text-align: center;
+    margin: 15px 20px 20px 20px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.text-input-description {
+    font-size: 10px;
+    color:rgb(190, 190, 190);
+    text-align: left;
+    margin: 0 ;
+    padding-left: 15px;
+    line-height: 1.4;
+    margin-top: 10px;
+    font-weight: 400;
 }
 
