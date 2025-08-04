@@ -23,7 +23,7 @@
     top: 0;
     right: 0;
     width: 320px;
-    height: 100dvh;
+    height: 100%;
     background:linear-gradient(to bottom,rgb(0, 0, 0),rgb(29, 29, 29), #000000);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     padding: 10px;
@@ -427,12 +427,11 @@
   .neon3d-proceed-button {
     width: 90% !important;
     margin: 0px auto !important;
-    margin-bottom: 10px !important;
     margin-top: 45px !important;
     font-size: 14px !important;
     padding:8px 12px !important;
     height: auto !important;
-
+    margin-bottom: 10px !important;
   }
 
   /* モバイル版グローパワーセクション - canvas-size-displayと同じ位置 */
@@ -510,25 +509,19 @@
 
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 320px) {
-  .controls-panel {
-    width: calc(100vw - 30px);
-    right: 15px;
-    left: 15px;
-  }
-}
 
 @media (max-width:1280px) and (min-width: 321px) {
   .controls-panel {
     width: 250px;
     right: 10px;
+    height: 100%;
   }
 }
 
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .controls-panel {
     right: 10px;
+    height: 100%;
   }
 }
 
