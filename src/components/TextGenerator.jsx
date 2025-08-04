@@ -339,7 +339,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         const rgb = hexToRgb(selectedNeonColor);
         const darkerColor = rgb ? 
-            `rgb(${Math.floor(rgb.r * 0.085)}, ${Math.floor(rgb.g * 0.085)}, ${Math.floor(rgb.b * 0.085)})` : 
+            `rgb(${Math.floor(rgb.r * 0.12)}, ${Math.floor(rgb.g * 0.12)}, ${Math.floor(rgb.b * 0.12)})` : 
             '#111827';
         
         // グラデーション背景を作成
