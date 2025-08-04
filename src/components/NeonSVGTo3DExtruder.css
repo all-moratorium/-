@@ -23,28 +23,15 @@
     top: 0;
     right: 0;
     width: 320px;
-    height: 100%;
-    background-color:rgb(29, 29, 29);
-    border-radius: 12px;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    z-index: 1000;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    bottom: 0;
-    height: 98%;
-    transition: all 0.3s ease;
-    padding: 16px;
+    height: 100dvh;
+    background:linear-gradient(to bottom,rgb(0, 0, 0),rgb(29, 29, 29), #000000);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 9px;
+    z-index: 1000;
     overflow-y: auto;
-    overflow-x: hidden !important;
-    box-sizing: border-box;
-    max-width: 380px !important;
-    word-wrap: break-word;
-    will-change: transform;
 }
 
 .control-group {
@@ -181,7 +168,9 @@
 
 /* 折りたたまれたサイドバー */
 .controls-panel.collapsed {
-  background-color:transparent;
+  background: transparent;
+  background-image: none;
+  border-left: none;
   overflow: hidden;
   pointer-events: none;
 }
@@ -205,42 +194,56 @@
 /* トグルボタン */
 .sidebar-toggle-button {
   position: absolute;
-  right: 23px;
-  top: 46px;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background-color: #0a0a0a;
-  color: rgba(255, 255, 255, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 101;
-  font-size: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.2s ease;
+    right: 30px;
+    top: 36px;
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color:rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
 }
 
 .sidebar-toggle-button:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.2),
+    0 0 40px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* サイドバー閉じた時のトグルボタンのグロー効果 */
 .controls-panel.collapsed .sidebar-toggle-button {
-  background-color: #1a1a1a;
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
-  border-color: #ffffff;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 45px rgba(255, 255, 255, 0.1);
-  animation: extruder-glow-pulse 2s ease-in-out infinite alternate;
+  box-shadow:
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .controls-panel.collapsed .sidebar-toggle-button:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
-  border-color: #ffffff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 @keyframes extruder-glow-pulse {
@@ -332,6 +335,7 @@
     align-items: center !important;
     justify-content: space-between !important;
     position: relative !important;
+    margin-left: 0px !important;
     margin-top: 0 !important;
     margin-bottom: 42px !important;
     padding: 15px 15px 0 15px !important;
@@ -541,7 +545,7 @@
 }
 
 .neon3d-detail-info-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   color:rgb(255, 255, 255);
   margin: 0;
@@ -553,8 +557,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border: 2px solid #ddd; 
   border-radius: 50%;
   cursor: pointer;
@@ -565,7 +569,7 @@
   overflow: visible;
   transition: all 0.3s ease;
   position: absolute;
-  right: 19px;
+  right: 76px;
   top: 5px;
 }
 
@@ -805,8 +809,9 @@
 /* モデル詳細情報表示セクション */
 .neon3d-details-info-container {
   margin-bottom: 130px;
-  margin-top: 60px;
-  padding: 12px;
+  margin-top: 0px;
+  padding-left: 12px;
+  padding-right: 12px;
   border-radius: 8px;
   opacity: 0;
   transform: translateX(20px);
@@ -816,10 +821,11 @@
 /* モデル詳細情報ヘッダー（customize-headerスタイルを参考） */
 .neon3d-model-details-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 70px;
-  position: relative;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 100px;
 }
 
 /* 右からのスライドインアニメーション */
@@ -835,12 +841,12 @@
 }
 
 .neon3d-info-section-title {
-  font-size: 1.3em;
-  font-weight: bold;
-  color:rgb(255, 247, 247); /* Accent color for titles */
-  margin: 0;
-  padding: 0;
-  text-align: center;
+  font-size: 24px;
+    font-weight: bold;
+    color:rgb(255, 255, 255);
+    margin: 0;
+    margin-left: -116px;
+    text-align: center;
 }
 
 .neon3d-info-item {
@@ -896,6 +902,11 @@
   text-align: right;
   min-width: 80px;
   padding-left: 8px;
+}
+
+/* 特定の項目（テキスト）のフォントサイズを小さく */
+.neon3d-dimension-value.neon3d-small-text {
+  font-size: 16px;
 }
 
 

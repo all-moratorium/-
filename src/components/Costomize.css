@@ -126,7 +126,7 @@
     font-size: 16px;
     font-weight: bold;
     color: #d1d5db;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
@@ -423,8 +423,9 @@
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
   box-shadow:
-    0 0 25px rgba(255, 255, 255, 0.2),
-    0 0 40px rgba(255, 255, 255, 0.1),
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -433,8 +434,9 @@
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
   box-shadow:
-    0 0 25px rgba(255, 255, 255, 0.2),
-    0 0 40px rgba(255, 255, 255, 0.1),
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -650,7 +652,7 @@
         font-size: 13px !important;
         font-weight: bold !important;
         color: #d1d5db !important;
-        margin-left: 20px !important;
+        margin-left: 0px !important;
     }
     .tube-total-length-subtitle {
         font-size: 13px !important;
@@ -750,6 +752,7 @@
         margin-bottom: 12px !important;
         margin-top: 16px !important;
         gap: 8px !important;
+        padding-left:0px !important;
     }
 
     .color-setting-label {
@@ -769,6 +772,7 @@
 
     .color-setting-controls {
         gap: 6px !important;
+        padding-left:0px !important;
         padding-left: 30px !important;
     }
 
@@ -790,6 +794,7 @@
         margin-top: 12px !important;
         margin-bottom: 4px !important;
         gap: 8px !important;
+        padding-left:0px !important;
     }
 
     .thickness-setting-label {
@@ -1196,7 +1201,7 @@ html, body {
 .color-setting-section {
     margin-bottom: 16px;
     margin-top:20px;
-
+    padding-left:15px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1251,6 +1256,7 @@ html, body {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
+    padding-left:15px;
     gap: 12px;
 }
 
@@ -1532,7 +1538,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .neon-tube-title {
@@ -1577,13 +1583,14 @@ html, body {
     padding: 12px;
     text-align: center;
     color: #9ca3af;
+    margin-top: 45px;
     font-size: 14px;
     font-style: italic;
 }
 
 /* 土台設定セクション */
 .base-settings {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 
