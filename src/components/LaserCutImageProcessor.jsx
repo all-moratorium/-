@@ -1889,7 +1889,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         
                 <div className="product-estimate-container">
                   <div className="product-form-section">
-                    <h2 style={{marginBottom: '25px', color: '#ffff00'}}>仕様</h2>
+                    <h2 style={{marginBottom: '25px', color: '#10b981'}}>仕様</h2>
                     
                     <div className="product-container-vertical">
                       

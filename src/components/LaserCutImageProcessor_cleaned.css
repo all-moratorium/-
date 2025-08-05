@@ -246,8 +246,8 @@
 }
 
 .creation-modal-choice-box-yellow:hover {
-  border-color: rgba(255, 255, 0, 0.5);
-  box-shadow: 0 0 30px 0px rgba(255, 255, 0, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 30px 0px rgba(16, 185, 129, 0.2);
 }
 
 .creation-modal-choice-box-cyan:hover {
@@ -275,7 +275,7 @@
 }
 
 .creation-modal-choice-step.step-yellow { 
-  color: #FFFF00; 
+  color: #10b981; 
   font-size: 28px;
 }
 
@@ -1244,7 +1244,7 @@
   width: 30px;
   height: 30px;
   border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid #ffff00;
+  border-top: 3px solid #10b981;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -1676,7 +1676,7 @@
 
 /* Product Info Page Styles */
 .product-info-container {
-  width: 100%;
+  width: 80%;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -1692,7 +1692,7 @@
 .product-header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: #ffff00;
+  color: #10b981;
 }
 
 .product-header p {
@@ -1704,7 +1704,7 @@
 
 .product-estimate-container {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 70% 400px;
   gap: 40px;
   margin-bottom: 40px;
 }
@@ -1778,7 +1778,7 @@
 }
 
 .delivery-info h4 {
-  color: #ffff00;
+  color: #10b981;
   margin-bottom: 15px;
   font-size: 1.1rem;
 }
@@ -1846,8 +1846,8 @@
 .form-group input:focus,
 .quantity-display:focus {
   outline: none;
-  border-color: #ffff00;
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.1);
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 .form-group textarea {
@@ -1867,8 +1867,8 @@
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #ffff00;
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.1);
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 .form-group textarea::placeholder {
@@ -1930,12 +1930,12 @@
 }
 
 .quantity-modifier:hover {
-  background-color: #333300;
-  border-color: #ffff00;
+  background-color: #0a2e23;
+  border-color: #10b981;
 }
 
 .quantity-modifier:active {
-  background-color: #555500;
+  background-color: #0a2e23;
   transform: translateY(1px);
 }
 
@@ -1978,7 +1978,7 @@
 .price-summary h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #ffff00;
+  color: #10b981;
   text-align: center;
 }
 
@@ -1994,13 +1994,13 @@
   border-bottom: none;
   margin-top: 15px;
   padding-top: 20px;
-  border-top: 2px solid #ffff00;
+  border-top: 2px solid #10b981;
 }
 
 .price-item.total {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #ffff00;
+  color: #10b981;
 }
 
 .estimate-button {
@@ -2068,7 +2068,7 @@
 /* Product Form H2 Styling */
 .product-form-h2 {
   margin-bottom: 25px;
-  color: #ffff00;
+  color: #10b981;
 }
 
 /* Price Item Total Styling */
@@ -2098,7 +2098,7 @@
 .contact-section h3 {
   font-size: 1.8rem;
   margin-bottom: 15px;
-  color: #ffff00;
+  color: #10b981;
 }
 
 .contact-section p {
@@ -2811,9 +2811,10 @@ canvas {
 
   /* 商品情報セクション - ヘッダー重複回避 */
   .product-info-container {
-    margin-top: 60px !important;
-    padding: 0px !important;
+    margin-top: 80px !important;
+    padding: 20px !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .product-form-section {
@@ -2827,10 +2828,12 @@ canvas {
 
   /* モバイル版 - インラインスタイル用クラス */
   .product-info-feature-card {
-    min-width:350px !important;
-    width: 80% !important;
-    margin: 0 auto;
-    box-sizing: border-box;
+    min-width: 280px !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    margin: 0 auto 20px auto !important;
+    box-sizing: border-box !important;
+    padding: 20px !important;
   }
 
   .product-form-h2 {
@@ -3056,8 +3059,8 @@ canvas {
   }
   
   .creation-modal-choice-box-yellow:active {
-    border-color: rgba(255, 255, 0, 0.5);
-    box-shadow: 0 0 30px 0px rgba(255, 255, 0, 0.2);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 30px 0px rgba(16, 185, 129, 0.2);
   }
   
   .creation-modal-choice-box-cyan:active {
