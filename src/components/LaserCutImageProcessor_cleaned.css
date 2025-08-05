@@ -1712,7 +1712,7 @@
 .product-form-section {
   background: linear-gradient(145deg, #1a1a1a, #262626);
   border-radius: 20px;
-  padding: 30px;
+  padding: 20px;
   border: 1px solid #333;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
@@ -1721,7 +1721,7 @@
   background: linear-gradient(145deg, #0a0a0a, #141414);
   border: 2px solid #333;
   border-radius: 15px;
-  padding: 25px;
+  padding: 20px;
   margin-bottom: 25px;
 }
 
@@ -2068,6 +2068,13 @@
 /* Product Form H2 Styling */
 .product-form-h2 {
   margin-bottom: 25px;
+  color: #10b981;
+}
+
+/* Product Specs Title */
+.product-specs-title {
+  margin-bottom: 20px;
+  margin-top: 0px;
   color: #10b981;
 }
 
