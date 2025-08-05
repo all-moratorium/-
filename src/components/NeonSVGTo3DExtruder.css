@@ -433,6 +433,10 @@
     height: auto !important;
     margin-bottom: 10px !important;
   }
+  .neon3d-proceed-button-container {
+    margin-bottom: 19px !important;
+    margin-top: 10px !important;
+  }
 
   /* モバイル版グローパワーセクション - canvas-size-displayと同じ位置 */
   .neon3d-glow-power-section {
