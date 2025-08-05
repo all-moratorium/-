@@ -398,16 +398,6 @@
 }
 
 /* 中央の点修正ボタン */
-.edit-mode-button-center {
-    padding: 12px 8px;
-    font-weight: bold;
-    border: 1px solid;
-    font-size: 14px;
-    transition: all 0.2s;
-    cursor: pointer;
-    transform: scale(1);
-    flex: 1;
-}
 
 .edit-mode-button-center:hover:not(.button-disabled) {
     /* hover effect removed */
@@ -614,9 +604,8 @@
 
 /* 基本ボタンスタイル */
 .button-disabled {
-    background-color: rgb(29, 29, 29);
+    background-color: rgba(29, 29, 29, 0);
     color: #9ca3af;
-    border-color: #6b7280;
     cursor: not-allowed;
 }
 
@@ -626,58 +615,83 @@
 }
 
 .button-blue {
-    background-color: #2563eb;
-    border-color: #3b82f6;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
     color: white;
-}
+   }
 
-.button-green {
-    background-color: #10b981;
-    border-color:rgb(48, 223, 164);
+  .button-green {
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
     color: white;
-}
+  }
 
-.button-yellow {
-    background-color: #2563eb;
+
+  .button-red {
+    background: rgba(220, 38, 38, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 38, 38, 0.8);
+    box-shadow: 
+      0 0 15px rgba(220, 38, 38, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
     color: white;
-    border-color: #3b82f6;
-}
+  }
 
-.button-red {
-    background-color: #dc2626;
-    border-color: #ef4444;
+
+  .button-purple {
+    background: rgba(124, 58, 237, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(124, 58, 237, 0.8);
+    box-shadow: 
+      0 0 15px rgba(124, 58, 237, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
     color: white;
-}
-
-.button-orange {
-    background-color: #ea580c;
-    border-color: #f97316;
-}
-
-.button-purple {
-    background-color: #7c3aed;
-    border-color: #8b5cf6;
-    color: white;
-}
+  }
+   
 
 .button-teal {
     background-color: #0d9488;
     border-color: #14b8a6;
 }
 
-.button-purple {
-    background-color: #7c3aed;
-    border-color: #8b5cf6;
-}
+
 
 .button-secondary {
-    background-color: #374151;
-    color: #d1d5db;
-    border-color: #4b5563;
+    background: rgba(107, 114, 128, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  box-shadow: 
+    0 0 8px rgba(107, 114, 128, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .button-secondary:hover:not(.scale-button) {
-    background-color: #4b5563;
+    background: rgba(107, 114, 128, 0.25);
+  border: 1px solid rgba(107, 114, 128, 0.5);
+  box-shadow: 
+    0 0 12px rgba(107, 114, 128, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* 新しいパス */
@@ -691,6 +705,7 @@
     border: none;
     margin-bottom: 12px;
     margin-top: 6px;
+    border: 1px solid rgba(0, 0, 0, 0);
     width: 85%;
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
@@ -705,9 +720,9 @@
 
 .new-path-button.button-disabled,
 .new-path-button:disabled {
-    background-color: rgb(29, 29, 29) !important;
+    background-color: rgba(29, 29, 29, 0) !important;
     color: #9ca3af !important;
-    border: 1px solid #6b7280 !important;
+    border-color: #6b7280;
     box-shadow: none !important;
     cursor: not-allowed !important;
 }
@@ -795,7 +810,6 @@
     padding: 11px 6px;
     border-radius: 4px;
     font-weight: bold;
-    border: 1px solid transparent;
     font-size: 14px;
     transition: all 0.2s;
     cursor: pointer;
@@ -804,7 +818,7 @@
 
 .edit-mode-button.button-disabled {
     border: 1px solid #6b7280;
-    background-color: rgb(29, 29, 29) !important;
+    background-color: rgba(29, 29, 29, 0) !important;
     color: #9ca3af !important;
     cursor: not-allowed !important;
 }
@@ -1660,83 +1674,91 @@
 }
 
 .load-button {
-    background-color: #10b981 !important;
+    background-color: #10b981 ;
 
 }
 
 .load-button:hover {
-    background-color: #059669 !important;
+    background-color: #059669 ;
 }
 
 /* プロジェクト保存ボタン */
 .project-save-btn {
-    padding: 6px 4px !important;
-    width: 25% !important;
-    height: auto !important;
-    min-height: 30.4px !important;
-    flex: none !important;
-    color: white !important;
-    font-weight: bold !important;
-    font-size: 13px !important;
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-decoration: none !important;
-    background-color: #3b82f6 !important;
-    border: none !important;
-    box-shadow: none !important;
-    line-height: 1 !important;
+    padding: 6px 4px ;
+    width: 25% ;
+    height: auto ;
+    min-height: 30.4px ;
+    flex: none ;
+    font-weight: bold ;
+    font-size: 13px ;
+    border-radius: 4px ;
+    cursor: pointer ;
+    transition: all 0.2s ;
+    display: flex ;
+    align-items: center ;
+    justify-content: center ;
+    text-decoration: none ;
+    line-height: 1 ;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
 }
 
 .project-save-btn:hover {
-    background-color: #2563eb !important;
-    box-shadow: none !important;
+    background-color:#2563eb;
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .project-save-btn.button-disabled {
-    background-color: rgb(29, 29, 29) !important;
-    color: #9ca3af !important;
-    border-color: #6b7280 !important;
-    border: 1px solid #6b7280 !important;
-    cursor: not-allowed !important;
+    background-color: rgba(29, 29, 29, 0) ;
+    color: #9ca3af ;
+    border-color: #6b7280 ;
+    border: 1px solid #6b7280 ;
+    cursor: not-allowed ;
 }
 
 .project-save-btn.button-disabled:hover {
-    background-color: rgb(29, 29, 29) !important;
-    color: #9ca3af !important;
+    background-color: rgba(29, 29, 29, 0) ;
+    color: #9ca3af ;
 }
 
 /* プロジェクト読み込みボタン */
 .project-load-btn {
-    padding: 6px 4px !important;
-    width: 25% !important;
-    height: auto !important;
-    min-height: 30.4px !important;
-    flex: none !important;
-    color: white !important;
-    font-weight: bold !important;
-    font-size: 13px !important;
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-decoration: none !important;
-    background-color: #10b981 !important;
-    border: none !important;
-    box-shadow: none !important;
-    line-height: 1 !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
+    padding: 6px 4px ;
+    width: 25% ;
+    height: auto ;
+    min-height: 30.4px ;
+    flex: none ;
+    color: white ;
+    font-weight: bold ;
+    font-size: 13px ;
+    border-radius: 4px ;
+    cursor: pointer ;
+    transition: all 0.2s ;
+    display: flex ;
+    align-items: center ;
+    justify-content: center ;
+    text-decoration: none ;
+    background-color: #10b981 ;
+    border: none ;
+    box-shadow: none ;
+    line-height: 1 ;
+    box-sizing: border-box ;
+    margin: 0 ;
 }
 
 .project-load-btn:hover {
-    background-color: #059669 !important;
-    box-shadow: none !important;
+    background-color: #059669 ;
+    box-shadow: none ;
 }
 
 /* 拡大縮小ツール関連スタイル */
@@ -1751,9 +1773,14 @@
     font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid #3b82f6;
-    background-color: #2563eb;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
     color: white;
     transform: scale(1);
     width: 99px;
@@ -2255,7 +2282,7 @@
     .delete-button {
         padding: 10px 8px !important;
         font-size: 12px !important;
-        min-height: 40px !important;
+        height: 40px !important;
         border-radius: 4px !important;
     }
     .scale-button {
