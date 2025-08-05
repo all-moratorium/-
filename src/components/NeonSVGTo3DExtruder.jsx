@@ -757,7 +757,18 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
                           elementsData.forEach((elementData, index) => {
                             if (elementData.type === 'base') {
                               if (elementData.points.length > 2) {
-                                const correctFillColor = calculatedModelData?.baseColor === '黒色アクリル' ? '#000000' : 'transparent';
+                                // Get actual fill color from path colors instead of relying on calculatedModelData
+                                let actualFillColor = 'transparent';
+                                Object.keys(neonSvgData.pathColors).forEach(key => {
+                                  if (key.endsWith('_fill')) {
+                                    const color = neonSvgData.pathColors[key];
+                                    if (color && color !== 'transparent') {
+                                      actualFillColor = color;
+                                    }
+                                  }
+                                });
+                                console.log(`3D Base Debug - actualFillColor: ${actualFillColor}`);
+                                const correctFillColor = actualFillColor;
                                 const baseMesh = createBase(elementData.points, correctFillColor);
                                 if (baseMesh) {
                                   neonGroupRef.current.add(baseMesh);

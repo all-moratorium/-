@@ -878,7 +878,7 @@
     color: rgb(255, 255, 255);
     font-weight: bold;
     font-size: 1em;
-    margin-bottom: 16px;
+    margin-bottom: 30px;
     margin-top: 16px;
     width: 90%;
     box-sizing: border-box;
@@ -1886,7 +1886,7 @@
     top: 1.5%;
     right: 410px;
     background-color: #0a0a0a;
-    border: 1px solid rgba(107, 114, 128, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 8px;
     padding: 12px;
     min-width: 160px;

@@ -27,7 +27,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : (window.innerWidth > 768));
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
     const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#191919'); // RGB(25,25,25)
-    const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#e6e6e6'); // RGB(230,230,230)
+    const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#dcdcdc'); // RGB(220,220,220)
     const [gridColor, setGridColor] = useState(initialState?.gridColor || '#646464'); // RGB(100,100,100)
     const [gridColorOff, setGridColorOff] = useState(initialState?.gridColorOff || '#000000'); // RGB(0,0,0)
     const [showGrid, setShowGrid] = useState(initialState?.showGrid !== undefined ? initialState.showGrid : true);
@@ -2594,7 +2594,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             }}
                                             onClick={() => {
                                                 setOffTubeColor('matching');
-                                                setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                                                setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
                                             }}
                                             title="発光色マッチング"
                                         />
@@ -2606,7 +2606,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             style={{ backgroundColor: '#ffffff', border: '2px solid #ccc' }}
                                             onClick={() => {
                                                 setOffTubeColor('white');
-                                                setBackgroundColorOff('#bebebe'); // RGB(190,190,190)
+                                                setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
                                             }}
                                             title="ホワイト"
                                         />
@@ -2803,7 +2803,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         setSelectedColor('#ff0080');
                                         setThickness(20);
                                         setBackgroundColor('#191919'); // RGB(25,25,25)
-                                        setBackgroundColorOff('#e6e6e6'); // RGB(230,230,230)
+                                        setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
                                         setGridColor('#646464'); // RGB(100,100,100)
                                         setGridColorOff('#000000'); // RGB(0,0,0)
                                         setShowGrid(true);
