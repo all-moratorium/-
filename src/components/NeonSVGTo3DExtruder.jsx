@@ -1899,8 +1899,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             <span className="neon3d-dimension-value">{calculatedModelData?.isGenerated === true ? `${(calculatedModelData.tubeLength8mm / 10).toFixed(1)}cm` : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
-            <span className="neon3d-dimension-label">OFF時の　<br />チューブカラー</span>
-            <span className="neon3d-dimension-value neon3d-small-text">{calculatedModelData?.isGenerated === true ? (offTubeColor === 'white' ? 'ホワイト' : '発光色マッチング') : 'N/A'}</span>
+            <span className="neon3d-dimension-label">OFF時の<br />チューブカラー</span>
+            <span className="neon3d-dimension-value neon3d-small-text">{calculatedModelData?.isGenerated === true ? (offTubeColor === 'white' ? 'ホワイト' : '発光色') : 'N/A'}</span>
           </div>
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">{window.innerWidth <= 768 ? 'ベースプレート色' : 'ベースプレート色'}</span>

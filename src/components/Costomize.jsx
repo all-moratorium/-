@@ -2596,9 +2596,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                                 setOffTubeColor('matching');
                                                 setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
                                             }}
-                                            title="発光色マッチング"
+                                            title="発光色"
                                         />
-                                        <span className="color-name-text">発光色マッチング</span>
+                                        <span className="color-name-text">発光色</span>
                                     </div>
                                     <div className="color-button-container">
                                         <button
