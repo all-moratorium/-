@@ -2798,22 +2798,22 @@ html, body {
 
 /* Color Selection Modal */
 .color-selection-modal {
-    background-color: rgb(29, 29, 29);
-    padding: 24px;
+    background: linear-gradient(to bottom right, #000000,rgb(12, 17, 27), #000000);
+    padding: 15px 24px 30px 24px;
     border-radius: 12px;
     border: none;
-    min-width: 380px;
-    max-width: 420px;
+    width: 380px;
     position: fixed;
-    right: 430px;
-    top: 20px;
+    right: 395px;
+    top: 15px;
     animation: colorModalFadeIn 0.15s ease-out;
     pointer-events: auto;
 }
 
 .color-selection-modal h3 {
-    color: #FFFF00;
+    color:rgb(255, 255, 255);
     margin-bottom: 16px;
+    margin-top: 5px;
     text-align: center;
 }
 
