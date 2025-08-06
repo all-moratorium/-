@@ -19,7 +19,7 @@
 }
 
 .creation-modal-content {
-  background: #0a0a0a;
+  background-image: linear-gradient(to bottom right, #000000, rgb(12, 17, 27), #000000);
   border: 2px solid rgba(16, 185, 129, 0.7);
   border-radius: 16px;
   box-shadow: 

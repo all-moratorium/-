@@ -2813,7 +2813,13 @@ html, body {
     height: auto;
     pointer-events: auto;
     overflow-y: auto;
-    
+    transition: right 0.3s ease;
+}
+
+/* サイドバー非表示時の位置調整 */
+.neon-sidebar.collapsed ~ .canvas-area .color-selection-modal,
+.color-selection-modal.sidebar-collapsed {
+    right: 100px;
 }
 
 .color-selection-modal h3 {

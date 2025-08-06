@@ -3088,7 +3088,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     zIndex: 1000,
                     pointerEvents: 'none'
                 }}>
-                    <div className="color-selection-modal">
+                    <div className={`color-selection-modal ${!sidebarVisible ? 'sidebar-collapsed' : ''}`}>
                         <h3>
                             チューブの色を選択
                         </h3>
@@ -3129,6 +3129,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             onClick={() => {
                                 setShowColorModal(false);
                                 setSelectedPathIndex(null);
+                                // サイドバーが閉じていたら開く
+                                if (!sidebarVisible) {
+                                    setSidebarVisible(true);
+                                }
                             }}
                         >
                             キャンセル

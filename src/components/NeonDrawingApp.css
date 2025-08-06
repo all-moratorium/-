@@ -1237,6 +1237,8 @@
     cursor: pointer;
     transform: scale(1);
     font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 15px;
     font-size: 14px;
 }
 
@@ -1952,10 +1954,11 @@
 /* モデルサイズ情報スタイル */
 .model-size-info {
     margin-top: 10px;
-    padding: 24px 24px 12px 24px;
+    padding: 12px 20px 12px 20px;
     background-color: rgba(128, 128, 128, 0);
     border: 1px solid rgba(241, 241, 241, 0.3);
     border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 /* 拡大縮小モーダルのスクロールバーを非表示 */
