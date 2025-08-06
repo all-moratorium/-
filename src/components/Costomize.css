@@ -1233,13 +1233,12 @@ html, body {
 }
 
 .color-select-button {
-    background: rgba(37, 100, 235, 0.425);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(37, 100, 235, 0.7);
+    background: rgba(37, 100, 235, 0.55);
+    border: 1px solid rgba(37, 100, 235, 0.85);
     box-shadow: 
-      0 0 15px rgba(37, 100, 235, 0.3),
-      0 4px 15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 0 16px rgba(37, 100, 235, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     color: white;
     border-radius: 4px;
@@ -1249,15 +1248,6 @@ html, body {
     cursor: pointer;
     font-weight: bold;
     width:70px;
-}
-
-.color-select-button:hover {
-    background: rgba(37, 100, 235, 0.55);
-    border: 1px solid rgba(37, 100, 235, 0.85);
-    box-shadow: 
-    0 0 16px rgba(37, 100, 235, 0.25),
-    0 4px 15px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* 太さ設定エリア */
@@ -1316,23 +1306,13 @@ html, body {
 }
 
 .thickness-button.active {
-    background: rgba(16, 185, 129, 0.425);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(16, 185, 129, 0.7);
-    box-shadow: 
-      0 0 15px rgba(16, 185, 129, 0.3),
-      0 4px 15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    transition: all 0.3s ease;
-}
-
-.thickness-button.active:hover {
     background: rgba(16, 185, 129, 0.55);
     border: 1px solid rgba(16, 185, 129, 0.85);
     box-shadow: 
     0 0 16px rgba(16, 185, 129, 0.25),
     0 4px 15px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
 }
 
 /* ネオンON/OFFスイッチ */
@@ -1760,16 +1740,21 @@ html, body {
 
 /* 設置環境ボタンスタイル（独自クラス名） */
 .installation-environment-button {
-    background-color: #6b7280;
-    box-sizing: border-box;
+    background: rgba(107, 114, 128, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    box-shadow: 
+      0 0 8px rgba(107, 114, 128, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     color: white;
-    border: 1px solid #6b7280;
+    box-sizing: border-box;
     border-radius: 4px;
     padding: 12px 20px;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
     min-width: 90px;
     height: 60px;
     display: flex;
@@ -1779,29 +1764,23 @@ html, body {
     white-space: nowrap;
 }
 
-.installation-environment-button:hover {
-    background-color: #4b5563;
-    border-color: #4b5563;
+.installation-environment-button:hover:not(.active) {
+    background: rgba(107, 114, 128, 0.25);
+    border: 1px solid rgba(107, 114, 128, 0.5);
+    box-shadow: 
+      0 0 12px rgba(107, 114, 128, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .installation-environment-button.active {
-    background: rgba(16, 185, 129, 0.425);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(16, 185, 129, 0.7);
-    box-shadow: 
-      0 0 15px rgba(16, 185, 129, 0.3),
-      0 4px 15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    transition: all 0.3s ease;
-}
-
-.installation-environment-button.active:hover {
     background: rgba(16, 185, 129, 0.55);
     border: 1px solid rgba(16, 185, 129, 0.85);
     box-shadow: 
     0 0 16px rgba(16, 185, 129, 0.25),
     0 4px 15px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
 }
 
 /* 設置環境セクションスタイル */
@@ -2783,4 +2762,267 @@ html, body {
 .thickness-selection-button.active:hover {
     background-color: #059669;
     border-color: #059669;
+}
+
+/* Color Selection Modal */
+.color-selection-modal {
+    background-color: rgb(29, 29, 29);
+    padding: 24px;
+    border-radius: 12px;
+    border: none;
+    min-width: 380px;
+    max-width: 420px;
+    position: fixed;
+    right: 430px;
+    top: 20px;
+    animation: colorModalFadeIn 0.15s ease-out;
+    pointer-events: auto;
+}
+
+.color-selection-modal h3 {
+    color: #FFFF00;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.color-selection-modal .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.color-selection-modal .color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.color-selection-modal .color-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.color-selection-modal .color-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.color-selection-modal .color-button.selected {
+    border: 3px solid #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.4);
+}
+
+.color-selection-modal .color-button:not(.selected) {
+    border: 2px solid #6b7280;
+}
+
+.color-selection-modal .color-name {
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.color-selection-modal .close-button {
+    background-color: #dc2626;
+    color: white;
+    border: 1px solid #dc2626;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.color-selection-modal .close-button:hover {
+    background-color: #b91c1c;
+}
+
+@keyframes colorModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Bulk Modal Content */
+.bulk-modal-content {
+    background: linear-gradient(to bottom right, #000000,rgb(12, 17, 27), #000000);
+    padding: 15px 24px 24px 24px;
+    border-radius: 12px;
+    border: none;
+    width: 350px;
+    max-height: calc(100vh - 205px);
+    height: auto;
+    overflow-y: auto;
+    animation: bgModalSlideIn 0.3s ease-out !important;
+    position: fixed;
+    right: 10px;
+    top: 150px;
+    pointer-events: auto;
+}
+
+.bulk-modal-content h3 {
+    color:rgb(255, 255, 255);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.bulk-modal-content .selected-tubes-section {
+    margin-bottom: 0px;
+}
+
+.bulk-modal-content .selected-tubes-title {
+    color: #d1d5db;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.bulk-modal-content .selected-tubes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 0px;
+    min-height: 30px;
+    max-height: 120px;
+    margin-top: 10px;
+    overflow-y: auto;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+.bulk-modal-content .selected-tube-item {
+    padding: 4px 6px;
+    padding-left: 14px;
+    background-color:rgba(55, 65, 81, 0.21);
+    color: white;
+    border-radius: 4px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 24px;
+}
+
+.bulk-modal-content .tube-color-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+.bulk-modal-content .tube-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bulk-modal-content .color-selection-section {
+    margin-bottom: 16px;
+}
+
+.bulk-modal-content .color-selection-title {
+    color: #d1d5db;
+    margin-bottom: 12px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.bulk-modal-content .bulk-color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.bulk-modal-content .bulk-color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.bulk-modal-content .bulk-color-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bulk-modal-content .bulk-color-button.selected {
+    border: 3px solid #ffffff;
+    transform: scale(1.1);
+}
+
+.bulk-modal-content .bulk-color-button:not(.selected) {
+    border: 2px solid #6b7280;
+}
+
+.bulk-modal-content .bulk-color-name {
+    font-size: 10px;
+    color: #d1d5db;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 60px;
+    word-wrap: break-word;
+}
+
+.bulk-modal-content .sample-button-section {
+    margin-bottom: 16px;
+}
+
+.bulk-modal-content .thickness-selection-container {
+    margin-bottom: 16px;
+}
+
+.bulk-modal-content .thickness-selection-title {
+    color: #d1d5db;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.bulk-modal-content .thickness-buttons-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.bulk-modal-content .thickness-button {
+    color: white;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 70px;
+}
+
+.bulk-modal-content .thickness-button.selected {
+    background-color: #10b981;
+    border: 1px solid #10b981;
+}
+
+.bulk-modal-content .thickness-button:not(.selected) {
+    background-color: #6b7280;
+    border: 1px solid #6b7280;
+}
+
+.bulk-modal-content .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
 }
