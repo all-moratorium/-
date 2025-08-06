@@ -3092,23 +3092,26 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                         <h3>
                             チューブの色を選択
                         </h3>
-                        <div className="color-grid">
+                        <div className="bulk-color-palette">
                             {neonPresetColors.map((color) => (
-                                <div key={color} className="color-item">
-                                    <button
-                                        className={`color-button ${pathColors[selectedPathIndex] === color ? 'selected' : ''}`}
+                                <div 
+                                    key={color} 
+                                    className={`bulk-color-item-wrapper ${pathColors[selectedPathIndex] === color ? 'selected' : ''}`}
+                                    onClick={() => {
+                                        handlePathColorChange(selectedPathIndex, color);
+                                        setShowColorModal(false);
+                                        setSelectedPathIndex(null);
+                                    }}
+                                >
+                                    <div 
+                                        className="bulk-color-item"
                                         style={{
                                             backgroundColor: color
                                         }}
-                                        onClick={() => {
-                                            handlePathColorChange(selectedPathIndex, color);
-                                            setShowColorModal(false);
-                                            setSelectedPathIndex(null);
-                                        }}
                                     />
-                                    <span className="color-name">
+                                    <div className="bulk-color-name">
                                         {colorNameMap[color]}
-                                    </span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
