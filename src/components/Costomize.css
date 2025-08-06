@@ -1233,10 +1233,9 @@ html, body {
 .color-preview {
     width: 32px;
     height: 32px;
-    border: 2px solid #ccc;
+    border: 2px solid #fff;
     border-radius: 6px;
     margin-top:1px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .color-select-button {
@@ -1280,7 +1279,7 @@ html, body {
     display: flex;
     gap: 8px;
     flex: 1;
-    margin-left:35px;
+    margin-left:37px;
 }
 
 .thickness-button {
