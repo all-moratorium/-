@@ -3184,27 +3184,30 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 <h4 className="color-selection-title">
                                     適用する色を選択
                                 </h4>
-                                <div className="bulk-color-grid">
+                                <div className="bulk-color-palette">
                                     {neonPresetColors.map((color) => (
-                                        <div key={color} className="bulk-color-item">
-                                            <button
-                                                className={`bulk-color-button ${selectedBulkColor === color ? 'selected' : ''}`}
+                                        <div 
+                                            key={color} 
+                                            className={`bulk-color-item-wrapper ${selectedBulkColor === color ? 'selected' : ''}`}
+                                            onClick={() => {
+                                                setSelectedBulkColor(color);
+                                                // 現在選択中の全チューブに色を適用
+                                                const newColors = {};
+                                                selectedTubes.forEach(index => {
+                                                    newColors[index] = color;
+                                                });
+                                                setPathColors(prev => ({ ...prev, ...newColors }));
+                                            }}
+                                        >
+                                            <div 
+                                                className="bulk-color-item"
                                                 style={{
                                                     backgroundColor: color
                                                 }}
-                                                onClick={() => {
-                                                    setSelectedBulkColor(color);
-                                                    // 現在選択中の全チューブに色を適用
-                                                    const newColors = {};
-                                                    selectedTubes.forEach(index => {
-                                                        newColors[index] = color;
-                                                    });
-                                                    setPathColors(prev => ({ ...prev, ...newColors }));
-                                                }}
                                             />
-                                            <span className="bulk-color-name">
+                                            <div className="bulk-color-name">
                                                 {colorNameMap[color]}
-                                            </span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
