@@ -2507,8 +2507,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         }}
                                         style={{
                                             cursor: 'pointer',
-                                            border: highlightedTube === originalIndex ? '3px solid #ff6b35' : '1px solid rgba(255, 255, 255, 0.1)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
                                             backgroundColor: highlightedTube === originalIndex ? 'rgba(255, 107, 53, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                            outline: highlightedTube === originalIndex ? '2px solid #ff6b35' : 'none',
                                             transition: 'all 0.2s ease',
                                             boxShadow: highlightedTube === originalIndex ? '0 0 15px rgba(255, 107, 53, 0.3)' : 'none'
                                         }}
@@ -2583,7 +2584,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 <h3 className="customize-setting-title">OFF時のチューブカラー</h3>
                             </div>
                             <div className="base-item off-tube-color-section">
-                                <label className="base-color-label">電源OFF時のチューブの色を選択してください</label>
+                                <label className="base-off-tube-color-label">電源OFF時のチューブの色を選択してください</label>
                                 <div className="base-color-options">
                                     <div className="color-button-container">
                                         <button
@@ -2645,8 +2646,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         }}
                                         style={{
                                             cursor: 'pointer',
-                                            border: highlightedBase === index ? '3px solid #ff6b35' : '1px solid rgba(255, 255, 255, 0.1)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
                                             backgroundColor: highlightedBase === index ? 'rgba(255, 107, 53, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                            outline: highlightedBase === index ? '2px solid #ff6b35' : 'none',
                                             transition: 'all 0.2s ease',
                                             boxShadow: highlightedBase === index ? '0 0 15px rgba(255, 107, 53, 0.3)' : 'none'
                                         }}
@@ -2686,7 +2688,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 <h3 className="customize-setting-title">設置環境</h3>
                             </div>
                             <div className="base-item installation-environment-section">
-                                <label className="base-color-label">使用環境を選択してください</label>
+                                <label className="base-installation-label">使用環境を選択してください</label>
                                 <div className="base-color-options">
                                     <div 
                                         className={`installation-environment-button ${installationEnvironment === 'indoor' ? 'active' : ''}`}

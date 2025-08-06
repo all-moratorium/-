@@ -1699,13 +1699,28 @@ html, body {
     font-size: 14px;
     color: #d1d5db;
     margin-bottom: 8px;
+    margin-top:10px;
+}
+
+.base-off-tube-color-label {
+    font-size: 14px;
+    color: #d1d5db;
+    margin-bottom: 8px;
+    margin-top:10px;
+}
+
+.base-installation-label {
+    font-size: 14px;
+    color: #d1d5db;
+    margin-bottom: 8px;
+    margin-top:10px;
 }
 
 .base-color-options {
     display: flex;
-    gap: 8px;
+    gap: 25px;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .base-color-button {
@@ -1715,6 +1730,7 @@ html, body {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
+    margin-bottom: 10px;
 }
 
 .base-color-button.transparent {
