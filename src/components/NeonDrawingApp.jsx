@@ -4137,7 +4137,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     onChange={(e) => setBgImageScale(Number(e.target.value))}
                                     className="range-input"
                                 />
-                                <div className="scale-input-container">
+                                <div className="bg-scale-input-container">
                                     <label className="direct-input-label">画像横幅:</label>
                                     <input
                                         ref={widthInputRef}
