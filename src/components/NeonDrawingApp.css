@@ -1069,15 +1069,30 @@
 }
 
 .modal-apply-btn {
-    background: #10b981;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
     color: white;
-    border: none;
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+}
+
+.modal-apply-btn:hover {
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .modal-close-btn {
@@ -1206,19 +1221,30 @@
 .clear-image-button {
     width: 100%;
     padding: 8px;
-    background-color: #dc2626;
+    background: rgba(220, 38, 38, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 38, 38, 0.8);
+    box-shadow: 
+      0 0 15px rgba(220, 38, 38, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
     color: white;
     border-radius: 8px;
-    border: none;
     cursor: pointer;
-    transition: all 0.2s;
     transform: scale(1);
     font-weight: 600;
     font-size: 14px;
 }
 
 .clear-image-button:hover {
-    background-color: #ef4444;
+    background: rgba(220, 38, 38, 0.75);
+    border: 1px solid rgba(220, 38, 38, 0.9);
+    box-shadow: 
+      0 0 16px rgba(220, 38, 38, 0.35),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 /* モーダルボタンコンテナ */
@@ -1232,19 +1258,30 @@
 .reset-size-button {
     width: 100%;
     padding: 8px;
-    background-color: #2563eb;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
     color: white;
     border-radius: 6px;
-    border: none;
     cursor: pointer;
-    transition: all 0.2s;
     font-weight: 600;
     font-size: 14px;
     margin-top: 4px;
 }
 
 .reset-size-button:hover {
-    background-color: #3b82f6;
+    background: rgba(37, 100, 235, 0.6);
+    border: 1px solid rgba(37, 99, 235, 0.85);
+    box-shadow: 
+      0 0 18px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 /* モーダル内のクリアボタンの調整 */
@@ -1258,18 +1295,29 @@
 .reset-position-button {
     width: 100%;
     padding: 8px;
-    background-color: #10b981;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
     color: white;
     border-radius: 6px;
-    border: none;
     cursor: pointer;
-    transition: all 0.2s;
     font-weight: 600;
     font-size: 14px;
 }
 
 .reset-position-button:hover {
-    background-color:rgb(86, 211, 138);
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .setting-description {
