@@ -493,7 +493,13 @@
 }
 
 .view-reset-button:hover {
-    background-color: #ef4444;
+    background: rgba(220, 38, 38, 0.75);
+  border: 1px solid rgba(220, 38, 38, 1.0);
+  box-shadow: 
+    0 0 20px rgba(220, 38, 38, 0.2),
+    0 0 40px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* グリッド切り替えコンテナ */
