@@ -23,7 +23,7 @@ const getInitialTextGeneratorState = () => {
         fontSize: savedData?.fontSize || 60,
         letterSpacing: savedData?.letterSpacing || 0,
         strokeWidth: savedData?.strokeWidth || 3,
-        selectedNeonColor: savedData?.selectedNeonColor || '#00ffff'
+        selectedNeonColor: savedData?.selectedNeonColor || '#ffffff'
     };
 };
 
@@ -35,7 +35,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const [fontSize, setFontSize] = useState(initialState.fontSize);
     const [letterSpacing, setLetterSpacing] = useState(initialState.letterSpacing);
     const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
-    const [selectedNeonColor, setSelectedNeonColor] = useState(initialState.selectedNeonColor || '#00ffff');
+    const [selectedNeonColor, setSelectedNeonColor] = useState(initialState.selectedNeonColor || '#ffffff');
     const canvasRef = useRef(null);
     const [generatedPaths, setGeneratedPaths] = useState([]);
     const textAreaRef = useRef(null);

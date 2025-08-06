@@ -383,7 +383,7 @@
 }
 
 .font-preview-item {    
-    background: linear-gradient(to right bottom,rgb(5, 5, 5),rgb(55, 55, 55),rgb(5, 5, 5));
+    background: linear-gradient(to bottom right, #000000,rgb(25, 29, 39), #000000);
     border-radius: 4px; 
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
