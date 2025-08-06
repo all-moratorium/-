@@ -1720,7 +1720,7 @@ html, body {
 
 .base-color-palette {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 12px;
     margin-top: 24px;
     justify-content: center;
@@ -1734,18 +1734,19 @@ html, body {
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     text-align: center;
-    width: 80px;
+    width: 70px;
     overflow: visible;
 }
 
 .base-color-item-wrapper.selected {
     background: linear-gradient(90deg,
-      rgba(16, 185, 129, 0.2) 0%,
-      rgba(16, 185, 129, 0.08) 100%);
-    border-color: rgba(16, 185, 129, 0.4);
+      rgba(16, 185, 129, 0.25) 0%,
+      rgba(16, 185, 129, 0.1) 100%);
+    outline: 1px solid rgba(16, 185, 129, 0.6);
     box-shadow:
-      0 0 30px rgba(16, 185, 129, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      0 0 15px rgba(16, 185, 129, 0.4),
+      0 0 30px rgba(16, 185, 129, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .base-color-item {

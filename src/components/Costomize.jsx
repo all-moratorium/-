@@ -2588,7 +2588,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 <div className="base-color-palette">
                                     <div 
                                         className={`base-color-item-wrapper ${offTubeColor === 'matching' ? 'selected' : ''}`}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             setOffTubeColor('matching');
                                             setBackgroundColorOff('#dcdcdc');
                                         }}
@@ -2603,7 +2604,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     </div>
                                     <div 
                                         className={`base-color-item-wrapper ${offTubeColor === 'white' ? 'selected' : ''}`}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             setOffTubeColor('white');
                                             setBackgroundColorOff('#dcdcdc');
                                         }}
@@ -2663,7 +2665,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         <div className="base-color-palette">
                                             <div 
                                                 className={`base-color-item-wrapper ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'selected' : ''}`}
-                                                onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePathColorChange(`${index}_fill`, 'transparent');
+                                                }}
                                             >
                                                 <div 
                                                     className="base-color-item transparent"
@@ -2672,7 +2677,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             </div>
                                             <div 
                                                 className={`base-color-item-wrapper ${pathColors[`${index}_fill`] === '#000000' ? 'selected' : ''}`}
-                                                onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePathColorChange(`${index}_fill`, '#000000');
+                                                }}
                                             >
                                                 <div 
                                                     className="base-color-item"
