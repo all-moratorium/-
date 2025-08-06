@@ -2585,33 +2585,36 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             </div>
                             <div className="base-item off-tube-color-section">
                                 <label className="base-off-tube-color-label">電源OFF時のチューブの色を選択してください</label>
-                                <div className="base-color-options">
-                                    <div className="color-button-container">
-                                        <button
-                                            className={`base-color-button rainbow ${offTubeColor === 'matching' ? 'active' : ''}`}
-                                            style={{ 
-                                                background: 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff, #ff00ff)',
-                                                border: '2px solid #ccc'
+                                <div className="base-color-palette">
+                                    <div 
+                                        className={`base-color-item-wrapper ${offTubeColor === 'matching' ? 'selected' : ''}`}
+                                        onClick={() => {
+                                            setOffTubeColor('matching');
+                                            setBackgroundColorOff('#dcdcdc');
+                                        }}
+                                    >
+                                        <div 
+                                            className="base-color-item"
+                                            style={{
+                                                background: 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff, #ff00ff)'
                                             }}
-                                            onClick={() => {
-                                                setOffTubeColor('matching');
-                                                setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
-                                            }}
-                                            title="発光色"
                                         />
-                                        <span className="color-name-text">発光色</span>
+                                        <div className="base-color-name">発光色</div>
                                     </div>
-                                    <div className="color-button-container">
-                                        <button
-                                            className={`base-color-button white ${offTubeColor === 'white' ? 'active' : ''}`}
-                                            style={{ backgroundColor: '#ffffff', border: '2px solid #ccc' }}
-                                            onClick={() => {
-                                                setOffTubeColor('white');
-                                                setBackgroundColorOff('#dcdcdc'); // RGB(220,220,220)
+                                    <div 
+                                        className={`base-color-item-wrapper ${offTubeColor === 'white' ? 'selected' : ''}`}
+                                        onClick={() => {
+                                            setOffTubeColor('white');
+                                            setBackgroundColorOff('#dcdcdc');
+                                        }}
+                                    >
+                                        <div 
+                                            className="base-color-item"
+                                            style={{
+                                                backgroundColor: '#ffffff'
                                             }}
-                                            title="ホワイト"
                                         />
-                                        <span className="color-name-text">ホワイト</span>
+                                        <div className="base-color-name">ホワイト</div>
                                     </div>
                                 </div>
                             </div>
@@ -2656,23 +2659,28 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                       
                                         
                                         {/* ベースプレートの色設定 */}
-                                        <div className="base-color-label">色の設定</div>
-                                        <div className="base-color-options">
-                                            <div className="color-button-container">
-                                                <button
-                                                    className={`base-color-button transparent ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'active' : ''}`}
-                                                    onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
-                                                    title="透明"
+                                        <div className="base-color-label">ベースプレートの色を選択してください</div>
+                                        <div className="base-color-palette">
+                                            <div 
+                                                className={`base-color-item-wrapper ${(pathColors[`${index}_fill`] || 'transparent') === 'transparent' ? 'selected' : ''}`}
+                                                onClick={() => handlePathColorChange(`${index}_fill`, 'transparent')}
+                                            >
+                                                <div 
+                                                    className="base-color-item transparent"
                                                 />
-                                                <span className="color-name-text">クリア</span>
+                                                <div className="base-color-name">クリア</div>
                                             </div>
-                                            <div className="color-button-container">
-                                                <button
-                                                    className={`base-color-button black ${pathColors[`${index}_fill`] === '#000000' ? 'active' : ''}`}
-                                                    onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
-                                                    title="黒"
+                                            <div 
+                                                className={`base-color-item-wrapper ${pathColors[`${index}_fill`] === '#000000' ? 'selected' : ''}`}
+                                                onClick={() => handlePathColorChange(`${index}_fill`, '#000000')}
+                                            >
+                                                <div 
+                                                    className="base-color-item"
+                                                    style={{
+                                                        backgroundColor: '#000000'
+                                                    }}
                                                 />
-                                                <span className="color-name-text">ブラック</span>
+                                                <div className="base-color-name">ブラック</div>
                                             </div>
                                         </div>
                                     </div>

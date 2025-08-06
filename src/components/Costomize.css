@@ -1699,21 +1699,75 @@ html, body {
     font-size: 14px;
     color: #d1d5db;
     margin-bottom: 8px;
-    margin-top:10px;
+    margin-top:8px;
 }
 
 .base-off-tube-color-label {
     font-size: 14px;
     color: #d1d5db;
     margin-bottom: 8px;
-    margin-top:10px;
+    padding-top: 8px;
+    display: block;
 }
 
 .base-installation-label {
     font-size: 14px;
     color: #d1d5db;
     margin-bottom: 8px;
-    margin-top:10px;
+    padding-top: 8px;
+    display: block;
+}
+
+.base-color-palette {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.base-color-item-wrapper {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+    width: 80px;
+    overflow: visible;
+}
+
+.base-color-item-wrapper.selected {
+    background: linear-gradient(90deg,
+      rgba(16, 185, 129, 0.2) 0%,
+      rgba(16, 185, 129, 0.08) 100%);
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow:
+      0 0 30px rgba(16, 185, 129, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.base-color-item {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    margin: 0 auto 8px auto;
+    border: 1px solid rgb(201, 201, 201);
+}
+
+.base-color-item.transparent {
+    background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 8px 8px;
+    border: 1px solid rgba(201, 201, 201, 0.3);
+}
+
+.base-color-name {
+    color: #ffffff;
+    font-size: 9px;
+    line-height: 1.2;
+    white-space: nowrap;
+    font-weight: 600;
+    width: 100%;
 }
 
 .base-color-options {
