@@ -3605,8 +3605,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             disabled={areDrawModeButtonsDisabled}
                             className={`draw-mode-button ${
                                 areDrawModeButtonsDisabled
-                                        ? (drawMode === 'fill' ? 'button-green' : 'button-disabled')
-                                        : (drawMode === 'fill' ? 'button-green' : 'button-secondary')
+                                        ? (drawMode === 'fill' ? 'button-red' : 'button-disabled')
+                                        : (drawMode === 'fill' ? 'button-red' : 'button-secondary')
                             }`}
                         >
                             土台

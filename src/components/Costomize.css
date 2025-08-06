@@ -49,7 +49,7 @@
     box-sizing: border-box;
     width: 380px;
     height: 100dvh;
-    background:linear-gradient(to bottom,rgb(0, 0, 0),rgb(29, 29, 29), #000000);
+    background: rgb(10, 10, 10);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     padding: 10px;
     display: flex;
@@ -342,7 +342,7 @@
     padding: 12px 24px;
     margin: 0 auto;
     border: 1px solid rgba(16, 185, 129, 0.7);
-    border-radius: 8px;
+    border-radius: 6px;
     background: transparent;
     background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
     backdrop-filter: blur(10px);
@@ -351,7 +351,7 @@
     font-size: 1em;
     margin-bottom: 30px;
     margin-top: 16px;
-    width: 90%; /* サイズ維持 */
+    width: 85%; /* サイズ維持 */
     box-sizing: border-box; /* 維持 */
     box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 50px 0px;
     cursor: pointer;
@@ -1794,11 +1794,25 @@ html, body {
 }
 
 .grid-toggle-button.on {
-    background-color: #10b981;
+    background: rgba(16, 185, 129, 0.75);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 0 40px rgba(16, 185, 129, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .grid-toggle-button.off {
-    background-color: #6b7280;
+    background: rgba(107, 114, 128, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  box-shadow: 
+    0 0 8px rgba(107, 114, 128, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 
@@ -2362,29 +2376,33 @@ html, body {
 
 /* プロジェクト保存ボタン */
 .project-save-btn {
-    padding: 6px 4px ;
-    width: 25% ;
-    height: auto ;
-    height: 30.4px ;
-    flex: none ;
-    color: white ;
-    font-weight: bold ;
-    font-size: 13px ;
-    border-radius: 4px ;
-    cursor: pointer ;
-    transition: all 0.2s ;
-    display: flex ;
-    align-items: center ;
-    justify-content: center ;
-    text-decoration: none ;
-    border: none ;
-    outline: none ;
-    background-color: #3b82f6 ;
+    width: 25%;
+    padding: auto;
+    padding-right: 9px;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+    0 0 20px rgba(37, 100, 235, 0.2),
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    height: 30.4px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .project-save-btn:hover {
-    background-color: #2563eb ;
-    box-shadow: none ;
+    background: rgba(37, 100, 235, 0.75);
+    border: 1px solid rgba(37, 100, 235, 1.0);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 0 40px rgba(37, 100, 235, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .project-save-btn.button-disabled {
@@ -2393,6 +2411,7 @@ html, body {
     border-color: #6b7280 ;
     border: 1px solid #6b7280 ;
     cursor: not-allowed ;
+    box-shadow: none;
 }
 
 .project-save-btn.button-disabled:hover {
@@ -2402,28 +2421,32 @@ html, body {
 
 /* プロジェクト読み込みボタン */
 .project-load-btn {
-    padding: 6px 0px ;
-    width: 25% ;
-    height: 30.4px ;
-    flex: none ;
-    color: white ;
-    font-weight: bold ;
-    font-size: 13px ;
-    border-radius: 4px ;
-    cursor: pointer ;
-    transition: all 0.2s ;
-    display: flex ;
-    align-items: center ;
-    justify-content: center ;
-    text-decoration: none ;
-    border: none ;
-    outline: none ;
-    background-color: #10b981 ;
+    width: 25%;
+    padding: auto;
+    background: rgba(16, 185, 129, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    height: 30.4px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .project-load-btn:hover {
-    background-color: #059669 ;
-    box-shadow: none ;
+    background: rgba(16, 185, 129, 0.75);
+    border: 1px solid rgba(16, 185, 129, 1.0);
+    box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 0 40px rgba(16, 185, 129, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 /* ===== 太さ選択セクション（一括設定用） ===== */
