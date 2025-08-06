@@ -4124,7 +4124,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageScale" className="modal-label">
-                                    画像サイズ: {(bgImageScale * 100).toFixed(1)}% 
+                                    画像サイズ : {(bgImageScale * 100).toFixed(1)}% 
                                     ({((initialBgImageWidth * bgImageScale) / 25).toFixed(1)}×{((initialBgImageHeight * bgImageScale) / 25).toFixed(1)}cm)
                                 </label>
                                 <input
@@ -4138,7 +4138,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     className="range-input"
                                 />
                                 <div className="bg-scale-input-container">
-                                    <label className="direct-input-label">画像横幅:</label>
+                                    <label className="direct-input-label">画像横幅 :</label>
                                     <input
                                         ref={widthInputRef}
                                         type="number"
@@ -4175,7 +4175,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             {/* X/Y position controls */}
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageX" className="modal-label">
-                                    X位置: {(bgImageX / 25).toFixed(1)}cm
+                                    X位置 : {(bgImageX / 25).toFixed(1)}cm
                                 </label>
                                 <input
                                     id="bgImageX"
@@ -4190,7 +4190,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             </div>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageY" className="modal-label">
-                                    Y位置: {(bgImageY / 25).toFixed(1)}cm
+                                    Y位置 : {(bgImageY / 25).toFixed(1)}cm
                                 </label>
                                 <input
                                     id="bgImageY"
@@ -4205,7 +4205,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             </div>
                             <div className="modal-setting-item">
                                 <label htmlFor="bgImageOpacity" className="modal-label">
-                                    透明度: {(bgImageOpacity * 100).toFixed(0)}%
+                                    透明度 : {(bgImageOpacity * 100).toFixed(0)}%
                                 </label>
                                 <input
                                     id="bgImageOpacity"
@@ -4530,7 +4530,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 <div className="modal-content-inner scale-modal-content">
                     <div className="scale-setting-item">
                         <label htmlFor="scaleFactor" className="scale-label">
-                            倍率: {scaleFactor.toFixed(2)}x
+                            倍率 : {scaleFactor.toFixed(2)}x
                         </label>
                         <input
                             id="scaleFactor"
@@ -4549,8 +4549,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <h4 className="size-info-title">モデルサイズ</h4>
                         <div className="size-info-grid">
                             <div className="size-info-item">
-                                <label className="direct-input-label">幅:</label>
                                 <div className="scale-input-container">
+                                    <label className="direct-input-label">幅 :</label>
                                     <input
                                         ref={widthSizeInputRef}
                                         type="number"
@@ -4585,8 +4585,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 </div>
                             </div>
                             <div className="size-info-item">
-                                <label className="direct-input-label">高さ:</label>
                                 <div className="scale-input-container">
+                                    <label className="direct-input-label">高さ :</label>
                                     <input
                                         ref={heightSizeInputRef}
                                         type="number"
@@ -4621,7 +4621,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 </div>
                             </div>
                             <div className="size-info-item">
-                                <span className="direct-input-label">チューブ長:</span>
+                                <span className="direct-input-label">チューブ長 :</span>
                                 <span className="size-value">{modelSize.totalLength.toFixed(1)} cm</span>
                             </div>
                         </div>

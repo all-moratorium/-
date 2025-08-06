@@ -1365,9 +1365,11 @@
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     margin-top: 0px;
+    width:90%;
+    margin:0 auto;
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .bg-scale-input-container {
@@ -1375,7 +1377,7 @@
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     margin-top: 8px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -1392,7 +1394,7 @@
 .direct-number-input {
     flex: 1;
     padding: 10px 16px;
-    background-color:rgb(80, 80, 80);
+    background-color:rgb(100, 100, 100);
     border-radius: 6px;
     border: none;
     color: #ffffff;
@@ -1407,9 +1409,18 @@
 
 .direct-number-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    background-color: #4b5563;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    border-color:#10b981;
+    background-color:rgb(110, 110, 110);
+    box-shadow: 
+        0 0 0 1px rgba(16, 185, 129, 0.4),
+        0 0 10px rgba(16, 185, 129, 0.3),
+        0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.direct-number-input::placeholder {
+    color: white;
+    font-size: 13px;
+    opacity: 1;
 }
 
 /* 数値入力フィールドのスピナー（上下ボタン）を非表示 */
@@ -1935,8 +1946,8 @@
 /* モデルサイズ情報スタイル */
 .model-size-info {
     margin-top: 10px;
-    padding: 16px;
-    background-color: rgba(128, 128, 128, 0.1);
+    padding: 24px 24px 12px 24px;
+    background-color: rgba(128, 128, 128, 0);
     border: 1px solid rgba(241, 241, 241, 0.3);
     border-radius: 8px;
 }
@@ -1985,7 +1996,6 @@
     align-items: center;
     gap: 12px;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(107, 114, 128, 0.3);
 }
 
 .size-info-item:last-child {
