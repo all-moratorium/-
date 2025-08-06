@@ -33,13 +33,17 @@
   max-height: 90vh;
   overflow: hidden;
   position: relative;
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.3s ease-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .creation-modal-inner {
   padding: 40px;
   overflow-y: auto;
   max-height: 90vh;
+  transform: translateZ(0);
+  will-change: scroll-position;
 }
 
 .creation-modal-close-button {
@@ -82,11 +86,11 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(20px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -220,7 +224,7 @@
 
 .creation-modal-choice-box {
   flex: 1;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   padding: 25px;

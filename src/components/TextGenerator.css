@@ -74,8 +74,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border: 2px solid #ddd;
     border-radius: 50%;
     cursor: pointer;
@@ -204,10 +204,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px;
+    padding: 10px;
     background: transparent;
     border: 2px solid #10b981;
-    border-radius: 8px;
+    border-radius: 6px;
     width: 250px;
     height: 70px;
     margin-left: auto;
@@ -285,7 +285,7 @@
     padding: 12px;
     background: transparent;
     border: 2px solid #10b981;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
@@ -509,7 +509,7 @@
 .text-input {
     padding: 8px 8px;
     border: 2px solid #10b981;
-    border-radius: 8px;
+    border-radius: 6px;
     background: transparent;
     color: #ffffff;
     font-size: 22px;
@@ -552,7 +552,7 @@
     padding: 4px 10px;
     background-color: rgba(59, 130, 246, 0.1);
     border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 6px;
+    border-radius: 4px;
     color: #3b82f6;
     font-size: 11px;
     font-weight: 500;
@@ -566,7 +566,7 @@
     padding: 4px 10px;
     background-color: rgba(251, 191, 36, 0.1);
     border: 1px solid rgba(251, 191, 36, 0.3);
-    border-radius: 6px;
+    border-radius: 4px;
     color: #fbbf24;
     font-size: 10px;
     font-weight: 500;
@@ -680,22 +680,22 @@
     left: calc(150px + (100vw - min(24vw, 500px) - 50px) / 2);
     padding: 10px 16px;
     transform: translateX(-50%);
-    border: 2px solid #10b981;
+    border: 2px solid #ffffff;
     border-radius: 6px;
     font-size: 10px;
     font-weight: bold;
     cursor: pointer;
     background: #000000;
     color: #ffffff;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
     z-index: 1000;
 }
 
 .text-generator-canvas-download-button:hover {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     background: #000000;
-    border-color: #10b981;
+    border-color: #ffffff;
 }
 
 /* Mobile adjustments */
@@ -704,9 +704,9 @@
         left: 50%;
         bottom: 5%;
         background: #000000;
-        border: 2px solid #10b981;
+        border: 2px solid #ffffff;
         color: #ffffff;
-        box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         transform: translateX(-50%);
         border-radius: 4px;
         padding: 6px 8px !important;
