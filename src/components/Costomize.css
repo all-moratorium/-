@@ -2548,13 +2548,13 @@ html, body {
 
 /* 太さ選択全体のコンテナ */
 .thickness-selection-container {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 /* 「適用する太さを選択」タイトル部分 */
 .thickness-selection-title {
     color: #d1d5db;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-size: 14px;
     font-weight: normal;
     text-align: center;
@@ -2690,7 +2690,7 @@ html, body {
 /* 一括設定モーダルの完了・キャンセルボタン */
 .bulk-modal-complete-button {
     flex: 1;
-    padding: 10px;
+    padding: 8px;
     background: rgba(16, 185, 129, 0.425);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(16, 185, 129, 0.7);
@@ -2700,7 +2700,7 @@ html, body {
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
     transition: all 0.3s ease;
     color: white;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -2717,12 +2717,12 @@ html, body {
 
 .bulk-modal-cancel-button {
     flex: 1;
-    padding: 10px;
+    padding: 8px;
     background-color: #dc2626;
     border-color: #ef4444;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -2735,7 +2735,7 @@ html, body {
 
 /* 太さ選択セクション */
 .thickness-selection-container {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .thickness-selection-title {
@@ -3010,23 +3010,71 @@ html, body {
 }
 
 .bulk-modal-content .sample-button-section {
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 
 .bulk-modal-content .thickness-selection-container {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
 }
 
 .bulk-modal-content .thickness-selection-title {
     color: #d1d5db;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-size: 14px;
+}
+
+.bulk-modal-content .thickness-selection-left {
+    display: flex;
+    flex-direction: column;
 }
 
 .bulk-modal-content .thickness-buttons-container {
     display: flex;
     gap: 6px;
+    justify-content: flex-start;
+}
+
+.bulk-modal-content .thickness-selection-instructions {
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 120px;
+    margin-bottom:13px;
+    text-align: left;
+}
+
+.bulk-modal-content .thickness-instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.bulk-modal-content .thickness-instruction-item::before {
+    content: counter(instruction-counter);
+    counter-increment: instruction-counter;
+    background: #10b981;
+    color: #000;
+    border-radius: 3px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    flex-shrink: 0;
+    box-shadow: 
+        0 0 5px rgba(16, 185, 129, 0.4),
+        0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.bulk-modal-content .thickness-selection-instructions {
+    counter-reset: instruction-counter;
 }
 
 .bulk-modal-content .thickness-button {

@@ -3232,10 +3232,11 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                         {/* 太さ選択 */}
                         {(
                             <div className="thickness-selection-container">
-                                <h4 className="thickness-selection-title">
-                                    適用する太さを選択
-                                </h4>
-                                <div className="thickness-buttons-container">
+                                <div className="thickness-selection-left">
+                                    <h4 className="thickness-selection-title">
+                                        適用する太さを選択
+                                    </h4>
+                                    <div className="thickness-buttons-container">
                                     <button
                                         className={`thickness-button ${selectedBulkThickness === 15 ? 'selected' : ''}`}
                                         onClick={() => {
@@ -3264,6 +3265,12 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     >
                                         8mm
                                     </button>
+                                </div>
+                                </div>
+                                <div className="thickness-selection-instructions">
+                                    <div className="thickness-instruction-item">チューブを選ぶ</div>
+                                    <div className="thickness-instruction-item">色を選ぶ</div>
+                                    <div className="thickness-instruction-item">太さを選ぶ</div>
                                 </div>
                             </div>
                         )}
