@@ -801,8 +801,6 @@
   height: 100%;
   max-height: calc(90vh - 80px);
   overflow-y: auto;
-  padding-right: 8px;
-  margin-right: -8px;
 }
 
 .notice-section {

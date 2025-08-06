@@ -990,18 +990,19 @@
 .modal-content-right {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
-    width: 380px;
-    height: 600px;
+    width: 350px;
+    max-height: calc(100vh - 180px);
+    height: auto;
+    overflow-y: auto;
+    top: 150px;
+    right: 10px;
     position: fixed;
     background-color: rgb(10, 10, 10);
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%) ;
-    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     animation: modalSlideIn 0.3s ease-out !important;
     border: none;
+    padding: 15px 24px 15px 24px;
 }
 
 /* 土台自動生成モーダル専用スタイル */
@@ -1013,45 +1014,41 @@
 .bg-modal .modal-content-right {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
-    width: 380px;
-    height: 740px;
+    width: 350px;
+    max-height: calc(100vh - 195px);
+    height: auto;
     position: fixed;
-    right: 15px;
-    top: 55%;
-    transform: translateY(-50%) ;
-    overflow-y: hidden;
+    right: 10px;
+    top: 150px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     animation: bgModalSlideIn 0.3s ease-out !important;
     border: none;
     background-color: rgb(10, 10, 10) !important;
-    padding: 15px 24px 0px 24px;
+    padding: 15px 24px 24px 24px;
 }
 
 @keyframes modalSlideIn {
     from {
-        right: -380px;
-        top: 50%;
-        transform: translateY(-50%);
+        right: -350px;
+        top: 150px;
     }
     to {
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
+        right: 10px;
+        top: 150px;
     }
 }
 
 /* 背景画像モーダル専用アニメーション */
 @keyframes bgModalSlideIn {
     from {
-        right: -380px;
-        top: 55%;
-        transform: translateY(-50%);
+        right: -350px;
+        top: 150px;
     }
     to {
-        right: 15px;
-        top: 55%;
-        transform: translateY(-50%);
+        right: 10px;
+        top: 150px;
     }
 }
 
@@ -1878,7 +1875,7 @@
 
 /* 拡大縮小スライダー専用スタイル */
 .scale-setting-item {
-    margin-bottom: 24px;
+    margin-bottom: 5px;
     padding: 0 10px;
 }
 
@@ -1951,10 +1948,11 @@
 
 /* 拡大縮小モーダル専用スタイル */
 .scale-modal-content {
-    overflow-y: hidden !important;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
     height: auto !important;
-    max-height: none !important;
+    width: 350px;
+    max-height: calc(100vh - 285px);
 }
 
 .size-info-title {
@@ -1996,7 +1994,7 @@
 /* キャンバス右上のサイズ表示 */
 .canvas-size-display {
     position: absolute;
-    top: 1.5%;
+    top: 15px;
     right: 410px;
     background-color: #0a0a0a;
     border: 1px solid rgba(255, 255, 255, 0.35);
