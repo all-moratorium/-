@@ -3025,7 +3025,7 @@ html, body {
 
 .bulk-modal-content .thickness-buttons-container {
     display: flex;
-    gap: 12px;
+    gap: 6px;
     justify-content: center;
 }
 
@@ -3041,9 +3041,9 @@ html, body {
     color: white;
     border-radius: 4px;
     padding: 4px 8px;
-    font-size: 12px;
+    font-size: 13px;
     cursor: pointer;
-    width: 60px;
+    width: 70px;
     height: 32px;
     font-weight: bold;
 }
@@ -3059,7 +3059,7 @@ html, body {
     transition: all 0.3s ease;
 }
 
-.bulk-modal-content .thickness-button:not(.selected) {
+.bulk-modal-content .thickness-button:hover:not(.selected) {
     background: rgba(107, 114, 128, 0.25);
     border: 1px solid rgba(107, 114, 128, 0.5);
     box-shadow: 
