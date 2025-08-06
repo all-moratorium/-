@@ -2677,6 +2677,16 @@ html, body {
     margin-top: 10px;
 }
 
+.bulk-color-sample-button:hover {
+    background: rgba(37, 100, 235, 0.6);
+    border: 1px solid rgba(37, 99, 235, 0.85);
+    box-shadow: 
+      0 0 18px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
 /* 一括設定モーダルの完了・キャンセルボタン */
 .bulk-modal-complete-button {
     flex: 1;
@@ -3020,23 +3030,43 @@ html, body {
 }
 
 .bulk-modal-content .thickness-button {
+    background: rgba(107, 114, 128, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    box-shadow: 
+      0 0 8px rgba(107, 114, 128, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     color: white;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 13px;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
     cursor: pointer;
+    width: 60px;
+    height: 32px;
     font-weight: bold;
-    min-width: 70px;
 }
 
+
 .bulk-modal-content .thickness-button.selected {
-    background-color: #10b981;
-    border: 1px solid #10b981;
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
 }
 
 .bulk-modal-content .thickness-button:not(.selected) {
-    background-color: #6b7280;
-    border: 1px solid #6b7280;
+    background: rgba(107, 114, 128, 0.25);
+    border: 1px solid rgba(107, 114, 128, 0.5);
+    box-shadow: 
+      0 0 12px rgba(107, 114, 128, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 .bulk-modal-content .modal-actions {
