@@ -1233,9 +1233,15 @@ html, body {
 }
 
 .color-select-button {
-    background-color: #3b82f6;
+    background: rgba(37, 100, 235, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 100, 235, 0.7);
+    box-shadow: 
+      0 0 15px rgba(37, 100, 235, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
     color: white;
-    border: 1px solid #2563eb;
     border-radius: 4px;
     padding: 8px 1px;
     margin-left:12px;
@@ -1243,11 +1249,15 @@ html, body {
     cursor: pointer;
     font-weight: bold;
     width:70px;
-    transition: all 0.2s ease;
 }
 
 .color-select-button:hover {
-    background-color: #2563eb;
+    background: rgba(37, 100, 235, 0.55);
+    border: 1px solid rgba(37, 100, 235, 0.85);
+    box-shadow: 
+    0 0 16px rgba(37, 100, 235, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* 太さ設定エリア */
@@ -1277,9 +1287,15 @@ html, body {
 }
 
 .thickness-button {
-    background-color: #6b7280;
+    background: rgba(107, 114, 128, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    box-shadow: 
+      0 0 8px rgba(107, 114, 128, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     color: white;
-    border: 1px solid #6b7280;
     border-radius: 4px;
     padding: 4px 8px;
     font-size: 12px;
@@ -1287,12 +1303,36 @@ html, body {
     width: 60px;
     height: 32px;
     font-weight: bold;
-    transition: all 0.2s ease;
+}
+
+.thickness-button:hover:not(.active) {
+    background: rgba(107, 114, 128, 0.25);
+    border: 1px solid rgba(107, 114, 128, 0.5);
+    box-shadow: 
+      0 0 12px rgba(107, 114, 128, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 .thickness-button.active {
-    background-color: #10b981;
-    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+}
+
+.thickness-button.active:hover {
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* ネオンON/OFFスイッチ */
@@ -1513,11 +1553,23 @@ html, body {
     background-color: #ef4444;
 }
 .bulk-action-button.apply {
-    background-color: #10b981;
-    border-color:rgb(46, 197, 147);
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
 }
+
 .bulk-action-button.apply:hover {
-    background-color:rgb(46, 197, 147);
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 .bulk-action-button.apply:disabled {
     background-color: #6b7280;
@@ -1575,18 +1627,50 @@ html, body {
 }
 
 .tube-action-button.scroll-last {
-    background-color: #10b981;
-    border-color: #059669;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+}
+
+.tube-action-button.scroll-last:hover {
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .tube-action-button.scroll-top {
-    background-color: #3b82f6;
-    border-color: #2563eb;
+    background: rgba(37, 100, 235, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 100, 235, 0.7);
+    box-shadow: 
+      0 0 15px rgba(37, 100, 235, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+}
+
+.tube-action-button.scroll-top:hover {
+    background: rgba(37, 100, 235, 0.55);
+    border: 1px solid rgba(37, 100, 235, 0.85);
+    box-shadow: 
+    0 0 16px rgba(37, 100, 235, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .tube-action-button.minimize {
-    background-color: #6b7280;
-    border-color: #4b5563;
+    background: rgba(156, 163, 175, 0.55);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(156, 163, 175, 0.8);
+    transition: all 0.3s ease;
 }
 
 .tube-minimized-message {
@@ -1701,8 +1785,23 @@ html, body {
 }
 
 .installation-environment-button.active {
-    background-color: #10b981;
-    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+}
+
+.installation-environment-button.active:hover {
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* 設置環境セクションスタイル */
@@ -2512,15 +2611,30 @@ html, body {
 .tube-color-sample-button {
     width: 100%;
     padding: 8px;
-    background-color: #3b82f6;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
     color: white;
-    border: none;
     border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 8px;
-    transition: all 0.2s ease;
+}
+
+.tube-color-sample-button:hover {
+    background: rgba(37, 100, 235, 0.6);
+    border: 1px solid rgba(37, 99, 235, 0.85);
+    box-shadow: 
+      0 0 18px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 
@@ -2529,15 +2643,29 @@ html, body {
 .tube-color-modal-cancel-button {
     width: 100%;
     padding: 8px;
-    background-color: #dc2626;
-    border-color: #ef4444;
+    background: rgba(220, 38, 38, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 38, 38, 0.8);
+    box-shadow: 
+      0 0 15px rgba(220, 38, 38, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
     color: white;
-    border: none;
     border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tube-color-modal-cancel-button:hover {
+    background: rgba(220, 38, 38, 0.75);
+    border: 1px solid rgba(220, 38, 38, 0.9);
+    box-shadow: 
+      0 0 16px rgba(220, 38, 38, 0.35),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 
@@ -2562,18 +2690,28 @@ html, body {
 .bulk-modal-complete-button {
     flex: 1;
     padding: 10px;
-    background-color: #10b981;
+    background: rgba(16, 185, 129, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
     color: white;
-    border: none;
     border-radius: 6px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .bulk-modal-complete-button:hover {
-    background-color:rgb(46, 197, 147);
+    background: rgba(16, 185, 129, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.85);
+    box-shadow: 
+    0 0 16px rgba(16, 185, 129, 0.25),
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .bulk-modal-cancel-button {
