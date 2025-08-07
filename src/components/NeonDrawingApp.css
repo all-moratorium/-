@@ -233,7 +233,7 @@
     margin-bottom: 30px;
 }
 
-.neon-toggle-sidebar-button {
+. {
     position: absolute;
     right: 20px;
     top: 16px;
@@ -286,6 +286,30 @@
     0 0 60px rgba(255, 255, 255, 0.3),
     0 0 80px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 三角形の基本スタイル */
+.triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* 閉じた状態（下向き三角形 ▼） */
+.triangle-down {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 10px solid rgba(255, 255, 255, 0.95);
+    border-top: none;
+}
+
+/* 開いた状態（上向き三角形 ▲） */
+.triangle-up {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid rgba(255, 255, 255, 1);
+    border-bottom: none;
 }
 
 @keyframes neon-glow-pulse {
