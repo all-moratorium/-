@@ -264,7 +264,7 @@
 
 /* サイドバー閉じた時のトグルボタンのグロー効果 */
 .neon-sidebar.collapsed .neon-toggle-sidebar-button {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0, 0, 0);
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
   box-shadow:
@@ -275,7 +275,7 @@
 }
 
 .neon-sidebar.collapsed .neon-toggle-sidebar-button:hover {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0, 0, 0);
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
   box-shadow:
