@@ -2324,7 +2324,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         </div>
                     )}
                     <button className="sidebar-toggle" onClick={toggleSidebar}>
-                        {sidebarExpanded ? '◀' : '▶'}
+                        <div className={`sidebar-triangle ${sidebarExpanded ? 'triangle-left' : 'triangle-right'}`}></div>
                     </button>
                 </div>
                 <nav className="sidebar-nav">
