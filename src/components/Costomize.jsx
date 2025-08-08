@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './Costomize.css';
 import CustomizeGuideModal from './CustomizeGuideModal.jsx';
 
@@ -636,6 +636,28 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         return totalLength;
     };
+
+    // パス長さとフィルター済みリストをメモ化（重い計算を1回だけ実行）
+    const tubePathsData = useMemo(() => {
+        return neonPaths
+            .map((pathObj, index) => {
+                if (!pathObj || !pathObj.points || pathObj.points.length < 2 || pathObj.mode !== 'stroke') {
+                    return null;
+                }
+                const length = calculatePathLength(pathObj);
+                if (length / 25 * 10 <= 7) return null; // 0.7cm以下は除外
+                return { pathObj, originalIndex: index, length };
+            })
+            .filter(item => item !== null)
+            .sort((a, b) => b.length - a.length);
+    }, [neonPaths]);
+
+    // タイトル表示用の数値もメモ化
+    const tubeStats = useMemo(() => {
+        const count = tubePathsData.length;
+        const totalLength = tubePathsData.reduce((total, item) => total + item.length, 0);
+        return { count, totalLength };
+    }, [tubePathsData]);
 
     const handlePresetColorClick = (color) => {
         setSelectedColor(color);
@@ -2444,19 +2466,15 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     </div>
 
                     {/* ネオンチューブ設定 */}
-                    {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7).length > 0 && (
+                    {tubeStats.count > 0 && (
                         <div className="neon-tube-settings">
                             <div className="neon-tube-header">
                                 <div className="neon-tube-title-container">
                                     <h3 className="neon-tube-title">
-                                        ネオンチューブ設定 ({neonPaths.filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7).length}本)
+                                        ネオンチューブ設定 ({tubeStats.count}本)
                                     </h3>
                                     <span className="tube-total-length-subtitle">
-                                        合計長さ: {(Math.round(
-                                            neonPaths
-                                                .filter(pathObj => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7)
-                                                .reduce((total, pathObj) => total + calculatePathLength(pathObj), 0) / 25 * 10
-                                        ) / 10).toFixed(1)}cm
+                                        合計長さ: {(Math.round(tubeStats.totalLength / 25 * 10) / 10).toFixed(1)}cm
                                     </span>
                                 </div>
                                 <div className="neon-tube-actions">
@@ -2478,11 +2496,8 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     </button>
                                 </div>
                             </div>
-                            {!isTubeSettingsMinimized && neonPaths
-                                .map((pathObj, index) => ({ pathObj, originalIndex: index }))
-                                .filter(({ pathObj }) => pathObj && pathObj.mode === 'stroke' && calculatePathLength(pathObj) / 25 * 10 > 7)
-                                .sort((a, b) => calculatePathLength(b.pathObj) - calculatePathLength(a.pathObj))
-                                .map(({ pathObj, originalIndex }, sortedIndex) => (
+                            {!isTubeSettingsMinimized && tubePathsData
+                                .map(({ pathObj, originalIndex, length }, sortedIndex) => (
                                     <div 
                                         key={originalIndex} 
                                         className="customize-path-color-section"
@@ -2512,7 +2527,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         }}
                                     >
                                         <label className="tube-title">
-                                            チューブ {sortedIndex + 1} (長さ: {(Math.round(calculatePathLength(pathObj) / 25 * 10) / 10).toFixed(1)}cm)
+                                            チューブ {sortedIndex + 1} (長さ: {(Math.round(length / 25 * 10) / 10).toFixed(1)}cm)
                                         </label>
                                         
                                         {/* 色設定 */}
