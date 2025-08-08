@@ -1721,7 +1721,7 @@
 .product-estimate-container {
   display: grid;
   grid-template-columns: 1fr minmax(300px, 400px);
-  gap: 40px;
+  gap: 25px;
   margin-bottom: 40px;
   min-width: 0;
 }
