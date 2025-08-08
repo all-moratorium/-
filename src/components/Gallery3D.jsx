@@ -951,7 +951,7 @@ const Gallery3D = ({ models = [] }) => {
 
         // レンダラー作成
         rendererRef.current = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 3));
         rendererRef.current.shadowMap.enabled = true;
         rendererRef.current.shadowMap.type = THREE.PCFSoftShadowMap;
         containerRef.current.appendChild(rendererRef.current.domElement);
