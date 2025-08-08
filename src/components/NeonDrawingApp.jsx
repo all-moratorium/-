@@ -863,32 +863,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                     }
                     
-                    // 白い点と緑い点にグロー効果（2層）
-                    if (pointFillStyle === colors.strokePoint || pointFillStyle === colors.fillPoint) {
-                        ctx.save();
-                        ctx.globalAlpha = 0.7;
-                        
-                        // グロー層（弱め）
-                        if (pointFillStyle === colors.strokePoint) {
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; // 白いグロー
-                        } else {
-                            ctx.fillStyle = 'rgba(52, 211, 153, 0.1)'; // 緑いグロー
-                        }
-                        ctx.arc(p.x, p.y, 6 / scale, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // メイン点
-                        ctx.beginPath();
-                        ctx.fillStyle = pointFillStyle;
-                        ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        ctx.restore();
-                    } else {
-                        ctx.fillStyle = pointFillStyle;
-                        ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
+                    // 点はグローなしでシンプルに
+                    ctx.fillStyle = pointFillStyle;
+                    ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                    ctx.fill();
                 });
             });
         }

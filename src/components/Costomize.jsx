@@ -755,7 +755,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         
         // shadowBlurでグロー効果（GPUアクセラレーションが効く）
         ctx.shadowColor = color;
-        ctx.shadowBlur = 15 * (window.devicePixelRatio || 1);
+        ctx.shadowBlur = 15* (window.devicePixelRatio || 1);
         ctx.strokeStyle = adjustBrightness(color, Math.min(brightness * 1.3, 255));
         ctx.globalAlpha = 1.0;
         ctx.lineWidth = thickness;
@@ -1054,17 +1054,14 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             });
             setNeonPaths(limitedPaths);
             
-            // 全パスにデフォルト太さを設定
+            // 全stroketパスに強制的に6mm（15px）を設定
             const defaultThickness = {};
             svgData.paths.forEach((path, index) => {
                 if (path.mode === 'stroke') {
-                    defaultThickness[index] = 15; // 6mm デフォルト
+                    defaultThickness[index] = 15; // 6mm強制適用
                 }
             });
-            setPathThickness(prev => ({
-                ...defaultThickness,
-                ...prev // 既存の設定があれば上書き
-            }));
+            setPathThickness(defaultThickness); // 既存設定を無視して強制適用
             
             if (svgData.colors) {
                 // fillAreaを透明に設定してからneonColorsを更新
@@ -1148,7 +1145,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     if (pathObj.mode === 'stroke') {
                         // チューブの場合
                         initialColors[pathIndex] = svgData.colors?.strokeLine || '#ffff00';
-                        initialThickness[pathIndex] = 15;  // チューブは常に15px（6mm）で開始
+                        initialThickness[pathIndex] = 15;  // チューブは強制的に15px（6mm）
                     } else if (pathObj.mode === 'fill') {
                         // ベースプレートの場合
                         initialColors[`${pathIndex}_fill`] = 'transparent';  // ベースプレートは透明がデフォルト
@@ -1157,7 +1154,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 });
                 
                 setPathColors(prev => ({ ...prev, ...initialColors }));
-                setPathThickness(prev => ({ ...prev, ...initialThickness }));
+                setPathThickness(initialThickness); // 強制的に6mm設定
             }
         }
     }, [svgData]);

@@ -9865,7 +9865,7 @@
     "fillPoint": "#000000",
     "fillArea": "transparent",
     "fillBorder": "#000000",
-    "background": "#3c3c3c",
+    "background": "#191919",
     "grid": "#000000"
   },
   "neonLineWidths": {
@@ -19455,7 +19455,7 @@
       "fillPoint": "#000000",
       "fillArea": "transparent",
       "fillBorder": "#000000",
-      "background": "#3c3c3c",
+      "background": "#191919",
       "grid": "#000000"
     },
     "lineWidths": {
