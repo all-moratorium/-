@@ -92,7 +92,7 @@ const getInitialDrawingState = (initialState) => {
         fillPoint: '#000000',
         fillArea: 'rgba(110, 110, 110, 0.5)',
         fillBorder: '#000000',
-        background: '#3c3c3c',
+        background: '#191919',
         grid: '#000000'
     };
     
@@ -120,7 +120,7 @@ const getInitialDrawingState = (initialState) => {
         bgImageOpacity: getStateValue('bgImageOpacity', 1.0),
         showGrid: getStateValue('showGrid', true),
         gridSize: getStateValue('gridSize', 100),
-        gridOpacity: getStateValue('gridOpacity', 0.5),
+        gridOpacity: getStateValue('gridOpacity', 0.3),
         colors: getStateValue('colors', defaultColors),
         lineWidths: getStateValue('lineWidths', defaultLineWidths),
         history: getStateValue('history', [{
@@ -1309,14 +1309,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 bgImageOpacity: 1.0,
                 showGrid: true,
                 gridSize: 100,
-                gridOpacity: 0.5,
+                gridOpacity: 0.3,
                 colors: {
                     strokePoint: '#00ffff',
                     strokeLine: '#ffff00',
                     fillPoint: '#000000',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
                     fillBorder: '#000000',
-                    background: '#3c3c3c',
+                    background: '#191919',
                     grid: '#000000'
                 },
                 lineWidths: {
@@ -4385,7 +4385,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 fillPoint: '#000000',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
-                                background: '#3c3c3c',
+                                background: '#191919',
                                 grid: '#000000'
                             });
                             setLineWidths({
