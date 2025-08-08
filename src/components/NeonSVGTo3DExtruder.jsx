@@ -1860,7 +1860,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           onClick={() => setSidebarVisible(!sidebarVisible)}
           aria-label={sidebarVisible ? '閉じる' : '開く'}
         >
-          {sidebarVisible ? '▲' : '▼'}
+          <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
         </button>
 
         {/* モデル詳細情報表示 */}

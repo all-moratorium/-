@@ -2326,7 +2326,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             onClick={() => setSidebarVisible(!sidebarVisible)}
                             className="customize-toggle-sidebar-button"
                         >
-                            {sidebarVisible ? '▲' : '▼'}
+                            <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                         </button>
                     </div>
 
