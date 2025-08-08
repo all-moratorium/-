@@ -1427,8 +1427,8 @@ html, body {
 }
 
 .neon-power-switch.off {
-    background-color: #374151;
-    border-color: #6b7280;
+    background-color: rgba(107, 114, 128, 0.25);
+    border-color: rgba(107, 114, 128, 0.5);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0);
 }
 
