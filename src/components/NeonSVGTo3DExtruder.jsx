@@ -534,7 +534,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // スマホ版では解像度を大幅削減
     const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
     const radialSegments = isMobile ? 8 : 12;
-    const tubularSegments = isMobile ? Math.max(50, points.length * 3) : Math.max(100, points.length * 6);
+    const tubularSegments = isMobile ? Math.max(100, points.length * 6) : Math.max(350, points.length * 6);
     
     const geometry = new THREE.TubeGeometry(curve, tubularSegments, actualTubeSizeMm, radialSegments, false);
 
@@ -1635,9 +1635,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             // なめらかさ重視の解像度設定
             const newGeometry = new THREE.TubeGeometry(
               simplifiedCurve,
-              Math.max(40, simplifiedPoints.length * 1), // tubularSegments（さらに増加）
+              Math.max(60, simplifiedPoints.length * 1), // tubularSegments（さらに増加）
               originalRadius,
-              8, // radialSegments（10→12に増加
+              12, // radialSegments（10→12に増加
               false
             );
             
