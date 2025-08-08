@@ -648,10 +648,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         // 無限グリッドを描画
         if (showGrid) {
-            ctx.strokeStyle = colors.grid;
+            ctx.strokeStyle = '#646464';
             ctx.lineWidth = 0.5 / scale;
             ctx.setLineDash([]);
-            ctx.globalAlpha = gridOpacity;
+            ctx.globalAlpha = 0.3;
 
             const startX = Math.floor(visibleLeft / gridSize) * gridSize;
             const startY = Math.floor(visibleTop / gridSize) * gridSize;
