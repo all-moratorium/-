@@ -437,6 +437,7 @@ const Gallery3D = ({ models = [] }) => {
         });
         
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.set(0, 0, 0);
         group.add(plane);
 
         const setOffset = setIndex * paintingData.length * spacing;
@@ -563,6 +564,7 @@ const Gallery3D = ({ models = [] }) => {
                 });
                 
                 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.rotation.set(0, 0, 0);
                 model.add(plane);
                 model.userData.isImage = true;
                 // グループのスケールを1に戻す
@@ -901,6 +903,11 @@ const Gallery3D = ({ models = [] }) => {
                 model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
                 model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
                 model.position.y = 0;
+            } else if (isImagePlane) {
+                // 画像プレーンは常に正面向きに固定
+                if (model.rotation.x !== 0 || model.rotation.y !== 0 || model.rotation.z !== 0) {
+                    model.rotation.set(0, 0, 0);
+                }
             }
             // 他のモデルは完全に静止（処理しない）
         });
@@ -944,6 +951,7 @@ const Gallery3D = ({ models = [] }) => {
 
         // レンダラー作成
         rendererRef.current = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         rendererRef.current.shadowMap.enabled = true;
         rendererRef.current.shadowMap.type = THREE.PCFSoftShadowMap;
         containerRef.current.appendChild(rendererRef.current.domElement);
