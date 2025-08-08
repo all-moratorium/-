@@ -87,9 +87,9 @@ const getInitialDrawingState = (initialState) => {
     };
     
     const defaultColors = {
-        strokePoint: '#00ffff',
-        strokeLine: '#ffff00',
-        fillPoint: '#000000',
+        strokePoint: '#ffffff',
+        strokeLine: '#ffffff',
+        fillPoint: '#34d399',
         fillArea: 'rgba(110, 110, 110, 0.5)',
         fillBorder: '#000000',
         background: '#191919',
@@ -232,8 +232,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 背景色変更のデバウンス用ref
     const backgroundColorTimeoutRef = useRef(null);
     
-    // 色設定 - 包括的な初期化
-    const [colors, setColors] = useState(initialDrawingState.colors);
+    // 色設定 - 包括的な初期化（白色と緑色を強制適用）
+    const [colors, setColors] = useState({
+        ...initialDrawingState.colors,
+        strokePoint: '#ffffff',
+        strokeLine: '#ffffff',
+        fillPoint: '#10b981'
+    });
     
     // 線の太さ設定 - 包括的な初期化
     const [lineWidths, setLineWidths] = useState(initialDrawingState.lineWidths);
@@ -761,10 +766,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
             ctx.fill();
             
-            // 境界線も描画
-            ctx.strokeStyle = colors.fillBorder;
+            // 境界線を緑色のグローで描画
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.shadowColor = '#10b981';
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = '#10b981';
             ctx.lineWidth = lineWidths.fillBorder / scale;
             ctx.stroke();
+            ctx.restore();
         });
 
         // 2. 次に全てのチューブ（stroke）パスを描画
@@ -778,7 +788,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             if (pathPoints.length < 2) return;
 
+            // 白いスプラインにshadowBlurグロー
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.shadowColor = colors.strokeLine;
+            ctx.shadowBlur = 8;
             ctx.strokeStyle = colors.strokeLine;
+            
             // 骨組み描画の場合はスケールで調整、チューブ表示の場合は固定
             ctx.lineWidth = tubeThickness === 'default' ? lineWidths.strokeLine / scale : lineWidths.strokeLine;
             ctx.lineJoin = 'round';
@@ -786,16 +802,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             ctx.beginPath();
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-
-            if (pathType === 'spline') { // スプライン描画
-                // SVG出力と全く同じ開いたパス処理: キャンバス描画でもベジェ曲線を使用
+            
+            if (pathType === 'spline') {
                 for (let i = 0; i < pathPoints.length - 1; i++) {
                     const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
                     const p1 = pathPoints[i];
                     const p2 = pathPoints[i + 1];
                     const p3 = (i + 2 >= pathPoints.length) ? pathPoints[pathPoints.length - 1] : pathPoints[i + 2];
 
-                    // SVG出力と全く同じCatmull-Rom→ベジェ制御点計算
                     const cp1x = p1.x + (p2.x - p0.x) / 8;
                     const cp1y = p1.y + (p2.y - p0.y) / 8;
                     const cp2x = p2.x - (p3.x - p1.x) / 8;
@@ -803,12 +817,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     
                     ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
                 }
-            } else { // 直線描画
+            } else {
                 for (let i = 1; i < pathPoints.length; i++) {
                     ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
                 }
             }
             ctx.stroke();
+            ctx.restore();
         });
 
         // 3. 最後に全ての制御点を描画（土台、チューブの順で色分け）
@@ -848,10 +863,32 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                     }
                     
-                    ctx.fillStyle = pointFillStyle;
-
-                    ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
-                    ctx.fill();
+                    // 白い点と緑い点にグロー効果（2層）
+                    if (pointFillStyle === colors.strokePoint || pointFillStyle === colors.fillPoint) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.7;
+                        
+                        // グロー層（弱め）
+                        if (pointFillStyle === colors.strokePoint) {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; // 白いグロー
+                        } else {
+                            ctx.fillStyle = 'rgba(52, 211, 153, 0.1)'; // 緑いグロー
+                        }
+                        ctx.arc(p.x, p.y, 6 / scale, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // メイン点
+                        ctx.beginPath();
+                        ctx.fillStyle = pointFillStyle;
+                        ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.restore();
+                    } else {
+                        ctx.fillStyle = pointFillStyle;
+                        ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                 });
             });
         }
@@ -1313,7 +1350,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 colors: {
                     strokePoint: '#00ffff',
                     strokeLine: '#ffff00',
-                    fillPoint: '#000000',
+                    fillPoint: '#34d399',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
                     fillBorder: '#000000',
                     background: '#191919',
@@ -1672,7 +1709,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         const loadedPaths = projectData.neonPaths;
                         
                         // カスタマイズされた色設定のみ反映（線幅は下絵で独自に決める）
-                        if (projectData.neonColors) setColors(projectData.neonColors);
+                        // ストローク色は常に白色を強制適用
+                        if (projectData.neonColors) {
+                            setColors({
+                                ...projectData.neonColors,
+                                strokePoint: '#ffffff',
+                                strokeLine: '#ffffff',
+                                fillPoint: '#10b981'
+                            });
+                        }
                         
                         // 最適な初期視点を計算してモデルを画面中央に配置
                         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -1746,7 +1791,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             
                             if (svgDataParsed && svgDataParsed.paths) {
                                 // カスタマイズされた色設定のみ反映
-                                if (svgDataParsed.colors) setColors(svgDataParsed.colors);
+                                // ストローク色は常に白色を強制適用
+                                if (svgDataParsed.colors) {
+                                    setColors({
+                                        ...svgDataParsed.colors,
+                                        strokePoint: '#ffffff',
+                                        strokeLine: '#ffffff',
+                                        fillPoint: '#10b981'
+                                    });
+                                }
                                 
                                 // 最適な初期視点を計算してモデルを画面中央に配置
                                 const loadedPaths = svgDataParsed.paths;
@@ -1985,8 +2038,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
                 
                 // 色設定を復元
+                // ストローク色は常に白色を強制適用
                 if (sharedFileData.neonColors) {
-                    setColors(sharedFileData.neonColors);
+                    setColors({
+                        ...sharedFileData.neonColors,
+                        strokePoint: '#ffffff',
+                        strokeLine: '#ffffff',
+                        fillPoint: '#10b981'
+                    });
                 }
                 
                 // 線幅設定を復元（ただし骨組み描画用の太さに調整）
@@ -4382,7 +4441,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             setColors({
                                 strokePoint: '#00ffff',
                                 strokeLine: '#ffff00',
-                                fillPoint: '#000000',
+                                fillPoint: '#34d399',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',
                                 background: '#191919',
