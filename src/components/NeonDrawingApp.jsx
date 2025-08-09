@@ -863,8 +863,16 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                     }
                     
-                    // 点はグローなしでシンプルに
-                    ctx.fillStyle = pointFillStyle;
+                    // 点の外側に黒い境界線を描画
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = 0.8 / scale;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // 内側を塗りつぶし（strokeモードは白に近いグレー、fillモードは元の色）
+                    ctx.fillStyle = pathObj.mode === 'stroke' ? '#e8e8e8' : pointFillStyle;
+                    ctx.beginPath();
                     ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
                     ctx.fill();
                 });
@@ -1329,7 +1337,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 gridSize: 100,
                 gridOpacity: 0.3,
                 colors: {
-                    strokePoint: '#00ffff',
+                    strokePoint: '#d0d0d0',
                     strokeLine: '#ffff00',
                     fillPoint: '#34d399',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
@@ -3958,8 +3966,18 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
                             );
                             
+                            // ネオンパス（strokeモード）が存在するかチェック
+                            const hasStrokePath = paths.some(pathObj => 
+                                pathObj && pathObj.mode === 'stroke' && pathObj.points && pathObj.points.length >= 2
+                            );
+                            
                             if (!hasFillPath) {
                                 alert('土台を描画してください。');
+                                return;
+                            }
+                            
+                            if (!hasStrokePath) {
+                                alert('少なくとも一つのネオンパスを描画してください。');
                                 return;
                             }
                             
@@ -4419,7 +4437,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <button
                         onClick={() => {
                             setColors({
-                                strokePoint: '#00ffff',
+                                strokePoint: '#d0d0d0',
                                 strokeLine: '#ffff00',
                                 fillPoint: '#34d399',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',

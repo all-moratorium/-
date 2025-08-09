@@ -1280,7 +1280,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 
                 const effectiveThickness = customThickness || neonLineWidths.strokeLine || 15; // キャンバス表示と同じロジック
                 console.log(`SVG出力 パス${pathIndex}: effectiveThickness=${effectiveThickness}`);
-                strokePathData += `<path class="neon-stroke" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
+                strokePathData += `<path class="neon-stroke" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine || '#ffffff'}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
             }
 
             if (pathMode === 'fill' && pathPoints.length >= 3) {
@@ -2977,7 +2977,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     }
                                     
                                     const effectiveThickness = customThickness || neonLineWidths.strokeLine || 15;
-                                    strokePathData += `<path class="neon-stroke" data-type="neon" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
+                                    strokePathData += `<path class="neon-stroke" data-type="neon" d="${currentStrokeSegment}" stroke="${customColor || neonColors.strokeLine || '#ffffff'}" stroke-width="${effectiveThickness}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow-${pathIndex})"/>\n    `;
                                 }
 
                                 if (pathMode === 'fill' && pathPoints.length >= 3) {
