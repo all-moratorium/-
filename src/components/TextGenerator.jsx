@@ -27,7 +27,7 @@ const getInitialTextGeneratorState = () => {
     };
 };
 
-const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEffectStop }) => {
+const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEffectStop, sidebarExpanded = true }) => {
     const initialState = getInitialTextGeneratorState();
     
     const [inputText, setInputText] = useState(initialState.inputText);
@@ -294,7 +294,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         } else {
             // デスクトップ: サイドバーを考慮した配置
             const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
-            const leftSidebarWidth = 250; // 左サイドバー（固定幅）
+            const leftSidebarWidth = sidebarExpanded ? 250 : 70; // 左サイドバー（開閉状態に応じて変更）
             const availableCanvasWidth = canvasWidth - rightSidebarWidth - leftSidebarWidth;
             
             // 表示領域を利用可能幅の70%に設定し、中央配置
@@ -409,7 +409,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, sidebarExpanded]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -689,7 +689,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     useEffect(() => {
         updateCanvasSize();
         generateTextToSVG();
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize, sidebarExpanded]);
 
     // キャンバスのdevicePixelRatio対応設定
     useEffect(() => {
@@ -726,6 +726,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                 <button
                     onClick={downloadFontImage}
                     className="text-generator-canvas-download-button"
+                    style={
+                        window.innerWidth > 1280 && navigator.maxTouchPoints === 0 
+                        ? {
+                            left: `calc(${sidebarExpanded ? '250px' : '70px'} + (100vw - min(24vw, 500px) - ${sidebarExpanded ? '250px' : '70px'}) / 2)`,
+                            transition: 'left 0.3s ease'
+                          }
+                        : {}
+                    }
                 >
                     テキスト画像を保存
                 </button>

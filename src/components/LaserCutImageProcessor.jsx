@@ -1855,6 +1855,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             }}
             isGuideEffectStopped={isTextGeneratorGuideEffectStopped}
             onGuideEffectStop={() => setIsTextGeneratorGuideEffectStopped(true)}
+            sidebarExpanded={sidebarExpanded}
           />
         );
       case 'neonDrawing':
@@ -2327,8 +2328,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     <button 
                         className="sidebar-toggle" 
                         onClick={toggleSidebar}
-                        disabled={isPreloadingModels}
-                        style={isPreloadingModels ? { pointerEvents: 'none', opacity: 0.5 } : {}}
+                        disabled={currentPage === 'home' && isPreloadingModels}
+                        style={currentPage === 'home' && isPreloadingModels ? { pointerEvents: 'none', opacity: 0.5 } : {}}
                     >
                         <div className={`sidebar-triangle ${sidebarExpanded ? 'triangle-left' : 'triangle-right'}`}></div>
                     </button>
