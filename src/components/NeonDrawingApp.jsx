@@ -3885,7 +3885,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 }}
                                 style={{ position: 'sticky', zIndex: 9999 }}
                             >
-                                <option value={0.5}>0.5cm</option>
                                 <option value={1}>1cm</option>
                                 <option value={2}>2cm</option>
                                 <option value={3}>3cm</option>
