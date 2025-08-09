@@ -48,6 +48,10 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     // キャンバスサイズの状態
     const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
     const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
+    
+    // アニメーション用の左サイドバー幅
+    const [animatedLeftSidebarWidth, setAnimatedLeftSidebarWidth] = useState(sidebarExpanded ? 250 : 70);
+    const animationFrameRef = useRef(null);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -294,7 +298,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         } else {
             // デスクトップ: サイドバーを考慮した配置
             const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
-            const leftSidebarWidth = sidebarExpanded ? 250 : 70; // 左サイドバー（開閉状態に応じて変更）
+            const leftSidebarWidth = animatedLeftSidebarWidth; // アニメーション中の左サイドバー幅を使用
             const availableCanvasWidth = canvasWidth - rightSidebarWidth - leftSidebarWidth;
             
             // 表示領域を利用可能幅の70%に設定し、中央配置
@@ -409,7 +413,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, sidebarExpanded]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, animatedLeftSidebarWidth]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -449,7 +453,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         // 高解像度対応（8倍サイズで描画）
         const scale = 8;
-        const minPadding = 2; // 最小限の余白（2px）
+        const minPadding = 8; // 余白8px
         exportCanvas.width = (textWidth + minPadding * 2) * scale;
         exportCanvas.height = (textHeight + minPadding * 2) * scale;
         
@@ -535,7 +539,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         // 高解像度対応（devicePixelRatioも考慮した8倍サイズで描画）
         const pixelRatio = window.devicePixelRatio || 1;
         const scale = 8 * pixelRatio;
-        const minPadding = 2; // 最小限の余白（2px）
+        const minPadding = 8; // 余白8px
         exportCanvas.width = (textWidth + minPadding * 2) * scale;
         exportCanvas.height = (textHeight + minPadding * 2) * scale;
         
@@ -670,6 +674,43 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         }
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth]);
 
+    // サイドバー状態変更時のスムーズなアニメーション
+    useEffect(() => {
+        const targetWidth = sidebarExpanded ? 250 : 70;
+        const startWidth = animatedLeftSidebarWidth;
+        const startTime = Date.now();
+        const duration = 300; // 0.3秒
+        
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+            
+            const currentWidth = startWidth + (targetWidth - startWidth) * easeProgress;
+            setAnimatedLeftSidebarWidth(currentWidth);
+            
+            if (progress < 1) {
+                animationFrameRef.current = requestAnimationFrame(animate);
+            }
+        };
+        
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+        }
+        
+        if (Math.abs(targetWidth - startWidth) > 1) {
+            animationFrameRef.current = requestAnimationFrame(animate);
+        } else {
+            setAnimatedLeftSidebarWidth(targetWidth);
+        }
+        
+        return () => {
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+        };
+    }, [sidebarExpanded]);
+
     // 初期化フラグを設定
     useEffect(() => {
         isInitialized.current = true;
@@ -689,7 +730,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     useEffect(() => {
         updateCanvasSize();
         generateTextToSVG();
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize, sidebarExpanded]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize, animatedLeftSidebarWidth]);
 
     // キャンバスのdevicePixelRatio対応設定
     useEffect(() => {
