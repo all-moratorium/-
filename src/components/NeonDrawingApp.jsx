@@ -904,10 +904,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     };
                     
                     ctx.save();
-                    ctx.strokeStyle = colors.fillBorder; // 土台と同じ境界線色
-                    ctx.lineWidth = lineWidths.fillBorder / scale; // 土台と同じ線の太さ
+                    // 境界線を緑色のグローで描画（土台と同じエフェクト）
+                    ctx.globalAlpha = 0.85;
+                    ctx.shadowColor = '#10b981';
+                    ctx.shadowBlur = 8;
+                    ctx.strokeStyle = '#10b981';
+                    ctx.lineWidth = lineWidths.fillBorder / scale;
                     ctx.setLineDash([]); // 実線
-                    ctx.globalAlpha = 0.8;
                     
                     // 長方形プレビュー
                     ctx.beginPath();

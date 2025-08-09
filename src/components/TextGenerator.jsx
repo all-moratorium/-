@@ -464,7 +464,6 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         // 改行対応のテキスト描画
         ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = '#000000';
         ctx.textBaseline = 'alphabetic';
         ctx.letterSpacing = `${letterSpacing}px`;
         
@@ -473,6 +472,9 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             const lineWidth = ctx.measureText(line).width;
             const centerX = (textWidth + minPadding * 2) / 2 - lineWidth / 2;
             const yPos = actualTop + minPadding + (index * lineHeight);
+            
+            // グレー単色
+            ctx.fillStyle = '#b0b0b0';
             ctx.fillText(line, centerX, yPos);
         });
         
@@ -548,7 +550,6 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         
         // 改行対応のテキスト描画
         ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = '#000000';
         ctx.textBaseline = 'alphabetic';
         ctx.letterSpacing = `${letterSpacing}px`;
         
@@ -557,6 +558,9 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             const lineWidth = ctx.measureText(line).width;
             const centerX = (textWidth + minPadding * 2) / 2 - lineWidth / 2;
             const yPos = actualTop + minPadding + (index * lineHeight);
+            
+            // グレー単色
+            ctx.fillStyle = '#b0b0b0';
             ctx.fillText(line, centerX, yPos);
         });
         
@@ -589,7 +593,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         const svgContent = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${textWidth + 100}" height="${textHeight * 1.6}" viewBox="0 0 ${textWidth + 100} ${textHeight * 1.6}">
   <rect width="100%" height="100%" fill="#ffffff"/>
-  <text x="50" y="${textHeight * 1.1}" font-family="${fontFamily}" font-size="${fontSize}" fill="#000000" letter-spacing="${letterSpacing}px">${displayText}</text>
+  <text x="50" y="${textHeight * 1.1}" font-family="${fontFamily}" font-size="${fontSize}" fill="#000000" stroke="#ffffff" stroke-width="3" letter-spacing="${letterSpacing}px">${displayText}</text>
 </svg>`.trim();
         
         // SVGをダウンロード
