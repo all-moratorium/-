@@ -464,6 +464,7 @@ const LaserCutImageProcessor = () => {
   const [isGenerating3D, setIsGenerating3D] = useState(false);
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [isPreloadingModels, setIsPreloadingModels] = useState(false); // 3Dモデルプリロード中フラグ
   const [svgGenerationProgress, setSvgGenerationProgress] = useState(0);
 const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
@@ -1654,7 +1655,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <h1 className="page-title">Image To LED Neon Sign</h1>
             
             <div className="preview-container">
-            {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D />}
+            {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
             </div>
             
             {/* Mobile Layout */}
@@ -2323,7 +2324,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                             <span className="logo">NEON</span>
                         </div>
                     )}
-                    <button className="sidebar-toggle" onClick={toggleSidebar}>
+                    <button 
+                        className="sidebar-toggle" 
+                        onClick={toggleSidebar}
+                        disabled={isPreloadingModels}
+                        style={isPreloadingModels ? { pointerEvents: 'none', opacity: 0.5 } : {}}
+                    >
                         <div className={`sidebar-triangle ${sidebarExpanded ? 'triangle-left' : 'triangle-right'}`}></div>
                     </button>
                 </div>

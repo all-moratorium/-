@@ -5,7 +5,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import animationManager from '../utils/AnimationManager';
 import './Gallery3D.css';
 
-const Gallery3D = ({ models = [] }) => {
+const Gallery3D = ({ models = [], onPreloadingChange }) => {
     const containerRef = useRef(null);
     const sceneRef = useRef(null);
     const cameraRef = useRef(null);
@@ -30,6 +30,13 @@ const Gallery3D = ({ models = [] }) => {
     const [modelScales, setModelScales] = useState({});
     const [preloadProgress, setPreloadProgress] = useState(0); // プリロード進行状況
     const [isPreloading, setIsPreloading] = useState(false); // プリロード中フラグ
+    
+    // プリロード状態が変更された時に親コンポーネントに通知
+    useEffect(() => {
+        if (onPreloadingChange) {
+            onPreloadingChange(isPreloading);
+        }
+    }, [isPreloading, onPreloadingChange]);
 
     // 個別モデル設定（各モデルごとにパラメーター管理）
     const modelConfigs = [
