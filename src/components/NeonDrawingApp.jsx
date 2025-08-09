@@ -87,7 +87,7 @@ const getInitialDrawingState = (initialState) => {
     };
     
     const defaultColors = {
-        strokePoint: '#ffffff',
+        strokePoint: '#d0d0d0',
         strokeLine: '#ffffff',
         fillPoint: '#34d399',
         fillArea: 'rgba(110, 110, 110, 0.5)',
@@ -235,7 +235,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 色設定 - 包括的な初期化（白色と緑色を強制適用）
     const [colors, setColors] = useState({
         ...initialDrawingState.colors,
-        strokePoint: '#ffffff',
+        strokePoint: '#d0d0d0',
         strokeLine: '#ffffff',
         fillPoint: '#10b981'
     });
@@ -1694,7 +1694,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         if (projectData.neonColors) {
                             setColors({
                                 ...projectData.neonColors,
-                                strokePoint: '#ffffff',
+                                strokePoint: '#d0d0d0',
                                 strokeLine: '#ffffff',
                                 fillPoint: '#10b981'
                             });
@@ -1776,7 +1776,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 if (svgDataParsed.colors) {
                                     setColors({
                                         ...svgDataParsed.colors,
-                                        strokePoint: '#ffffff',
+                                        strokePoint: '#d0d0d0',
                                         strokeLine: '#ffffff',
                                         fillPoint: '#10b981'
                                     });
@@ -2023,7 +2023,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 if (sharedFileData.neonColors) {
                     setColors({
                         ...sharedFileData.neonColors,
-                        strokePoint: '#ffffff',
+                        strokePoint: '#d0d0d0',
                         strokeLine: '#ffffff',
                         fillPoint: '#10b981'
                     });

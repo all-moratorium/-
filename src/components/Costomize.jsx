@@ -214,7 +214,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             // 0.7cm以下の短いチューブは除外
                             if (calculatePathLength(pathObj) / 25 * 10 <= 7) return;
                             
-                            const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffff00';
+                            const color = pathColors[pathIndex] || neonColors.strokeLine || '#ffffff';
                             const thickness = pathThickness[pathIndex] || 15;
                             const opacity = 1.0; // プレビュー画像では常にグロー効果オン
                             console.log(`PNG生成 strokeパス${pathIndex}: color=${color} thickness=${thickness}`);
@@ -1166,7 +1166,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 svgData.paths.forEach((pathObj, pathIndex) => {
                     if (pathObj.mode === 'stroke') {
                         // チューブの場合
-                        initialColors[pathIndex] = svgData.colors?.strokeLine || '#ffff00';
+                        initialColors[pathIndex] = svgData.colors?.strokeLine || '#ffffff';
                         initialThickness[pathIndex] = 15;  // チューブは強制的に15px（6mm）
                     } else if (pathObj.mode === 'fill') {
                         // ベースプレートの場合
@@ -1646,7 +1646,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             }
                         } else {
                             // 新規選択: 元の設定を保存
-                            const currentColor = pathColors[hitPathIndex] || neonColors.strokeLine || '#ffff00';
+                            const currentColor = pathColors[hitPathIndex] || neonColors.strokeLine || '#ffffff';
                             const currentThickness = pathThickness[hitPathIndex] || neonLineWidths.strokeLine || 15;
                             
                             // 元の設定を保存
@@ -2056,7 +2056,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             // 0.7cm以下の短いパスは描画しない
             if (calculatePathLength(pathObj) / 25 * 10 <= 7) return;
 
-            const strokeColor = pathColors[pathIndex] || neonColors.strokeLine;
+            const strokeColor = pathColors[pathIndex] || neonColors.strokeLine || '#ffffff';
             const strokeWidth = pathThickness[pathIndex] || neonLineWidths.strokeLine;
             
             // ベース輝度を使用
@@ -2432,7 +2432,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                                 const originalSettings = {};
                                                 selectedTubes.forEach(index => {
                                                     originalSettings[index] = {
-                                                        color: pathColors[index] || neonColors.strokeLine || '#ffff00',
+                                                        color: pathColors[index] || neonColors.strokeLine || '#ffffff',
                                                         thickness: pathThickness[index] || neonLineWidths.strokeLine || 15
                                                     };
                                                 });
@@ -2538,7 +2538,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                                 <div 
                                                     className="color-preview"
                                                     style={{
-                                                        backgroundColor: pathColors[originalIndex] || neonColors.strokeLine || '#ffff00'
+                                                        backgroundColor: pathColors[originalIndex] || neonColors.strokeLine || '#ffffff'
                                                     }}
                                                 />
                                                 {/* 色設定ボタン */}
@@ -3203,7 +3203,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                             <div 
                                                 className="tube-color-indicator"
                                                 style={{
-                                                    backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffff00'
+                                                    backgroundColor: pathColors[index] || neonColors.strokeLine || '#ffffff'
                                                 }}
                                             />
                                             <span className="tube-label">
