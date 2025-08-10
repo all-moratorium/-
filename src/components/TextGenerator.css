@@ -738,12 +738,12 @@
         padding-bottom: 2px;
         margin-left: 0px;
         flex-shrink: 0;
-        margin-left: 0px;
+        margin-left: 8px;
     }
 
     .text-generator-guide-button {
         position: absolute;
-        left: calc(175px + 8px);
+        left: calc(184px + 8px);
         top: 32px;
         transform: translateY(-50%);
         width: 22px;
@@ -849,7 +849,6 @@
 
     .text-input-help {
         font-size: 9px;
-        white-space: nowrap;
         padding: 6px 8px;
         border-radius: 4px;
     }

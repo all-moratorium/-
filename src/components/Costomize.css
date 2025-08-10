@@ -2579,6 +2579,9 @@ html, body {
     height: 30.4px;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .project-save-btn:hover {
@@ -2623,6 +2626,9 @@ html, body {
     height: 30.4px;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .project-load-btn:hover {

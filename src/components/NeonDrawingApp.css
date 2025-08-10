@@ -1879,10 +1879,10 @@
     text-decoration: none ;
     border: none ;
     box-shadow: none ;
-    line-height: 1 ;
     box-sizing: border-box ;
     margin: 0 ;
 }
+
 
 .project-load-btn:hover {
     background: rgba(16, 185, 129, 0.75);
@@ -2534,7 +2534,7 @@
     
     .project-save-btn,
     .project-load-btn {
-        padding: 0 !important;
+        padding: auto !important;
         font-size: 11px !important;
         border-radius: 4px !important;
         margin:0 !important;
@@ -2804,7 +2804,7 @@
         max-height: 100% !important;
         min-height: 100% !important;
         position: fixed !important;
-        background-color: rgba(30, 30, 30, 0.95) !important;
+        background-color: rgba(10, 10, 10, 0.95) !important;
         right: 0 !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
