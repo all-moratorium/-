@@ -3556,7 +3556,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         className="mobile-function-btn mobile-toggle"
                         onClick={() => setSidebarVisible(!sidebarVisible)}
                     >
-                        {sidebarVisible ? '▲' : '▼'}
+                        <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                     </button>
                     <button
                         className="mobile-function-btn new-path"

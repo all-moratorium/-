@@ -2785,14 +2785,14 @@
         display: block !important;
         position: fixed !important;
         right: 158px !important;
-        bottom: 16px !important;
+        bottom: 10px !important;
         transform: translateX(50%) !important;
-        width: 180px !important;
+        width: 185px !important;
         z-index: 1000 !important;
-        background-color: rgba(30, 30, 30, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-        padding: 6px 1px !important;
+        background-color: rgba(10, 10, 10, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+        padding: 4px 0px !important;
         border-radius: 4px !important;
         text-align: center !important;
     }
@@ -2936,8 +2936,8 @@
         font-size: 14px !important;
         padding: 9px !important;
         margin-top: 15px !important;
-        width: 35px !important;
-        height: 35px !important;
+        width: 32px !important;
+        height: 32px !important;
     }
 
     /* サイドバーが閉じている時のモバイルトグルボタン */
