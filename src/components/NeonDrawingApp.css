@@ -2266,12 +2266,12 @@
         padding-bottom: 2px;
         margin-left: 0px;
         flex-shrink: 0;
-        margin-left: 60px;
+        margin-left: 83px;
     }
     
     .neon-header .neon-guide-button {
         position: absolute;
-        left: 167px;
+        left: 190px;
         top: 32px;
         transform: translateY(-50%);
         width: 25.2px;
@@ -2856,6 +2856,16 @@
         margin-top: 30px !important;    
         font-size: 10px !important;
         box-shadow: rgba(16, 185, 129, 0.3) 0px 0px 15px 0px !important;
+    }
+
+    .mobile-function-btn.new-path.button-disabled {
+        background-color: rgba(29, 29, 29, 0) !important;
+        background-image: none !important;
+        color: #9ca3af !important;
+        border-color: #6b7280 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        cursor: not-allowed !important;
     }
 
     .mobile-function-btn.modify-points {

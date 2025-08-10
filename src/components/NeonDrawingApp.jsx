@@ -3553,7 +3553,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 {!isInitializing && (
                 <div className="mobile-function-bar">
                     <button
-                        className="mobile-function-btn new-path"
+                        className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
                         onClick={startNewPath}
                         disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
                     >
