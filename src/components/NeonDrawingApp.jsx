@@ -881,16 +881,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         ctx.stroke();
                     }
                     
-                    // 500個を超えた場合は透明度を下げる（編集モード時の色付きの点は除外）
-                    const isColoredPoint = isModifyingPoints || isPointDeleteMode || isPathDeleteMode || 
-                                         (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx);
-                    
-                    if (totalVisiblePoints > POINT_DISPLAY_THRESHOLD && !isColoredPoint) {
-                        ctx.globalAlpha = 0.6; // 透明度60%
-                    } else {
-                        ctx.globalAlpha = 1.0; // 通常の透明度
-                    }
-                    
                     // 内側を塗りつぶし（スプラインは色変更適用、strokeモードは白に近いグレー、fillモードは元の色）
                     if (pathObj.type === 'spline') {
                         ctx.fillStyle = pointFillStyle; // スプラインは色変更を適用
@@ -900,9 +890,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
                     ctx.fill();
-                    
-                    // 透明度をリセット
-                    ctx.globalAlpha = 1.0;
                 });
             });
         }
