@@ -3553,12 +3553,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 {!isInitializing && (
                 <div className="mobile-function-bar">
                     <button
-                        className="mobile-function-btn mobile-toggle"
-                        onClick={() => setSidebarVisible(!sidebarVisible)}
-                    >
-                        <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
-                    </button>
-                    <button
                         className="mobile-function-btn new-path"
                         onClick={startNewPath}
                         disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
@@ -3625,10 +3619,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         >
                         </button>
 
-                        {/* サイドバー切り替えボタン */}
+                        {/* モバイル統一トグルボタン */}
                         <button
                             onClick={() => setSidebarVisible(!sidebarVisible)}
-                            className="neon-toggle-sidebar-button"
+                            className="neon-mobile-toggle-unified"
                         >
                             <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                         </button>
