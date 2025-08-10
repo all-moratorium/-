@@ -372,7 +372,7 @@
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    background:rgba(19, 19, 19, 0);
+    background:rgba(10, 10, 10, 0);
     padding: 9px;
 }
 
@@ -709,8 +709,8 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         transform: translateX(-50%);
         border-radius: 4px;
-        padding: 6px 8px !important;
-        font-size: 9px !important;
+        padding: 6px 6px !important;
+        font-size: 8px !important;
     }
 
     .text-generator-sidebar {
@@ -860,17 +860,19 @@
     }
 
     .font-selector-button {
-        width: 160px;
-        height: 55px;
-        padding: 9px;
+        width: 180px;
+        height: 58px;
+        padding: 6px;
+        padding-right: 12px;
         margin-left: auto;
         margin-right: auto;
     }
 
     .selected-font-text {
         font-size: 26px;
-        line-height: 50px;
-        max-width: 120px;
+        line-height: 49px;
+        max-width: 144px;
+        margin-right: 2.8px;
     }
 
     .selected-font-name {
@@ -879,7 +881,7 @@
 
     .font-selector-arrow {
         font-size: 12px;
-        margin-left: 8px;
+        margin-left: 0px;
     }
 
     /* モバイル版 文字数制限警告 */
@@ -896,26 +898,33 @@
         margin-bottom: 10px;
     }
 
+    .font-preview-container {
+        width: 100%;
+        margin-bottom: 0px;
+        margin-top: 10px;
+    }
+
     .font-preview-grid {
         display: grid;
     grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
     gap: 4px;
     max-height: 600px;
-    height: 180px;
+    min-height: 190px;
+    height: 35dvh;
     overflow-y: auto;
     border: 1px solid #444;
     border-radius: 4px;
-    background: #2a2a2a;
+    background:rgb(10, 10, 10) !important;
     padding: 4px;
     }
 
     .font-preview-item {
-        height: 40px;
+        height: 45px;
         width: 100%;
     }
 
     .font-preview-text {
-        font-size: 20px;
+        font-size: 21px;
     }
 
     .font-name {
@@ -1029,11 +1038,11 @@
     }
 
     .letter-spacing-selector-container {
-        margin-bottom: 35px;
+        margin-bottom: 65px;
     }
 
     .letter-spacing-selector-button {
-        width: 90%;
+        width: 170px;
         height: 45px;
         padding: 8px;
         margin-left: auto;
@@ -1055,7 +1064,8 @@
 
     .letter-spacing-slider-container {
         margin-top: 10px;
-        padding: 12px;
+        padding: 5px;
+        margin-bottom: 0px;
     }
 
     .letter-spacing-slider-label {
@@ -1065,7 +1075,7 @@
 
     .letter-spacing-slider {
         width: 90%;
-        margin-bottom: 42px;
+        margin-bottom: 0px;
     }
 
     /* モバイル版 下絵作成ボタンコンテナ */
