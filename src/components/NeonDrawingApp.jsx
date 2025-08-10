@@ -788,11 +788,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             if (pathPoints.length < 2) return;
 
-            // 白いスプラインにshadowBlurグロー
+            // 白いスプライン
             ctx.save();
             ctx.globalAlpha = 0.85;
-            ctx.shadowColor = colors.strokeLine;
-            ctx.shadowBlur = 8;
             ctx.strokeStyle = colors.strokeLine;
             
             // 骨組み描画の場合はスケールで調整、チューブ表示の場合は固定
