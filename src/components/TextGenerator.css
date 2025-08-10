@@ -1169,8 +1169,8 @@
     }
 }
 
-/* パソコン版ではトグルボタンを非表示 */
-@media screen and (min-width: 1280px), (pointer: fine) {
+/* パソコン版（マウス操作のデスクトップ）ではトグルボタンを非表示 */
+@media screen and (min-width: 1280px) and (pointer: fine) {
     .text-generator-mobile-toggle,
     .text-generator-mobile-toggle-fixed {
         display: none;
