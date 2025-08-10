@@ -780,18 +780,9 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                 </button>
             </div>
 
-            {/* サイドバー閉じた時のみ表示するトグルボタン */}
-            {(navigator.maxTouchPoints > 0) && !isMobileSidebarVisible && (
-                <button 
-                    className="text-generator-mobile-toggle-fixed"
-                    onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
-                >
-                    ▼
-                </button>
-            )}
 
             {/* 右サイドバー */}
-            <div className={`text-generator-sidebar ${!isMobileSidebarVisible ? 'hidden' : ''}`}>
+            <div className={`text-generator-sidebar ${isMobileSidebarVisible ? '' : 'collapsed'}`}>
                 <div className="text-generator-header">
                     <h2 className="text-generator-title">テキストから生成</h2>
                     <div 
@@ -807,7 +798,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                         className="text-generator-mobile-toggle"
                         onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
                     >
-                        ▲
+                        <div className={`triangle ${isMobileSidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                     </button>
                 </div>
                 <div className="text-input-tools-title">テキストを入力</div>
