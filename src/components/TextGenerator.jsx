@@ -290,11 +290,25 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         let displayAreaWidth, displayAreaHeight, displayAreaLeft, displayAreaTop;
         
         if (isMobile) {
-            // スマホ: 画面中央に配置
-            displayAreaWidth = canvasWidth * 0.6;
-            displayAreaHeight = canvasHeight * 0.6;
-            displayAreaLeft = (canvasWidth - displayAreaWidth) / 2;
-            displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
+            // スマホ: サイドバー状態に応じて配置
+            console.log('Mobile sidebar visible:', isMobileSidebarVisible);
+            if (isMobileSidebarVisible) {
+                // サイドバー開いている時：右300pxを除いた左のすべての真ん中
+                const rightSidebarWidth = 300;
+                const availableCanvasWidth = canvasWidth - rightSidebarWidth;
+                displayAreaWidth = availableCanvasWidth * 0.7;
+                displayAreaHeight = canvasHeight * 0.7;
+                displayAreaLeft = (availableCanvasWidth - displayAreaWidth) / 2;
+                displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
+                console.log('Sidebar open - displayAreaLeft:', displayAreaLeft);
+            } else {
+                // サイドバー閉じている時：画面中央に配置
+                displayAreaWidth = canvasWidth * 0.6;
+                displayAreaHeight = canvasHeight * 0.6;
+                displayAreaLeft = (canvasWidth - displayAreaWidth) / 2;
+                displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
+                console.log('Sidebar closed - displayAreaLeft:', displayAreaLeft);
+            }
         } else {
             // デスクトップ: サイドバーを考慮した配置
             const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
@@ -413,7 +427,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, animatedLeftSidebarWidth]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, animatedLeftSidebarWidth, isMobileSidebarVisible]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -732,6 +746,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         generateTextToSVG();
     }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, generateTextToSVG, updateCanvasSize, animatedLeftSidebarWidth]);
 
+
     // キャンバスのdevicePixelRatio対応設定
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -796,7 +811,11 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     ></div>
                     <button 
                         className="text-generator-mobile-toggle"
-                        onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
+                        onClick={() => {
+                            console.log('Toggle button clicked! Current state:', isMobileSidebarVisible);
+                            setIsMobileSidebarVisible(!isMobileSidebarVisible);
+                            console.log('New state should be:', !isMobileSidebarVisible);
+                        }}
                     >
                         <div className={`triangle ${isMobileSidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                     </button>
