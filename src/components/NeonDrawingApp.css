@@ -2491,7 +2491,7 @@
     
     .view-reset-button {
         padding: 0 !important;
-        font-size: 12px !important;
+        font-size: 10px !important;
         border-radius: 4px !important;
         min-height: 30px !important;
         margin:0 !important;
@@ -2535,7 +2535,7 @@
     .project-save-btn,
     .project-load-btn {
         padding: 0 !important;
-        font-size: 12px !important;
+        font-size: 11px !important;
         border-radius: 4px !important;
         min-height: 30px !important;
         margin:0 !important;
