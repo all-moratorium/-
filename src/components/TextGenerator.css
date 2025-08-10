@@ -829,14 +829,14 @@
     .text-generator-sidebar.collapsed .text-generator-buttons-container,
     .text-generator-sidebar.collapsed .text-generator-controls,
     .text-generator-sidebar.collapsed .text-generator-save-button {
-        display: none;
+        display: none !important;
     }
 
     /* モバイル版 テキスト入力エリア */
     .text-input-tools-title {
-        font-size: 16px;
+        font-size: 14px;
         margin-top: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     .text-input {
@@ -848,22 +848,51 @@
     }
 
     .text-input-help {
-        font-size: 9px;
+        font-size: 8px;
         padding: 6px 8px;
+        white-space: nowrap;
         border-radius: 4px;
+    }
+
+    /* モバイル版 フォントセレクタ */
+    .font-selector-container {
+        margin-bottom: 0px;
+    }
+
+    .font-selector-button {
+        width: 160px;
+        height: 55px;
+        padding: 9px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .selected-font-text {
+        font-size: 26px;
+        line-height: 50px;
+        max-width: 120px;
+    }
+
+    .selected-font-name {
+        font-size: 10px;
+    }
+
+    .font-selector-arrow {
+        font-size: 12px;
+        margin-left: 8px;
     }
 
     /* モバイル版 文字数制限警告 */
     .character-limit-warning {
-        font-size: 9px;
+        font-size: 8px;
         padding: 4px 6px;
         border-radius: 4px;
     }
 
     /* モバイル版 フォントプレビュー */
     .font-preview-tools-title {
-        font-size: 15px;
-        margin-top: 12px;
+        font-size: 14px;
+        margin-top: 15px;
         margin-bottom: 10px;
     }
 
@@ -929,11 +958,109 @@
         color: #ffffff;
     }
 
+    /* モバイル版 ネオン色ツールタイトル */
+    .neon-color-tools-title {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+        margin-top: 15px !important;
+    }
+
+    /* モバイル版 ネオン色パレット */
+    .neon-color-palette {
+        display: grid !important;
+        grid-template-columns: repeat(3, 85px) !important;
+        gap: 5px !important;
+        margin-bottom: 15px !important;
+        padding: 0 0px !important;
+        justify-content: center !important;
+    }
+
+    .neon-color-item-wrapper {
+        border: 2px solid transparent !important;
+        border-radius: 8px !important;
+        padding: 8px 0px !important;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        text-align: center !important;
+        min-width: 60px !important;
+        width: 85px !important;
+        overflow: visible;
+    }
+
+    .neon-color-item-wrapper.selected {
+        background: linear-gradient(90deg,
+          rgba(16, 185, 129, 0.2) 0%,
+          rgba(16, 185, 129, 0.08) 100%) !important;
+        border-color: rgba(16, 185, 129, 0.4) !important;
+        box-shadow:
+          0 0 20px rgba(16, 185, 129, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .neon-color-item {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 5px !important;
+        margin: 0 auto 6px auto !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .neon-color-name {
+        color: #ffffff !important;
+        font-size: 8.5px !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+    }
+
+    /* モバイル版 色選択注意書き */
+    .color-selection-note {
+        font-size: 8.5px !important;
+        margin: 5px 10px 5px 10px !important;
+        line-height: 1.3 !important;
+    }
+
     /* モバイル版 文字間隔調整 */
     .letter-spacing-label {
         font-size: 13px;
         margin-top: 0px;
         margin-bottom: 3px;
+    }
+
+    .letter-spacing-selector-container {
+        margin-bottom: 35px;
+    }
+
+    .letter-spacing-selector-button {
+        width: 90%;
+        height: 45px;
+        padding: 8px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .letter-spacing-selector-label {
+        font-size: 13px;
+    }
+
+    .letter-spacing-value {
+        font-size: 14px;
+    }
+
+    .letter-spacing-arrow {
+        font-size: 12px;
+        margin-left: 6px;
+    }
+
+    .letter-spacing-slider-container {
+        margin-top: 10px;
+        padding: 12px;
+    }
+
+    .letter-spacing-slider-label {
+        font-size: 12px;
+        margin-bottom: 10px;
     }
 
     .letter-spacing-slider {
@@ -954,7 +1081,7 @@
     .text-generator-export-button {
         width: 90% !important;
         margin: 0px auto !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 20px !important;
         font-size: 14px !important;
         padding:8px 12px !important;
         height: auto !important;
