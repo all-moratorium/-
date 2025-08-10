@@ -52,6 +52,20 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     // アニメーション用の左サイドバー幅
     const [animatedLeftSidebarWidth, setAnimatedLeftSidebarWidth] = useState(sidebarExpanded ? 250 : 70);
     const animationFrameRef = useRef(null);
+    
+    // モバイル版アニメーション用の表示エリア位置とサイズ
+    const [animatedDisplayAreaLeft, setAnimatedDisplayAreaLeft] = useState(
+        isMobileSidebarVisible ? (window.innerWidth - 300) * 0.15 : window.innerWidth * 0.2
+    );
+    const [animatedDisplayAreaWidth, setAnimatedDisplayAreaWidth] = useState(
+        isMobileSidebarVisible ? (window.innerWidth - 300) * 0.7 : window.innerWidth * 0.6
+    );
+    const [animatedDisplayAreaHeight, setAnimatedDisplayAreaHeight] = useState(
+        window.innerHeight * (isMobileSidebarVisible ? 0.7 : 0.6)
+    );
+    const mobileAnimationFrameRef = useRef(null);
+    const previousOrientationRef = useRef(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
+    const [shouldAnimateButton, setShouldAnimateButton] = useState(true);
 
     const allFonts = [
         { name: 'cudi', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
@@ -290,25 +304,11 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         let displayAreaWidth, displayAreaHeight, displayAreaLeft, displayAreaTop;
         
         if (isMobile) {
-            // スマホ: サイドバー状態に応じて配置
-            console.log('Mobile sidebar visible:', isMobileSidebarVisible);
-            if (isMobileSidebarVisible) {
-                // サイドバー開いている時：右300pxを除いた左のすべての真ん中
-                const rightSidebarWidth = 300;
-                const availableCanvasWidth = canvasWidth - rightSidebarWidth;
-                displayAreaWidth = availableCanvasWidth * 0.7;
-                displayAreaHeight = canvasHeight * 0.7;
-                displayAreaLeft = (availableCanvasWidth - displayAreaWidth) / 2;
-                displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
-                console.log('Sidebar open - displayAreaLeft:', displayAreaLeft);
-            } else {
-                // サイドバー閉じている時：画面中央に配置
-                displayAreaWidth = canvasWidth * 0.6;
-                displayAreaHeight = canvasHeight * 0.6;
-                displayAreaLeft = (canvasWidth - displayAreaWidth) / 2;
-                displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
-                console.log('Sidebar closed - displayAreaLeft:', displayAreaLeft);
-            }
+            // スマホ: サイドバー状態に応じて配置（アニメーション対応）
+            displayAreaWidth = animatedDisplayAreaWidth;
+            displayAreaHeight = animatedDisplayAreaHeight;
+            displayAreaLeft = animatedDisplayAreaLeft;
+            displayAreaTop = (canvasHeight - displayAreaHeight) / 2;
         } else {
             // デスクトップ: サイドバーを考慮した配置
             const rightSidebarWidth = Math.min(window.innerWidth * 0.24, 500); // 右サイドバー（27%、最大500px）
@@ -427,7 +427,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         });
         
         setGeneratedPaths(paths);
-    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, animatedLeftSidebarWidth, isMobileSidebarVisible]);
+    }, [inputText, selectedFont, fontSize, letterSpacing, strokeWidth, selectedNeonColor, canvasWidth, canvasHeight, animatedLeftSidebarWidth, animatedDisplayAreaLeft, animatedDisplayAreaWidth, animatedDisplayAreaHeight]);
 
     // 画像出力とネオン下絵への移動
     const exportAsImage = useCallback(() => {
@@ -725,6 +725,76 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         };
     }, [sidebarExpanded]);
 
+    // モバイルサイドバー状態変更時のスムーズなアニメーション
+    useEffect(() => {
+        const currentOrientation = canvasHeight > canvasWidth ? 'portrait' : 'landscape';
+        const orientationChanged = previousOrientationRef.current !== currentOrientation;
+        
+        // 画面向きが変わった場合は前回の向きを更新
+        if (orientationChanged) {
+            previousOrientationRef.current = currentOrientation;
+        }
+        
+        const targetLeft = isMobileSidebarVisible 
+            ? (canvasWidth - 300) * 0.15  // サイドバー開：左エリアの15%位置
+            : canvasWidth * 0.2;          // サイドバー閉：画面の20%位置
+            
+        const targetWidth = isMobileSidebarVisible 
+            ? (canvasWidth - 300) * 0.7   // サイドバー開：左エリアの70%
+            : canvasWidth * 0.6;          // サイドバー閉：画面の60%
+            
+        const targetHeight = canvasHeight * (isMobileSidebarVisible ? 0.7 : 0.6);
+        
+        // 画面向きが変わった時は即座に位置を更新（アニメーションなし）
+        if (orientationChanged) {
+            setAnimatedDisplayAreaLeft(targetLeft);
+            setAnimatedDisplayAreaWidth(targetWidth);
+            setAnimatedDisplayAreaHeight(targetHeight);
+            setShouldAnimateButton(false);
+            // 少し遅延してアニメーションを再開
+            setTimeout(() => setShouldAnimateButton(true), 100);
+            return;
+        }
+            
+        const startLeft = animatedDisplayAreaLeft;
+        const startWidth = animatedDisplayAreaWidth;
+        const startHeight = animatedDisplayAreaHeight;
+        const startTime = Date.now();
+        const duration = 300; // 0.3秒
+        
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // イージング関数（ease-out）
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            
+            const currentLeft = startLeft + (targetLeft - startLeft) * easeOut;
+            const currentWidth = startWidth + (targetWidth - startWidth) * easeOut;
+            const currentHeight = startHeight + (targetHeight - startHeight) * easeOut;
+            
+            setAnimatedDisplayAreaLeft(currentLeft);
+            setAnimatedDisplayAreaWidth(currentWidth);
+            setAnimatedDisplayAreaHeight(currentHeight);
+            
+            if (progress < 1) {
+                mobileAnimationFrameRef.current = requestAnimationFrame(animate);
+            }
+        };
+        
+        if (mobileAnimationFrameRef.current) {
+            cancelAnimationFrame(mobileAnimationFrameRef.current);
+        }
+        
+        animate();
+        
+        return () => {
+            if (mobileAnimationFrameRef.current) {
+                cancelAnimationFrame(mobileAnimationFrameRef.current);
+            }
+        };
+    }, [isMobileSidebarVisible, canvasWidth, canvasHeight]);
+
     // 初期化フラグを設定
     useEffect(() => {
         isInitialized.current = true;
@@ -788,7 +858,12 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                             left: `calc(${sidebarExpanded ? '250px' : '70px'} + (100vw - min(24vw, 500px) - ${sidebarExpanded ? '250px' : '70px'}) / 2)`,
                             transition: 'left 0.3s ease'
                           }
-                        : {}
+                        : {
+                            left: isMobileSidebarVisible 
+                                ? 'calc((100vw - 300px) / 2)'
+                                : '50%',
+                            transition: shouldAnimateButton ? 'left 0.3s ease' : 'none'
+                          }
                     }
                 >
                     テキスト画像を保存
@@ -811,11 +886,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     ></div>
                     <button 
                         className="text-generator-mobile-toggle"
-                        onClick={() => {
-                            console.log('Toggle button clicked! Current state:', isMobileSidebarVisible);
-                            setIsMobileSidebarVisible(!isMobileSidebarVisible);
-                            console.log('New state should be:', !isMobileSidebarVisible);
-                        }}
+                        onClick={() => setIsMobileSidebarVisible(!isMobileSidebarVisible)}
                     >
                         <div className={`triangle ${isMobileSidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                     </button>
