@@ -824,8 +824,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.restore();
         });
 
+        // 表示領域内の全点数をカウントして表示制御
+        const totalVisiblePoints = paths.reduce((count, pathObj) => {
+            if (!pathObj || !Array.isArray(pathObj.points)) return count;
+            return count + pathObj.points.filter(point => {
+                return point.x >= visibleLeft && point.x <= visibleRight &&
+                       point.y >= visibleTop && point.y <= visibleBottom;
+            }).length;
+        }, 0);
+
+        const POINT_DISPLAY_THRESHOLD = 500;
+        const shouldShowPoints = showPoints && totalVisiblePoints <= POINT_DISPLAY_THRESHOLD;
+
         // 3. 最後に全ての制御点を描画（土台、チューブの順で色分け）
-        if (showPoints) {
+        if (shouldShowPoints) {
             paths.forEach((pathObj, pathIdx) => {
                 if (!pathObj || !Array.isArray(pathObj.points)) {
                     return;
