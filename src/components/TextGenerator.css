@@ -753,9 +753,9 @@
     }
 
     .text-generator-mobile-toggle {
-        position: fixed !important;
-        right: 25px !important;
-        top: 25px !important;
+        position: absolute;
+        right: 20px;
+        top: 15px;
         width: 32px;
         height: 32px;
         border-radius: 6px;
@@ -770,10 +770,7 @@
         justify-content: center;
         font-size: 12px;
         transition: all 0.2s ease;
-        z-index: 1001;
-        transform: none !important;
-        left: auto !important;
-        bottom: auto !important;
+        z-index: 101;
         box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 15px 0px;
     }
 
