@@ -1089,7 +1089,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 // fillAreaを透明に設定してからneonColorsを更新（安全な色設定）
                 const safeColors = {
                     strokeLine: (svgData.colors?.strokeLine && svgData.colors.strokeLine !== '' && svgData.colors.strokeLine !== 'undefined') ? svgData.colors.strokeLine : '#ffffff',
-                    strokePoint: svgData.colors?.strokePoint || '#d0d0d0',
+                    strokePoint: svgData.colors?.strokePoint || '#ffffff',
                     fillPoint: svgData.colors?.fillPoint || '#34d399',
                     fillArea: 'transparent',
                     fillBorder: svgData.colors?.fillBorder || '#000000',

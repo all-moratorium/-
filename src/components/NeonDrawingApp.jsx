@@ -87,7 +87,7 @@ const getInitialDrawingState = (initialState) => {
     };
     
     const defaultColors = {
-        strokePoint: '#d0d0d0',
+        strokePoint: '#ffffff',
         strokeLine: '#ffffff',
         fillPoint: '#34d399',
         fillArea: 'rgba(110, 110, 110, 0.5)',
@@ -235,7 +235,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 色設定 - 包括的な初期化（白色と緑色を強制適用）
     const [colors, setColors] = useState({
         ...initialDrawingState.colors,
-        strokePoint: '#d0d0d0',
+        strokePoint: '#ffffff',
         strokeLine: '#ffffff',
         fillPoint: '#10b981'
     });
@@ -1339,7 +1339,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 gridSize: 100,
                 gridOpacity: 0.3,
                 colors: {
-                    strokePoint: '#d0d0d0',
+                    strokePoint: '#ffffff',
                     strokeLine: '#ffff00',
                     fillPoint: '#34d399',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
@@ -1704,7 +1704,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         if (projectData.neonColors) {
                             setColors({
                                 ...projectData.neonColors,
-                                strokePoint: '#d0d0d0',
+                                strokePoint: '#ffffff',
                                 strokeLine: '#ffffff',
                                 fillPoint: '#10b981'
                             });
@@ -1786,7 +1786,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 if (svgDataParsed.colors) {
                                     setColors({
                                         ...svgDataParsed.colors,
-                                        strokePoint: '#d0d0d0',
+                                        strokePoint: '#ffffff',
                                         strokeLine: '#ffffff',
                                         fillPoint: '#10b981'
                                     });
@@ -2033,7 +2033,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 if (sharedFileData.neonColors) {
                     setColors({
                         ...sharedFileData.neonColors,
-                        strokePoint: '#d0d0d0',
+                        strokePoint: '#ffffff',
                         strokeLine: '#ffffff',
                         fillPoint: '#10b981'
                     });
@@ -4439,7 +4439,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <button
                         onClick={() => {
                             setColors({
-                                strokePoint: '#d0d0d0',
+                                strokePoint: '#ffffff',
                                 strokeLine: '#ffff00',
                                 fillPoint: '#34d399',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
