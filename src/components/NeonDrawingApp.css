@@ -2813,6 +2813,7 @@
         flex-direction: column !important;
         gap: 8px !important;
         padding: 10px 0 !important;
+        padding-top: 140px !important;
         overflow-y: auto !important;
     }
 
@@ -2970,7 +2971,7 @@
     /* モバイル統一トグルボタン */
     .neon-mobile-toggle-unified {
         position: absolute;
-        right: 5px;
+        right: 4px;
         top: 15px;
         width: 32px;
         height: 32px;
@@ -3005,24 +3006,7 @@
     /* トグルボタンだけクリック可能にする */
     .neon-sidebar.collapsed .neon-mobile-toggle-unified {
         pointer-events: all;
-        background: rgb(0, 0, 0);
-        background-image: none;
-        backdrop-filter: none;
-        border-color: rgba(255, 255, 255, 1.0);
-        color: #ffffff;
-        box-shadow:
-            0 0 35px rgba(255, 255, 255, 0.5),
-            0 0 60px rgba(255, 255, 255, 0.3),
-            0 0 80px rgba(255, 255, 255, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        animation: neon-mobile-glow-pulse 2s ease-in-out infinite alternate;
-    }
-
-    .neon-sidebar.collapsed .neon-mobile-toggle-unified:hover {
-        box-shadow:
-            0 0 20px rgba(255, 255, 255, 0.7),
-            0 0 40px rgba(255, 255, 255, 0.5),
-            0 0 60px rgba(255, 255, 255, 0.3);
+        /* 開いている時と同じ緑の見た目を維持 */
     }
 
     /* サイドバー内のコンテンツを折りたたみ時に非表示にする */
