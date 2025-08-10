@@ -979,7 +979,7 @@
     inset: 0;
     background-color: transparent;
     display: flex;
-    z-index: 50;
+    z-index: 1100;
     backdrop-filter: none !important;
     filter: none !important;
     pointer-events: none;
@@ -2240,7 +2240,7 @@
         justify-content: center;
         font-size: 12px;
         transition: all 0.2s ease;
-        z-index: 1001;
+        z-index: 10;
         transform: none !important;
         left: auto !important;
         bottom: auto !important;
@@ -2608,7 +2608,7 @@
         left: auto !important;
         transform: none !important;
         border-radius: 0 !important;
-        padding: 9px !important;
+        padding: 15px 9px !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         max-height: 100% !important;
@@ -2632,6 +2632,7 @@
     .modal-label {
         font-size: 14px !important;
         font-weight: 600 !important;
+        white-space: nowrap !important;
     }
 
     .modal-setting-item {
@@ -2788,7 +2789,7 @@
         bottom: 10px !important;
         transform: translateX(50%) !important;
         width: 185px !important;
-        z-index: 1000 !important;
+        z-index: 10 !important;
         background-color: rgba(10, 10, 10, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
@@ -2809,7 +2810,7 @@
         top: 50% !important;
         transform: translateY(-50%) !important;
         width: 50px !important;
-        z-index: 1001 !important;
+        z-index: 10 !important;
         flex-direction: column !important;
         gap: 8px !important;
         padding: 10px 0 !important;
@@ -2848,14 +2849,14 @@
 
     .mobile-function-btn.new-path {
         background: transparent !important;
-        background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%) !important;
+        background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.25) 100%) !important;
         backdrop-filter: blur(10px) !important;
         color: rgb(255, 255, 255) !important;
-        border: 1px solid rgba(16, 185, 129, 0.7) !important;
+        border: none !important;
         white-space: nowrap !important;
         margin-top: 30px !important;    
         font-size: 10px !important;
-        box-shadow: rgba(16, 185, 129, 0.3) 0px 0px 15px 0px !important;
+        box-shadow: rgba(16, 185, 129, 0.55) 0px 0px 20px 0px !important;
     }
 
     .mobile-function-btn.new-path.button-disabled {
