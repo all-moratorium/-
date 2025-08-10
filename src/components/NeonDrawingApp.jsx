@@ -3619,10 +3619,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         >
                         </button>
 
-                        {/* モバイル統一トグルボタン */}
+                        {/* サイドバー切り替えボタン */}
                         <button
                             onClick={() => setSidebarVisible(!sidebarVisible)}
-                            className="neon-mobile-toggle-unified"
+                            className="neon-toggle-sidebar-button"
                         >
                             <div className={`triangle ${sidebarVisible ? 'triangle-down' : 'triangle-up'}`}></div>
                         </button>
