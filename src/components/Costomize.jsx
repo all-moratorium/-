@@ -1086,12 +1086,17 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             setPathThickness(defaultThickness); // 既存設定を無視して強制適用
             
             if (svgData.colors) {
-                // fillAreaを透明に設定してからneonColorsを更新
-                const colorsWithTransparentFill = {
-                    ...svgData.colors,
-                    fillArea: 'transparent'
+                // fillAreaを透明に設定してからneonColorsを更新（安全な色設定）
+                const safeColors = {
+                    strokeLine: (svgData.colors?.strokeLine && svgData.colors.strokeLine !== '' && svgData.colors.strokeLine !== 'undefined') ? svgData.colors.strokeLine : '#ffffff',
+                    strokePoint: svgData.colors?.strokePoint || '#d0d0d0',
+                    fillPoint: svgData.colors?.fillPoint || '#34d399',
+                    fillArea: 'transparent',
+                    fillBorder: svgData.colors?.fillBorder || '#000000',
+                    background: svgData.colors?.background || '#191919',
+                    grid: svgData.colors?.grid || '#000000'
                 };
-                setNeonColors(colorsWithTransparentFill);
+                setNeonColors(safeColors);
             }
             
             if (svgData.lineWidths) {
@@ -1165,8 +1170,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 const initialThickness = {};
                 svgData.paths.forEach((pathObj, pathIndex) => {
                     if (pathObj.mode === 'stroke') {
-                        // チューブの場合
-                        initialColors[pathIndex] = svgData.colors?.strokeLine || '#ffffff';
+                        // チューブの場合 - 安全な色設定
+                        const strokeLineColor = svgData.colors?.strokeLine;
+                        const safeColor = (strokeLineColor && strokeLineColor !== '' && strokeLineColor !== 'undefined') ? strokeLineColor : '#ffffff';
+                        initialColors[pathIndex] = safeColor;
                         initialThickness[pathIndex] = 15;  // チューブは強制的に15px（6mm）
                     } else if (pathObj.mode === 'fill') {
                         // ベースプレートの場合
