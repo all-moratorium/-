@@ -2619,8 +2619,10 @@
         overflow-y: auto !important;
         display: flex !important;
         flex-direction: column !important;
+        height: 100% !important;
         gap: 8px !important;
-        padding:0 9px !important;margin:0 !important;
+        padding:0 9px !important;
+        margin:0 !important;
     }
 
     .modal-title {
@@ -2646,7 +2648,9 @@
     }
 
     .range-input {
-        height: 6px !important;
+        height: 5px !important;
+        margin: 0 auto !important;
+        display: block !important;
     }
 
     .file-input {
@@ -2705,7 +2709,18 @@
     }
 
     .scale-range-input {
-        height: 6px !important;
+        height: 5px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    
+    .scale-modal-content {
+        width: 300px !important;
+        max-height: calc(100vh - 100px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+        height: auto !important;
     }
 
     .model-size-info {
