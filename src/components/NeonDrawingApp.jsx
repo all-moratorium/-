@@ -868,8 +868,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
                     ctx.stroke();
                     
-                    // 内側を塗りつぶし（strokeモードは白に近いグレー、fillモードは元の色）
-                    ctx.fillStyle = pathObj.mode === 'stroke' ? '#e8e8e8' : pointFillStyle;
+                    // 内側を塗りつぶし（スプラインは色変更適用、strokeモードは白に近いグレー、fillモードは元の色）
+                    if (pathObj.type === 'spline') {
+                        ctx.fillStyle = pointFillStyle; // スプラインは色変更を適用
+                    } else {
+                        ctx.fillStyle = pathObj.mode === 'stroke' ? '#e8e8e8' : pointFillStyle;
+                    }
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
                     ctx.fill();
