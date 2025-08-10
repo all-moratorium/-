@@ -2604,11 +2604,11 @@
         position: absolute !important;
         right: 0 !important;
         top: 0 !important;
-        transform: translateY(-50%) !important;
         left: auto !important;
         transform: none !important;
         border-radius: 0 !important;
-        padding: 15px 9px !important;
+        padding: 0px 9px !important;
+        padding-top: 15px !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         max-height: 100% !important;
@@ -2674,6 +2674,9 @@
         margin: 0 auto !important;
         margin-bottom: 4px !important;
     }
+    .clear-image-button {
+        margin-bottom: 20px !important;
+    }
 
     .direct-input-container,
     .scale-input-container {
@@ -2712,20 +2715,29 @@
         height: 5px !important;
         margin: 0 auto !important;
         display: block !important;
+        width: 245px !important;
+        margin-top: 8px !important;
     }
     
     .scale-modal-content {
-        width: 300px !important;
+        width: 100% !important;
         max-height: calc(100vh - 100px) !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         box-sizing: border-box !important;
         height: auto !important;
+        max-height: 100% !important;
+        padding: 0!important;
+        margin: 0 auto!important;
+        
+
     }
 
     .model-size-info {
         padding: 9px !important;
         margin-top: 6px !important;
+        margin: 9px !important;
+        margin-bottom: 3px !important;
     }
 
     .size-info-title {
@@ -2756,7 +2768,7 @@
         padding: 4px !important;
     }
     .scale-input-container {
-        margin-top: 6px !important;
+        margin-top: 4px !important;
     }
 
     .modal-apply-btn {
@@ -2764,6 +2776,7 @@
         font-size: 12px !important;
         min-height: 32px !important;
         border-radius: 4px !important;
+        margin-right: 10px !important;
     }
 
     .modal-header {
@@ -2774,6 +2787,7 @@
         font-size: 18px !important;
         margin-bottom: 0px !important;
         margin-top: 0px !important;
+        margin-left: 20px !important;
     }
 
     .modal-buttons-container {
