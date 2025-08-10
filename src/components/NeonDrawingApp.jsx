@@ -834,10 +834,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }, 0);
 
         const POINT_DISPLAY_THRESHOLD = 500;
-        const shouldShowPoints = showPoints && totalVisiblePoints <= POINT_DISPLAY_THRESHOLD;
 
         // 3. 最後に全ての制御点を描画（土台、チューブの順で色分け）
-        if (shouldShowPoints) {
+        if (showPoints) {
             paths.forEach((pathObj, pathIdx) => {
                 if (!pathObj || !Array.isArray(pathObj.points)) {
                     return;
@@ -873,12 +872,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                     }
                     
-                    // 点の外側に黒い境界線を描画
-                    ctx.strokeStyle = '#000000';
-                    ctx.lineWidth = 0.8 / scale;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
-                    ctx.stroke();
+                    // 点の外側に黒い境界線を描画（500個以下の場合のみ）
+                    if (totalVisiblePoints <= 500) {
+                        ctx.strokeStyle = '#000000';
+                        ctx.lineWidth = 0.8 / scale;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, 4 / scale, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
                     
                     // 内側を塗りつぶし（スプラインは色変更適用、strokeモードは白に近いグレー、fillモードは元の色）
                     if (pathObj.type === 'spline') {
