@@ -3168,7 +3168,7 @@ html, body {
     transform: scale(1);
     font-weight: 600;
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 0px;
 }
 
 .color-selection-modal .close-button:hover {
@@ -3192,6 +3192,37 @@ html, body {
     }
 }
 
+/* パソコン版 tube-color-sample-button と bulk-color-sample-button のスタイル統一 */
+.tube-color-sample-button,
+.bulk-color-sample-button {
+    width: 100%;
+    padding: 8px;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.tube-color-sample-button:hover,
+.bulk-color-sample-button:hover {
+    background: rgba(37, 100, 235, 0.6);
+    border: 1px solid rgba(37, 99, 235, 0.85);
+    box-shadow: 
+      0 0 18px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
+}
 
 /* Bulk Modal Content */
 .bulk-modal-content {
