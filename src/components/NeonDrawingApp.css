@@ -2599,19 +2599,20 @@
     }
 
     .modal-content-right {
-        width: 320px !important;
-        height: 100% !important;
+        width: 300px !important;
+        height: auto !important;
         position: absolute !important;
         right: 0 !important;
-        top: 0 !important;
+        top: 50% !important;
         left: auto !important;
-        transform: none !important;
+        transform: translateY(-50%) !important;
         border-radius: 0 !important;
         padding: 0px 9px !important;
         padding-top: 15px !important;
         margin: 0 !important;
+        border-radius: 8px !important;
         box-sizing: border-box !important;
-        max-height: 100% !important;
+        max-height: 100dvh !important;
     }
     .modal-content-inner {
         flex: 1 !important;
@@ -2740,6 +2741,8 @@
         padding: 15px 15px !important;
         padding-top: 8px !important;
         border-radius: 6px !important;
+        max-height: 100dvh !important;
+        overflow-y: auto !important;
     }
 
     .drawing-type-description {
@@ -2757,7 +2760,11 @@
     .rectangle-generation-modal .modal-content-right {
         height: auto !important;
         width: 200px !important;
-        max-height: calc(100vh - 60px) !important;
+        max-height: 100dvh !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        position: absolute !important;
+        right: 0 !important;
     }
 
     .model-size-info {
