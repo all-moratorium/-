@@ -746,7 +746,17 @@
         height: auto !important;
         margin-bottom: 20px !important;
     }
+    .base-off-tube-color-label {
+        font-size: 12px !important;
+        color: #d1d5db !important;
+        margin-bottom: 6px !important;
+    }
     .base-color-label {
+        font-size: 12px !important;
+        color: #d1d5db !important;
+        margin-bottom: 6px !important;
+    }
+    .base-installation-label {
         font-size: 12px !important;
         color: #d1d5db !important;
         margin-bottom: 6px !important;
@@ -1062,11 +1072,13 @@
 
     /* 色サンプルボタン */
     .bulk-color-sample-button {
-        padding: 4px !important;
+        padding: 6px !important;
         font-size: 12px !important;
+        min-height: 25px !important;
         border-radius: 4px !important;
-        margin-bottom: 6px !important;
-        margin-top: 0px !important;
+        width: 95% !important;
+        margin: 0 auto !important;
+        margin-bottom: 4px !important;
         background: rgba(37, 100, 235, 0.45) !important;
         backdrop-filter: blur(20px) !important;
         border: 1px solid rgba(37, 99, 235, 0.7) !important;
@@ -1074,7 +1086,20 @@
           0 0 20px rgba(37, 100, 235, 0.2),
           0 4px 15px rgba(0, 0, 0, 0.1),
           inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-        width: 95% !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+    }
+    
+    .bulk-color-sample-button:hover {
+        background: rgba(37, 100, 235, 0.6) !important;
+        border: 1px solid rgba(37, 99, 235, 0.85) !important;
+        box-shadow: 
+          0 0 18px rgba(37, 100, 235, 0.2),
+          0 4px 15px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        color: white !important;
     }
 
     /* 太さ選択セクション */
@@ -1133,8 +1158,8 @@
     }
 
     .color-selection-modal h3 {
-        font-size: 17px !important;
-        margin-bottom: 26px !important;
+        font-size: 18px !important;
+        margin-bottom: 22px !important;
         margin-top: 12px !important;
     }
 
@@ -1208,12 +1233,34 @@
 
     /* 色選択モーダルの色サンプルボタン */
     .color-selection-modal .tube-color-sample-button {
-        padding: 4px !important;
+        padding: 6px !important;
         font-size: 12px !important;
+        min-height: 25px !important;
         border-radius: 4px !important;
-        margin-bottom: 8px !important;
-        margin-top: 0px !important;
         width: 95% !important;
+        margin: 0 auto !important;
+        margin-bottom: 4px !important;
+        background: rgba(37, 100, 235, 0.45) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(37, 99, 235, 0.7) !important;
+        box-shadow: 
+          0 0 20px rgba(37, 100, 235, 0.2),
+          0 4px 15px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+    }
+    
+    .color-selection-modal .tube-color-sample-button:hover {
+        background: rgba(37, 100, 235, 0.6) !important;
+        border: 1px solid rgba(37, 99, 235, 0.85) !important;
+        box-shadow: 
+          0 0 18px rgba(37, 100, 235, 0.2),
+          0 4px 15px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        color: white !important;
     }
 
     /* 色選択モーダルのキャンセルボタン */
@@ -1243,7 +1290,7 @@
         font-weight: 600 !important;
         margin: 0 auto !important;
         margin-bottom: 20px !important;
-        margin-top: 4px !important;
+        margin-top: 8px !important;
         font-size: 12px !important;
         min-height: 25px !important;
         width: 95% !important;
