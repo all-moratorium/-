@@ -927,24 +927,39 @@
 
     /* 一括色設定モーダルのモバイル対応 */
     .bulk-modal-content {
-        width: 200px !important;
-        right: 0 !important;
+        width: 280px !important;
+        right: 0px !important;
         box-sizing: border-box !important;
-        padding:5px !important;
+        padding:10px !important;
         border-radius: 0px !important;
         height: auto !important;
-        max-height: 100% !important;
+        max-height: 100dvh !important;
         overflow-y: auto !important;
+        position: fixed !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
     }
 
     .bulk-modal-content h3 {
-        font-size: 13px !important;
-        margin-bottom: 24px !important;
+        font-size: 17px !important;
+        margin-bottom: 28px !important;
+        margin-top: 12px !important;
     }
 
     .bulk-modal-content h4 {
-        font-size: 10px !important;
+        font-size: 12px !important;
         margin-bottom: 6px !important;
+    }
+    
+    .bulk-modal-content .selected-tubes-title {
+        font-size: 10px !important;
+        margin-bottom: 0px !important;
+    }
+    
+    .bulk-modal-content .color-selection-title {
+        font-size: 13px !important;
+        margin-bottom: 12px !important;
+        margin-top: 18px !important;
     }
 
     /* 選択されたチューブの表示 */
@@ -958,13 +973,17 @@
         box-sizing: border-box !important;
         overflow: auto !important;
     }
+    .bulk-modal-content .selected-tubes-grid {
+        margin-top: 6px !important;
+    }
+    
 
 
     .bulk-modal-content .selected-tube-item {
-        padding: 2px 13px !important;
+        padding: 2px 7px !important;
         font-size: 9px !important;
         min-height: 25px !important;
-        width: 90px !important;
+        width: 78px !important;
         gap: 4px !important;
         border-radius: 4px !important;
         overflow: hidden !important;
@@ -983,6 +1002,52 @@
         margin-top: 16px !important;
         padding: 0 4px !important;
     }
+    
+    .bulk-modal-content .bulk-color-palette {
+        display: grid !important;
+        grid-template-columns: repeat(3, 85px) !important;
+        gap: 2px !important;
+        margin-bottom: 15px !important;
+        padding: 0px !important;
+        justify-content: center !important;
+    }
+    
+    .bulk-modal-content .bulk-color-item-wrapper {
+        border: 2px solid transparent !important;
+        border-radius: 8px !important;
+        padding: 8px 0px !important;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        text-align: center !important;
+    }
+    
+    .bulk-modal-content .bulk-color-item-wrapper.selected {
+        background: linear-gradient(90deg,
+          rgba(16, 185, 129, 0.2) 0%,
+          rgba(16, 185, 129, 0.08) 100%) !important;
+        border-color: rgba(16, 185, 129, 0.4) !important;
+        box-shadow:
+          0 0 20px rgba(16, 185, 129, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    .bulk-modal-content .bulk-color-item {
+        width: 26px !important;
+        height: 26px !important;
+        border-radius: 5px !important;
+        margin: 0 auto 6px auto !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    .bulk-modal-content .bulk-color-name {
+        color: #ffffff !important;
+        font-size: 8px !important;
+        line-height: 1.1 !important;
+        white-space: nowrap !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+    }
+    
 
     .bulk-modal-content button[style*="48px"] {
         width: 30px !important;
@@ -1009,12 +1074,18 @@
           0 0 20px rgba(37, 100, 235, 0.2),
           0 4px 15px rgba(0, 0, 0, 0.1),
           inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        width: 95% !important;
     }
 
     /* 太さ選択セクション */
+    .bulk-modal-content .thickness-selection-container {
+        gap: 24px !important;
+        margin-top: 12px !important;
+        margin-bottom: 13px !important;
+    }
     .bulk-modal-content .thickness-selection-container h4 {
-        font-size: 10px !important;
-        margin-bottom: 8px !important;
+        font-size: 11px !important;
+        margin-bottom: 0px !important;
     }
 
     .bulk-modal-content .thickness-buttons-container {
@@ -1044,18 +1115,17 @@
         padding: 8px !important;
         font-size: 12px !important;
         border-radius: 4px !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 15px !important;
     }
 
     /* 色選択モーダルのモバイル対応 */
     .color-selection-modal {
-        width: 200px !important;
-        min-width: 200px !important;
-        max-width: 200px !important;
+        width: 280px !important;
         right: 0 !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
         height: auto !important;
+        max-height: 100dvh !important;
         padding: 5px !important;
         border-radius: 0px !important;
         box-sizing: border-box !important;
@@ -1063,12 +1133,13 @@
     }
 
     .color-selection-modal h3 {
-        font-size: 13px !important;
-        margin-bottom: 16px !important;
+        font-size: 17px !important;
+        margin-bottom: 26px !important;
+        margin-top: 12px !important;
     }
 
     /* 色選択モーダル内のグリッド */
-    .color-selection-modal div[style*="repeat(4, 1fr)"] {
+    .color-selection-modal div[style*="repeat(3, 1fr)"] {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 4px !important;
@@ -1089,6 +1160,51 @@
         max-width: 60px !important;
     }
     
+    /* モバイル版色選択モーダルのbulk-color関連スタイル */
+    .color-selection-modal .bulk-color-palette {
+        display: grid !important;
+        grid-template-columns: repeat(3, 85px) !important;
+        gap: 5px !important;
+        margin-bottom: 15px !important;
+        padding: 0 0px !important;
+        justify-content: center !important;
+    }
+    
+    .color-selection-modal .bulk-color-item-wrapper {
+        border: 2px solid transparent !important;
+        border-radius: 8px !important;
+        padding: 8px 0px !important;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        text-align: center !important;
+    }
+    
+    .color-selection-modal .bulk-color-item-wrapper.selected {
+        background: linear-gradient(90deg,
+          rgba(16, 185, 129, 0.2) 0%,
+          rgba(16, 185, 129, 0.08) 100%) !important;
+        border-color: rgba(16, 185, 129, 0.4) !important;
+        box-shadow:
+          0 0 20px rgba(16, 185, 129, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    .color-selection-modal .bulk-color-item {
+        width: 26px !important;
+        height: 26px !important;
+        border-radius: 5px !important;
+        margin: 0 auto 6px auto !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    .color-selection-modal .bulk-color-name {
+        color: #ffffff !important;
+        font-size: 8px !important;
+        line-height: 1.1 !important;
+        white-space: nowrap !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+    }
 
     /* 色選択モーダルの色サンプルボタン */
     .color-selection-modal .tube-color-sample-button {
@@ -1097,6 +1213,7 @@
         border-radius: 4px !important;
         margin-bottom: 8px !important;
         margin-top: 0px !important;
+        width: 95% !important;
     }
 
     /* 色選択モーダルのキャンセルボタン */
@@ -1106,6 +1223,40 @@
         border-radius: 4px !important;
         margin-bottom: 8px !important;
         margin-top: 0px !important;
+    }
+    
+    /* モバイル版色選択モーダルのキャンセルボタン */
+    .color-selection-modal .close-button {
+        padding: 6px !important;
+        background: rgba(220, 38, 38, 0.6) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(220, 38, 38, 0.8) !important;
+        box-shadow: 
+          0 0 15px rgba(220, 38, 38, 0.4),
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        transform: scale(1) !important;
+        font-weight: 600 !important;
+        margin: 0 auto !important;
+        margin-bottom: 20px !important;
+        margin-top: 4px !important;
+        font-size: 12px !important;
+        min-height: 25px !important;
+        width: 95% !important;
+    }
+    
+    .color-selection-modal .close-button:hover {
+        background: rgba(220, 38, 38, 0.75) !important;
+        border: 1px solid rgba(220, 38, 38, 0.9) !important;
+        box-shadow: 
+          0 0 16px rgba(220, 38, 38, 0.35),
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
     }
 
     /* 3D進捗モーダル - モバイル専用 */
@@ -2971,6 +3122,33 @@ html, body {
     white-space: nowrap;
     font-weight: 600;
     width: 100%;
+}
+
+.color-selection-modal .bulk-color-palette {
+    display: grid !important;
+    gap: 5px !important;
+    margin-bottom: 15px !important;
+    padding: 0 0px !important;
+    justify-content: center !important;
+}
+
+.color-selection-modal .bulk-color-item-wrapper {
+    border: 2px solid transparent !important;
+    border-radius: 8px !important;
+    padding: 8px 0px !important;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: center !important;
+}
+
+.color-selection-modal .bulk-color-item-wrapper.selected {
+    background: linear-gradient(90deg,
+      rgba(16, 185, 129, 0.2) 0%,
+      rgba(16, 185, 129, 0.08) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    box-shadow:
+      0 0 20px rgba(16, 185, 129, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 .color-selection-modal .close-button {

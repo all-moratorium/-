@@ -2800,6 +2800,14 @@
         gap: 8px !important;
     }
     
+    .rectangle-generation-modal .scale-range-input {
+        width: 200px !important;
+    }
+    
+    .rectangle-generation-modal .modal-label {
+        margin-top: 12px !important;
+    }
+    
 
     .model-size-info {
         padding: 9px !important;
