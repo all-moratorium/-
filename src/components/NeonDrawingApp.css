@@ -2161,37 +2161,59 @@
 .rectangle-generate-button {
     width: 100%;
     padding: 8px;
-    background-color: #2563eb;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
     color: white;
-    border-radius: 8px;
-    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
     font-weight: 600;
     font-size: 14px;
 }
 
 .rectangle-generate-button:hover {
-    background-color: #3b82f6;
+    background: rgba(37, 100, 235, 0.6);
+    border: 1px solid rgba(37, 99, 235, 0.85);
+    box-shadow: 
+      0 0 18px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 /* 土台モーダル専用キャンセルボタン */
 .rectangle-cancel-button {
     width: 100%;
     padding: 8px;
-    background-color: #dc2626;
+    background: rgba(220, 38, 38, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 38, 38, 0.8);
+    box-shadow: 
+      0 0 15px rgba(220, 38, 38, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
     color: white;
-    border-radius: 8px;
-    border: none;
+    border-radius: 4px;
     margin-top: 2px;
     cursor: pointer;
-    transition: all 0.2s;
     font-weight: 600;
     font-size: 14px;
 }
 
 .rectangle-cancel-button:hover {
-    background-color: #ef4444;
+    background: rgba(220, 38, 38, 0.75);
+    border: 1px solid rgba(220, 38, 38, 0.9);
+    box-shadow: 
+      0 0 16px rgba(220, 38, 38, 0.35),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 .rectangle-size-marks {
@@ -2759,13 +2781,25 @@
     
     .rectangle-generation-modal .modal-content-right {
         height: auto !important;
-        width: 200px !important;
+        width: 250px !important;
         max-height: 100dvh !important;
+        padding: 5px !important;
+        padding-bottom: 0px !important;
+        padding-top: 15px !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
         position: absolute !important;
         right: 0 !important;
+
     }
+    .rectangle-cancel-button {
+        margin-bottom: 20px !important;
+    }
+    .rectangle-modal-buttons {
+        margin-top: 15px !important;
+        gap: 8px !important;
+    }
+    
 
     .model-size-info {
         padding: 9px !important;
