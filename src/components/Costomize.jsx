@@ -1919,35 +1919,6 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
 
         ctx.restore();
 
-        // スケール表示（1マス = 4cm）
-        if (showGrid) {
-            ctx.save();
-            
-            // 画面の横の真ん中（50%）、上側に表示
-            const textX = canvasWidth / 2;
-            const textY = 16;
-            
-            // モバイル判定
-            const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
-            const fontSize = isMobile ? '10px' : '14px';
-            const boxWidth = isMobile ? 60 : 80;
-            const boxHeight = isMobile ? 18 : 24;
-            const boxOffsetX = isMobile ? 30 : 40;
-            
-            // 背景の半透明ボックス（中央揃えのため少し左にずらす）
-            ctx.globalAlpha = 0.7;
-            ctx.fillStyle = neonPower ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.8)';
-            ctx.fillRect(textX - boxOffsetX, textY - 4, boxWidth, boxHeight);
-            ctx.globalAlpha = 1;
-            
-            // テキストを描画（中央揃え）
-            ctx.fillStyle = neonPower ? '#ffffff' : '#333333';
-            ctx.font = `${fontSize} Arial`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.fillText(`1マス = ${gridSize / 25}cm`, textX, textY);
-            ctx.restore();
-        }
 
         // パスと制御点の描画
         ctx.save();
@@ -2103,6 +2074,36 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         });
 
         ctx.restore();
+
+        // スケール表示（1マス = 4cm）- パスの描画後に表示
+        if (showGrid) {
+            ctx.save();
+            
+            // 画面の横の真ん中（50%）、上側に表示
+            const textX = canvasWidth / 2;
+            const textY = 16;
+            
+            // モバイル判定
+            const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
+            const fontSize = isMobile ? '10px' : '14px';
+            const boxWidth = isMobile ? 60 : 80;
+            const boxHeight = isMobile ? 18 : 24;
+            const boxOffsetX = isMobile ? 30 : 40;
+            
+            // 背景の半透明ボックス（中央揃えのため少し左にずらす）
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = neonPower ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.8)';
+            ctx.fillRect(textX - boxOffsetX, textY - 4, boxWidth, boxHeight);
+            ctx.globalAlpha = 1;
+            
+            // テキストを描画（中央揃え）
+            ctx.fillStyle = neonPower ? '#ffffff' : '#333333';
+            ctx.font = `${fontSize} Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`1マス = ${gridSize / 25}cm`, textX, textY);
+            ctx.restore();
+        }
 
         // Canvas画像の送信は3Dモデル生成時のみに移動
 

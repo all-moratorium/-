@@ -1895,7 +1895,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     
                     <div className="product-container-vertical">
                       
-                      <img className="product-image" src={customizeCanvasImageDataURL || neonPreviewImageDataURL} alt="プレビュー" />
+                      {(customizeCanvasImageDataURL || neonPreviewImageDataURL) && (
+                        <img className="product-image" src={customizeCanvasImageDataURL || neonPreviewImageDataURL} alt="プレビュー" />
+                      )}
                       
                       <div className="product-specs-list">
                         {(() => {

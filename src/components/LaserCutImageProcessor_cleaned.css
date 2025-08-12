@@ -1745,17 +1745,12 @@
 .product-image {
   text-align: center;
   margin-bottom: 25px;
-  margin-top: 5%;
-  width: 80%;
-  min-width: 390px;
-  min-height: 390px;
+  margin-top: 3%;
+  width: 100%;
+  max-width: 800px;
   height: auto;
   object-fit: contain;
   border-radius: 12px;
-  box-shadow: 
-    0 0 15px rgba(235, 235, 235, 0.3),
-    0 4px 15px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transition: all 0.3s ease;
 }
 
@@ -1798,9 +1793,12 @@
   background: linear-gradient(145deg, #0a0a0a, #141414);
   border: 1px solid #333;
   border-radius: 10px;
+  width: 80%;
   padding: 20px;
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .delivery-info h4 {
@@ -1867,7 +1865,7 @@
   padding: 12px 16px;
   background: #0f0f0f;
   border: 2px solid #333;
-  border-radius: 10px;
+  border-radius: 8px;
   color: #ffffff;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -2841,6 +2839,7 @@ canvas {
 
   .product-container-vertical {
     padding: 20px;
+    border-radius: 12px !important;
   }
 
   .spec-item-row {
@@ -2853,6 +2852,7 @@ canvas {
 
  .price-summary {
     padding: 20px;
+    border-radius: 15px !important;
     max-width: 100%;
     width: 100% !important;
     min-width: 280px !important;
@@ -2861,9 +2861,10 @@ canvas {
     box-sizing: border-box;
   }
 
+
   /* 商品情報セクション - ヘッダー重複回避 */
   .product-info-container {
-    margin-top: 70px !important;
+    margin-top: 55px !important;
     padding: 25px !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -2872,6 +2873,7 @@ canvas {
   .product-form-section {
     padding: 10px !important;
     max-width: 100%;
+    border-radius: 15px !important;
     min-width: 200px !important;
     width: 100% !important;
     margin: 0 auto;
@@ -2880,17 +2882,13 @@ canvas {
   .product-image {
     text-align: center;
     margin-bottom: 25px;
-    margin-top: 2.5%;
-    width: 95%;
+    margin-top: 0;
+    width: 100%;
     min-width: 0px;
     min-height: 0px;
     height: auto;
     object-fit: contain;
     border-radius: 12px;
-    box-shadow: 
-      0 0 15px rgba(235, 235, 235, 0.3),
-      0 4px 15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
     transition: all 0.3s ease;
   }
 
@@ -2911,7 +2909,7 @@ canvas {
   }
   
   .product-header {
-    
+    margin-bottom: 30px !important;
   }
   
   .product-header h1 {
@@ -2935,7 +2933,8 @@ canvas {
   }
   
   .product-specs-title {
-    
+    margin-bottom: 15px;
+    margin-top: 5px;
   }
   
   .spec-item-row {
@@ -2952,6 +2951,13 @@ canvas {
   
   .price-summary {
     
+  }
+  .delivery-info {
+    max-width: 500px !important;
+  }
+  .delivery-info h4 {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
   }
   
   .estimate-button {
@@ -2973,6 +2979,13 @@ canvas {
   .product-estimate-container {
     grid-template-columns: 1fr minmax(280px, 350px);
     gap: 20px;
+  }
+
+}
+@media screen and (min-width: 601px) and (max-width: 880px) {
+  .price-summary h3 {
+    margin-bottom: 10px !important;
+    margin-top: 10px !important;
   }
 }
 
@@ -3014,6 +3027,7 @@ canvas {
   
   .product-header {
     margin-bottom: 20px !important;
+    margin-top: 50px !important;
   }
   
   .product-header h1 {

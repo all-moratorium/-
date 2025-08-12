@@ -1324,9 +1324,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       const height = window.innerHeight;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(width, height);
       if (composerRef.current) {
-        composerRef.current.bloom.setSize(width * 3.0, height * 3.0);
+        composerRef.current.bloom.setSize(width * 2.0, height * 2.0);
         composerRef.current.final.setSize(width, height);
       }
     };
