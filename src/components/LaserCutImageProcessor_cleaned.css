@@ -2848,6 +2848,7 @@ canvas {
     max-width: 100%;
     width: 100% !important;
     min-width: 300px !important;
+    max-width: 430px;
     margin: 0 auto;
     box-sizing: border-box;
   }
@@ -2871,8 +2872,8 @@ canvas {
   .product-image {
     text-align: center;
     margin-bottom: 25px;
-    margin-top: 5%;
-    width: 90%;
+    margin-top: 2.5%;
+    width: 95%;
     min-width: 0px;
     min-height: 0px;
     height: auto;
@@ -2899,6 +2900,53 @@ canvas {
   .product-form-h2 {
     margin-bottom: 15px !important;
     font-size: 1.3rem !important;
+  }
+  
+  .product-header {
+    
+  }
+  
+  .product-header h1 {
+    
+  }
+  
+  .product-header p {
+    
+  }
+  
+  .product-estimate-container {
+    
+  }
+  
+  .product-container-vertical {
+    
+  }
+  
+  .product-specs-list {
+    
+  }
+  
+  .product-specs-title {
+    
+  }
+  
+  .spec-item-row {
+    
+  }
+  
+  .spec-label {
+    
+  }
+  
+  .spec-value {
+    
+  }
+  
+  .price-summary {
+    
+  }
+  
+  .estimate-button {
     
   }
 
