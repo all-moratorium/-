@@ -2847,7 +2847,7 @@ canvas {
     padding: 20px;
     max-width: 100%;
     width: 100% !important;
-    min-width: 300px !important;
+    min-width: 280px !important;
     max-width: 430px;
     margin: 0 auto;
     box-sizing: border-box;
@@ -2864,7 +2864,7 @@ canvas {
   .product-form-section {
     padding: 10px !important;
     max-width: 100%;
-    min-width: 350px !important;
+    min-width: 200px !important;
     width: 100% !important;
     margin: 0 auto;
     box-sizing: border-box;
@@ -2981,13 +2981,18 @@ canvas {
   }
 
   .product-form-section {
-    padding: 10px !important;
-    border-radius: 8px !important;
+    padding: 10px 15px !important;
+    border-radius: 12px !important;
   }
   
   .product-image {
     width: 100% !important;
     margin-top: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    min-width: 100px !important;
+    margin-bottom: 0px !important;
+
     
   }
   
@@ -3000,7 +3005,7 @@ canvas {
   }
   
   .product-header {
-    
+    margin-bottom: 20px !important;
   }
   
   .product-header h1 {
@@ -3009,7 +3014,7 @@ canvas {
   }
   
   .product-header p {
-    font-size: 11px !important;
+    font-size: 3vw !important;
     white-space: nowrap !important;
   }
   
@@ -3020,6 +3025,7 @@ canvas {
   .product-container-vertical {
     padding: 10px !important;
     border-radius: 8px !important;
+    margin-bottom: 12px !important;
   }
   
   .product-specs-list {
@@ -3037,15 +3043,35 @@ canvas {
   }
   
   .spec-label {
-    
+    font-size: 13px !important;
+    white-space: nowrap !important;
   }
   
   .spec-value {
-    
+    margin-left: 10px !important;
+    padding-left: 10px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+  .info-input {
+    border-radius: 8px !important;
   }
   
   .price-summary {
-    
+    padding: 5px 20px;
+    max-width: 100%;
+    width: 100% !important;
+    min-width: 280px !important;
+    max-width: 430px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  .price-summary h3 {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  .price-item {
+    font-size: 16px !important;
   }
   
   .estimate-button {
@@ -3053,6 +3079,28 @@ canvas {
   }
 
   .price-item-total {
+    
+  }
+  
+  .delivery-info {
+    width: 80% !important;
+    margin: 0 auto !important;
+    margin-bottom: 20px !important;
+    margin-top: 20px !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+  }
+  
+  .delivery-info h4 {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .delivery-timeline {
+    font-size: 13px !important;
+  }
+  
+  .timeline-item {
     
   }
 }

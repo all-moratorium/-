@@ -1988,7 +1988,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                       <label htmlFor="message">ご要望・メッセージ</label>
                       <textarea 
                         id="message" 
-                        placeholder="色の指定、特別な仕上げ、その他ご要望がございましたらお書きください。" 
+                        placeholder="色の指定、特別な仕上げ、その他ご要望がございましたらこちらへお書きください。" 
                         rows="6"
                       />
                     </div>
