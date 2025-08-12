@@ -692,11 +692,7 @@
     z-index: 1000;
 }
 
-.text-generator-canvas-download-button:hover {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-    background: #000000;
-    border-color: #ffffff;
-}
+
 
 /* Mobile adjustments */
 @media screen and (max-width: 1280px), (pointer: coarse) {
@@ -706,10 +702,10 @@
         background: #000000;
         border: 2px solid #ffffff;
         color: #ffffff;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         transform: translateX(-50%);
         border-radius: 4px;
         padding: 6px 6px !important;
+        box-shadow: none;
         font-size: 8px !important;
     }
 
