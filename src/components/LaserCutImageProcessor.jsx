@@ -2016,8 +2016,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                       <span>小計</span>
                       <span id="subtotal">{'---'}</span>
                     </div>
-                    <div className="price-item total" style={{fontSize: '1.5rem', color: '#00ff80'}}>
-                      <span>合計金額</span>
+                    <div className="price-item total" style={{fontSize: '1.5rem', color: '#10b981', textShadow: '0 0 5px rgba(16, 185, 129, 0.6)'}}>
+                      <span>予想見積価格</span>
                       <span id="total-price">{'---'}</span>
                     </div>
                     <button className="estimate-button" onClick={handleAddToCart}>

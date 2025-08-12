@@ -1709,6 +1709,7 @@
   font-size: 2.5rem;
   margin-bottom: 10px;
   color: #10b981;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6)
 }
 
 .product-header p {
@@ -1797,6 +1798,7 @@
   color: #10b981;
   margin-bottom: 15px;
   font-size: 1.1rem;
+  text-shadow: 0 0 5px rgba(16, 185, 129, 0.6);
 }
 
 .delivery-timeline {
@@ -2000,6 +2002,7 @@
   margin-bottom: 20px;
   color: #10b981;
   text-align: center;
+  text-shadow: 0 0 5px rgba(16, 185, 129, 0.6);
 }
 
 .price-item {
@@ -2096,6 +2099,8 @@
   margin-bottom: 20px;
   margin-top: 0px;
   color: #10b981;
+  text-shadow: 0 0 5px rgba(16, 185, 129, 0.6);
+
 }
 
 /* Price Item Total Styling */
@@ -2126,6 +2131,7 @@
   font-size: 1.8rem;
   margin-bottom: 15px;
   color: #10b981;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
 }
 
 .contact-section p {
