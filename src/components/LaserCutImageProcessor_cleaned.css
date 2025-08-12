@@ -1863,7 +1863,7 @@
 
 .form-group select,
 .form-group input {
-  width: 100%;
+  width: 70%;
   padding: 12px 16px;
   background: #0f0f0f;
   border: 2px solid #333;
@@ -1894,6 +1894,7 @@
   min-height: 80px;
   font-family: inherit;
   box-sizing: border-box;
+  resize: none;
 }
 
 .form-group textarea:focus {
@@ -2044,7 +2045,7 @@
   background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
   backdrop-filter: blur(10px);
   color: rgb(255, 255, 255);
-  font-size: 1.1rem;
+  font-size: 1em;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2947,7 +2948,7 @@ canvas {
   }
   
   .estimate-button {
-    
+    font-size: 14px !important;
   }
 
   .price-item-total {
@@ -2977,7 +2978,7 @@ canvas {
 
 @media screen and (max-width: 600px) {
   .product-info-container {
-    padding: 0px 10px !important;
+    padding: 0px 15px !important;
   }
 
   .product-form-section {
@@ -3055,14 +3056,14 @@ canvas {
   }
   .info-input {
     border-radius: 8px !important;
+    
   }
   
   .price-summary {
-    padding: 5px 20px;
-    max-width: 100%;
+    padding: 5px 20px 10px 20px !important;
     width: 100% !important;
     min-width: 280px !important;
-    max-width: 430px;
+    max-width: 400px;
     margin: 0 auto;
     box-sizing: border-box;
   }
@@ -3101,6 +3102,58 @@ canvas {
   }
   
   .timeline-item {
+    
+  }
+  
+  .info-input {
+    
+  }
+  
+  .form-group {
+    
+  }
+  
+  .form-group label {
+    
+  }
+  
+  .form-group select {
+    
+  }
+  
+  .form-group input {
+    border-radius: 8px !important;
+  }
+  
+  .form-group textarea {
+    height: 120px !important;
+    border-radius: 8px !important;
+    
+  }
+  
+  .form-group select:focus {
+    
+  }
+  
+  .form-group input:focus {
+    
+  }
+  
+  .form-group textarea:focus {
+    
+  }
+  
+  .form-group textarea::placeholder {
+    
+  }
+  
+  .quantity-display {
+    height: 50px !important;
+    width: 60% !important;
+    
+  }
+  
+  .quantity-display:focus {
     
   }
 }
