@@ -2238,7 +2238,7 @@ canvas {
     top: 0;
     left: 0;
     right: 0;
-    height: 60px !important;
+    height: 50px !important;
     background-color: #0a0a0a;
     color: white;
     z-index: 2000;
@@ -2252,13 +2252,13 @@ canvas {
 
   /* Mobile Menu Button - Only show on mobile */
   .mobile-menu-button {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background: transparent;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0);
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2272,12 +2272,15 @@ canvas {
 
   /* Mobile Header Logo Text */
   .mobile-header-logo {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
-    color: #FFFF00;
-    text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
-    margin-left: 15px;
+    color: #10b981;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
     white-space: nowrap;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   /* Mobile Header Minimal Mode - Only show toggle button */
@@ -2303,7 +2306,7 @@ canvas {
   .mobile-header.mobile-header-minimal .mobile-menu-button {
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0);
     pointer-events: auto;
   }
 
@@ -2379,7 +2382,7 @@ canvas {
 
   /* Mobile Content */
   .mobile-content {
-    padding-top: 60px;
+    padding-top: 50px;
     min-height: 100dvh;
     overflow-y: auto;
     width: 100%;
@@ -2393,8 +2396,8 @@ canvas {
     text-align: center;
     font-size: 6vw;
     font-weight: bold;
-    color: #FFFF00;
-    text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    color: #10b981;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
     margin: 20px 0;
     padding: 0 15px;
     white-space: nowrap;
@@ -2469,14 +2472,19 @@ canvas {
     width: calc(100% - 30px);
     max-width: 650px;
     height: 50px;
-    background: #FFFF00;
-    color: black;
-    border: none;
+    border: 1px solid rgba(16, 185, 129, 0.7);
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0px 15px 20px 15px;
+    background: transparent;
+    background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
+    backdrop-filter: blur(10px);
+    color: rgb(255, 255, 255);
     cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0px 15px 20px 15px;
+    box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 50px 0px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
   }
 
   .mobile-switch-row {
@@ -2639,10 +2647,10 @@ canvas {
   /* Hide default sidebar on mobile and reposition */
   .sidebar {
     position: fixed !important;
-    top: 60px;
+    top: 50px;
     left: -260px;
     width: 250px !important;
-    height: calc(100dvh - 60px);
+    height: calc(100dvh - 50px);
     z-index: 1500;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     overflow-y: auto !important;
@@ -2856,7 +2864,7 @@ canvas {
 
   /* 商品情報セクション - ヘッダー重複回避 */
   .product-info-container {
-    margin-top: 80px !important;
+    margin-top: 70px !important;
     padding: 25px !important;
     width: 100% !important;
     box-sizing: border-box !important;
