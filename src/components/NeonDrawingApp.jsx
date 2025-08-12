@@ -172,7 +172,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [lastPanX, setLastPanX] = useState(0);
     const [lastPanY, setLastPanY] = useState(0);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
-    const [showPoints, setShowPoints] = useState(true); // 点の表示/非表示
+    const [showPoints, setShowPoints] = useState(false); // 点の表示/非表示
     
     // タッチ操作用のstate
     const [lastTouchDistance, setLastTouchDistance] = useState(0);
@@ -1780,6 +1780,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }];
                         setHistory(initialHistory);
                         setHistoryIndex(0);
+                        
+                        // ファイル読み込み時は点を非表示にする
+                        setShowPoints(false);
                         
                         saveToLocalStorage();
                         alert('色 / 仕様のカスタマイズファイルを読み込みました');
