@@ -759,7 +759,9 @@
     .base-installation-label {
         font-size: 12px !important;
         color: #d1d5db !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
+        padding-top: 8px !important;
+        display: block !important;
     }
 
     .customize-reset-button {

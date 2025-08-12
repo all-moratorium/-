@@ -3081,6 +3081,16 @@
         white-space: nowrap !important;
     }
 
+    .mobile-function-btn.points-toggle:hover {
+        background: rgba(16, 185, 129, 0.6) !important;
+        border: 1px solid rgba(16, 185, 129, 1.0) !important;
+        box-shadow: 
+          0 0 20px rgba(16, 185, 129, 0.2),
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        color: rgb(255, 255, 255) !important;
+    }
+
     .mobile-function-btn.points-toggle.button-active {
         background: rgba(16, 185, 129, 0.6) !important;
         border: 1px solid rgba(16, 185, 129, 1.0) !important;

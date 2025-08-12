@@ -287,7 +287,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         // フォント設定 - フォント名からフォントファミリーを取得
         const fontFamily = getFontFamily(selectedFont);
         ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.strokeStyle = '#ffff00';
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = strokeWidth;
         
         // 文字間隔の設定

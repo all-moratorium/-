@@ -544,12 +544,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         tubeColor = new THREE.Color(svgColor);
       } catch (e) {
         console.warn('Invalid SVG color, falling back to default.', svgColor);
-        const colors = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
-        tubeColor = new THREE.Color(colors[materialIndex % colors.length]);
+        tubeColor = new THREE.Color('#ffffff');
       }
     } else {
-      const colors = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
-      tubeColor = new THREE.Color(colors[materialIndex % colors.length]);
+      tubeColor = new THREE.Color('#ffffff');
     }
 
     // クリッピングプレーン：チューブを全部切るテスト（Z=20mm以下をカット）
@@ -1557,7 +1555,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     }
   };
 
-  const colorPresets = ['#ff0088', '#00ff88', '#0088ff', '#ffff00', '#ff4400'];
+  const colorPresets = ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'];
 
   // neonSvgDataが変更された時に自動的にSVGをロード
   useEffect(() => {

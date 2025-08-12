@@ -964,7 +964,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const b = parseInt(match[3]).toString(16).padStart(2, '0');
             return `#${r}${g}${b}`;
         }
-        return '#FFFF00'; // デフォルト色
+        return '#FFFFFF'; // デフォルト色
     };
 
     // 履歴を保存する関数
@@ -1353,7 +1353,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 gridOpacity: 0.3,
                 colors: {
                     strokePoint: '#ffffff',
-                    strokeLine: '#ffff00',
+                    strokeLine: '#ffffff',
                     fillPoint: '#34d399',
                     fillArea: 'rgba(110, 110, 110, 0.5)',
                     fillBorder: '#000000',
@@ -4447,7 +4447,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         onClick={() => {
                             setColors({
                                 strokePoint: '#ffffff',
-                                strokeLine: '#ffff00',
+                                strokeLine: '#ffffff',
                                 fillPoint: '#34d399',
                                 fillArea: 'rgba(110, 110, 110, 0.5)',
                                 fillBorder: '#000000',

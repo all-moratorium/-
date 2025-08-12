@@ -2853,7 +2853,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                         const resetThickness = {};
                                         neonPaths.forEach((pathObj, index) => {
                                             if (pathObj.mode === 'stroke') {
-                                                resetColors[index] = '#ffff00';
+                                                resetColors[index] = '#ffffff';
                                                 resetThickness[index] = 15;
                                             } else {
                                                 resetColors[index] = '#000000';
