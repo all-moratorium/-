@@ -2301,10 +2301,12 @@ canvas {
   }
 
   .mobile-header.mobile-header-minimal .mobile-menu-button {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(10, 10, 10,1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0);
     pointer-events: auto;
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+
   }
 
   /* Hide toggle button when minimal header sidebar is open */
