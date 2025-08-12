@@ -2961,7 +2961,7 @@ canvas {
 }
 
 /* デスクトップでの画面幅調整 */
-@media screen and (min-width: 900px) and (max-width: 1200px) {
+@media screen and (min-width: 880px) and (max-width: 1200px) {
   .product-estimate-container {
     grid-template-columns: 1fr minmax(280px, 350px);
     gap: 20px;
@@ -2972,6 +2972,88 @@ canvas {
   .product-estimate-container {
     grid-template-columns: 1fr minmax(320px, 380px);
     gap: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .product-info-container {
+    padding: 0px 10px !important;
+  }
+
+  .product-form-section {
+    padding: 10px !important;
+    border-radius: 8px !important;
+  }
+  
+  .product-image {
+    width: 100% !important;
+    margin-top: 0 !important;
+    
+  }
+  
+  .product-info-feature-card {
+    
+  }
+  
+  .product-form-h2 {
+    
+  }
+  
+  .product-header {
+    
+  }
+  
+  .product-header h1 {
+    font-size:28px !important;
+    margin-top: 5px !important;
+  }
+  
+  .product-header p {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+  
+  .product-estimate-container {
+    
+  }
+  
+  .product-container-vertical {
+    padding: 10px !important;
+    border-radius: 8px !important;
+  }
+  
+  .product-specs-list {
+    
+  }
+  
+  .product-specs-title {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+    margin-top: 0px !important;
+  }
+  
+  .spec-item-row {
+    
+  }
+  
+  .spec-label {
+    
+  }
+  
+  .spec-value {
+    
+  }
+  
+  .price-summary {
+    
+  }
+  
+  .estimate-button {
+    
+  }
+
+  .price-item-total {
+    
   }
 }
 
