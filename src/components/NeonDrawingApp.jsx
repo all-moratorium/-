@@ -3114,96 +3114,44 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         };
     };
 
-    const handleTouchStart = useCallback((e) => {
+    const handlePointerDown = useCallback((e) => {
+        e.preventDefault();
         
-        if (e.touches.length === 1) {
-            // 1本指: 左クリック相当
-            setIsPanning(false); // 1本指の場合はパンモードを無効化
-            const touch = e.touches[0];
-            const mouseEvent = {
-                button: 0,
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                preventDefault: () => {}
-            };
-            handleMouseDown(mouseEvent);
-        } else if (e.touches.length === 2) {
-            // 2本指: パン・ズーム開始
-            const distance = getTouchDistance(e.touches);
-            const center = getTouchCenter(e.touches);
-            
-            setLastTouchDistance(distance);
-            setTouchStartScale(scale);
-            setLastTouchCenter(center);
-            setIsPanning(true);
+        if (e.pointerType === 'touch' && e.isPrimary === false) {
+            // 2本目以降のタッチ（マルチタッチ処理は後で実装）
+            return;
         }
-    }, [scale, handleMouseDown]);
+        
+        // マウス、ペン、プライマリタッチを統一処理
+        const pointerEvent = {
+            button: e.button,
+            clientX: e.clientX,
+            clientY: e.clientY,
+            preventDefault: () => {}
+        };
+        handleMouseDown(pointerEvent);
+    }, [handleMouseDown]);
 
-    const handleTouchMove = useCallback((e) => {
+    const handlePointerMove = useCallback((e) => {
+        e.preventDefault();
         
-        if (e.touches.length === 2 && isPanning) {
-            const distance = getTouchDistance(e.touches);
-            const center = getTouchCenter(e.touches);
-            
-            // ピンチズーム
-            if (lastTouchDistance > 0) {
-                const scaleChange = distance / lastTouchDistance;
-                let newScale = touchStartScale * scaleChange;
-                const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
-                const minScale = isMobile ? 0.1 : 0.18; // スマホは0.05倍、PCは0.18倍まで縮小可能
-                newScale = Math.max(minScale, Math.min(newScale, 20));
-                
-                const canvas = canvasRef.current;
-                const rect = canvas.getBoundingClientRect();
-                const zoomCenterX = center.x - rect.left;
-                const zoomCenterY = center.y - rect.top;
-                
-                const scaleRatio = newScale / scale;
-                const newOffsetX = zoomCenterX - (zoomCenterX - offsetX) * scaleRatio;
-                const newOffsetY = zoomCenterY - (zoomCenterY - offsetY) * scaleRatio;
-                
-                setScale(newScale);
-                setOffsetX(newOffsetX);
-                setOffsetY(newOffsetY);
-            }
-            
-            // パン移動
-            if (lastTouchCenter.x !== 0 && lastTouchCenter.y !== 0) {
-                const deltaX = center.x - lastTouchCenter.x;
-                const deltaY = center.y - lastTouchCenter.y;
-                
-                setOffsetX(prev => prev + deltaX);
-                setOffsetY(prev => prev + deltaY);
-            }
-            
-            setLastTouchCenter(center);
-        } else if (e.touches.length === 1 && !isPanning) {
-            // 1本指: マウスムーブ相当
-            const touch = e.touches[0];
-            const mouseEvent = {
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                preventDefault: () => {}
-            };
-            handleMouseMove(mouseEvent);
-        }
-    }, [isPanning, lastTouchDistance, touchStartScale, lastTouchCenter, scale, offsetX, offsetY, handleMouseMove]);
+        // マウス、ペン、プライマリタッチを統一処理
+        const pointerEvent = {
+            clientX: e.clientX,
+            clientY: e.clientY,
+            preventDefault: () => {}
+        };
+        handleMouseMove(pointerEvent);
+    }, [handleMouseMove]);
 
-    const handleTouchEnd = useCallback((e) => {
+    const handlePointerUp = useCallback((e) => {
+        e.preventDefault();
         
-        if (e.touches.length < 2) {
-            setIsPanning(false);
-            setLastTouchDistance(0);
-            setLastTouchCenter({ x: 0, y: 0 });
-        }
-        
-        if (e.touches.length === 0) {
-            // 全タッチ終了: マウスアップ相当
-            const mouseEvent = {
-                preventDefault: () => {}
-            };
-            handleMouseUp(mouseEvent);
-        }
+        // マウス、ペン、プライマリタッチを統一処理
+        const pointerEvent = {
+            preventDefault: () => {}
+        };
+        handleMouseUp(pointerEvent);
     }, [handleMouseUp]);
 
     const handleMouseLeave = useCallback(() => {
@@ -3212,6 +3160,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setIsPanning(false);
         setActivePoint(null);
     }, []);
+
+    const handlePointerLeave = useCallback((e) => {
+        e.preventDefault();
+        
+        // マウスリーブと同じ処理
+        handleMouseLeave();
+    }, [handleMouseLeave]);
 
     // ビューをリセット（ズームとパンを初期値に戻す）
     const resetView = useCallback(() => {
@@ -3525,14 +3480,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     className={`main-canvas ${getCursorClass()}`}
                     onClick={handleMouseClick}
                     onWheel={handleWheel}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
                     onContextMenu={(e) => e.preventDefault()} // 右クリックメニューを無効化
-                    onMouseLeave={handleMouseLeave}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
+                    onPointerLeave={handlePointerLeave}
                     style={{ touchAction: 'none' }}
                 />
                 
