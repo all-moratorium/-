@@ -488,6 +488,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
+  const [can3DPreview, setCan3DPreview] = useState(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
   
@@ -802,6 +803,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   useEffect(() => {
     const handleOrientationChange = () => {
       setIsLandscape(window.innerWidth > window.innerHeight);
+      setCan3DPreview(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
     };
 
     window.addEventListener('resize', handleOrientationChange);
@@ -816,9 +818,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // 3Dプレビューのマウント/アンマウント処理（モバイル・デスクトップ共通）
   useEffect(() => {
     if (isMobile && currentPage === 'neonSvg3dPreview') {
-      // モバイルで3Dプレビューページに遷移した時（横画面の場合のみ）
-      if (neonSvgData && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible && isLandscape) {
-        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合かつ横画面の場合のみ再構築
+      // モバイルで3Dプレビューページに遷移した時（横画面または横幅768px以上の場合）
+      if (neonSvgData && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible && can3DPreview) {
+        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合かつ3D表示可能な場合のみ再構築
         setIsRemountingModel(true);
         setIsRealTime3DProgressVisible(true);
         setIsMobile3DPreviewMounted(true);
@@ -846,7 +848,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
       setIsRealTime3DProgressVisible(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData, isLandscape]);
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData, can3DPreview]);
 
   // モバイルデバイス検出
   useEffect(() => {
@@ -2250,7 +2252,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       <div className="layout-container">
         {/* Mobile Header */}
         <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
-          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && (
+          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && (
             <div className="rotation-message">
               <div className="rotation-icon"></div>
               <div className="rotation-text">横画面でご利用ください</div>
