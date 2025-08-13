@@ -1081,6 +1081,23 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     renderer.shadowMap.enabled = false;
     renderer.localClippingEnabled = true; // クリッピングプレーンを有効化
     rendererRef.current = renderer;
+    
+    // WebGLコンテキストロスト/復旧の処理を追加
+    renderer.domElement.addEventListener('webglcontextlost', (event) => {
+      console.warn('WebGL context lost, preventing default behavior');
+      event.preventDefault();
+    });
+    
+    renderer.domElement.addEventListener('webglcontextrestored', () => {
+      console.log('WebGL context restored, reinitializing');
+      // コンテキスト復旧時に3Dシーンを再初期化
+      setTimeout(() => {
+        if (isMountedRef.current && neonSvgData) {
+          handleResize();
+        }
+      }, 100);
+    });
+    
     mountRef.current.appendChild(renderer.domElement);
     
     // 実際のDOM追加完了を待って進捗更新
