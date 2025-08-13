@@ -484,6 +484,7 @@
   font-size: 14px;
   margin-right: 8px;
   flex-shrink: 0;
+  margin-top: 6px;
 }
 
 /* 小さいテキスト */
@@ -817,8 +818,8 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    margin: 15px auto;
-    margin-top: -7px;
+    margin: 19px auto;
+    margin-top: -1px;
 }
 
 .sample-load-btn:hover {
@@ -845,7 +846,7 @@
   text-align: center;
   line-height: 1.6;
   font-size: 11px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   white-space: nowrap;
 }
 

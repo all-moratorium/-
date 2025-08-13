@@ -149,7 +149,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   それぞれのページには「i」マークの<br />
                   ガイドボタンが配置されています。<br />
                   <br />
-                  こちらをクリックすることでガイドを<br />
+                  こちらをクリックすることでいつでも<br />ガイドを
                   開くことができます。
                 </div>
               </div>
@@ -161,7 +161,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   <div className="image-placeholder">スマホスクリーンショット</div>
                 </div>
                 <div className="guide-info-text">
-                  検索バーを非表示にして全画面表示したい<br />場合は、ブラウザの「ホーム画面に追加」<br />機能をご利用ください。
+                検索バーを非表示にして全画面表示したい<br />場合は、ブラウザの「ホーム画面に追加」<br />機能をご利用ください。
                 </div>
               </div>
 
@@ -193,23 +193,18 @@ const GuideModal = ({ isOpen, onClose }) => {
 
               <div className="guide-info-section sample-data-section">
                 <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
-                <label className="sample-load-btn">
+                <div className="sample-load-btn">
                   📤 読み込む
-                  <input
-                    type="file"
-                    accept=".json"
-                    style={{display: 'none'}}
-                  />
-                </label>
+                </div>
                 <div className="sample-description-text">
-                  ネオン下絵、色 / 仕様のカスタマイズページの右サイドバーに<br />それぞれ「読み込む」ボタンが配置されています
+                  ネオン下絵、色 / 仕様のカスタマイズページの右サイドバー<br />にそれぞれ「読み込む」ボタンが配置されています
                 </div>
                 <div className="guide-info-text">
                   <div className="list-item">
                     <span className="triangle-icon">▶</span> ネオン下絵で読み込むと、下絵のデータが<br />読み込まれます
                   </div>
                   <div className="list-item">
-                    <span className="triangle-icon">▶</span> 色仕様のカスタマイズで読み込むと、色仕様のデータ<br />そしてネオン下絵に下絵のデータが読み込まれます
+                    <span className="triangle-icon">▶</span> 色 / 仕様のカスタマイズで読み込むと、色仕様のデータ<br />そしてネオン下絵に下絵のデータが読み込まれます
                   </div>
                   <div className="list-item">
                     <span className="triangle-icon">▶</span> サンプルデータは色仕様のカスタマイズデータ<br />ですので、どちらでも読み込み可能です
