@@ -3599,7 +3599,7 @@ canvas {
   background-color: #000000;
   padding:0;
   height: 100dvh;
-  border-radius: 12px;
+  border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -3629,7 +3629,6 @@ canvas {
   white-space: nowrap;
   color: #ccc;
   max-width: 100%;
-  width: 480px;
 }
 
 .preview3d-mobile-empty-button {
