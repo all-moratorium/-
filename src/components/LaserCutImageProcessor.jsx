@@ -802,8 +802,35 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   // 画面向きの変更を検出
   useEffect(() => {
     const handleOrientationChange = () => {
-      setIsLandscape(window.innerWidth > window.innerHeight);
-      setCan3DPreview(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
+      const previousLandscape = isLandscape;
+      const newLandscape = window.innerWidth > window.innerHeight;
+      const isTablet = window.innerWidth >= 768;
+      
+      setIsLandscape(newLandscape);
+      setCan3DPreview(newLandscape || isTablet);
+      
+      // 3Dプレビューページが開いている時のみリマウント処理
+      if (isMobile && currentPage === 'neonSvg3dPreview' && neonSvgData) {
+        let shouldRemount = false;
+        
+        if (isTablet) {
+          // タブレット: 縦→横、横→縦どちらでもリマウント
+          shouldRemount = previousLandscape !== newLandscape;
+        } else {
+          // スマホ: 縦→横の時のみリマウント
+          shouldRemount = !previousLandscape && newLandscape;
+        }
+        
+        if (shouldRemount && isMobile3DPreviewMounted) {
+          // 3Dプレビューを一度アンマウントしてから再マウント
+          setIsMobile3DPreviewMounted(false);
+          setTimeout(() => {
+            setIsRemountingModel(true);
+            setIsRealTime3DProgressVisible(true);
+            setIsMobile3DPreviewMounted(true);
+          }, 100);
+        }
+      }
     };
 
     window.addEventListener('resize', handleOrientationChange);
@@ -813,7 +840,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('resize', handleOrientationChange);
       window.removeEventListener('orientationchange', handleOrientationChange);
     };
-  }, []);
+  }, [isLandscape, isMobile, currentPage, neonSvgData, isMobile3DPreviewMounted]);
 
   // 3Dプレビューのマウント/アンマウント処理（モバイル・デスクトップ共通）
   useEffect(() => {
