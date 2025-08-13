@@ -1332,7 +1332,13 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       }
     };
 
+    const handleOrientationChange = () => {
+      // 実機での画面向き変更時にWebGLコンテキストを適切に更新
+      setTimeout(handleResize, 100); // orientationchange後に少し遅延してリサイズ処理
+    };
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
 
     // Cleanup
     return () => {
@@ -1343,6 +1349,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       }
       
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
       isMountedRef.current = false;
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
