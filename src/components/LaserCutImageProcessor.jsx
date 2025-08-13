@@ -2188,7 +2188,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   maxWidth: '100%',
                   width: '480px'
                 }}>
-                  3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
+                  このページを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
                 </div>
                 <button 
                   onClick={() => setCurrentPage('customize')}

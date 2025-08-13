@@ -24,7 +24,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     const [thickness, setThickness] = useState(initialState?.thickness || 20);
     const glowIntensity = 50; // 固定値
     // 点滅エフェクトを削除
-    const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : (window.innerWidth > 768));
+    const [sidebarVisible, setSidebarVisible] = useState(initialState?.sidebarVisible !== undefined ? initialState.sidebarVisible : false);
     const [neonPower, setNeonPower] = useState(initialState?.neonPower !== undefined ? initialState.neonPower : true); // ネオンON/OFF状態
     const [backgroundColor, setBackgroundColor] = useState(initialState?.backgroundColor || '#191919'); // RGB(25,25,25)
     const [backgroundColorOff, setBackgroundColorOff] = useState(initialState?.backgroundColorOff || '#dcdcdc'); // RGB(220,220,220)
@@ -514,7 +514,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             // 画面サイズに対してモデルが適切に収まるスケールを計算
                             const screenWidth = window.innerWidth;
                             const screenHeight = window.innerHeight;
-                            const isMobile = window.innerWidth <= 768;
+                            const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
                             const padding = isMobile ? 5 : 200; // スマホは5px、PCは200pxの余白
                             
                             const scaleX = (screenWidth - padding * 2) / modelWidth;
@@ -2178,7 +2178,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 />
 
                 {/* モバイル版のデータなし画面オーバーレイ */}
-                {window.innerWidth <= 1280 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {(window.innerWidth <= 1280 || navigator.maxTouchPoints > 0) && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div className="customize-empty-state">
                         <div className="customize-empty-content">
                             <div className="customize-empty-title">
@@ -2201,7 +2201,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 )}
 
                 {/* デスクトップ版のデータなし画面オーバーレイ */}
-                {window.innerWidth > 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
+                {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
                     <div className={`customize-empty-state-desktop ${sidebarExpanded ? 'left-sidebar-visible' : 'left-sidebar-collapsed'} ${sidebarVisible ? 'right-sidebar-visible' : ''}`}>
                         <div className="customize-empty-content-desktop">
                             <div className="customize-empty-title-desktop">
