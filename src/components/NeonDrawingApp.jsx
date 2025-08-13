@@ -173,6 +173,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [lastPanY, setLastPanY] = useState(0);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [showPoints, setShowPoints] = useState(false); // 点の表示/非表示
+    const [originalShowPointsState, setOriginalShowPointsState] = useState(null); // モード切り替え前の点表示状態を記憶
     
     // タッチ操作用のstate
     const [lastTouchDistance, setLastTouchDistance] = useState(0);
@@ -3434,27 +3435,75 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     // 点修正モードの切り替え
     const toggleModifyMode = useCallback(() => {
-        setIsModifyingPoints(prev => !prev);
+        setIsModifyingPoints(prev => {
+            const newValue = !prev;
+            if (newValue) {
+                // モードON: 現在の表示状態を記憶し、点が非表示なら表示
+                setOriginalShowPointsState(showPoints);
+                if (!showPoints) {
+                    setShowPoints(true);
+                }
+            } else {
+                // モードOFF: 元の表示状態に戻す
+                if (originalShowPointsState !== null) {
+                    setShowPoints(originalShowPointsState);
+                    setOriginalShowPointsState(null);
+                }
+            }
+            return newValue;
+        });
         setActivePoint(null); // アクティブな点をクリア
         setIsPathDeleteMode(false); // パス削除モードを無効化
         setIsPointDeleteMode(false); // 点削除モードを無効化
-    }, []);
+    }, [showPoints, originalShowPointsState]);
 
     // パス削除モードの切り替え
     const togglePathDeleteMode = useCallback(() => {
-        setIsPathDeleteMode(prev => !prev);
+        setIsPathDeleteMode(prev => {
+            const newValue = !prev;
+            if (newValue) {
+                // モードON: 現在の表示状態を記憶し、点が非表示なら表示
+                setOriginalShowPointsState(showPoints);
+                if (!showPoints) {
+                    setShowPoints(true);
+                }
+            } else {
+                // モードOFF: 元の表示状態に戻す
+                if (originalShowPointsState !== null) {
+                    setShowPoints(originalShowPointsState);
+                    setOriginalShowPointsState(null);
+                }
+            }
+            return newValue;
+        });
         setActivePoint(null); // アクティブな点をクリア
         setIsModifyingPoints(false); // 点修正モードを無効化
         setIsPointDeleteMode(false); // 点削除モードを無効化
-    }, []);
+    }, [showPoints, originalShowPointsState]);
 
     // 点削除モードの切り替え
     const togglePointDeleteMode = useCallback(() => {
-        setIsPointDeleteMode(prev => !prev);
+        setIsPointDeleteMode(prev => {
+            const newValue = !prev;
+            if (newValue) {
+                // モードON: 現在の表示状態を記憶し、点が非表示なら表示
+                setOriginalShowPointsState(showPoints);
+                if (!showPoints) {
+                    setShowPoints(true);
+                }
+            } else {
+                // モードOFF: 元の表示状態に戻す
+                if (originalShowPointsState !== null) {
+                    setShowPoints(originalShowPointsState);
+                    setOriginalShowPointsState(null);
+                }
+            }
+            return newValue;
+        });
         setActivePoint(null); // アクティブな点をクリア
         setIsModifyingPoints(false); // 点修正モードを無効化
         setIsPathDeleteMode(false); // パス削除モードを無効化
-    }, []);
+    }, [showPoints, originalShowPointsState]);
 
     // 画像圧縮関数
     const compressImage = useCallback((file, quality = 0.7, maxWidth = 1920) => {
