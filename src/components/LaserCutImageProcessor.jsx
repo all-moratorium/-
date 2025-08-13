@@ -1874,6 +1874,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
           onStateChange={handleCustomizeStateChange}
           isGuideEffectStopped={isCustomizeGuideEffectStopped}
           onGuideEffectStop={() => setIsCustomizeGuideEffectStopped(true)}
+          sidebarExpanded={sidebarExpanded}
         />;
       case 'neonSvg3dPreview':
         if (isMobile && !neonSvgData) {

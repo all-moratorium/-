@@ -17,7 +17,7 @@ const limitCoordinates = (x, y) => {
     };
 };
 
-const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped, onGuideEffectStop }) => {
+const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped, onGuideEffectStop, sidebarExpanded }) => {
     // 初期状態の設定（propsから受け取るか、デフォルト値を使用）
     const [selectedColor, setSelectedColor] = useState(initialState?.selectedColor || '#ff0080');
     const brightness = 100; // 固定値
@@ -2179,65 +2179,19 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
 
                 {/* モバイル版のデータなし画面オーバーレイ */}
                 {window.innerWidth <= 1280 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
-                    <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: '#000000',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 10
-                    }}>
-                        <div style={{
-                            backgroundColor: '#000000',
-                            padding: '30px',
-                            paddingRight: '20%',
-                            height: '80%',
-                            paddingLeft: '20%',
-                            borderRadius: '12px',
-                            textAlign: 'center',
-                            maxWidth: '280px',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
-                        }}>
-                            <div style={{
-                                fontSize: '1.3rem',
-                                fontWeight: 'bold',
-                                marginBottom: '18px',
-                                color: '#fff'
-                            }}>
+                    <div className="customize-empty-state">
+                        <div className="customize-empty-content">
+                            <div className="customize-empty-title">
                                 色 / 仕様のカスタマイズについて
                             </div>
-                            <div style={{
-                                fontSize: '0.9rem',
-                                lineHeight: '1.6',
-                                marginBottom: '25px',
-                                color: '#ccc',
-                                maxWidth: '400px'
-                            }}>
+                            <div className="customize-empty-description">
                                 このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
                             </div>
                             <button 
+                                className="customize-empty-button"
                                 onClick={() => {
                                     // ネオン下絵ページへの遷移イベントを発火
                                     window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
-                                }}
-                                style={{
-                                    fontSize: '0.9rem',
-                                    backgroundColor: '#007bff',
-                                    width: '135px',
-                                    height: '40px',
-                                    textAlign: 'center',
-                                    margin: '0 auto',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer'
                                 }}
                             >
                                 ネオン下絵へ
@@ -2248,65 +2202,24 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
 
                 {/* デスクトップ版のデータなし画面オーバーレイ */}
                 {window.innerWidth > 768 && !isInitializing && (!isDataLoaded || (!svgData && neonPaths.length === 0) || !neonPaths.some(path => path && Array.isArray(path.points) && path.points.length > 0)) && (
-                    <div 
-                        ref={(el) => {
-                            if (el) {
-                                el.style.setProperty('min-width', '500px', 'important');
-                                el.style.setProperty('max-width', '760px', 'important');
-                            }
-                        }}
-                        style={{
-                        position: 'absolute',
-                        left: `${canvasWidth / 2 - 72}px`,
-                        top: `${canvasHeight / 2}px`,
-                        transform: 'translate(-50%, -50%)',
-                        backgroundColor: '#000000',
-                        padding: '50px 60px',
-                        borderRadius: '12px',
-                        textAlign: 'center',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center'
-                    }}>
-                        <div style={{
-                            fontSize: '1.8rem',
-                            fontWeight: 'bold',
-                            marginBottom: '25px',
-                            color: '#fff'
-                        }}>
-                            色 / 仕様のカスタマイズについて
+                    <div className={`customize-empty-state-desktop ${sidebarExpanded ? 'left-sidebar-visible' : 'left-sidebar-collapsed'} ${sidebarVisible ? 'right-sidebar-visible' : ''}`}>
+                        <div className="customize-empty-content-desktop">
+                            <div className="customize-empty-title-desktop">
+                                色 / 仕様のカスタマイズについて
+                            </div>
+                            <div className="customize-empty-description-desktop">
+                                このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                            </div>
+                            <button 
+                                className="customize-empty-button-desktop"
+                                onClick={() => {
+                                    // ネオン下絵ページへの遷移イベントを発火
+                                    window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
+                                }}
+                            >
+                                ネオン下絵へ
+                            </button>
                         </div>
-                        <div style={{
-                            fontSize: '1.1rem',
-                            lineHeight: '1.6',
-                            marginBottom: '35px',
-                            color: '#ccc',
-                            maxWidth: '480px'
-                        }}>
-                            このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
-                        </div>
-                        <button 
-                            onClick={() => {
-                                // ネオン下絵ページへの遷移イベントを発火
-                                window.dispatchEvent(new CustomEvent('RequestPageTransitionToNeonDrawing'));
-                            }}
-                            style={{
-                                padding: '10px 20px',
-                                fontSize: '1rem',
-                                backgroundColor: '#007bff',
-                                width: '180px',
-                                height: '50px',
-                                textAlign: 'center',
-                                margin: '20px auto',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            ネオン下絵へ
-                        </button>
                     </div>
                 )}
                 
