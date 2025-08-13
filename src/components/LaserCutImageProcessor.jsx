@@ -825,6 +825,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         setIsRealTime3DProgressVisible(true);
         setIsMobile3DPreviewMounted(true);
       }
+      // 既にマウントされている場合は何もしない（画面向き変更時の再マウントを防ぐ）
     } else if (isMobile && currentPage !== 'neonSvg3dPreview' && isMobile3DPreviewMounted) {
       // 3Dプレビューページ以外に遷移した時はスマホ版3Dコンポーネントをアンマウント
       setIsMobile3DPreviewMounted(false);
@@ -848,7 +849,20 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
       setIsRealTime3DProgressVisible(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData, can3DPreview]);
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData]);
+
+  // 画面向き変更時の3Dプレビュー処理
+  useEffect(() => {
+    if (isMobile && currentPage === 'neonSvg3dPreview' && neonSvgData) {
+      // 3Dプレビューページで画面向きが変更された時
+      if (can3DPreview && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible) {
+        // 3D表示可能になったが、まだマウントされていない場合のみマウント
+        setIsRemountingModel(true);
+        setIsRealTime3DProgressVisible(true);
+        setIsMobile3DPreviewMounted(true);
+      }
+    }
+  }, [can3DPreview, isMobile, currentPage, neonSvgData, isMobile3DPreviewMounted, isRealTime3DProgressVisible]);
 
   // モバイルデバイス検出
   useEffect(() => {
