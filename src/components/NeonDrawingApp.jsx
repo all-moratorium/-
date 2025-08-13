@@ -3139,15 +3139,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         handleMouseMove(pointerEvent);
     }, [handleMouseMove]);
 
-    const handlePointerUp = useCallback((e) => {
-        e.preventDefault();
-        
-        // マウス、ペン、プライマリタッチを統一処理
-        const pointerEvent = {
-            preventDefault: () => {}
-        };
-        handleMouseUp(pointerEvent);
-    }, [handleMouseUp]);
 
     const handleMouseLeave = useCallback(() => {
         // モーダル表示中でもパン操作終了は許可
@@ -3340,7 +3331,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         const isModeSelecting = !isModifyingPoints && !isPathDeleteMode && !isPointDeleteMode && 
                                (drawMode !== 'stroke' && drawMode !== 'fill');
         
-        if (e.button !== 0 || isPanning || didDragRef.current || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || 
+        // 通常の描画モードではドラッグ判定を無効化（点修正・削除モード以外）
+        const shouldBlockDrag = (isModifyingPoints || isPathDeleteMode || isPointDeleteMode) && didDragRef.current;
+        
+        if (e.button !== 0 || isPanning || shouldBlockDrag || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || 
             (drawMode === 'fill' && showFillDrawingTypeModal) || isModeSelecting) {
             return;
         }
@@ -3427,6 +3421,16 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             return newPaths;
         });
     }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal]); 
+
+    const handlePointerUp = useCallback((e) => {
+        e.preventDefault();
+        
+        // マウスアップ処理
+        const pointerEvent = {
+            preventDefault: () => {}
+        };
+        handleMouseUp(pointerEvent);
+    }, [handleMouseUp]);
 
     // 点修正モードの切り替え
     const toggleModifyMode = useCallback(() => {
@@ -3541,7 +3545,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     onWheel={handleWheel}
                     onPointerDown={handlePointerDown}
                     onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
+                    onPointerUp={handleMouseUp}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
