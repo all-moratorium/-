@@ -131,24 +131,25 @@
 }
 
 .customize-empty-title-desktop {
-    font-size: 1.8rem;
+    font-size: 25px;
     font-weight: bold;
-    margin-bottom: 25px;
     color: #fff;
+    white-space: nowrap;
 }
 
 .customize-empty-video {
     width: 100%;
     max-width: 500px;
     height: auto;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    margin-top: 20px;
     border-radius: 8px;
 }
 
 .customize-empty-description-desktop {
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     width: 620px;
     color: #ccc;
 }
@@ -156,25 +157,29 @@
 .customize-empty-button-desktop {
     padding: 12px 20px;
     font-size: 1rem;
-    background: transparent;
-    background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(16, 185, 129, 0.7);
-    box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 15px 0px;
+    background: rgba(37, 100, 235, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(37, 99, 235, 0.7);
+    box-shadow: 
+      0 0 20px rgba(37, 100, 235, 0.2),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
     width: 180px;
     height: 48px;
     text-align: center;
-    margin: 10px auto;
-    color: rgb(255, 255, 255);
-    font-weight: bold;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
+    font-weight: bold;
 }
 
 .customize-empty-button-desktop:hover {
-    box-shadow: rgba(16, 185, 129, 0.65) 0px 0px 20px 0px;
+    box-shadow: 
+      0 0 25px rgba(37, 100, 235, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* キャンバスエリア */
