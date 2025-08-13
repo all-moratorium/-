@@ -3118,6 +3118,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         
         if (e.touches.length === 1) {
             // 1本指: 左クリック相当
+            setIsPanning(false); // 1本指の場合はパンモードを無効化
             const touch = e.touches[0];
             const mouseEvent = {
                 button: 0,
