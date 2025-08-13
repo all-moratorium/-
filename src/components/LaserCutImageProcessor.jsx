@@ -809,26 +809,35 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setIsLandscape(newLandscape);
       setCan3DPreview(newLandscape || isTablet);
       
-      // 3Dプレビューページが開いている時のみリマウント処理
+      // 3Dプレビューページが開いている時のみ処理
       if (isMobile && currentPage === 'neonSvg3dPreview' && neonSvgData) {
-        let shouldRemount = false;
-        
         if (isTablet) {
           // タブレット: 縦→横、横→縦どちらでもリマウント
-          shouldRemount = previousLandscape !== newLandscape;
+          if (previousLandscape !== newLandscape && isMobile3DPreviewMounted) {
+            setIsMobile3DPreviewMounted(false);
+            setTimeout(() => {
+              setIsRemountingModel(true);
+              setIsRealTime3DProgressVisible(true);
+              setIsMobile3DPreviewMounted(true);
+            }, 100);
+          }
         } else {
-          // スマホ: 縦→横の時のみリマウント
-          shouldRemount = !previousLandscape && newLandscape;
-        }
-        
-        if (shouldRemount && isMobile3DPreviewMounted) {
-          // 3Dプレビューを一度アンマウントしてから再マウント
-          setIsMobile3DPreviewMounted(false);
-          setTimeout(() => {
-            setIsRemountingModel(true);
-            setIsRealTime3DProgressVisible(true);
-            setIsMobile3DPreviewMounted(true);
-          }, 100);
+          // スマホ: 縦→横はリマウント、横→縦はアンマウント
+          if (!previousLandscape && newLandscape) {
+            // 縦→横: リマウント
+            if (isMobile3DPreviewMounted) {
+              setIsMobile3DPreviewMounted(false);
+              setTimeout(() => {
+                setIsRemountingModel(true);
+                setIsRealTime3DProgressVisible(true);
+                setIsMobile3DPreviewMounted(true);
+              }, 100);
+            }
+          } else if (previousLandscape && !newLandscape) {
+            // 横→縦: アンマウント
+            setIsMobile3DPreviewMounted(false);
+            setIsRealTime3DProgressVisible(false);
+          }
         }
       }
     };
