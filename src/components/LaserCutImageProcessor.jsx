@@ -487,6 +487,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [processingMessage, setProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
   
@@ -797,12 +798,27 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
   }, [isMobile]);
 
+  // 画面向きの変更を検出
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleOrientationChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+
+    return () => {
+      window.removeEventListener('resize', handleOrientationChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
+
   // 3Dプレビューのマウント/アンマウント処理（モバイル・デスクトップ共通）
   useEffect(() => {
     if (isMobile && currentPage === 'neonSvg3dPreview') {
-      // モバイルで3Dプレビューページに遷移した時
-      if (neonSvgData && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible) {
-        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合のみ再構築
+      // モバイルで3Dプレビューページに遷移した時（横画面の場合のみ）
+      if (neonSvgData && !isMobile3DPreviewMounted && !isRealTime3DProgressVisible && isLandscape) {
+        // 既存のモデルデータがあり、現在進捗モーダルが表示されていない場合かつ横画面の場合のみ再構築
         setIsRemountingModel(true);
         setIsRealTime3DProgressVisible(true);
         setIsMobile3DPreviewMounted(true);
@@ -830,7 +846,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     if (currentPage !== 'neonSvg3dPreview' && isRealTime3DProgressVisible) {
       setIsRealTime3DProgressVisible(false);
     }
-  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData]);
+  }, [currentPage, isMobile, isMobile3DPreviewMounted, isDesktop3DPreviewMounted, isRealTime3DProgressVisible, neonSvgData, isLandscape]);
 
   // モバイルデバイス検出
   useEffect(() => {
