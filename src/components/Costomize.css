@@ -106,50 +106,28 @@
 .customize-empty-state-desktop {
     position: fixed;
     top: 0;
-    left: 250px;
+    left: 0;
     right: 0;
     bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10;
-    transition: left 0.3s ease, right 0.3s ease;
-}
-
-.customize-empty-state-desktop.left-sidebar-visible {
-    left: 250px;
-}
-
-.customize-empty-state-desktop.left-sidebar-collapsed {
-    left: 70px;
-}
-
-.customize-empty-state-desktop.right-sidebar-visible {
-    right: 380px;
-}
-
-.customize-empty-state-desktop.left-sidebar-visible.right-sidebar-visible {
-    left: 250px;
-    right: 380px;
-}
-
-.customize-empty-state-desktop.left-sidebar-collapsed.right-sidebar-visible {
-    left: 70px;
-    right: 380px;
 }
 
 .customize-empty-content-desktop {
     background-color: #000000;
-    padding: 50px 60px;
+    padding: 20px 20px;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     display: flex;
-    width: 70%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     max-width: 700px;
+    width: 50%;
+    box-sizing: border-box;
 }
 
 .customize-empty-title-desktop {
@@ -159,17 +137,24 @@
     color: #fff;
 }
 
+.customize-empty-video {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
 .customize-empty-description-desktop {
-    font-size: 1.1rem;
+    font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
+    width: 620px;
     color: #ccc;
-    max-width: 480px;
-    width: 700px;
 }
 
 .customize-empty-button-desktop {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 1rem;
     background: transparent;
     background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
@@ -177,12 +162,12 @@
     border: 1px solid rgba(16, 185, 129, 0.7);
     box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 15px 0px;
     width: 180px;
-    height: 50px;
+    height: 48px;
     text-align: center;
     margin: 10px auto;
     color: rgb(255, 255, 255);
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
@@ -1579,15 +1564,13 @@ html, body {
 }
 
 .customize-app-container {
-    max-width: 100vw !important;
-    width: 100vw !important;
+    max-width: 100vw;
+    width: 100vw;
     overflow-x: hidden !important;
     position: relative;
 }
 
-.customize-app-container * {
-    max-width: 100% !important;
-}
+
 
 /* 全体的なスクロールバー制御 */
 ::-webkit-scrollbar:horizontal {

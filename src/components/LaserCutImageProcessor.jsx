@@ -2216,6 +2216,16 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="preview3d-empty-title-desktop">
                   3Dプレビューについて
                 </div>
+                <video 
+                  className="preview3d-empty-video"
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                >
+                  <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                  お使いのブラウザは動画の再生に対応していません。
+                </video>
                 <div className="preview3d-empty-description-desktop">
                   3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
                 </div>
