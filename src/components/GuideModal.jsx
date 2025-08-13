@@ -191,7 +191,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section">
+              <div className="guide-info-section sample-data-section">
                 <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
                 <label className="sample-load-btn">
                   📤 読み込む
@@ -201,33 +201,18 @@ const GuideModal = ({ isOpen, onClose }) => {
                     style={{display: 'none'}}
                   />
                 </label>
+                <div className="sample-description-text">
+                  ネオン下絵、色 / 仕様のカスタマイズページの右サイドバーに<br />それぞれ「読み込む」ボタンが配置されています
+                </div>
                 <div className="guide-info-text">
-                  <div className="data-type-section">
-                    <strong>ネオン下絵、色 / 仕様のカスタマイズページの右サイドバーに<br />それぞれ「読み込む」ボタンが配置されています</strong>
-                    <br /><br />
-                    
-                    <div className="data-type-item">
-                      <div className="data-type-header">ネオン下絵からダウンロードしたデータ</div>
-                      <div className="data-type-details">
-                        • <strong>読み込み場所:</strong> ネオン下絵<br />
-                        • <strong>保存されているデータ:</strong> 下絵のみ
-                      </div>
-                    </div>
-                    <br />
-                    
-                    <div className="data-type-item">
-                      <div className="data-type-header">色 / 仕様のカスタマイズからダウンロードしたデータ</div>
-                      <div className="data-type-details">
-                        • <strong>読み込み場所:</strong> 色 / 仕様のカスタマイズ、ネオン下絵　どちらでも可<br />
-                        • <strong>保存されているデータ:</strong> 下絵＋色仕様の情報
-                      </div>
-                    </div>
-                    <br />
-                    
-                    <div className="note-text">
-                      色仕様のカスタマイズで読み込むと自動的にネオン下絵に下絵が読み込まれます。<br />
-                      サンプルデータは色仕様のカスタマイズデータですので、どちらでも読み込み可能です。
-                    </div>
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> ネオン下絵で読み込むと、下絵のデータが<br />読み込まれます
+                  </div>
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> 色仕様のカスタマイズで読み込むと、色仕様のデータ<br />そしてネオン下絵に下絵のデータが読み込まれます
+                  </div>
+                  <div className="list-item">
+                    <span className="triangle-icon">▶</span> サンプルデータは色仕様のカスタマイズデータ<br />ですので、どちらでも読み込み可能です
                   </div>
                 </div>
               </div>

@@ -817,7 +817,8 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    margin: 20px auto;
+    margin: 15px auto;
+    margin-top: -7px;
 }
 
 .sample-load-btn:hover {
@@ -828,6 +829,48 @@
     0 0 40px rgba(16, 185, 129, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.9);
+}
+
+/* サンプルデータセクション専用 */
+.sample-data-section {
+
+}
+
+.sample-data-section .guide-info-title {
+  margin-bottom: 20px;
+}
+
+.sample-data-section .sample-description-text {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.6;
+  font-size: 11px;
+  margin-bottom: 15px;
+  white-space: nowrap;
+}
+
+.sample-data-section .guide-info-text {
+  white-space: normal;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.sample-data-section .list-item {
+  display: flex;
+  margin-left: 1px;
+  white-space: nowrap;
+  font-size: 11px;
+  margin-bottom: 13px;
+  align-items: flex-start;
+}
+
+.sample-data-section .triangle-icon {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 /* モバイル版 */
