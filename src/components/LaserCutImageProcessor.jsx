@@ -2211,58 +2211,17 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             </div>
           ) : !isMobile && !neonSvgData ? (
             /* Desktop No-Model State */
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%',
-              backgroundColor: '#000000'
-            }}>
-              <div style={{
-                backgroundColor: '#000000',
-                padding: '50px 60px',
-                borderRadius: '12px',
-                textAlign: 'center',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                minWidth: '500px',
-                maxWidth: '760px'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  fontWeight: 'bold',
-                  marginBottom: '25px',
-                  color: '#fff'
-                }}>
+            <div className={`preview3d-empty-state-desktop ${sidebarExpanded ? 'left-sidebar-visible' : 'left-sidebar-collapsed'}`}>
+              <div className="preview3d-empty-content-desktop">
+                <div className="preview3d-empty-title-desktop">
                   3Dプレビューについて
                 </div>
-                <div style={{
-                  fontSize: '1.1rem',
-                  lineHeight: '1.6',
-                  marginBottom: '35px',
-                  color: '#ccc',
-                  maxWidth: '100%'
-                }}>
+                <div className="preview3d-empty-description-desktop">
                   3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
                 </div>
                 <button 
+                  className="preview3d-empty-button-desktop"
                   onClick={() => setCurrentPage('customize')}
-                  style={{
-                    padding: '10px 20px',
-                    fontSize: '1rem',
-                    backgroundColor: '#007bff',
-                    width: '250px',
-                    height: '50px',
-                    textAlign: 'center',
-                    margin: '10px auto',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer'
-                  }}
                 >
                   色 / 仕様のカスタマイズへ
                 </button>

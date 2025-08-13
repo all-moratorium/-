@@ -129,7 +129,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: left 0.3s ease, right 0.3s ease;
+  transition: left 0.3s ease;
 }
 
 .preview3d-empty-state-desktop.left-sidebar-visible {
@@ -138,20 +138,6 @@
 
 .preview3d-empty-state-desktop.left-sidebar-collapsed {
   left: 70px;
-}
-
-.preview3d-empty-state-desktop.right-sidebar-visible {
-  right: 380px;
-}
-
-.preview3d-empty-state-desktop.left-sidebar-visible.right-sidebar-visible {
-  left: 250px;
-  right: 380px;
-}
-
-.preview3d-empty-state-desktop.left-sidebar-collapsed.right-sidebar-visible {
-  left: 70px;
-  right: 380px;
 }
 
 .preview3d-empty-content-desktop {
