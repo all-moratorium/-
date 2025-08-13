@@ -2142,68 +2142,30 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       
       {/* NeonSVGTo3DExtruder and Mobile No-Model State */}
       {currentPage === 'neonSvg3dPreview' && (
-        <div style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%', 
-          zIndex: 100,
-          pointerEvents: 'auto'
-        }}>
+        <div className="neon-3d-extruder-container">
           {/* Mobile No-Model State */}
           {isMobile && !neonSvgData ? (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%',
-              backgroundColor: '#000000'
-            }}>
-              <div style={{
-                backgroundColor: '#000000',
-                padding: '30px 20% 30px 20%',
-                height: '80%',
-                borderRadius: '12px',
-                textAlign: 'center',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
-              }}>
-                <div style={{
-                  fontSize: '1.3rem',
-                  fontWeight: 'bold',
-                  marginBottom: '18px',
-                  color: '#fff'
-                }}>
+            <div className="preview3d-mobile-empty-state">
+              <div className="preview3d-mobile-empty-content">
+                <div className="preview3d-mobile-empty-title">
                   3Dプレビュー
                 </div>
-                <div style={{
-                  fontSize: '0.9rem',
-                  lineHeight: '1.6',
-                  marginBottom: '25px',
-                  color: '#ccc',
-                  maxWidth: '100%',
-                  width: '480px'
-                }}>
-                  このページを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
+                <video 
+                  className="preview3d-mobile-empty-video"
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                >
+                  <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                  お使いのブラウザは動画の再生に対応していません。
+                </video>
+                <div className="preview3d-mobile-empty-description">
+                  このページを表示するには、色仕様のカスタマイズからデータを作成して、<br></br>「3Dモデル生成」ボタンを押してください。
                 </div>
                 <button 
                   onClick={() => setCurrentPage('customize')}
-                  style={{
-                    fontSize: '0.9rem',
-                    backgroundColor: '#007bff',
-                    width: '220px',
-                    height: '40px',
-                    textAlign: 'center',
-                    margin: '0 auto',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer'
-                  }}
+                  className="preview3d-mobile-empty-button"
                 >
                   色 / 仕様のカスタマイズへ
                 </button>
