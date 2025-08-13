@@ -102,20 +102,25 @@
 
 .preview3d-empty-button {
   font-size: 0.9rem;
-  background-color: #007bff;
+  background: transparent;
+  background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.7);
+  box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 15px 0px;
   width: 220px;
   height: 40px;
   text-align: center;
   margin: 0 auto;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
 
 .preview3d-empty-button:hover {
-  background-color: #0056b3;
+  box-shadow: rgba(16, 185, 129, 0.65) 0px 0px 20px 0px;
 }
 
 /* デスクトップ版の案内メッセージ */
@@ -171,20 +176,25 @@
 .preview3d-empty-button-desktop {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #007bff;
+  background: transparent;
+  background-image: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.18) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.7);
+  box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 15px 0px;
   width: 250px;
   height: 50px;
   text-align: center;
   margin: 10px auto;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
 
 .preview3d-empty-button-desktop:hover {
-  background-color: #0056b3;
+  box-shadow: rgba(16, 185, 129, 0.65) 0px 0px 20px 0px;
 }
 
 .creation-modal-content {
