@@ -70,17 +70,17 @@
 }
 
 .customize-mobile-empty-video {
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-    margin: 10px auto 10px auto;
-    border-radius: 8px;
+    height: 40%;
+  width: auto;
+  margin: 12px auto 10px auto;
+  border-radius: 0px;
+  max-height: 300px;
 }
 
 .customize-empty-description {
     font-size: 12.5px;
   line-height: 1.5;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   white-space: nowrap;
   color: #ccc;
   max-width: 100%;
@@ -149,7 +149,7 @@
     height: auto;
     margin-bottom: 20px;
     margin-top: 20px;
-    border-radius: 8px;
+    border-radius: 0px;
 }
 
 .customize-empty-description-desktop {
