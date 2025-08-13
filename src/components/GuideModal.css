@@ -744,6 +744,8 @@
   }
 }
 
+
+
 /* 縦向き時の追加調整 */
 @media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
   /* モーダル本体 */
@@ -792,3 +794,40 @@
     height: 6px;
   }
 }
+
+/* サンプルデータ読み込みボタン - project-load-btnと同じスタイル */
+.sample-load-btn {
+    width: 89.8px;
+    padding: auto;
+    background: rgba(16, 185, 129, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.7);
+    box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    height: 30.4px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin: 20px auto;
+}
+
+.sample-load-btn:hover {
+    background: rgba(16, 185, 129, 0.75);
+    border: 1px solid rgba(16, 185, 129, 1.0);
+    box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 0 40px rgba(16, 185, 129, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* モバイル版 */
