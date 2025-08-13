@@ -2178,7 +2178,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   marginBottom: '18px',
                   color: '#fff'
                 }}>
-                  3Dプレビューについて
+                  3Dプレビュー
                 </div>
                 <div style={{
                   fontSize: '0.9rem',
@@ -2214,7 +2214,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <div className={`preview3d-empty-state-desktop ${sidebarExpanded ? 'left-sidebar-visible' : 'left-sidebar-collapsed'}`}>
               <div className="preview3d-empty-content-desktop">
                 <div className="preview3d-empty-title-desktop">
-                  3Dプレビューについて
+                  3Dプレビュー
                 </div>
                 <video 
                   className="preview3d-empty-video"
@@ -2227,7 +2227,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   お使いのブラウザは動画の再生に対応していません。
                 </video>
                 <div className="preview3d-empty-description-desktop">
-                  3Dプレビューを表示するには、色仕様のカスタマイズからデータを作成して、「3Dモデル生成」ボタンを押してください。
+                  このページを表示するには、色仕様のカスタマイズからデータを作成して、<br></br>「3Dモデル生成」ボタンを押してください。
                 </div>
                 <button 
                   className="preview3d-empty-button-desktop"

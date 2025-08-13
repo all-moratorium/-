@@ -2182,7 +2182,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     <div className="customize-empty-state">
                         <div className="customize-empty-content">
                             <div className="customize-empty-title">
-                                色 / 仕様のカスタマイズについて
+                                色 / 仕様のカスタマイズ
                             </div>
                             <div className="customize-empty-description">
                                 このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
@@ -2205,7 +2205,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     <div className={`customize-empty-state-desktop ${sidebarExpanded ? 'left-sidebar-visible' : 'left-sidebar-collapsed'} ${sidebarVisible ? 'right-sidebar-visible' : ''}`}>
                         <div className="customize-empty-content-desktop">
                             <div className="customize-empty-title-desktop">
-                                色 / 仕様のカスタマイズについて
+                                色 / 仕様のカスタマイズ
                             </div>
                             <video 
                                 className="customize-empty-video"
@@ -2218,7 +2218,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 お使いのブラウザは動画の再生に対応していません。
                             </video>
                             <div className="customize-empty-description-desktop">
-                                このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
+                                このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の<br></br>右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
                             </div>
                             <button 
                                 className="customize-empty-button-desktop"

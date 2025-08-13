@@ -138,8 +138,7 @@
 }
 
 .customize-empty-video {
-    width: 100%;
-    max-width: 500px;
+    width: 600px;
     height: auto;
     margin-bottom: 20px;
     margin-top: 20px;
@@ -150,6 +149,7 @@
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 20px;
+    white-space: nowrap;
     width: 620px;
     color: #ccc;
 }

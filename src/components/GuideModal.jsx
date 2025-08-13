@@ -192,7 +192,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="guide-info-section">
-                <h3 className="guide-info-title">この説明セクションはまだ考え中</h3>
+                <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
                 <div className="guide-info-text">
                   <br />
                   <br />
