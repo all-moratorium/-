@@ -3408,6 +3408,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 setCurrentPathIndex(actualPathIndex);
             }
 
+            // 点が非表示の場合は自動で表示
+            if (!showPoints) {
+                setShowPoints(true);
+            }
+            
             // 新しい点を追加
             targetPath.points = [...targetPath.points, { x: contentX, y: contentY }];
             
@@ -3421,7 +3426,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             saveToHistory(newPaths, actualPathIndex, drawMode, drawingType); 
             return newPaths;
         });
-    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal]); 
+    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal, showPoints]); 
 
     const handlePointerUp = useCallback((e) => {
         e.preventDefault();
