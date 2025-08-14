@@ -2997,7 +2997,7 @@
           0 0 8px rgba(107, 114, 128, 0.1),
           0 2px 8px rgba(0, 0, 0, 0.05),
           inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-        color: rgba(255, 255, 255, 0.7) !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.modify-points.button-active {
@@ -3008,7 +3008,7 @@
           0 0 20px rgba(37, 100, 235, 0.2),
           0 4px 15px rgba(0, 0, 0, 0.1),
           inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-        color: white !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.undo {
@@ -3123,7 +3123,7 @@
           0 0 8px rgba(107, 114, 128, 0.1),
           0 2px 8px rgba(0, 0, 0, 0.05),
           inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-        color: rgba(255, 255, 255, 0.7) !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.point-delete.button-active {
@@ -3134,7 +3134,7 @@
           0 0 15px rgba(220, 38, 38, 0.4),
           0 4px 15px rgba(0, 0, 0, 0.3),
           inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-        color: white !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.path-delete {
@@ -3145,7 +3145,7 @@
           0 0 8px rgba(107, 114, 128, 0.1),
           0 2px 8px rgba(0, 0, 0, 0.05),
           inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-        color: rgba(255, 255, 255, 0.7) !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.path-delete.button-active {
@@ -3156,7 +3156,7 @@
           0 0 15px rgba(220, 38, 38, 0.4),
           0 4px 15px rgba(0, 0, 0, 0.3),
           inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-        color: white !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     .mobile-function-btn.mobile-toggle {
