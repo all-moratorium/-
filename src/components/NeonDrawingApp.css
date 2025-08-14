@@ -2908,7 +2908,7 @@
     /* サイドバー閉じているときの機能バー */
     .mobile-function-bar {
         display: none !important;
-        height: 100dvh !important;
+        height: auto !important;
         position: fixed !important;
         background-color: rgba(10, 10, 10, 0.95) !important;
         right: 0 !important;
@@ -2934,6 +2934,7 @@
         flex-direction: column !important;
         gap: 8px !important;
         padding: 0 !important;
+        height: auto !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
     }
