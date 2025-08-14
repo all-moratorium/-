@@ -3698,6 +3698,19 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 <path d="M15 18 L21 18 M18 15 L18 21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                             </svg>
                         </button>
+                        <button
+                            className="mobile-function-btn background-image"
+                            onClick={() => {
+                                setShowBgModal(true);
+                                setSidebarVisible(false);
+                            }}
+                        >
+                            <svg width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <path d="M21 15l-5-5L5 21"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 )}
