@@ -3686,6 +3686,24 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             </svg>
                         </button>
                         <button
+                            className={`mobile-function-btn point-delete ${isPointDeleteMode ? 'button-active' : ''}`}
+                            onClick={togglePointDeleteMode}
+                        >
+                            <svg width="35.4" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="6" fill="currentColor" stroke="black" strokeWidth="1.2"/>
+                                <path d="M28 12l-16 16M12 12l16 16" stroke="currentColor" strokeWidth="2"/>
+                            </svg>
+                        </button>
+                        <button
+                            className={`mobile-function-btn path-delete ${isPathDeleteMode ? 'button-active' : ''}`}
+                            onClick={togglePathDeleteMode}
+                        >
+                            <svg width="35.4" height="40" viewBox="0 0 40 40" fill="none">
+                                <path d="M6 20 Q12 12 18 20 Q24 28 30 20 Q34 16 36 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                <path d="M28 12l-16 16M12 12l16 16" stroke="currentColor" strokeWidth="2"/>
+                            </svg>
+                        </button>
+                        <button
                             className="mobile-function-btn scale"
                             onClick={() => {
                                 setOpenedFromFunctionBar(true);
