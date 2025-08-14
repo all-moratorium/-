@@ -2908,7 +2908,7 @@
     /* サイドバー閉じているときの機能バー */
     .mobile-function-bar {
         display: none !important;
-        height: 100vh !important;
+        height: 100dvh !important;
         position: fixed !important;
         background-color: rgba(10, 10, 10, 0.95) !important;
         right: 0 !important;
@@ -2955,7 +2955,7 @@
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         display: flex !important;
-        padding: 7px !important;
+        padding: 0px !important;
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
@@ -3092,6 +3092,7 @@
           inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
         color: white !important;
         font-size: 10px !important;
+        padding-right: 3px !important;
         white-space: nowrap !important;
     }
 

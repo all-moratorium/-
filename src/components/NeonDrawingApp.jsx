@@ -3647,7 +3647,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             onClick={handleUndo}
                             disabled={historyIndex <= 0}
                         >
-                            ←<br/>戻る
+                            <svg width="22" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M11 17l-5-5 5-5"></path>
+                                <path d="M18 17l-5-5 5-5"></path>
+                            </svg>
                         </button>
                         
                         <button
@@ -3655,15 +3658,26 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             onClick={handleRedo}
                             disabled={historyIndex >= history.length - 1}
                         >
-                            →<br/>進む
+                            <svg width="22" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M13 17l5-5-5-5"></path>
+                                <path d="M6 17l5-5-5-5"></path>
+                            </svg>
                         </button>
                         <button
                             className={`mobile-function-btn points-toggle ${!showPoints ? 'button-active' : ''}`}
                             onClick={() => setShowPoints(!showPoints)}
-                            dangerouslySetInnerHTML={{
-                                __html: showPoints ? '点<br/>非表示' : '点<br/>表示'
-                            }}
-                        ></button>
+                        >
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <path d="M6 20 Q12 12 18 20 Q24 28 30 20 Q34 16 36 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                {showPoints && (
+                                    <>
+                                        <circle cx="12" cy="16" r="2.5" fill="currentColor" stroke="black" strokeWidth="0.8"/>
+                                        <circle cx="24" cy="24" r="2.5" fill="currentColor" stroke="black" strokeWidth="0.8"/>
+                                        <circle cx="32" cy="18" r="2.5" fill="currentColor" stroke="black" strokeWidth="0.8"/>
+                                    </>
+                                )}
+                            </svg>
+                        </button>
                         <button
                             className="mobile-function-btn scale"
                             onClick={() => {
@@ -3671,7 +3685,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 openScaleModal();
                             }}
                         >
-                            拡大<br/>縮小
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="18" cy="18" r="7" fill="none" stroke="currentColor" strokeWidth="2"/>
+                                <path d="M23 23 L30 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                <path d="M15 18 L21 18 M18 15 L18 21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
