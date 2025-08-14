@@ -3105,14 +3105,6 @@
         color: rgb(255, 255, 255) !important;
     }
 
-    .mobile-function-btn.points-toggle.button-active {
-        background: rgba(16, 185, 129, 0.6) !important;
-        border: 1px solid rgba(16, 185, 129, 1.0) !important;
-        box-shadow: 
-          0 0 20px rgba(16, 185, 129, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-        color: rgb(255, 255, 255) !important;
-    }
 
     .mobile-function-btn.background-image {
         background: rgba(156, 163, 175, 0.55) !important;

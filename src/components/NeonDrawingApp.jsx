@@ -3640,7 +3640,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         </button>
                         <button
                             className={`mobile-function-btn modify-points ${isModifyingPoints ? 'button-active' : ''}`}
-                            onClick={() => setIsModifyingPoints(!isModifyingPoints)}
+                            onClick={toggleModifyMode}
                         >
                             <svg width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
@@ -3701,6 +3701,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <button
                             className="mobile-function-btn background-image"
                             onClick={() => {
+                                setOpenedFromFunctionBar(true);
                                 setShowBgModal(true);
                                 setSidebarVisible(false);
                             }}
@@ -4292,7 +4293,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     onStateChange(currentState);
                 }
                 setShowBgModal(false);
-                setSidebarVisible(true);
+                if (!openedFromFunctionBar) {
+                    setSidebarVisible(true);
+                }
+                setOpenedFromFunctionBar(false);
             }} title="背景画像設定" position="right" className="bg-modal">
                 <div className="modal-content-inner">
                     <input
