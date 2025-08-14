@@ -3623,51 +3623,57 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 {/* モバイル機能バー（サイドバー閉じている時のみ表示） */}
                 {!isInitializing && (
                 <div className="mobile-function-bar">
-                    <button
-                        className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
-                        onClick={startNewPath}
-                        disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
-                    >
-                        新しい<br/>パス
-                    </button>
-                    <button
-                        className={`mobile-function-btn modify-points ${isModifyingPoints ? 'button-active' : ''}`}
-                        onClick={() => setIsModifyingPoints(!isModifyingPoints)}
-                    >
-                        点<br/>修正
-                    </button>
-                    <button
-                        className={`mobile-function-btn undo ${historyIndex <= 0 ? 'button-disabled' : ''}`}
-                        onClick={handleUndo}
-                        disabled={historyIndex <= 0}
-                    >
-                        ←<br/>戻る
-                    </button>
+                    {/* 固定ヘッダー部分（サイドバートグルボタン用の領域） */}
+                    <div className="mobile-function-bar-header">
+                    </div>
                     
-                    <button
-                        className={`mobile-function-btn redo ${historyIndex >= history.length - 1 ? 'button-disabled' : ''}`}
-                        onClick={handleRedo}
-                        disabled={historyIndex >= history.length - 1}
-                    >
-                        →<br/>進む
-                    </button>
-                    <button
-                        className={`mobile-function-btn points-toggle ${!showPoints ? 'button-active' : ''}`}
-                        onClick={() => setShowPoints(!showPoints)}
-                        dangerouslySetInnerHTML={{
-                            __html: showPoints ? '点<br/>非表示' : '点<br/>表示'
-                        }}
-                    ></button>
-                    <button
-                        className="mobile-function-btn scale"
-                        onClick={() => {
-                            setOpenedFromFunctionBar(true);
-                            openScaleModal();
-                        }}
-                    >
-                        拡大<br/>縮小
-                    </button>
-                    
+                    {/* スクロール可能なボタンコンテンツ部分 */}
+                    <div className="mobile-function-bar-content">
+                        <button
+                            className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                            onClick={startNewPath}
+                            disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
+                        >
+                            新しい<br/>パス
+                        </button>
+                        <button
+                            className={`mobile-function-btn modify-points ${isModifyingPoints ? 'button-active' : ''}`}
+                            onClick={() => setIsModifyingPoints(!isModifyingPoints)}
+                        >
+                            点<br/>修正
+                        </button>
+                        <button
+                            className={`mobile-function-btn undo ${historyIndex <= 0 ? 'button-disabled' : ''}`}
+                            onClick={handleUndo}
+                            disabled={historyIndex <= 0}
+                        >
+                            ←<br/>戻る
+                        </button>
+                        
+                        <button
+                            className={`mobile-function-btn redo ${historyIndex >= history.length - 1 ? 'button-disabled' : ''}`}
+                            onClick={handleRedo}
+                            disabled={historyIndex >= history.length - 1}
+                        >
+                            →<br/>進む
+                        </button>
+                        <button
+                            className={`mobile-function-btn points-toggle ${!showPoints ? 'button-active' : ''}`}
+                            onClick={() => setShowPoints(!showPoints)}
+                            dangerouslySetInnerHTML={{
+                                __html: showPoints ? '点<br/>非表示' : '点<br/>表示'
+                            }}
+                        ></button>
+                        <button
+                            className="mobile-function-btn scale"
+                            onClick={() => {
+                                setOpenedFromFunctionBar(true);
+                                openScaleModal();
+                            }}
+                        >
+                            拡大<br/>縮小
+                        </button>
+                    </div>
                 </div>
                 )}
             </div>
