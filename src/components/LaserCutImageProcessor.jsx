@@ -9,6 +9,7 @@ import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポー�
 import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
 import RealTime3DProgressModal from './RealTime3DProgressModal.jsx'; // リアルタイム3D進捗モーダル
 import { Home, Type, Edit3, Settings, Eye, Package } from 'lucide-react';
+import { FaCcVisa, FaCcMastercard, FaCcAmex, FaPaypal, FaFacebookF, FaInstagram, FaPinterestP, FaTwitter, FaYoutube, FaTiktok } from 'react-icons/fa';
 
 
 
@@ -2114,78 +2115,78 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     <button className="contact-button" onClick={() => openContactForm()}>お問い合わせ</button>
                   </div>
                 </div>
-                
-                <div className="product-info-footer">
-                  <div className="footer-content">
-                    <div className="footer-section">
-                      <h4>一般的な</h4>
-                      <ul>
-                        <li><a href="#about">私たちについて</a></li>
-                        <li><a href="#contact">お問い合わせ</a></li>
-                        <li><a href="#faq">よくある質問</a></li>
-                        <li><a href="#shipping">配送情報</a></li>
-                        <li><a href="#privacy">プライバシーポリシー</a></li>
-                        <li><a href="#terms">利用規約</a></li>
-                        <li><a href="#returns">返品規則</a></li>
-                      </ul>
-                    </div>
-                    
-                    <div className="footer-section">
-                      <h4>カテゴリー</h4>
-                      <ul>
-                        <li><a href="#custom-neon">カスタムネオンサイン</a></li>
-                        <li><a href="#ready-neon">既成ネオンサイン</a></li>
-                        <li><a href="#custom-led">カスタムLEDサイン</a></li>
-                        <li><a href="#indoor-neon">室内用ネオンサイン</a></li>
-                        <li><a href="#upload">画像をアップロードする</a></li>
-                        <li><a href="#blog">ブログ</a></li>
-                        <li><a href="#ambassador">ブランドアンバサダー</a></li>
-                      </ul>
-                    </div>
-                    
-                    <div className="footer-section">
-                      <h4>住所</h4>
-                      <div className="address-info">
-                        <p>125 エンタープライズ ドライブ スイート C<br/>カミング GA 30040</p>
-                        <div className="business-hours">
-                          <h5>勤務時間</h5>
-                          <p>24時間（全日）</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="footer-section">
-                      <h4>サインアップして節約</h4>
-                      <p>購読すると20%割引になります。</p>
-                      <div className="newsletter-signup">
-                        <input type="email" placeholder="メールアドレスを入力してください" />
-                        <button type="submit">📧</button>
-                      </div>
-                      <div className="social-icons">
-                        <a href="#facebook">📘</a>
-                        <a href="#instagram">📷</a>
-                        <a href="#pinterest">📌</a>
-                        <a href="#twitter">🐦</a>
-                        <a href="#youtube">📺</a>
-                        <a href="#tiktok">🎵</a>
-                      </div>
-                      
-                      <div className="payment-methods">
-                        <h5>安全な支払い</h5>
-                        <div className="payment-icons">
-                          <span className="payment-icon">💳</span>
-                          <span className="payment-icon">💰</span>
-                          <span className="payment-icon">🏧</span>
-                          <span className="payment-icon">💎</span>
-                        </div>
+              </div>
+              
+              <div className="product-info-footer">
+                <div className="footer-content">
+                  <div className="footer-section">
+                    <h4>一般的な</h4>
+                    <ul>
+                      <li><a href="#about">私たちについて</a></li>
+                      <li><a href="#contact">お問い合わせ</a></li>
+                      <li><a href="#faq">よくある質問</a></li>
+                      <li><a href="#shipping">配送情報</a></li>
+                      <li><a href="#privacy">プライバシーポリシー</a></li>
+                      <li><a href="#terms">利用規約</a></li>
+                      <li><a href="#returns">返品規則</a></li>
+                    </ul>
+                  </div>
+                  
+                  <div className="footer-section">
+                    <h4>カテゴリー</h4>
+                    <ul>
+                      <li><a href="#custom-neon">カスタムネオンサイン</a></li>
+                      <li><a href="#ready-neon">既成ネオンサイン</a></li>
+                      <li><a href="#custom-led">カスタムLEDサイン</a></li>
+                      <li><a href="#indoor-neon">室内用ネオンサイン</a></li>
+                      <li><a href="#upload">画像をアップロードする</a></li>
+                      <li><a href="#blog">ブログ</a></li>
+                      <li><a href="#ambassador">ブランドアンバサダー</a></li>
+                    </ul>
+                  </div>
+                  
+                  <div className="footer-section">
+                    <h4>住所</h4>
+                    <div className="address-info">
+                      <p>125 エンタープライズ ドライブ スイート C<br/>カミング GA 30040</p>
+                      <div className="business-hours">
+                        <h5>勤務時間</h5>
+                        <p>24時間（全日）</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="footer-bottom">
-                    <div className="copyright">
-                      <p>© 2025 GG NEON. 無断複写・転載を禁じます。</p>
+                  <div className="footer-section">
+                    <h4>サインアップして節約</h4>
+                    <p>購読すると20%割引になります。</p>
+                    <div className="newsletter-signup">
+                      <input type="email" placeholder="メールアドレスを入力してください" />
+                      <button type="submit">📧</button>
                     </div>
+                    <div className="social-icons">
+                      <a href="#facebook"><FaFacebookF /></a>
+                      <a href="#instagram"><FaInstagram /></a>
+                      <a href="#pinterest"><FaPinterestP /></a>
+                      <a href="#twitter"><FaTwitter /></a>
+                      <a href="#youtube"><FaYoutube /></a>
+                      <a href="#tiktok"><FaTiktok /></a>
+                    </div>
+                    
+                    <div className="payment-methods">
+                      <h5>安全な支払い</h5>
+                      <div className="payment-icons">
+                        <span className="payment-icon"><FaCcVisa /></span>
+                        <span className="payment-icon"><FaCcMastercard /></span>
+                        <span className="payment-icon"><FaCcAmex /></span>
+                        <span className="payment-icon"><FaPaypal /></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="footer-bottom">
+                  <div className="copyright">
+                    <p>© 2025 GG NEON. 無断複写・転載を禁じます。</p>
                   </div>
                 </div>
               </div>
