@@ -19,7 +19,7 @@
 }
 
 .creation-modal-content {
-  background-image: linear-gradient(to bottom right, #000000, rgb(12, 17, 27), #000000);
+  background-color: rgb(4, 4, 4);
   border: 2px solid rgba(16, 185, 129, 0.7);
   border-radius: 16px;
   box-shadow: 
@@ -396,7 +396,7 @@
 
 .creation-modal-choice-box {
   flex: 1;
-  background: rgba(0, 0, 0, 0.55);
+  background:linear-gradient(145deg, #1a1a1a,rgb(2, 2, 2));
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   padding: 25px;
@@ -414,8 +414,7 @@
 
 .creation-modal-choice-box:hover {
   border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.8);
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
