@@ -9,7 +9,8 @@ import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポー�
 import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
 import RealTime3DProgressModal from './RealTime3DProgressModal.jsx'; // リアルタイム3D進捗モーダル
 import { Home, Type, Edit3, Settings, Eye, Package } from 'lucide-react';
-import { FaCcVisa, FaCcMastercard, FaCcAmex, FaPaypal, FaFacebookF, FaInstagram, FaPinterestP, FaTwitter, FaYoutube, FaTiktok } from 'react-icons/fa';
+import { FaCcVisa, FaCcMastercard, FaCcAmex, FaPaypal, FaFacebookF, FaInstagram, FaTiktok, FaLinkedinIn } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 
 
@@ -2120,7 +2121,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               <div className="product-info-footer">
                 <div className="footer-content">
                   <div className="footer-section">
-                    <h4>一般的な</h4>
+                    <h4>会社情報</h4>
                     <ul>
                       <li><a href="#about">私たちについて</a></li>
                       <li><a href="#contact">お問い合わせ</a></li>
@@ -2128,57 +2129,45 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                       <li><a href="#shipping">配送情報</a></li>
                       <li><a href="#privacy">プライバシーポリシー</a></li>
                       <li><a href="#terms">利用規約</a></li>
-                      <li><a href="#returns">返品規則</a></li>
+                      <li><a href="#returns">返品・交換</a></li>
                     </ul>
                   </div>
                   
                   <div className="footer-section">
-                    <h4>カテゴリー</h4>
+                    <h4>商品カテゴリー</h4>
                     <ul>
-                      <li><a href="#custom-neon">カスタムネオンサイン</a></li>
+                      <li><a href="#custom-led-neon">カスタムLEDネオンサイン</a></li>
                       <li><a href="#ready-neon">既成ネオンサイン</a></li>
-                      <li><a href="#custom-led">カスタムLEDサイン</a></li>
-                      <li><a href="#indoor-neon">室内用ネオンサイン</a></li>
-                      <li><a href="#upload">画像をアップロードする</a></li>
-                      <li><a href="#blog">ブログ</a></li>
-                      <li><a href="#ambassador">ブランドアンバサダー</a></li>
                     </ul>
                   </div>
                   
-                  <div className="footer-section">
-                    <h4>住所</h4>
-                    <div className="address-info">
-                      <p>125 エンタープライズ ドライブ スイート C<br/>カミング GA 30040</p>
-                      <div className="business-hours">
-                        <h5>勤務時間</h5>
-                        <p>24時間（全日）</p>
-                      </div>
-                    </div>
-                  </div>
                   
                   <div className="footer-section">
-                    <h4>サインアップして節約</h4>
-                    <p>購読すると20%割引になります。</p>
+                    <h4>メルマガ登録</h4>
+                    <p className="newsletter-text">購読すると20%割引になります。</p>
                     <div className="newsletter-signup">
                       <input type="email" placeholder="メールアドレスを入力してください" />
-                      <button type="submit">📧</button>
+                      <button type="submit">登録</button>
                     </div>
                     <div className="social-icons">
                       <a href="#facebook"><FaFacebookF /></a>
                       <a href="#instagram"><FaInstagram /></a>
-                      <a href="#pinterest"><FaPinterestP /></a>
-                      <a href="#twitter"><FaTwitter /></a>
-                      <a href="#youtube"><FaYoutube /></a>
+                      <a href="#x"><FaXTwitter /></a>
+                      <a href="#linkedin"><FaLinkedinIn /></a>
                       <a href="#tiktok"><FaTiktok /></a>
                     </div>
                     
                     <div className="payment-methods">
-                      <h5>安全な支払い</h5>
+                      <h5>お支払い方法</h5>
                       <div className="payment-icons">
-                        <span className="payment-icon"><FaCcVisa /></span>
-                        <span className="payment-icon"><FaCcMastercard /></span>
-                        <span className="payment-icon"><FaCcAmex /></span>
-                        <span className="payment-icon"><FaPaypal /></span>
+                        <img src="/icons/visa.svg" alt="Visa" className="payment-icon" />
+                        <img src="/icons/mc_symbol.svg" alt="Mastercard" className="payment-icon" />
+                        <img src="/icons/American Express BB Logo.jpg" alt="American Express" className="payment-icon" />
+                        <img src="/icons/jcb-logomark-img-03.webp" alt="JCB" className="payment-icon" />
+                        <img src="/icons/paypay_3_rgb.png" alt="PayPay" className="payment-icon" />
+                        <img src="/icons/Logo_RakutenPay_Horizontal.png" alt="Rakuten Pay" className="payment-icon" />
+                        <img src="/icons/merpay_service_logo_horizontal_rgb.png" alt="Merpay" className="payment-icon" />
+                        <img src="/icons/Apple_Pay_Mark_RGB_041619.svg" alt="Apple Pay" className="payment-icon" />
                       </div>
                     </div>
                   </div>
@@ -2186,7 +2175,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 
                 <div className="footer-bottom">
                   <div className="copyright">
-                    <p>© 2025 GG NEON. 無断複写・転載を禁じます。</p>
+                    <p>© 2025 GG NEON. All rights reserved.</p>
                   </div>
                 </div>
               </div>
@@ -2196,6 +2185,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         return null;
     }
   };
+
 
   // Placeholder functions to resolve ESLint errors
   const updateEstimate = () => {

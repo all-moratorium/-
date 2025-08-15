@@ -35,7 +35,8 @@
       "Bash(npm run:*)",
       "Bash(pkill:*)",
       "Bash(true)",
-      "WebFetch(domain:theta-smoky.vercel.app)"
+      "WebFetch(domain:theta-smoky.vercel.app)",
+      "Bash(gunzip:*)"
     ],
     "deny": []
   }
