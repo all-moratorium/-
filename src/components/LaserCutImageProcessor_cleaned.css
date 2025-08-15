@@ -1872,6 +1872,185 @@
   line-height: 1.6;
 }
 
+.product-info-footer {
+  margin-top: 60px;
+  padding: 40px 0 20px 0;
+  border-top: 1px solid #333;
+  background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-section h4 {
+  color: #10b981;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #10b981;
+}
+
+.address-info p {
+  color: #ccc;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.business-hours h5 {
+  color: #10b981;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.business-hours p {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.newsletter-signup {
+  display: flex;
+  margin: 15px 0;
+  gap: 10px;
+}
+
+.newsletter-signup input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.newsletter-signup input::placeholder {
+  color: #666;
+}
+
+.newsletter-signup button {
+  padding: 10px 15px;
+  background: #10b981;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+}
+
+.newsletter-signup button:hover {
+  background: #0d9968;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.social-icons a {
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  background: #333;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 35px;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  background: #10b981;
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid #333;
+}
+
+.payment-methods {
+  margin-top: 30px;
+}
+
+.payment-methods h5 {
+  color: #10b981;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.payment-icon {
+  display: inline-block;
+  width: 40px;
+  height: 25px;
+  background: #333;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.payment-icon:hover {
+  background: #10b981;
+}
+
+.copyright p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .social-icons {
+    justify-content: center;
+  }
+  
+  .payment-icons {
+    justify-content: center;
+  }
+}
+
 .product-header {
   text-align: center;
   margin-bottom: 40px;
@@ -2331,7 +2510,8 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 0 10px;
+  margin-top: 15px;
+  width: 100%;
 }
 
 .contact-button:hover {

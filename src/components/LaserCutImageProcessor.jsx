@@ -2106,12 +2106,87 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     <h4>品質保証</h4>
                     <p>厳格な品質管理のもと、不良品は無償で再製作いたします。安心してご利用ください。</p>
                   </div>
+                  
+                  <div className="product-info-feature-card" style={{maxWidth: '350px', margin: '0 auto'}}>
+                    <div className="product-info-feature-icon">📞</div>
+                    <h4>特注・大量注文のご相談</h4>
+                    <p>より大きなサイズや特殊な仕様、大量注文については個別にお見積もりいたします。</p>
+                    <button className="contact-button" onClick={() => openContactForm()}>お問い合わせ</button>
+                  </div>
                 </div>
-        
-                <div className="contact-section">
-                  <h3>特注・大量注文のご相談</h3>
-                  <p>より大きなサイズや特殊な仕様、大量注文については個別にお見積もりいたします。</p>
-                  <button className="contact-button" onClick={() => openContactForm()}>お問い合わせ</button>
+                
+                <div className="product-info-footer">
+                  <div className="footer-content">
+                    <div className="footer-section">
+                      <h4>一般的な</h4>
+                      <ul>
+                        <li><a href="#about">私たちについて</a></li>
+                        <li><a href="#contact">お問い合わせ</a></li>
+                        <li><a href="#faq">よくある質問</a></li>
+                        <li><a href="#shipping">配送情報</a></li>
+                        <li><a href="#privacy">プライバシーポリシー</a></li>
+                        <li><a href="#terms">利用規約</a></li>
+                        <li><a href="#returns">返品規則</a></li>
+                      </ul>
+                    </div>
+                    
+                    <div className="footer-section">
+                      <h4>カテゴリー</h4>
+                      <ul>
+                        <li><a href="#custom-neon">カスタムネオンサイン</a></li>
+                        <li><a href="#ready-neon">既成ネオンサイン</a></li>
+                        <li><a href="#custom-led">カスタムLEDサイン</a></li>
+                        <li><a href="#indoor-neon">室内用ネオンサイン</a></li>
+                        <li><a href="#upload">画像をアップロードする</a></li>
+                        <li><a href="#blog">ブログ</a></li>
+                        <li><a href="#ambassador">ブランドアンバサダー</a></li>
+                      </ul>
+                    </div>
+                    
+                    <div className="footer-section">
+                      <h4>住所</h4>
+                      <div className="address-info">
+                        <p>125 エンタープライズ ドライブ スイート C<br/>カミング GA 30040</p>
+                        <div className="business-hours">
+                          <h5>勤務時間</h5>
+                          <p>24時間（全日）</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="footer-section">
+                      <h4>サインアップして節約</h4>
+                      <p>購読すると20%割引になります。</p>
+                      <div className="newsletter-signup">
+                        <input type="email" placeholder="メールアドレスを入力してください" />
+                        <button type="submit">📧</button>
+                      </div>
+                      <div className="social-icons">
+                        <a href="#facebook">📘</a>
+                        <a href="#instagram">📷</a>
+                        <a href="#pinterest">📌</a>
+                        <a href="#twitter">🐦</a>
+                        <a href="#youtube">📺</a>
+                        <a href="#tiktok">🎵</a>
+                      </div>
+                      
+                      <div className="payment-methods">
+                        <h5>安全な支払い</h5>
+                        <div className="payment-icons">
+                          <span className="payment-icon">💳</span>
+                          <span className="payment-icon">💰</span>
+                          <span className="payment-icon">🏧</span>
+                          <span className="payment-icon">💎</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="footer-bottom">
+                    <div className="copyright">
+                      <p>© 2025 GG NEON. 無断複写・転載を禁じます。</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
