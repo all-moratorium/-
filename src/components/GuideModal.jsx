@@ -1,8 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GuideModal.css';
 
 const GuideModal = ({ isOpen, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 全てのアニメーションをリセット
+      const allAnimatedCards = document.querySelectorAll('.fade-in.animate');
+      allAnimatedCards.forEach(card => {
+        card.classList.remove('animate');
+      });
+
+      // 少し待ってからページに対応するアニメーションを開始
+      const timer = setTimeout(() => {
+        if (currentPage === 1) {
+          const featureCards = document.querySelectorAll('.feature-card.fade-in');
+          featureCards.forEach(card => {
+            card.classList.add('animate');
+          });
+        } else if (currentPage === 2) {
+          const useCaseCards = document.querySelectorAll('.use-case-card.fade-in');
+          useCaseCards.forEach(card => {
+            card.classList.add('animate');
+          });
+        } else if (currentPage === 3) {
+          const page3Sections = document.querySelectorAll('.guide-info-section.fade-in, .creation-section.fade-in');
+          page3Sections.forEach(section => {
+            section.classList.add('animate');
+          });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, currentPage]);
 
   if (!isOpen) return null;
 
@@ -52,7 +83,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <h4 className="guide-section-title">このサイトでできること</h4>
             
             <div className="guide-features">
-              <div className="feature-card">
+              <div className="feature-card fade-in">
                 <div className="feature-icon">
                   <div className="icon-placeholder"></div>
                 </div>
@@ -63,7 +94,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
               
-              <div className="feature-card">
+              <div className="feature-card fade-in">
                 <div className="feature-icon">
                   <div className="icon-placeholder"></div>
                 </div>
@@ -74,7 +105,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
               
-              <div className="feature-card">
+              <div className="feature-card fade-in">
                 <div className="feature-icon">
                   <div className="icon-placeholder"></div>
                 </div>
@@ -84,7 +115,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
               
-              <div className="feature-card">
+              <div className="feature-card fade-in">
                 <div className="feature-icon">
                   <div className="icon-placeholder"></div>
                 </div>
@@ -103,21 +134,21 @@ const GuideModal = ({ isOpen, onClose }) => {
           </div>
             
             <div className="guide-use-cases">
-              <div className="use-case-card">
+              <div className="use-case-card fade-in">
                 <div className="use-case-title">店舗のサインボード・看板</div>
                 <div className="use-case-image">
                   <div className="image-placeholder">画像準備中</div>
                 </div>
               </div>
               
-              <div className="use-case-card">
+              <div className="use-case-card fade-in">
                 <div className="use-case-title">イベントの装飾・演出</div>
                 <div className="use-case-image">
                   <div className="image-placeholder">画像準備中</div>
                 </div>
               </div>
               
-              <div className="use-case-card">
+              <div className="use-case-card fade-in">
                 <div className="use-case-title">オフィス・お部屋のインテリア</div>
                 <div className="use-case-image">
                   <div className="image-placeholder">画像準備中</div>
@@ -140,7 +171,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <div className="guide-getting-started">
               <h3 className="guide-subtitle">その他事項</h3>
               
-              <div className="guide-info-section">
+              <div className="guide-info-section fade-in">
                 <h3 className="guide-info-title">ガイドを開く</h3>
                 <div className="info-icon">
                   <div className="guide-info-button"></div>
@@ -154,7 +185,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section">
+              <div className="guide-info-section fade-in">
                 <h3 className="guide-info-title">全画面表示について</h3>
                 <div className="mobile-only-text">※モバイル版のみ</div>
                 <div className="mobile-screenshot">
@@ -165,7 +196,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="creation-section">
+              <div className="creation-section fade-in">
                 <h3 className="creation-title">作成開始</h3>
                 <div className="creation-image">
                   <div className="image-placeholder">アプリスクリーンショット</div>
@@ -176,7 +207,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section data-storage-section">
+              <div className="guide-info-section data-storage-section fade-in">
                 <h3 className="guide-info-title">データの保存について</h3>
                 <div className="guide-info-text">
                   <div className="list-item">
@@ -191,7 +222,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section sample-data-section">
+              <div className="guide-info-section sample-data-section fade-in">
                 <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
                 <div className="sample-load-btn">
                   📤 読み込む
