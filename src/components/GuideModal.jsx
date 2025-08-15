@@ -7,7 +7,7 @@ const GuideModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       // 全てのアニメーションをリセット
-      const allAnimatedCards = document.querySelectorAll('.fade-in.animate');
+      const allAnimatedCards = document.querySelectorAll('.animate');
       allAnimatedCards.forEach(card => {
         card.classList.remove('animate');
       });
@@ -23,11 +23,6 @@ const GuideModal = ({ isOpen, onClose }) => {
           const useCaseCards = document.querySelectorAll('.use-case-card.fade-in');
           useCaseCards.forEach(card => {
             card.classList.add('animate');
-          });
-        } else if (currentPage === 3) {
-          const page3Sections = document.querySelectorAll('.guide-info-section.fade-in, .creation-section.fade-in');
-          page3Sections.forEach(section => {
-            section.classList.add('animate');
           });
         }
       }, 150);
@@ -171,7 +166,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <div className="guide-getting-started">
               <h3 className="guide-subtitle">その他事項</h3>
               
-              <div className="guide-info-section fade-in">
+              <div className="guide-info-section page3-fade-in">
                 <h3 className="guide-info-title">ガイドを開く</h3>
                 <div className="info-icon">
                   <div className="guide-info-button"></div>
@@ -185,7 +180,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section fade-in">
+              <div className="guide-info-section page3-fade-in">
                 <h3 className="guide-info-title">全画面表示について</h3>
                 <div className="mobile-only-text">※モバイル版のみ</div>
                 <div className="mobile-screenshot">
@@ -196,7 +191,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="creation-section fade-in">
+              <div className="creation-section page3-fade-in">
                 <h3 className="creation-title">作成開始</h3>
                 <div className="creation-image">
                   <div className="image-placeholder">アプリスクリーンショット</div>
@@ -207,7 +202,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section data-storage-section fade-in">
+              <div className="guide-info-section data-storage-section page3-fade-in">
                 <h3 className="guide-info-title">データの保存について</h3>
                 <div className="guide-info-text">
                   <div className="list-item">
@@ -222,7 +217,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section sample-data-section fade-in">
+              <div className="guide-info-section sample-data-section page3-fade-in">
                 <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
                 <div className="sample-load-btn">
                   📤 読み込む

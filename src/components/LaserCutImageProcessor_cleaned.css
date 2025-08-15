@@ -153,6 +153,8 @@
 
 .preview3d-empty-video {
   width: 600px;
+  min-width: 600px;
+  min-height: auto;
   height: auto;
   margin-bottom: 20px;
   margin-top: 20px;

@@ -390,40 +390,6 @@
   overflow: hidden;
 }
 
-/* ページ3のセクションアニメーション */
-.guide-info-section.fade-in,
-.creation-section.fade-in {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.guide-info-section.fade-in.animate,
-.creation-section.fade-in.animate {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 段階的アニメーション遅延 - guide-getting-started内の順番で */
-.guide-getting-started .guide-info-section:nth-child(2).fade-in {
-  transition-delay: 0.1s;
-}
-
-.guide-getting-started .guide-info-section:nth-child(3).fade-in {
-  transition-delay: 0.4s;
-}
-
-.guide-getting-started .creation-section:nth-child(4).fade-in {
-  transition-delay: 0.7s;
-}
-
-.guide-getting-started .guide-info-section:nth-child(5).fade-in {
-  transition-delay: 1.0s;
-}
-
-.guide-getting-started .guide-info-section:nth-child(6).fade-in {
-  transition-delay: 1.3s;
-}
 
 /* 左セクション（ガイド情報） */
 .guide-info-section {
