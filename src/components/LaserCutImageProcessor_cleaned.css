@@ -2431,16 +2431,47 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
-  margin-top: 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-top: 80px;
 }
 
 .product-info-feature-card {
   background: linear-gradient(145deg, #1a1a1a, #262626);
-  border-radius: 15px;
-  padding: 25px;
+  border-radius: 12px;
+  padding: 20px;
   border: 1px solid #333;
   text-align: center;
   transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-info-feature-card.fade-in {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.product-info-feature-card.fade-in.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-info-feature-card:nth-child(1).fade-in {
+  transition-delay: 0.1s;
+}
+
+.product-info-feature-card:nth-child(2).fade-in {
+  transition-delay: 0.5s;
+}
+
+.product-info-feature-card:nth-child(3).fade-in {
+  transition-delay: 1.0s;
+}
+
+.product-info-feature-card:nth-child(4).fade-in {
+  transition-delay: 1.4s;
 }
 
 .product-info-feature-icon {

@@ -2103,17 +2103,29 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 </div>
         
                 <div className="features-section">
-                  <div className="product-info-feature-card" style={{maxWidth: '350px', margin: '0 auto'}}>
+                  <div className="product-info-feature-card" style={{maxWidth: '280px', margin: '0 auto'}}>
                     <div className="product-info-feature-icon">🛡️</div>
                     <h4>品質保証</h4>
                     <p>厳格な品質管理のもと、不良品は無償で再製作いたします。安心してご利用ください。</p>
                   </div>
                   
-                  <div className="product-info-feature-card" style={{maxWidth: '350px', margin: '0 auto'}}>
+                  <div className="product-info-feature-card" style={{maxWidth: '280px', margin: '0 auto'}}>
                     <div className="product-info-feature-icon">📞</div>
                     <h4>特注・大量注文のご相談</h4>
                     <p>より大きなサイズや特殊な仕様、大量注文については個別にお見積もりいたします。</p>
                     <button className="contact-button" onClick={() => openContactForm()}>お問い合わせ</button>
+                  </div>
+                  
+                  <div className="product-info-feature-card" style={{maxWidth: '280px', margin: '0 auto'}}>
+                    <div className="product-info-feature-icon">🚚</div>
+                    <h4>全国配送対応</h4>
+                    <p>日本全国どこでも安全にお届けします。配送状況もリアルタイムで確認できます。</p>
+                  </div>
+                  
+                  <div className="product-info-feature-card" style={{maxWidth: '280px', margin: '0 auto'}}>
+                    <div className="product-info-feature-icon">⚡</div>
+                    <h4>スピード制作</h4>
+                    <p>デザイン確定後、最短5営業日でお届け。お急ぎの場合はご相談ください。</p>
                   </div>
                 </div>
               </div>
@@ -2186,6 +2198,33 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     }
   };
 
+  // スクロールアニメーション用のIntersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+      }
+    );
+
+    // ページロード時にfade-inクラスを追加してから監視開始
+    const cards = document.querySelectorAll('.product-info-feature-card');
+    cards.forEach((card) => {
+      card.classList.add('fade-in');
+      observer.observe(card);
+    });
+
+    return () => {
+      cards.forEach((card) => observer.unobserve(card));
+    };
+  }, [currentPage]);
 
   // Placeholder functions to resolve ESLint errors
   const updateEstimate = () => {
