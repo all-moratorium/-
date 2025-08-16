@@ -192,27 +192,27 @@
 .feature-card.fade-in {
   opacity: 0;
   transform: translateY(50px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .feature-card.fade-in.animate {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.feature-card:nth-child(1).fade-in {
+.feature-card:nth-child(1).fade-in.animate {
   transition-delay: 0.1s;
 }
 
-.feature-card:nth-child(2).fade-in {
+.feature-card:nth-child(2).fade-in.animate {
   transition-delay: 0.4s;
 }
 
-.feature-card:nth-child(3).fade-in {
+.feature-card:nth-child(3).fade-in.animate {
   transition-delay: 0.7s;
 }
 
-.feature-card:nth-child(4).fade-in {
+.feature-card:nth-child(4).fade-in.animate {
   transition-delay: 1.0s;
 }
 
@@ -272,23 +272,23 @@
 .use-case-card.fade-in {
   opacity: 0;
   transform: translateY(50px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .use-case-card.fade-in.animate {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.use-case-card:nth-child(1).fade-in {
+.use-case-card:nth-child(1).fade-in.animate {
   transition-delay: 0.1s;
 }
 
-.use-case-card:nth-child(2).fade-in {
+.use-case-card:nth-child(2).fade-in.animate {
   transition-delay: 0.4s;
 }
 
-.use-case-card:nth-child(3).fade-in {
+.use-case-card:nth-child(3).fade-in.animate {
   transition-delay: 0.7s;
 }
 
@@ -337,6 +337,38 @@
 }
 
 /* ページ3のスタイル - 整理済み */
+
+/* ページ3のアニメーション */
+.page3-fade-in {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.page3-fade-in.animate {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.page3-fade-in:nth-child(2).animate {
+  transition-delay: 0.1s;
+}
+
+.page3-fade-in:nth-child(3).animate {
+  transition-delay: 0.5s;
+}
+
+.page3-fade-in:nth-child(4).animate {
+  transition-delay: 0.9s;
+}
+
+.page3-fade-in:nth-child(5).animate {
+  transition-delay: 1.3s;
+}
+
+.page3-fade-in:nth-child(6).animate {
+  transition-delay: 1.7s;
+}
 
 /* ページ3専用 */
 .guide-page-3 {

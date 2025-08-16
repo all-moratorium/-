@@ -6,27 +6,52 @@ const GuideModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      // 全てのアニメーションをリセット
-      const allAnimatedCards = document.querySelectorAll('.animate');
-      allAnimatedCards.forEach(card => {
-        card.classList.remove('animate');
-      });
-
-      // 少し待ってからページに対応するアニメーションを開始
-      const timer = setTimeout(() => {
-        if (currentPage === 1) {
-          const featureCards = document.querySelectorAll('.feature-card.fade-in');
+      // ページごとに個別にアニメーションをリセット
+      if (currentPage === 1) {
+        // 1ページ目のアニメーションをリセット
+        const featureCards = document.querySelectorAll('.feature-card.fade-in');
+        featureCards.forEach(card => {
+          card.classList.remove('animate');
+        });
+        
+        // 少し待ってから1ページ目のアニメーション開始
+        const timer = setTimeout(() => {
           featureCards.forEach(card => {
             card.classList.add('animate');
           });
-        } else if (currentPage === 2) {
-          const useCaseCards = document.querySelectorAll('.use-case-card.fade-in');
+        }, 150);
+        return () => clearTimeout(timer);
+        
+      } else if (currentPage === 2) {
+        // 2ページ目のアニメーションをリセット
+        const useCaseCards = document.querySelectorAll('.use-case-card.fade-in');
+        useCaseCards.forEach(card => {
+          card.classList.remove('animate');
+        });
+        
+        // 少し待ってから2ページ目のアニメーション開始
+        const timer = setTimeout(() => {
           useCaseCards.forEach(card => {
             card.classList.add('animate');
           });
-        }
-      }, 150);
-      return () => clearTimeout(timer);
+        }, 150);
+        return () => clearTimeout(timer);
+        
+      } else if (currentPage === 3) {
+        // 3ページ目のアニメーションをリセット
+        const page3Cards = document.querySelectorAll('.page3-fade-in');
+        page3Cards.forEach(card => {
+          card.classList.remove('animate');
+        });
+        
+        // 少し待ってから3ページ目のアニメーション開始
+        const timer = setTimeout(() => {
+          page3Cards.forEach(card => {
+            card.classList.add('animate');
+          });
+        }, 150);
+        return () => clearTimeout(timer);
+      }
     }
   }, [isOpen, currentPage]);
 
