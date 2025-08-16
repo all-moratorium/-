@@ -3744,7 +3744,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(45px, 6vw, 50px);
+    height: clamp(45px, 6vw, 55px);
     z-index: 1000;
     position: relative;
   }
@@ -3861,7 +3861,7 @@ canvas {
   }
   .creation-modal-choice-box {
     width: 95%;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
     padding: clamp(12px, 2vw, 25px);
   }
