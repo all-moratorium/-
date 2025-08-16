@@ -703,7 +703,7 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
         color: #ffffff;
         transform: translateX(-50%);
-        border-radius: 2px;
+        border-radius: 4px;
         padding: 5px 5px !important;
         box-shadow: none;
         font-size: 8px !important;
