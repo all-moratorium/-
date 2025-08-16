@@ -191,14 +191,33 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="creation-section page3-fade-in">
-                <h3 className="creation-title">作成開始</h3>
-                <div className="creation-image">
-                  <div className="image-placeholder">アプリスクリーンショット</div>
+              <div className="creation-section sample-data-main-section page3-fade-in">
+                <h3 className="sample-data-title">サンプルデータの読み込み方法</h3>
+                <div className="sample-data-images-top">
+                  <div className="sample-data-image-group">
+                    <div className="sample-category-label">ネオン下絵</div>
+                    <div className="sample-data-image-small">
+                      <div className="image-placeholder">サンプル画像1</div>
+                    </div>
+                    <div className="sample-instruction-item">
+                 下絵のみのデータが読み込まれます。
+                    </div>
+                  </div>
+                  <div className="sample-data-image-group">
+                    <div className="sample-category-label">色 / 仕様のカスタマイズ</div>
+                    <div className="sample-data-image-small">
+                      <div className="image-placeholder">サンプル画像2</div>
+                    </div>
+                    <div className="sample-instruction-item">
+                     色 / 仕様のデータ、加えてネオン下絵に<br />下絵のデータが読み込まれます。
+                    </div>
+                  </div>
                 </div>
-                <div className="creation-text">
-                  画面真ん中下の「早速作成する」<br />
-                  ボタンを押して作成開始
+                <div className="sample-data-image-bottom">
+                  <div className="image-placeholder">サンプル画像3</div>
+                </div>
+                <div className="sample-instruction-item">
+                 サンプルデータは色仕様のカスタマイズデータ<br />ですので、どちらでも読み込み可能です。
                 </div>
               </div>
 
@@ -217,24 +236,14 @@ const GuideModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="guide-info-section sample-data-section page3-fade-in">
-                <h3 className="guide-info-title">サンプルデータの読み込み方法</h3>
-                <div className="sample-load-btn">
-                  📤 読み込む
+              <div className="guide-info-section creation-start-section page3-fade-in">
+                <h3 className="guide-info-title">作成開始</h3>
+                <div className="creation-start-image">
+                  <div className="image-placeholder">アプリスクリーンショット</div>
                 </div>
-                <div className="sample-description-text">
-                  ネオン下絵、色 / 仕様のカスタマイズページの右サイドバー<br />にそれぞれ「読み込む」ボタンが配置されています
-                </div>
-                <div className="guide-info-text">
-                  <div className="list-item">
-                    <span className="triangle-icon">▶</span> ネオン下絵で読み込むと、下絵のデータが<br />読み込まれます
-                  </div>
-                  <div className="list-item">
-                    <span className="triangle-icon">▶</span> 色 / 仕様のカスタマイズで読み込むと、色仕様のデータ<br />そしてネオン下絵に下絵のデータが読み込まれます
-                  </div>
-                  <div className="list-item">
-                    <span className="triangle-icon">▶</span> サンプルデータは色仕様のカスタマイズデータ<br />ですので、どちらでも読み込み可能です
-                  </div>
+                <div className="creation-start-text">
+                  画面真ん中下の「早速作成する」<br />
+                  ボタンを押して作成開始
                 </div>
               </div>
             </div>
