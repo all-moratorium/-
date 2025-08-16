@@ -398,7 +398,7 @@
   gap: 32px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 700px) {
   .creation-modal-choices {
     flex-direction: row;
     align-items: stretch;
@@ -458,8 +458,6 @@
   font-size: 28px;
   font-weight: bold;
   margin-right: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
   letter-spacing: 0.025em;
 }
 
@@ -3804,7 +3802,9 @@ canvas {
   }
   
   .creation-modal-choice-title {
-    font-size: min(4vw, 1.5rem);
+    font-size: clamp(14px, 2.8vw, 1.5rem);
+    white-space: nowrap;
+    margin-top: clamp(5px, 2vw, 24px);
   }
   
   .creation-modal-choice-step {
@@ -3817,21 +3817,29 @@ canvas {
   
   .creation-modal-choice-feature-text {
     font-size: min(4vw, 1.1rem);
+    white-space: wrap;
   }
   
   .creation-modal-choice-note {
     font-size: min(4vw, 1.1rem);
   }
   .creation-modal-choice-step.step-yellow {
-    font-size: min(4vw, 1.5rem);
+    font-size: clamp(16px, 2.8vw, 1.5rem);
+    margin-right: 2vw;
+    padding: 0;
   }
   .creation-modal-choice-step.step-cyan {
-    font-size: min(4vw, 1.5rem);
+    font-size: clamp(16px, 2.5vw, 1.5rem);
+    margin-right: 2vw;
+    padding: 0;
   }
   .creation-modal-step-title {
     font-size: clamp(8.5px, 1vw, 12px);
   }
   .creation-modal-choice-box {
+    width: 90%;
+    margin: 0 auto;
+    padding: clamp(15px, 2vw, 25px);
   }
   .creation-modal-step-num {
     font-size: clamp(10px, 1.2vw, 12px);
