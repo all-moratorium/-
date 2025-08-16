@@ -3,9 +3,15 @@ import './GuideModal.css';
 
 const GuideModal = ({ isOpen, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [animatedPages, setAnimatedPages] = useState(new Set());
 
   useEffect(() => {
     if (isOpen) {
+      // そのページが既にアニメーション済みの場合はスキップ
+      if (animatedPages.has(currentPage)) {
+        return;
+      }
+
       // ページごとに個別にアニメーションをリセット
       if (currentPage === 1) {
         // 1ページ目のアニメーションをリセット
@@ -19,6 +25,8 @@ const GuideModal = ({ isOpen, onClose }) => {
           featureCards.forEach(card => {
             card.classList.add('animate');
           });
+          // アニメーション完了をマーク
+          setAnimatedPages(prev => new Set(prev).add(1));
         }, 150);
         return () => clearTimeout(timer);
         
@@ -34,6 +42,8 @@ const GuideModal = ({ isOpen, onClose }) => {
           useCaseCards.forEach(card => {
             card.classList.add('animate');
           });
+          // アニメーション完了をマーク
+          setAnimatedPages(prev => new Set(prev).add(2));
         }, 150);
         return () => clearTimeout(timer);
         
@@ -49,11 +59,13 @@ const GuideModal = ({ isOpen, onClose }) => {
           page3Cards.forEach(card => {
             card.classList.add('animate');
           });
+          // アニメーション完了をマーク
+          setAnimatedPages(prev => new Set(prev).add(3));
         }, 150);
         return () => clearTimeout(timer);
       }
     }
-  }, [isOpen, currentPage]);
+  }, [isOpen, currentPage, animatedPages]);
 
   if (!isOpen) return null;
 
@@ -71,6 +83,7 @@ const GuideModal = ({ isOpen, onClose }) => {
 
   const resetAndClose = () => {
     setCurrentPage(1);
+    setAnimatedPages(new Set()); // アニメーション履歴をリセット
     onClose();
   };
 
