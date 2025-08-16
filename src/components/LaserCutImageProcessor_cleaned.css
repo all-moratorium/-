@@ -3744,7 +3744,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(40px, 6vw, 50px);
+    height: clamp(45px, 6vw, 50px);
     z-index: 1000;
     position: relative;
   }
@@ -3788,10 +3788,10 @@ canvas {
   }
   
   .creation-modal-header-title {
-    font-size: clamp(16px, 2.6vw, 20px);
+    font-size: clamp(18px, 2.6vw, 20px);
     margin: 0;
     color: #fff;
-    font-weight: 600;
+    font-weight: bold;
   }
   
   .creation-modal-title {
@@ -3886,8 +3886,8 @@ canvas {
   }
   
   .creation-modal-choice-box-yellow:active {
-    border-color: rgba(16, 185, 129, 0.5);
-    box-shadow: 0 0 30px 0px rgba(16, 185, 129, 0.2);
+    border-color: rgba(255, 255, 0, 0.5);
+    box-shadow: 0 0 30px 0px rgba(255, 255, 0, 0.2);
   }
   
   .creation-modal-choice-box-cyan:active {
