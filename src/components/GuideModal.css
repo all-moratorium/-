@@ -67,7 +67,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 50px;
+  height: 50px;
 }
 
 .guide-modal-close {
@@ -715,13 +715,17 @@
 
 /* ナビゲーション */
 .guide-navigation {
-  background: rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
+  position: sticky !important;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    min-height: 30px !important;
+    justify-content: space-between;
+    height: clamp(40px, 4vw, 50px) !important;
+    z-index: 1000;
+    flex-shrink: 0
 }
 
 
@@ -779,8 +783,10 @@
 /* レスポンシブ対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .guide-modal-content {
-    width: 98% !important;
-    height: 95dvh !important;
+    width: 95%;
+    max-width: 600px;
+    height: 90dvh;
+    max-height: 90dvh;
     border-radius: 12px !important;
     padding: 0;
     display: flex;
@@ -789,33 +795,59 @@
   
   /* ヘッダー - モーダルサイズに応じて調整 */
   .guide-modal-header {
-    padding: 1vh 2vw !important;
+    position: sticky !important;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
     min-height: 30px !important;
-    height: 4vh !important;
-    flex-shrink: 0;
+    justify-content: space-between;
+    height: clamp(40px, 4vw, 50px) !important;
+    z-index: 1000;
+    flex-shrink: 0
   }
   
   .guide-title {
-    font-size: max(12px, 1.8vh) !important;
+    font-size: clamp(18px, 2.6vw, 20px) !important;
+    margin: 0 !important;
+    color: #fff !important;
+    font-weight: bold !important;
   }
   
   .guide-modal-close {
-    font-size: 16px;
-    width: 20px;
-    height: 20px;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
   }
   
-  .page-text {
-    margin-left: 8px;
-  }
+
   
   .guide-subtitle {
-    font-size: 4vw;
+    font-size: clamp(17px, 3.5vw, 30px);
     white-space: nowrap;
+  }
+  .guide-getting-started .guide-subtitle {
+    font-size: clamp(17px, 3.5vw, 30px);
   }
   
   .guide-section-title {
-    font-size: 4vw;
+    font-size: clamp(17px, 3.5vw, 30px);
   }
   
   .guide-hero-image {
@@ -911,76 +943,32 @@
   
   /* フッター - 最小限の高さ */
   .guide-navigation {
-    padding: 2px 8px;
+    padding: 3px 8px;
     min-height: 30px;
     flex-shrink: 0;
   }
   
   .nav-button {
-    padding: 4px 8px;
-    font-size: 10px;
+    padding: 6px 10px;
+    font-size: clamp(12px, 1.6vw, 14px);
+    border-radius: 6px;
   }
   
   .page-text {
-    font-size: 10px;
+    font-size: clamp(12px, 1.6vw, 14px);
+    margin-left: clamp(4px, 1.2vw, 8px);
   }
   
   .dot {
-    width: 6px;
-    height: 6px;
+    width:clamp(8px, 1.6vw, 12px);
+    height: clamp(8px, 1.6vw, 12px);
   }
 }
 
 
 
 /* 縦向き時の追加調整 */
-@media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
-  /* モーダル本体 */
-  .guide-modal-content {
-    width: 95% !important;
-    height: 95dvh !important;
-    border-radius: 12px !important;
-  }
-  
-  /* ヘッダー調整 */
-  .guide-modal-header {
-    padding: 1vh 2vw !important;
-    min-height: 30px !important;
-    height: 4vh !important;
-    flex-shrink: 0;
-  }
-  
-  .guide-title {
-    font-size: max(12px, 1.8vh) !important;
-  }
-  
-  .guide-modal-close {
-    font-size: 16px;
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* ナビゲーション調整 */
-  .guide-navigation {
-    padding: 2px 8px;
-    min-height: 30px;
-    flex-shrink: 0;
-  }
-  
-  .nav-button {
-    padding: 4px 8px;
-    font-size: 10px;
-  }
-  
-  .page-text {
-    font-size: 10px;
-  }
-  
-  .dot {
-    width: 6px;
-    height: 6px;
-  }
-}
+
 
 /* サンプルデータ読み込みボタン - project-load-btnと同じスタイル */
 .sample-load-btn {
