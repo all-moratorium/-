@@ -358,6 +358,7 @@
   display: flex;
   justify-content: space-between;
   text-align: center;
+  gap: 10px;
 }
 
 .creation-modal-step-label {
@@ -3798,31 +3799,51 @@ canvas {
   }
   
   .creation-modal-process-title {
-    font-size: 1.5rem;
+    font-size: min(5vw, 1.5rem);
     margin-bottom: 20px;
   }
   
   .creation-modal-choice-title {
-    font-size: 1.5rem;
+    font-size: min(4vw, 1.5rem);
   }
   
   .creation-modal-choice-step {
-    font-size: 1.5rem;
+    font-size: clamp(4vw, 1.5rem, 1.5rem);
   }
   
   .creation-modal-choice-description {
-    font-size: 1.1rem;
+    font-size: min(4vw, 1.1rem);
   }
   
   .creation-modal-choice-feature-text {
-    font-size: 1.1rem;
+    font-size: min(4vw, 1.1rem);
   }
   
   .creation-modal-choice-note {
-    font-size: 1.1rem;
+    font-size: min(4vw, 1.1rem);
   }
-  
+  .creation-modal-choice-step.step-yellow {
+    font-size: min(4vw, 1.5rem);
+  }
+  .creation-modal-choice-step.step-cyan {
+    font-size: min(4vw, 1.5rem);
+  }
+  .creation-modal-step-title {
+    font-size: clamp(8.5px, 1vw, 12px);
+  }
   .creation-modal-choice-box {
+  }
+  .creation-modal-step-num {
+    font-size: clamp(10px, 1.2vw, 12px);
+    white-space: nowrap;
+  }
+  .creation-modal-progress-container {
+    margin-bottom: clamp(20px, 4vw, 2.5rem);
+  }
+  .creation-modal-process-route {
+    margin-bottom: clamp(20px, 4vw, 48px);
+
+
   }
   
   /* スマホ版でタップ時にホバー効果を適用 */

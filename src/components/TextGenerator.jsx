@@ -990,7 +990,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                 </div>
                 
                 <div className="color-selection-note">
-                    ※ こちらの色はプレビュー用です。実際のご注文時には、ネオン下絵で画像に沿ったネオンパスを描画して、色仕様のカスタマイズで色や太さを細かく指定可能です。
+                    ※ こちらの色はプレビュー用です。実際のご注文時には、ネオン下絵で画像に沿ったネオンパスを描画して、色 / 仕様のカスタマイズで色や太さを細かく指定します。
                 </div>
 
                 <div className="font-preview-tools-title">文字間隔を調整</div>
