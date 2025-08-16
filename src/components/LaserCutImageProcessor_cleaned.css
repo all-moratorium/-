@@ -3733,7 +3733,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(40px, 6vw, 55px) !important;
+    height: clamp(40px, 6vw, 50px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
