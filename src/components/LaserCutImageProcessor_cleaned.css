@@ -3709,8 +3709,9 @@ canvas {
   }
   .creation-modal-content {
     width: 95%;
-    max-width: none;
+    max-width: 1100px;
     height: 90vh;
+    max-height: 815px;
     display: flex;
     flex-direction: column;
   }
@@ -3786,28 +3787,28 @@ canvas {
   }
   
   .creation-modal-process-title {
-    font-size: 4vw;
+    font-size: 1.5rem;
     margin-bottom: 20px;
   }
   
   .creation-modal-choice-title {
-    font-size: 4vw;
+    font-size: 1.5rem;
   }
   
   .creation-modal-choice-step {
-    font-size: 5vw;
+    font-size: 1.5rem;
   }
   
   .creation-modal-choice-description {
-    font-size: 3vw;
+    font-size: 1.1rem;
   }
   
   .creation-modal-choice-feature-text {
-    font-size: 3vw;
+    font-size: 1.1rem;
   }
   
   .creation-modal-choice-note {
-    font-size: 2.5vw;
+    font-size: 1.1rem;
   }
   
   .creation-modal-choice-box {
