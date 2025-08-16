@@ -3697,9 +3697,6 @@ canvas {
 
 /* スマホ版 - 作成モーダル */
 @media screen and (max-width: 1280px), (pointer: coarse) {
-  .creation-modal-header {
-    display: flex;
-  }
   
   /* スマホ版では元の×ボタンを非表示にしてヘッダーの×ボタンのみ表示 */
   .creation-modal-close-button {
@@ -3728,7 +3725,7 @@ canvas {
   }
   
   .creation-modal-header {
-    position: sticky;
+    position: sticky !important;
     top: 0;
     background: rgba(255, 255, 255, 0.05);
     padding: 3px 15px;
@@ -3736,9 +3733,9 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(45px, 6vw, 55px);
+    height: clamp(40px, 6vw, 50px) !important;
     z-index: 1000;
-    position: relative;
+    flex-shrink: 0
   }
   
   .creation-modal-header .creation-modal-close-button {
