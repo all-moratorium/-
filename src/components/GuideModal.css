@@ -784,9 +784,9 @@
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .guide-modal-content {
     width: 95%;
-    max-width: 600px;
+    max-width: 800px;
     height: 90dvh;
-    max-height: 90dvh;
+    max-height:900px;
     border-radius: 12px !important;
     padding: 0;
     display: flex;
@@ -908,8 +908,17 @@
   .guide-getting-started {  
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
+    min-height: auto !important;
+    height: auto !important;
+    padding: 10px 0;
+  }
+  
+  .guide-page-3 {
+    padding: 10px !important;
+    overflow-y: auto !important;
+    height: 100% !important;
   }
   
   /* モバイル版共通セクションスタイル */
@@ -933,12 +942,114 @@
   /* モバイル版テキスト */
   .guide-info-text,
   .creation-text {
-    font-size: 1.6vh;
+    font-size: clamp(12px, 2.5vw, 14px);
+    line-height: 1.4;
   }
   
-  /* モバイル版画像 */
-  .creation-image {
-    height: 55vh;
+  /* ページ3 - サブタイトル */
+  .guide-getting-started .guide-subtitle {
+    margin-bottom: 15px;
+    font-size: clamp(16px, 3.2vw, 20px);
+  }
+  
+  /* ページ3 - 各セクション共通 */
+  .guide-info-section,
+  .creation-section {
+    width: 90vw;
+    max-width: 350px;
+    padding: 15px;
+    margin: 0 auto 15px auto;
+    border-radius: 8px;
+  }
+  
+  /* ページ3 - タイトル */
+  .guide-info-title,
+  .creation-title,
+  .sample-data-title {
+    font-size: clamp(14px, 3vw, 18px);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  
+  /* ページ3 - ガイドボタン */
+  .guide-info-button {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    margin: 20px auto;
+  }
+  
+  /* ページ3 - スマホスクリーンショット */
+  .mobile-screenshot {
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  /* ページ3 - モバイル版テキスト */
+  .mobile-only-text {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  
+  /* ページ3 - サンプルデータセクション */
+  .sample-data-main-section {
+    padding: 15px !important;
+  }
+  
+  .sample-data-images-top {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .sample-data-image-group {
+    width: 100%;
+  }
+  
+  .sample-data-image-small,
+  .sample-data-image-bottom {
+    width: 100%;
+    height: 120px;
+  }
+  
+  .sample-category-label {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .sample-instruction-item {
+    font-size: 11px;
+    margin-bottom: 8px;
+    white-space: normal;
+    text-align: center;
+  }
+  
+  .sample-main-triangle-icon {
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  
+  /* ページ3 - データ保存セクション */
+  .data-storage-section .list-item {
+    margin-left: 5px;
+    margin-bottom: 10px;
+    font-size: 11px;
+  }
+  
+  .data-storage-section .triangle-icon {
+    font-size: 12px;
+    margin-right: 6px;
+    margin-top: 2px;
+  }
+  
+  /* ページ3 - 作成開始セクション */
+  .creation-start-section .creation-start-image {
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .creation-start-section .creation-start-text {
+    font-size: clamp(11px, 2.2vw, 13px);
+    line-height: 1.3;
   }
   
   /* フッター - 最小限の高さ */
