@@ -3729,7 +3729,7 @@ canvas {
   
   .creation-modal-inner {
     padding: 5px 2.2%;
-    padding-bottom: clamp(20px, 2vw, 30px);
+    padding-bottom: clamp(20px, 2.5vw, 30px);
     padding-top: clamp(10px, 1.5vw, 20px);
     overflow-y: auto;
     flex: 1;
