@@ -408,13 +408,7 @@
   }
 }
 
-@media (min-width: 450px and max-width: 767px) {
-  .creation-modal-choice-features {
-    font-size: 18px;
-    justify-content: center;
-    align-items: center;
-  }
-}
+
 
 .creation-modal-choice-box {
   flex: 1;
@@ -3750,7 +3744,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 50px;
+    height: clamp(40px, 6vw, 50px);
     z-index: 1000;
     position: relative;
   }
@@ -3794,7 +3788,7 @@ canvas {
   }
   
   .creation-modal-header-title {
-    font-size: 20px;
+    font-size: clamp(16px, 2.6vw, 20px);
     margin: 0;
     color: #fff;
     font-weight: 600;
@@ -3867,7 +3861,7 @@ canvas {
   }
   .creation-modal-choice-box {
     width: 95%;
-    max-width: 1000px;
+    max-width: 500px;
     margin: 0 auto;
     padding: clamp(12px, 2vw, 25px);
   }
