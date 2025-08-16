@@ -151,13 +151,22 @@
   box-sizing: border-box;
 }
 
+.preview3d-empty-video-wrapper {
+  height: 339px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background: transparent;
+  border: none;
+}
+
 .preview3d-empty-video {
   width: 600px;
   min-width: 600px;
   min-height: auto;
   height: auto;
-  margin-bottom: 20px;
-  margin-top: 20px;
   border-radius: 0px;
 }
 

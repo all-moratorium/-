@@ -2217,16 +2217,18 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             <div className="customize-empty-title-desktop">
                                 色 / 仕様のカスタマイズ
                             </div>
-                            <video 
-                                className="customize-empty-video"
-                                autoPlay 
-                                loop 
-                                muted 
-                                playsInline
-                            >
-                                <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
-                                お使いのブラウザは動画の再生に対応していません。
-                            </video>
+                            <div className="customize-empty-video-wrapper">
+                                <video 
+                                    className="customize-empty-video"
+                                    autoPlay 
+                                    loop 
+                                    muted 
+                                    playsInline
+                                >
+                                    <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                                    お使いのブラウザは動画の再生に対応していません。
+                                </video>
+                            </div>
                             <div className="customize-empty-description-desktop">
                                 このページを表示するには、ネオン下絵からデータを作成していただくか、この画面の<br></br>右サイドバーの「読み込む」ボタンからファイルデーターを読み込んでください。
                             </div>
