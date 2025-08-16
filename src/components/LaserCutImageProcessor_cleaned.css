@@ -388,16 +388,18 @@
   gap: 32px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .creation-modal-choices {
     flex-direction: row;
     align-items: stretch;
     justify-content: center;
+    gap: 20px;  
   }
 }
 
 .creation-modal-choice-box {
   flex: 1;
+  width: 500px;
   background:linear-gradient(145deg, #1a1a1a,rgb(2, 2, 2));
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -495,7 +497,7 @@
 }
 
 .creation-modal-choice-feature-text {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #fff;
 }
 
@@ -3711,13 +3713,13 @@ canvas {
     width: 95%;
     max-width: 1100px;
     height: 90vh;
-    max-height: 815px;
+    max-height: 790px;
     display: flex;
     flex-direction: column;
   }
   
   .creation-modal-inner {
-    padding: 5px;
+    padding: 5px 2.2%;
     padding-top: 20px;
     overflow-y: auto;
     flex: 1;
@@ -3812,7 +3814,6 @@ canvas {
   }
   
   .creation-modal-choice-box {
-    margin: 0 10px;
   }
   
   /* スマホ版でタップ時にホバー効果を適用 */
@@ -3830,11 +3831,6 @@ canvas {
   .creation-modal-choice-box-cyan:active {
     border-color: rgba(0, 255, 255, 0.5);
     box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.2);
-  }
-  
-  /* STEP1ボタン（cyan）の下にマージン追加 */
-  .creation-modal-choice-box-cyan {
-    margin-bottom: 10px;
   }
 }
 
