@@ -261,7 +261,7 @@ const GuideModal = ({ isOpen, onClose }) => {
 
               <div className="guide-info-section data-storage-section page3-fade-in">
                 <h3 className="guide-info-title">データの保存について</h3>
-                <div className="guide-info-text">
+                <div className="guide-data-storage-text">
                   <div className="list-item">
                     <span className="triangle-icon">▶</span> 一時データはお使いのデバイスの<br />セッションストレージに保存されます。<br /><br />
                   </div>
