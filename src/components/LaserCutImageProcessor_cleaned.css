@@ -3736,7 +3736,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(25px, 5dvh, 45px) !important;
+    height: clamp(25px, 7.5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
       

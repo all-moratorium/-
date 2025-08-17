@@ -682,7 +682,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(25px, 5dvh, 45px) !important;
+    height: clamp(25px, 7.5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
@@ -878,21 +878,21 @@
   
   /* フッター - 最小限の高さ */
   .customize-guide-navigation {
-    padding: 3px clamp(3px, 0.7vh, 12px);
+    padding: 3px clamp(3px, 1vh, 10px);
     min-height: 30px;
-    height: clamp(25px, 5dvh, 45px) !important;
+    height: clamp(25px, 7.5dvh, 45px) !important;
     flex-shrink: 0;
     min-height: 0px !important;
   }
   
   .customize-nav-button {
-    padding:clamp(0px, 0.5vh, 6px) clamp(5px, 1.6vh, 10px);
-    font-size: clamp(12px, 1.6vh, 14px);
+    padding:clamp(0px, 1.2vh, 6px) clamp(5px, 1.6vh, 10px);
+    font-size: clamp(12px, 2vh, 14px);
     border-radius: 4px;
   }
   
   .customize-page-text {
-    font-size: clamp(12px, 1.6vw, 14px);
+    font-size: clamp(12px, 1.8vw, 14px);
     margin-left: clamp(4px, 1.2vw, 8px);
   }
   
