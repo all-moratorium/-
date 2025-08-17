@@ -52,6 +52,7 @@
   display: flex ;
   flex-direction: column ;
   animation: preview3d-bookOpen 0.3s ease-out ;
+  transform-origin: center center;
 }
 
 .preview3d-guide-modal-body {
