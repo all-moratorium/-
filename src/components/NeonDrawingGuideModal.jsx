@@ -816,14 +816,13 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
             ← 前のページ
           </button>
           
-          <div className="neon-drawing-dots-container">
+          <div className="neon-drawing-page-indicator">
             <span className={`neon-drawing-dot ${currentPage === 1 ? 'active' : ''}`}></span>
             <span className={`neon-drawing-dot ${currentPage === 2 ? 'active' : ''}`}></span>
             <span className={`neon-drawing-dot ${currentPage === 3 ? 'active' : ''}`}></span>
             <span className={`neon-drawing-dot ${currentPage === 4 ? 'active' : ''}`}></span>
+            <span className="neon-drawing-page-text">{currentPage}/4</span>
           </div>
-          
-          <span className="neon-drawing-page-text">{currentPage}/4</span>
           
           <button 
             className="neon-drawing-nav-button next" 

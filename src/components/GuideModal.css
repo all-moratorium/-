@@ -63,10 +63,11 @@
 .guide-modal-header {
   padding: 10px 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   position: relative;
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 45px;
 }
 
 .guide-modal-close {
@@ -732,17 +733,13 @@
 
 /* ナビゲーション */
 .guide-navigation {
-  position: sticky !important;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 3px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    min-height: 30px !important;
-    justify-content: space-between;
-    height: clamp(40px, 4vw, 50px) !important;
-    z-index: 1000;
-    flex-shrink: 0
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 
@@ -821,7 +818,7 @@
     align-items: center;
     min-height: 30px !important;
     justify-content: space-between;
-    height: clamp(40px, 4vw, 50px) !important;
+    height: clamp(40px, 6vw, 50px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
@@ -1111,6 +1108,7 @@
   .guide-navigation {
     padding: 3px 8px;
     min-height: 30px;
+    height: clamp(40px, 6vw, 50px) !important;
     flex-shrink: 0;
   }
   

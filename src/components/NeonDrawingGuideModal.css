@@ -34,24 +34,24 @@
 }
 
 .neon-drawing-guide-modal-overlay .neon-drawing-guide-modal-content {
-  background: #000 !important;
-  border-radius: 20px !important;
+  background: #000 ;
+  border-radius: 20px ;
   width: 98%;
-  max-width: 1400px !important;
-  height: 90vh !important;
-  max-height: 900px !important;
-  position: relative !important;
-  padding: 0 !important;
-  color: white !important;
-  overflow: hidden !important;
-  border: 2px solid rgba(16, 185, 129, 0.7) !important;
+  max-width: 1400px ;
+  height: 90vh ;
+  max-height: 900px ;
+  position: relative ;
+  padding: 0 ;
+  color: white ;
+  overflow: hidden ;
+  border: 2px solid rgba(16, 185, 129, 0.7) ;
   box-shadow: 
     0 0 10px rgba(16, 185, 129, 0.5),
     0 0 20px rgba(16, 185, 129, 0.3),
-    0 0 30px rgba(16, 185, 129, 0.1) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  animation: neon-drawing-bookOpen 0.3s ease-out !important;
+    0 0 30px rgba(16, 185, 129, 0.1) ;
+  display: flex ;
+  flex-direction: column ;
+  animation: neon-drawing-bookOpen 0.3s ease-out ;
 }
 
 .neon-drawing-guide-modal-body {
@@ -61,13 +61,13 @@
 }
 
 .neon-drawing-guide-modal-header {
-  background: rgba(255, 255, 255, 0.05);
   padding: 10px 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 50px;
+  height: 45px;
 }
 
 .neon-drawing-guide-modal-close {
@@ -134,7 +134,7 @@
 .neon-drawing-guide-navigation {
   background: rgba(255, 255, 255, 0.05);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 15px 20px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -161,13 +161,14 @@
   cursor: not-allowed;
 }
 
-.neon-drawing-dots-container {
+.neon-drawing-page-indicator {
   display: flex;
   align-items: center;
   gap: 10px;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .neon-drawing-dot {
@@ -187,10 +188,6 @@
 .neon-drawing-page-text {
   color: #ccc;
   font-size: 14px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-left: 61px;
 }
 
 /* 動画セクションのCSS */
@@ -638,20 +635,44 @@
   
   /* ヘッダー - モーダルサイズに応じて調整 */
   .neon-drawing-guide-modal-header {
-    padding: 1vh 2vw !important;
-    min-height: 30px !important;
-    height: 4vh !important;
-    flex-shrink: 0;
+    position: sticky !important;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: clamp(40px, 6vw, 50px) !important;
+    z-index: 1000;
+    flex-shrink: 0
   }
   
   .neon-drawing-guide-title {
-    font-size: max(12px, 1.8vh) !important;
+    font-size: clamp(18px, 2.6vw, 20px) !important;
+    margin: 0;
+    color: #fff;
+    font-weight: bold;
   }
   
   .neon-drawing-guide-modal-close {
-    font-size: 16px;
-    width: 20px;
-    height: 20px;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    background: none;
+    border: none;
+    font-size: 24px !important;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
   }
   
   /* メインコンテンツエリア */
@@ -818,23 +839,27 @@
   
   /* フッター - 最小限の高さ */
   .neon-drawing-guide-navigation {
-    padding: 2px 8px;
+    padding: 3px 8px;
     min-height: 30px;
+    height: clamp(40px, 6vw, 50px) !important;
     flex-shrink: 0;
+
   }
   
   .neon-drawing-nav-button {
-    padding: 4px 8px;
-    font-size: 10px;
+    padding: 6px 10px;
+    font-size: clamp(12px, 1.6vw, 14px);
+    border-radius: 6px;
   }
   
   .neon-drawing-page-text {
-    font-size: 10px;
+    font-size: clamp(12px, 1.6vw, 14px);
+    margin-left: clamp(4px, 1.2vw, 8px);
   }
   
   .neon-drawing-dot {
-    width: 6px;
-    height: 6px;
+    width:clamp(8px, 1.6vw, 12px);
+    height: clamp(8px, 1.6vw, 12px);
   }
 }
 

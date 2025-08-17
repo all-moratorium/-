@@ -2517,21 +2517,6 @@ html, body {
     isolation: isolate;
 }
 
-.customize-guide-modal-content {
-    background: linear-gradient(145deg, #0a0a0a, #141414);
-    border: 1px solid #222;
-    border-radius: 16px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
-                0 0 0 1px rgba(255, 255, 255, 0.05);
-    margin: 0;
-    padding: 40px;
-    width: 820px;
-    max-width: 900px;
-    max-height: 90vh;
-    overflow: hidden;
-    position: relative;
-    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 .customize-guide-modal-inner {
     height: 100%;
