@@ -1078,7 +1078,7 @@
   .guide-data-storage-text .list-item {
     display: flex;
     margin-left: clamp(5px, 1.3vw, 15px);
-    margin-bottom: 12px;
+    margin-bottom: 2px;
     font-size: clamp(11px, 3.2vw, 13px);
     line-height: 1.4;
     text-align: center;
