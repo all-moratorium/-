@@ -2197,7 +2197,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
+            // 1つ目が見えたら全部のカードにanimateクラスを追加
+            const allCards = document.querySelectorAll('.product-info-feature-card');
+            allCards.forEach((card) => {
+              card.classList.add('animate');
+            });
           }
         });
       },
@@ -2207,15 +2211,21 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       }
     );
 
-    // ページロード時にfade-inクラスを追加してから監視開始
+    // ページロード時にfade-inクラスを追加
     const cards = document.querySelectorAll('.product-info-feature-card');
     cards.forEach((card) => {
       card.classList.add('fade-in');
-      observer.observe(card);
     });
+    
+    // 1つ目のカードだけ監視
+    if (cards.length > 0) {
+      observer.observe(cards[0]);
+    }
 
     return () => {
-      cards.forEach((card) => observer.unobserve(card));
+      if (cards.length > 0) {
+        observer.unobserve(cards[0]);
+      }
     };
   }, [currentPage]);
 
