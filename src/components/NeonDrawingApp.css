@@ -1731,9 +1731,9 @@
 
 @media screen and (max-width: 1280px), (pointer: coarse) {
     .neon-guide-modal-content {
-        width: 95%;
+        width: 95vw;
+        height: 90dvh;
         padding: 24px;
-        max-height: 95vh !important;
     }
     
     .neon-guide-modal-content h2 {

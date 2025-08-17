@@ -2649,9 +2649,11 @@ html, body {
 
 @media screen and (max-width: 1280px), (pointer: coarse) {
     .customize-guide-modal-content {
-        width: 95% !important;
-        padding: 24px;
-        max-height: 95vh !important;
+        width: 95vw !important;
+    height: 90dvh !important;
+    border-radius: 12px !important;
+    display: flex;
+    flex-direction: column;
     }
     
     .customize-guide-modal-content h2 {
