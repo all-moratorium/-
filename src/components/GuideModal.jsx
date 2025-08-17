@@ -118,7 +118,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <div className="guide-features">
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <div className="icon-placeholder"></div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="オリジナルネオンサイン作成" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   完全オリジナルの<br />
@@ -129,7 +129,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <div className="icon-placeholder"></div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="データ保存・読み込み" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   作成したネオンサインの<br />
@@ -140,7 +140,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <div className="icon-placeholder"></div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="3Dプレビュー" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   高精細な3Dプレビュー<br />
@@ -150,7 +150,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <div className="icon-placeholder"></div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="ネオンサイン注文" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   完成したネオンサイン<br />
@@ -170,21 +170,21 @@ const GuideModal = ({ isOpen, onClose }) => {
               <div className="use-case-card fade-in">
                 <div className="use-case-title">店舗のサインボード・看板</div>
                 <div className="use-case-image">
-                  <div className="image-placeholder">画像準備中</div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="店舗のサインボード・看板" />
                 </div>
               </div>
               
               <div className="use-case-card fade-in">
                 <div className="use-case-title">イベントの装飾・演出</div>
                 <div className="use-case-image">
-                  <div className="image-placeholder">画像準備中</div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="イベントの装飾・演出" />
                 </div>
               </div>
               
               <div className="use-case-card fade-in">
                 <div className="use-case-title">オフィス・お部屋のインテリア</div>
                 <div className="use-case-image">
-                  <div className="image-placeholder">画像準備中</div>
+                  <img src="/ホーム画像/なにこれ？.png" alt="オフィス・お部屋のインテリア" />
                 </div>
               </div>
             </div>
@@ -269,7 +269,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                     <span className="triangle-icon">▶</span> ブラウザのタブを閉じると全てのデータ<br />が消失します。<br /><br />
                   </div>
                   <div className="list-item">
-                    <span className="triangle-icon">▶</span> そのため作業中は定期的にプロジェクト<br />ファイルをダウンロードしてデバイスに<br />保存することを推奨します。<br /><br />
+                    <span className="triangle-icon">▶</span> そのため作業中は定期的にプロジェクト<br />ファイルをダウンロードしてデバイスに<br />保存することを推奨します。
                   </div>
                 </div>
               </div>
