@@ -1073,19 +1073,28 @@
     margin-bottom: 3px !important;
     font-size: 11px;
     margin: 0 auto;
-    margin-left: clamp(5px, 1.7vw, 15px);
+  }
+  
+  .guide-data-storage-text .list-item {
+    display: flex;
+    margin-left: clamp(5px, 1.3vw, 15px);
+    margin-bottom: 12px;
+    font-size: clamp(11px, 3.2vw, 13px);
+    line-height: 1.4;
+    text-align: center;
   }
   
   .guide-data-storage-text .triangle-icon {
     font-size: 12px;
     margin-right: 6px;
     margin-top: 2px;
+    flex-shrink: 0;
   }
   
   /* ページ3 - 作成開始セクション */
   .creation-start-section .creation-start-image {
     height: 180px;
-    margin-bottom: 0px;
+    margin-top: -10px !important;
     width: 98% !important;
     margin: 0 auto;
   }
