@@ -642,7 +642,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(40px, 4vw, 50px) !important;
+    height: clamp(32px, 5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
@@ -834,7 +834,7 @@
   .preview3d-guide-navigation {
     padding: 3px 8px;
     min-height: 30px;
-    height: clamp(40px, 4vw, 50px) !important;
+    height: clamp(32px, 5dvh, 45px) !important;
     flex-shrink: 0;
   }
   
