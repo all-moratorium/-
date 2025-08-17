@@ -683,7 +683,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(32px, 5dvh, 45px) !important;
+    height: clamp(22px, 5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
@@ -881,14 +881,15 @@
   .customize-guide-navigation {
     padding: 3px 8px;
     min-height: 30px;
-    height: clamp(32px, 5dvh, 45px) !important;
+    height: clamp(22px, 5dvh, 45px) !important;
     flex-shrink: 0;
+    min-height: 0px !important;
   }
   
   .customize-nav-button {
-    padding: 6px 10px;
+    padding:clamp(0px, 0.5vh, 6px) clamp(5px, 1.6vh, 10px);
     font-size: clamp(12px, 1.6vw, 14px);
-    border-radius: 6px;
+    border-radius: 4px;
   }
   
   .customize-page-text {
