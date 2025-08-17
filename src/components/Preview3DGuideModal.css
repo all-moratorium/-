@@ -629,6 +629,7 @@
     height: 90dvh !important;
     border-radius: clamp(8px, 1.6vh, 12px) !important;
     display: flex;
+    max-height: 90dvh !important;
     flex-direction: column;
   }
   

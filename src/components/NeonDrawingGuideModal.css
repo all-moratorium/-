@@ -630,6 +630,7 @@
     border-radius: clamp(8px, 1.6vh, 12px) !important;
     display: flex;
     flex-direction: column;
+    max-height: 90dvh !important;
   }
   
   /* ヘッダー - モーダルサイズに応じて調整 */
