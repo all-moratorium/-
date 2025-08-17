@@ -2508,11 +2508,26 @@
 }
 
 .product-info-feature-card:nth-child(2).fade-in {
-  transition-delay: 0.4s;
+  transition-delay: 0.7s;  /* ピラミッド時：右上 - 最後 */
 }
 
 .product-info-feature-card:nth-child(3).fade-in {
-  transition-delay: 0.7s;
+  transition-delay: 0.4s;  /* ピラミッド時：真ん中下 - 2番目 */
+}
+
+/* 縦1列時は上から下の順番 */
+@media (max-width: 659px) {
+  .product-info-feature-card:nth-child(1).fade-in {
+    transition-delay: 0.1s;  /* 1番目 */
+  }
+  
+  .product-info-feature-card:nth-child(2).fade-in {
+    transition-delay: 0.4s;  /* 2番目 */
+  }
+  
+  .product-info-feature-card:nth-child(3).fade-in {
+    transition-delay: 0.7s;  /* 3番目 */
+  }
 }
 
 .product-info-feature-icon {
