@@ -2432,14 +2432,26 @@
   box-shadow: rgba(16, 185, 129, 0.65) 0px 0px 20px 0px;
 }
 
-/* Features Section */
+/* Features Section - パソコン版もピラミッド型 */
 .features-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-  gap:75px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 60px;
+}
+
+@media (min-width: 1081px) {
+  .product-info-feature-card:nth-child(1),
+  .product-info-feature-card:nth-child(2) {
+    width: 340px;
+  }
+  .product-info-feature-card:nth-child(3) {
+    width: 340px;
+    margin-top: 20px;
+  }
 }
 
 .product-info-feature-card {
@@ -2453,6 +2465,24 @@
   height: 340px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
+}
+
+/* 2列時のピラミッド型配置 - 上2個、下1個 */
+@media (min-width: 660px) and (max-width: 1000px) {
+  .features-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 37px;
+  }
+  .product-info-feature-card:nth-child(1),
+  .product-info-feature-card:nth-child(2) {
+    width: calc(50% - 18px);
+  }
+  .product-info-feature-card:nth-child(3) {
+    width: 340px;
+    margin-top: 20px;
+  }
 }
 
 .product-info-feature-card img {
