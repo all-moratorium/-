@@ -839,15 +839,22 @@
 
   
   .guide-subtitle {
-    font-size: clamp(17px, 3.5vw, 30px);
+    font-size: clamp(17px, 3.5vw, 30px) !important;
     white-space: nowrap;
+    font-weight: bold;
+    color: #fff;
   }
   .guide-getting-started .guide-subtitle {
-    font-size: clamp(17px, 3.5vw, 30px);
+    font-size: clamp(17px, 3.5vw, 30px) !important;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px !important;
   }
   
   .guide-section-title {
-    font-size: clamp(17px, 3.5vw, 30px);
+    font-size: clamp(17px, 3.5vw, 30px) !important;
+    font-weight: bold;
+    color: #fff;
   }
   
   .guide-hero-image {
@@ -862,10 +869,11 @@
   }
   
   .feature-card {
-    width:65vw;
-    height: 100%;
-    padding: 5px;
-    max-width: 300px;
+    width:85vw !important;
+    height: auto !important;
+    padding: clamp(5px, 2vw, 10px) !important;
+    max-width: 360px !important;
+    max-height: 360px !important;
   }
   
   .feature-text {
@@ -875,9 +883,9 @@
   }
   
   .icon-placeholder {
-    width: 57vw;
-    max-width: 280px;
-    height:20vh;
+    width:100% !important;
+    max-width: 300px !important;
+    height:25vh !important;
     font-size: 18px;
     margin: 0 auto;
   }
@@ -912,7 +920,7 @@
     align-items: center;
     min-height: auto !important;
     height: auto !important;
-    padding: 10px 0;
+    padding: 15px 0;
   }
   
   .guide-page-3 {
