@@ -2650,10 +2650,10 @@ html, body {
 @media screen and (max-width: 1280px), (pointer: coarse) {
     .customize-guide-modal-content {
         width: 95vw !important;
-    height: 90dvh !important;
-    border-radius: 12px !important;
-    display: flex;
-    flex-direction: column;
+        height: 90dvh !important;
+        border-radius: clamp(8px, 1.6vh, 12px) !important;
+        display: flex;
+        flex-direction: column;
     }
     
     .customize-guide-modal-content h2 {

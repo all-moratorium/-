@@ -665,10 +665,9 @@
 /* レスポンシブ対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
   .customize-guide-modal-content {
-    width: 98%;
-    height: 98dvh;
-    border-radius: 12px !important;
-    padding: 0;
+    width: 95vw !important;
+    height: 90dvh !important;
+    border-radius: clamp(8px, 1.6vh, 12px) !important;
     display: flex;
     flex-direction: column;
   }
@@ -683,7 +682,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(25px, 5vh, 45px) !important;
+    height: clamp(25px, 5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
   }
@@ -692,7 +691,7 @@
     font-size: clamp(18px, 2.6vw, 20px) !important;
     margin: 0;
     color: #fff;
-    font-weight: bold;
+    font-weight: bold !important;
   }
   
   .customize-guide-modal-close {
@@ -879,16 +878,16 @@
   
   /* フッター - 最小限の高さ */
   .customize-guide-navigation {
-    padding: 3px 8px;
+    padding: 3px clamp(3px, 0.7vh, 12px);
     min-height: 30px;
-    height: clamp(25px, 5vh, 45px) !important;
+    height: clamp(25px, 5dvh, 45px) !important;
     flex-shrink: 0;
     min-height: 0px !important;
   }
   
   .customize-nav-button {
     padding:clamp(0px, 0.5vh, 6px) clamp(5px, 1.6vh, 10px);
-    font-size: clamp(12px, 1.6vw, 14px);
+    font-size: clamp(12px, 1.6vh, 14px);
     border-radius: 4px;
   }
   

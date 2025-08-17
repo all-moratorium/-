@@ -3716,6 +3716,7 @@ canvas {
     max-height: 90dvh;
     display: flex;
     flex-direction: column;
+    border-radius: clamp(8px, 1.6vh, 12px) !important;
   }
   
   .creation-modal-inner {
@@ -3735,9 +3736,10 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: clamp(25px, 5vh, 45px) !important;
+    height: clamp(25px, 5dvh, 45px) !important;
     z-index: 1000;
     flex-shrink: 0
+      
   }
   
   .creation-modal-header .creation-modal-close-button {
