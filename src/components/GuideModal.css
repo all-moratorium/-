@@ -676,7 +676,8 @@
   display: flex;
   margin-left: 15px;
   white-space: nowrap;
-  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .data-storage-section .triangle-icon {
@@ -1077,11 +1078,12 @@
   
   .guide-data-storage-text .list-item {
     display: flex;
-    margin-left: clamp(5px, 1.3vw, 15px);
     margin-bottom: 2px;
     font-size: clamp(11px, 3.2vw, 13px);
     line-height: 1.4;
     text-align: center;
+    justify-content: center;
+    margin: 0 auto;
   }
   
   .guide-data-storage-text .triangle-icon {
@@ -1195,14 +1197,6 @@
   font-size: 13px;
 }
 
-.sample-data-section .list-item {
-  display: flex;
-  margin-left: 1px;
-  white-space: nowrap;
-  font-size: 11px;
-  margin-bottom: 13px;
-  align-items: flex-start;
-}
 
 .sample-data-section .triangle-icon {
   color: #10b981;
