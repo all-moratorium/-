@@ -561,7 +561,8 @@
   font-size: 14px;
   padding: 6px 0;
   display: flex;
-  align-items: center;
+  align-items: center !important;
+  text-align: left !important;
   gap: 10px;
   line-height: 1.4;
 }
@@ -969,13 +970,7 @@
     margin-bottom: 3px;
   }
   
-  .text-generator-supplement-title,
-  .text-generator-warning-title {
-    font-size: clamp(15px, 2.3vw, 17px) !important;
-    margin-bottom: clamp(15px, 3vw, 20px) !important;
-    margin-top: clamp(10px, 2vw, 16px) !important;
-    font-weight: bold !important;
-  }
+
   
   .text-generator-supplement-item,
   .text-generator-warning-item {
