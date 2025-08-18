@@ -747,7 +747,7 @@
   .text-generator-video-time {
     color: white;
     background: rgba(0, 0, 0, 0.8);
-    padding: 3px 6px;
+    padding: 4px 6px;
     border-radius: 4px;
     font-size: 12px;
     white-space: nowrap;
@@ -757,7 +757,7 @@
     background: rgba(0, 0, 0, 0.8);
     color: white;
     border: 1px solid #555;
-    padding: 3px 6px;
+    padding: 4px 6px;
     border-radius: 4px;
     font-size: 12px;
     cursor: pointer;
