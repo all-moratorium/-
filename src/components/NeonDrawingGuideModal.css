@@ -770,7 +770,6 @@
     overflow-y: auto;
     box-sizing: border-box !important;
     height: 100%;
-    background: rgba(26, 26, 26);
   }
   
   /* ステップインジケーター */
@@ -929,7 +928,7 @@
     padding: 8px 12px;
     overflow-y: auto;
     box-sizing: border-box;
-    background: rgba(26, 26, 26);
+
   }
   
   /* 縦向き時のフォントサイズ調整 */

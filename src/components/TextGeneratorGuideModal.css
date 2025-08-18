@@ -649,7 +649,6 @@
   
   .text-generator-guide-title {
     font-size: clamp(18px, 2.6vw, 20px) !important;
-    margin: 0;
     color: #fff;
     font-weight: bold !important;
   }
@@ -766,11 +765,11 @@
   /* 右側の説明エリア - スクロール可能 */
   .text-generator-content-section {
     width: 40%;
-    padding: 6px 8px;
+    padding: 20px 10px 10px 10px !important;
     overflow-y: auto;
     box-sizing: border-box !important;
     height: 100%;
-    background: rgba(26, 26, 26);
+
   }
   
   /* ステップインジケーター */
@@ -922,7 +921,6 @@
     padding: 8px 12px;
     overflow-y: auto;
     box-sizing: border-box;
-    background: rgba(26, 26, 26);
   }
   
   /* 縦向き時のフォントサイズ調整 */
