@@ -2655,6 +2655,7 @@ html, body {
         display: flex;
         max-height: 90dvh !important;
         flex-direction: column;
+        z-index: 1000000;
     }
     
     .customize-guide-modal-content h2 {

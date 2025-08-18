@@ -3774,7 +3774,7 @@ canvas {
   .creation-modal-header {
     position: sticky !important;
     top: 0;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(10, 10, 10);
     padding: 3px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
