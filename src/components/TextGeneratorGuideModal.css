@@ -803,7 +803,7 @@
   .text-generator-container-title {
     font-size: clamp(11px, 1.4vw, 16px);
     margin-bottom: clamp(10px, 1.8vw, 12px);
-    margin-top: clamp(10px, 1.8vw, 21px);
+    margin-top: clamp(10px, 1.4vw, 15px);
     font-weight: bold !important;
   }
   
@@ -820,7 +820,7 @@
   .text-generator-warning-title {
     font-size: clamp(13px, 1.5vw, 16px);
     margin-bottom: clamp(10px, 1.8vw, 12px);
-    margin-top: clamp(10px, 1.8vw, 21px);
+    margin-top: clamp(0px, 1vw, 15px);
     font-weight: bold !important;
   }
   
@@ -843,8 +843,9 @@
     margin-bottom: clamp(8px, 1.2vw, 16px);
     padding: clamp(6px, 1.5vw, 20px);
   }
-  .text-generator-supplement-list {
-    margin: clamp(0px, 0.4vw, 12px) 0;
+  .text-generator-supplement-list,
+  .text-generator-warning-list{
+    margin: clamp(0px, 0.4vw, 12px) 0 !important;
   }
   
   /* フッター - 最小限の高さ */
@@ -970,9 +971,9 @@
   
   .text-generator-supplement-title,
   .text-generator-warning-title {
-    font-size: clamp(14px, 2.3vw, 17px);
-    margin-bottom: clamp(15px, 3vw, 20px);
-    margin-top: clamp(13px, 3vw, 23px);
+    font-size: clamp(15px, 2.3vw, 17px) !important;
+    margin-bottom: clamp(15px, 3vw, 20px) !important;
+    margin-top: clamp(10px, 2vw, 16px) !important;
     font-weight: bold !important;
   }
   
