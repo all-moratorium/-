@@ -2765,7 +2765,23 @@ canvas {
     pointer-events: auto;
     border: 1px solid rgba(16, 185, 129, 0.7);
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    position: relative;
 
+  }
+
+  /* Protection area around mobile menu button in minimal mode */
+  .mobile-header.mobile-header-minimal .mobile-menu-button-wrapper {
+    position: relative;
+  }
+
+  .mobile-header.mobile-header-minimal .mobile-menu-button-protection {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    z-index: 1;
+    pointer-events: auto;
   }
 
   /* Hide toggle button when minimal header sidebar is open */

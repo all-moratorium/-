@@ -2418,9 +2418,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               <div className="rotation-text">横画面でご利用ください</div>
             </div>
           )}
-          <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
-            ☰
-          </button>
+          <div className="mobile-menu-button-wrapper">
+            <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
+              ☰
+            </button>
+            <div className="mobile-menu-button-protection" onClick={(e) => e.stopPropagation()}></div>
+          </div>
           <div className="mobile-header-logo">ロゴ</div>
         </div>
 
