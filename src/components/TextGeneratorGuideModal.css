@@ -629,7 +629,8 @@
     height: 90dvh !important;
     border-radius: clamp(8px, 1.6vh, 12px) !important;
     display: flex;
-    max-height: 90dvh !important;
+    max-height: 900px !important;
+    max-width: 1400px !important;
     flex-direction: column;
   }
   
@@ -833,13 +834,13 @@
   }
   
   .text-generator-content-container {
-    margin-bottom: 8px;
+    margin-bottom: clamp(8px, 1.2vw, 16px);
     padding: clamp(10px, 1.5vw, 20px);
   }
   
   .text-generator-warning-container,
   .text-generator-supplement-container {
-    margin-bottom: 8px;
+    margin-bottom: clamp(8px, 1.2vw, 16px);
     padding: clamp(6px, 1.5vw, 20px);
   }
   .text-generator-supplement-list {
@@ -878,6 +879,7 @@
   .text-generator-modal-content {
     flex-direction: column !important;
     height: 100%;
+    max-height: none !important;
     gap: 0;
   }
   
@@ -946,7 +948,7 @@
   }
 
   .text-generator-content-container {
-    margin-bottom: 8px;
+    margin-bottom: clamp(8px, 2vw, 16px);
     padding: 15px;
   }
   
