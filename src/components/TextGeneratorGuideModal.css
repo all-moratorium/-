@@ -629,7 +629,7 @@
     height: 90dvh !important;
     border-radius: clamp(8px, 1.6vh, 12px) !important;
     display: flex;
-    max-height: 900px !important;
+    max-height: 1400px !important;
     max-width: 1400px !important;
     flex-direction: column;
   }
