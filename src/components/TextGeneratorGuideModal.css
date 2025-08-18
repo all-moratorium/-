@@ -942,7 +942,7 @@
   /* 縦向き時のフォントサイズ調整 */
   .text-generator-content-section .text-generator-guide-title {
     font-size: clamp(16px, 3vw, 22px) !important;
-    margin-bottom: 12px;
+    margin-bottom: 18px !important;
   }
 
   .text-generator-content-container {
