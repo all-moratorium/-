@@ -119,7 +119,7 @@
   text-align: left;
 }
 
-.text-generator-guide-modal-header .text-generator-guide-title {
+.text-generator-guide-modal-header .text-generator-guide-header-title {
   font-size: 28px;
   margin: 0;
   color: #fff;
@@ -522,7 +522,7 @@
 }
 
 .text-generator-tips-item::before {
-  content: '⚡';
+  content: '⚙️';
   font-size: 14px;
   margin-top: 2px;
   flex-shrink: 0;
@@ -647,11 +647,12 @@
     flex-shrink: 0
   }
   
-  .text-generator-guide-title {
+  .text-generator-guide-header-title {
     font-size: clamp(18px, 2.6vw, 20px) !important;
     color: #fff;
     font-weight: bold !important;
   }
+  
   
   .text-generator-guide-modal-close {
     position: absolute;
@@ -765,7 +766,10 @@
   /* 右側の説明エリア - スクロール可能 */
   .text-generator-content-section {
     width: 40%;
-    padding: 20px 10px 10px 10px !important;
+    padding-top: 20px !important;
+    padding-bottom: 10px !important;
+    padding-left: clamp(10px, 1.5vw, 20px) !important;
+    padding-right: clamp(10px, 1.5vw, 20px) !important;
     overflow-y: auto;
     box-sizing: border-box !important;
     height: 100%;
@@ -778,56 +782,65 @@
   }
   
   .text-generator-step-number {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
+    width: clamp(20px, 2.5vw, 32px);
+    height: clamp(20px, 2.5vw, 32px);
+    font-size: clamp(10px, 1.5vw, 16px);
   }
   
   .text-generator-step-text {
-    font-size: 10px;
+    font-size: clamp(10px, 2vw, 14px);
   }
   
   /* タイトルとコンテンツのフォントサイズ調整 */
   .text-generator-content-section .text-generator-guide-title {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: clamp(16px, 2.4vw, 26px) !important;
+    margin-top: 15px;
+    margin-bottom: clamp(20px, 5vh, 30px) !important;
   }
   
   .text-generator-container-title {
-    font-size: 12px;
-    margin-bottom: 4px;
+    font-size: clamp(11px, 1.4vw, 16px);
+    margin-bottom: clamp(10px, 1.8vw, 12px);
+    margin-top: clamp(10px, 1.8vw, 21px);
   }
   
   .text-generator-step-item,
   .text-generator-tips-item {
-    font-size: 10px;
+    font-size: clamp(10px, 1vw, 14px);
     align-items: center !important;
-    line-height: 1.3;
+    line-height: 1.4;
+    gap: clamp(6px, 1vw, 10px);
     margin-bottom: 3px;
   }
   
   .text-generator-supplement-title,
   .text-generator-warning-title {
-    font-size: 11px;
-    margin-bottom: 4px;
+    font-size: clamp(13px, 1.5vw, 16px);
+    margin-bottom: clamp(10px, 1.8vw, 12px);
+    margin-top: clamp(10px, 1.8vw, 21px);
   }
   
   .text-generator-supplement-item,
   .text-generator-warning-item {
-    font-size: 9px;
-    line-height: 1.2;
-    margin-bottom: 2px;
+    font-size: clamp(10px, 1vw, 14px);
+    align-items: center !important;
+    line-height: 1.4;
+    gap: clamp(6px, 1vw, 10px);
+    margin-bottom: 3px;
   }
   
   .text-generator-content-container {
     margin-bottom: 8px;
-    padding: 6px;
+    padding: clamp(6px, 1.5vw, 20px);
   }
   
   .text-generator-warning-container,
   .text-generator-supplement-container {
-    padding: 8px;
     margin-bottom: 8px;
+    padding: clamp(6px, 1.5vw, 20px);
+  }
+  .text-generator-supplement-list {
+    margin: clamp(0px, 0.4vw, 12px) 0;
   }
   
   /* フッター - 最小限の高さ */

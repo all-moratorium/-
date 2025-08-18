@@ -249,7 +249,7 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
         {/* ヘッダー */}
         <div className="text-generator-guide-modal-header">
           <div className="text-generator-guide-header">
-            <h2 className="text-generator-guide-title">テキストから生成ガイド</h2>
+            <h2 className="text-generator-guide-header-title">テキストから生成ガイド</h2>
           </div>
           <button className="text-generator-guide-modal-close" onClick={resetAndClose}>
             ×

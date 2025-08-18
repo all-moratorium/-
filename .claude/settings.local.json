@@ -37,7 +37,8 @@
       "Bash(true)",
       "WebFetch(domain:theta-smoky.vercel.app)",
       "Bash(gunzip:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "WebSearch"
     ],
     "deny": []
   }
