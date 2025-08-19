@@ -1880,19 +1880,50 @@
 .product-info-footer {
   width: 100%;
   margin-top: 60px;
-  padding: 30px 0 20px 0;
-  border-top: 1px solid #333;
+  padding: 40px 0 20px 0;
   background: #000;
 }
 
-.footer-content {
+/* 上部メインセクション（3列レイアウト） */
+.footer-main {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  margin-bottom: 30px;
-  max-width: 1600px;
-  margin: 0 auto 40px auto;
-  padding: 0 60px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 40px;
+  margin-bottom: 40px;
+}
+
+/* 左側：ロゴとSNS */
+.footer-logo-section {
+  grid-column: 1;
+  margin-top: 20px;
+}
+
+.footer-logo .neon-logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #10b981;
+  text-shadow: 
+    0 0 10px rgba(16, 185, 129, 0.5),
+    0 0 20px rgba(16, 185, 129, 0.3),
+    0 0 30px rgba(16, 185, 129, 0.2);
+  margin: 0 0 10px 0;
+}
+
+.footer-logo .logo-subtitle {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 0 0 20px 0;
+}
+
+/* 右側2列 */
+.footer-sections {
+  grid-column: 2 / 4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 }
 
 .footer-section h4 {
@@ -1984,8 +2015,8 @@
 
 .social-icons {
   display: flex;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 12px;
+  margin-top: 20px;
   justify-content: center;
 }
 
@@ -1996,52 +2027,207 @@
   border-radius: 50%;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
   transition: all 0.3s ease;
   text-decoration: none;
-  margin-right: 10px;
-  background: #333;
+}
+
+/* Facebook */
+.social-icons a[href="#facebook"] {
+  background: #1877f2;
+  color: white;
+}
+
+/* Instagram */
+.social-icons a[href="#instagram"] {
+  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+  color: white;
+}
+
+/* X (Twitter) */
+.social-icons a[href="#x"] {
+  background: #000000;
+  color: white;
+}
+
+/* LinkedIn */
+.social-icons a[href="#linkedin"] {
+  background: #0077b5;
+  color: white;
+}
+
+/* TikTok */
+.social-icons a[href="#tiktok"] {
+  background: #000000;
   color: white;
 }
 
 .social-icons a:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.footer-bottom {
+/* 支払い方法セクション */
+.payment-section {
   text-align: center;
-  padding-top: 30px;
-  border-top: 1px solid #333;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  margin: 0 auto 30px auto;
+  max-width: 1450px;
+  padding: 0 40px;
 }
 
-.payment-methods {
-  margin-top: 30px;
-}
-
-.payment-methods h5 {
+.payment-section h5 {
   color: #ffffff;
-  font-size: 0.95rem;
-  margin-bottom: 10px;
-}
-
-.newsletter-text {
-  color: #ffffff;
+  font-size: 1.0rem;
+  margin-bottom: 15px;
 }
 
 .payment-icons {
   display: flex;
   gap: 10px;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
+/* ボーダーライン */
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background: #333;
+  margin: 30px 0;
+}
+
+/* 法的リンク */
+.footer-legal {
+  text-align: center;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+.legal-links {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.legal-links a {
+  color: #888;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.legal-links a:hover {
+  color: #10b981;
+}
+
+/* コピーライト */
+.footer-copyright {
+  text-align: center;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 40px;
+  margin-bottom: 15px;
+}
+
+.footer-copyright p {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* 最下部テキスト */
+.footer-bottom-text {
+  text-align: center;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+.footer-bottom-text p {
+  color: #888;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* レスポンシブデザイン */
+@media screen and (max-width: 1280px), (pointer: coarse) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 30px;
+  }
+  
+  .footer-logo-section {
+    grid-column: 1;
+    text-align: center;
+  }
+  
+  .footer-sections {
+    grid-column: 1;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .payment-section {
+    padding: 0 30px;
+  }
+  
+  .footer-legal {
+    padding: 0 30px;
+  }
+  
+  .legal-links {
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer-copyright {
+    padding: 0 30px;
+  }
+  
+  .footer-bottom-text {
+    padding: 0 30px;
+  }
+  
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .footer-main {
+    padding: 0 20px;
+  }
+  
+  .payment-section {
+    padding: 0 20px;
+  }
+  
+  .payment-icons {
+    gap: 10px;
+  }
+  
+  .footer-legal {
+    padding: 0 20px;
+  }
+  
+  .footer-copyright {
+    padding: 0 20px;
+  }
+  
+  .footer-bottom-text {
+    padding: 0 20px;
+  }
+}
+
 .payment-icon {
-  height: 25px;
-  width: 45px;
+  height: 22px;
+  width: 40px;
   object-fit: contain;
   background: white;
   border-radius: 3px;

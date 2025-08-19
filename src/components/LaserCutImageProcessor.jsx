@@ -2124,35 +2124,12 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               </div>
               
               <div className="product-info-footer">
-                <div className="footer-content">
-                  <div className="footer-section">
-                    <h4>会社情報</h4>
-                    <ul>
-                      <li><a href="#about">私たちについて</a></li>
-                      <li><a href="#contact">お問い合わせ</a></li>
-                      <li><a href="#faq">よくある質問</a></li>
-                      <li><a href="#shipping">配送情報</a></li>
-                      <li><a href="#privacy">プライバシーポリシー</a></li>
-                      <li><a href="#terms">利用規約</a></li>
-                      <li><a href="#returns">返品・交換</a></li>
-                    </ul>
-                  </div>
-                  
-                  <div className="footer-section">
-                    <h4>商品カテゴリー</h4>
-                    <ul>
-                      <li><a href="#custom-led-neon">カスタムLEDネオンサイン</a></li>
-                      <li><a href="#ready-neon">既成ネオンサイン</a></li>
-                    </ul>
-                  </div>
-                  
-                  
-                  <div className="footer-section">
-                    <h4>メルマガ登録</h4>
-                    <p className="newsletter-text">購読すると20%割引になります。</p>
-                    <div className="newsletter-signup">
-                      <input type="email" placeholder="メールアドレスを入力してください" />
-                      <button type="submit">登録</button>
+                <div className="footer-main">
+                  {/* 左側：ロゴとSNS */}
+                  <div className="footer-logo-section">
+                    <div className="footer-logo">
+                      <h2 className="neon-logo">GG NEON</h2>
+                      <p className="logo-subtitle">カスタムLEDネオンサインの専門店</p>
                     </div>
                     <div className="social-icons">
                       <a href="#facebook"><FaFacebookF /></a>
@@ -2161,27 +2138,69 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                       <a href="#linkedin"><FaLinkedinIn /></a>
                       <a href="#tiktok"><FaTiktok /></a>
                     </div>
+                  </div>
+                  
+                  {/* 右側2列 */}
+                  <div className="footer-sections">
+                    <div className="footer-section">
+                      <h4>商品カテゴリー</h4>
+                      <ul>
+                        <li><a href="#custom-neon">カスタムネオンサイン</a></li>
+                        <li><a href="#store-signs">店舗用サイン</a></li>
+                        <li><a href="#event-signs">イベント用サイン</a></li>
+                        <li><a href="#interior-signs">インテリア用サイン</a></li>
+                        <li><a href="#rgb-led">RGB LEDサイン</a></li>
+                      </ul>
+                    </div>
                     
-                    <div className="payment-methods">
-                      <h5>お支払い方法</h5>
-                      <div className="payment-icons">
-                        <img src="/icons/visa.svg" alt="Visa" className="payment-icon" />
-                        <img src="/icons/mc_symbol.svg" alt="Mastercard" className="payment-icon" />
-                        <img src="/icons/American Express BB Logo.jpg" alt="American Express" className="payment-icon" />
-                        <img src="/icons/jcb-logomark-img-03.webp" alt="JCB" className="payment-icon" />
-                        <img src="/icons/paypay_3_rgb.png" alt="PayPay" className="payment-icon" />
-                        <img src="/icons/Logo_RakutenPay_Horizontal.png" alt="Rakuten Pay" className="payment-icon" />
-                        <img src="/icons/merpay_service_logo_horizontal_rgb.png" alt="Merpay" className="payment-icon" />
-                        <img src="/icons/Apple_Pay_Mark_RGB_041619.svg" alt="Apple Pay" className="payment-icon" />
-                      </div>
+                    <div className="footer-section">
+                      <h4>サポート</h4>
+                      <ul>
+                        <li><a href="#contact">お問い合わせ</a></li>
+                        <li><a href="#shipping">配送について</a></li>
+                        <li><a href="#returns">返品・交換</a></li>
+                        <li><a href="#warranty">保証について</a></li>
+                        <li><a href="#support">取り付けサポート</a></li>
+                      </ul>
                     </div>
                   </div>
                 </div>
                 
-                <div className="footer-bottom">
-                  <div className="copyright">
-                    <p>© 2025 GG NEON. All rights reserved.</p>
+                {/* 支払い方法 */}
+                <div className="payment-section">
+                  <h5>お支払い方法</h5>
+                  <div className="payment-icons">
+                    <img src="/icons/visa.svg" alt="Visa" className="payment-icon" />
+                    <img src="/icons/mc_symbol.svg" alt="Mastercard" className="payment-icon" />
+                    <img src="/icons/paypal-logo.svg" alt="PayPal" className="payment-icon" />
+                    <img src="/icons/jcb-logomark-img-03.webp" alt="JCB" className="payment-icon" />
+                    <img src="/icons/Logo_RakutenPay_Horizontal.png" alt="Rakuten Pay" className="payment-icon" />
+                    <img src="/icons/paypay_3_rgb.png" alt="PayPay" className="payment-icon" />
+                    <img src="/icons/Apple_Pay_Mark_RGB_041619.svg" alt="Apple Pay" className="payment-icon" />
                   </div>
+                </div>
+                
+                {/* ボーダーライン */}
+                <div className="footer-divider"></div>
+                
+                {/* 法的リンク */}
+                <div className="footer-legal">
+                  <div className="legal-links">
+                    <a href="#privacy">プライバシーポリシー</a>
+                    <a href="#terms">利用規約</a>
+                    <a href="#tokusho">特定商取引法</a>
+                    <a href="#sitemap">サイトマップ</a>
+                  </div>
+                </div>
+                
+                {/* コピーライト */}
+                <div className="footer-copyright">
+                  <p>© 2025 GG NEON. All rights reserved.</p>
+                </div>
+                
+                {/* 最下部テキスト */}
+                <div className="footer-bottom-text">
+                  <p>カスタムLEDネオンサインの配送・販売</p>
                 </div>
               </div>
             </div>
