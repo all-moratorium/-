@@ -1927,10 +1927,14 @@
 }
 
 .footer-section h4 {
-  color: #ffffff;
+  color: #10b981;
   font-size: 1.3rem;
   margin-bottom: 15px;
   letter-spacing: 1px;
+  text-shadow: 
+    0 0 8px rgba(16, 185, 129, 0.4),
+    0 0 15px rgba(16, 185, 129, 0.2),
+    0 0 25px rgba(16, 185, 129, 0.1);
 }
 
 .footer-section ul {
@@ -2177,6 +2181,7 @@
   .footer-main {
     grid-template-columns: 1fr;
     gap: 30px;
+    margin-bottom: 50px;
     padding: 0 30px;
   }
   
@@ -2303,7 +2308,6 @@
   display: grid;
   grid-template-columns: 1fr minmax(300px, 400px);
   gap: 25px;
-  margin-bottom: 40px;
   min-width: 0;
 }
 
@@ -2645,7 +2649,7 @@
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
-  margin-top: 60px;
+  margin-top: 80px;
 }
 
 @media (min-width: 1081px) {
@@ -2722,6 +2726,10 @@
 
 /* 縦1列時は上から下の順番 */
 @media (max-width: 659px) {
+  .features-section {
+    margin-top: 60px !important;
+  }
+  
   .product-info-feature-card:nth-child(1).fade-in {
     transition-delay: 0.1s;  /* 1番目 */
   }
@@ -3575,10 +3583,11 @@ canvas {
   }
 
   .features-section {
-    margin-top: 50px !important;
+    margin-top: clamp(35px, 6vw, 70px) !important;
     gap: 35px !important;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
   }
+
   /* モバイル版 - インラインスタイル用クラス */
   .product-info-feature-card {
     min-width: 300px !important;
