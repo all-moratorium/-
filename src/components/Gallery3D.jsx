@@ -53,6 +53,18 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             icon: "🦋",
             theme: "butterfly"
         },
+        {
+            id: "coffee", 
+            name: "コーヒー",
+            glbPath: '/models/neon sample glb/コーヒー.glb',
+            imagePath: '/neon sample pictures/コーヒー2d.png',
+            description: "コーヒーのネオンサイン1",
+            modelScale: 0.015,
+            imageScale: 5.2,
+            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
+            icon: "🎯",
+            theme: "coffee"
+        },
        
         {
             id: "ramen",
@@ -66,18 +78,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             icon: "�",
             theme: "ramen"
         },
-        {
-            id: "coffee", 
-            name: "コーヒー",
-            glbPath: '/models/neon sample glb/コーヒー.glb',
-            imagePath: '/neon sample pictures/コーヒー2d.png',
-            description: "コーヒーのネオンサイン1",
-            modelScale: 0.015,
-            imageScale: 5.2,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎯",
-            theme: "coffee"
-        },
+        
        
         
         {

@@ -535,7 +535,7 @@
   pointer-events: none;
   overflow: hidden;
   will-change: transform;
-  background: linear-gradient(to bottom, #000000, #111827, #000000);
+  background: url('/public/ホーム画像/6.jpg') center/cover no-repeat;
 }
 
 /* Particles (disabled) */

@@ -2226,7 +2226,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       },
       {
         threshold: 0.1,
-        rootMargin: window.innerWidth <= 768 ? '0px 0px 35px 0px' : '0px 0px -50px 0px'
+        rootMargin: window.innerWidth <= 768 ? '0px 0px 35px 0px' : '0px 0px -80px 0px'
       }
     );
 
