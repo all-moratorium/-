@@ -1253,7 +1253,7 @@
   height: 35%;
   align-items: flex-start;
   position: absolute;
-  bottom: 0px;
+  bottom: 0px !important;
   left: 0px;
   right: 0px;
   z-index: 1;
@@ -1276,8 +1276,8 @@
   flex: 0 0 20%;
   padding: 20px;
   border-radius: 10px;
-  height: 100%;
-  overflow: visible;
+  height: 85%;
+  overflow:hidden;
   text-align: center;
 }
 
