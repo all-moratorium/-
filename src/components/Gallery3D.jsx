@@ -60,7 +60,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             imagePath: '/neon sample pictures/コーヒー2d.png',
             description: "コーヒーのネオンサイン1",
             modelScale: 0.015,
-            imageScale: 5.2,
+            imageScale: 5.3,
             sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
             icon: "🎯",
             theme: "coffee"
@@ -200,7 +200,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             imagePath: '/neon sample pictures/ライトブルーヘアー2d.png',
             description: "ライトブルーヘアーのネオンサイン",
             modelScale: 0.0058,
-            imageScale: 5.9,
+            imageScale: 6,
             sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
             icon: "",
             theme: "light blue hair"
