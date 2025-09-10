@@ -2976,8 +2976,8 @@ canvas {
     background: rgba(10, 10, 10,1);
     backdrop-filter: blur(10px);
     pointer-events: auto;
-    border: 1px solid rgba(16, 185, 129, 0.7);
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     position: relative;
 
   }
