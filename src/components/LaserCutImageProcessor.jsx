@@ -2430,11 +2430,17 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       {/* Main layout */}
       <div className="layout-container">
         {/* Mobile Header */}
-        <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${currentPage === 'info' ? 'mobile-header-portrait' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
           {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && (
             <div className="rotation-message">
               <div className="rotation-icon"></div>
               <div className="rotation-text">横画面でご利用ください</div>
+            </div>
+          )}
+          {currentPage === 'info' && (
+            <div className="portrait-rotation-message">
+              <div className="portrait-rotation-icon"></div>
+              <div className="portrait-rotation-text">縦画面でご利用ください</div>
             </div>
           )}
           <div className="mobile-menu-button-wrapper">
