@@ -1434,8 +1434,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 <div className="loading" id="loading">
                     {isPreloading ? (
                         <>
-                            ネオンサインモデルを読み込み中...<br/>
-                            <div style={{fontSize: '14px', marginTop: '10px'}}>
+                            <div style={{ fontSize: '14px', marginBottom: '6px', whiteSpace: 'nowrap'}}>
+                                ネオンサインモデルを読み込み中...
+                            </div>
+                            <div style={{fontSize: '14px'}}>
                                 進行状況: {Math.round(preloadProgress)}%
                             </div>
                         </>
