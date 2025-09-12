@@ -297,7 +297,7 @@ body:active {
 /* モバイル版対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
     #container {
-        top: -8% !important;
+        top: -4% !important;
         height: 55dvh  !important;
     }
     
