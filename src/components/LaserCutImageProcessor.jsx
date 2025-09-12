@@ -1757,6 +1757,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 </span>
               </div>
               
+              {/* Sample Viewer Button */}
+              <button
+                className="mobile-create-button button-blue"
+                style={{ marginBottom: '15px' }}
+              >
+                サンプルを見る
+              </button>
+              
               {/* Create Button */}
               <button
                 onClick={() => setShowCreationModal(true)}
@@ -1766,54 +1774,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               </button>
               
               
-              {/* Review Section */}
-              <div style={{
-                margin: '20px 15px',
-                width: 'calc(100% - 30px)',
-                height: 'calc(100vw - 30px)',
-                maxHeight: '350px',
-                overflow: 'visible'
-              }}>
-                <HomeLeftBottm />
-              </div>
               
-              {/* Sample Models Section */}
-              <div style={{margin: '20px 15px', color: 'white'}}>
-                <h3 style={{marginBottom: '15px', fontSize: '18px', fontWeight: 'bold'}}>サンプルモデル</h3>
-                <div className="mobile-sample-models-grid">
-                  {sampleModels.map((model, index) => (
-                    <div key={index} className="mobile-sample-model-item">
-                      <div className="mobile-sample-image-container">
-                        <img 
-                          src={model.image}
-                          alt={model.name}
-                          className="mobile-sample-image"
-                        />
-                      </div>
-                      <div className="mobile-sample-bottom-row">
-                        <div className="mobile-sample-title">{model.name}</div>
-                        <button 
-                          className="mobile-sample-toggle"
-                          onClick={() => toggleModelDescription(index)}
-                        >
-                          {expandedModels[index] ? '▲' : '▼'}
-                        </button>
-                      </div>
-                      {expandedModels[index] && (
-                        <div className="mobile-sample-description">
-                          {model.description}
-                        </div>
-                      )}
-                      <button 
-                        className="download-project-btn"
-                        onClick={() => downloadProjectFile(model.name)}
-                      >
-                        プロジェクトファイルをダウンロード
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             <div className="home-bottom-layout">
@@ -2327,6 +2288,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         setShowCreationModal(false);
         setCurrentPage(pageName);
       }} />}
+      
   
       <style>{`
         @keyframes spin {
