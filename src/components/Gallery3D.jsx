@@ -875,22 +875,22 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                         
                         if (wiggleAnimationRef.current === wiggleAnimation) {
                             if (animationTime < stepDuration) {
-                                // 右に回転（15度 = 0.2618ラジアン）
+                                // 右に回転（20度 = 0.3491ラジアン）
                                 const progress = animationTime / stepDuration;
                                 const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                                targetRotationRef.current.y = 0.2618 * easeProgress;
+                                targetRotationRef.current.y = 0.3491 * easeProgress;
                                 requestAnimationFrame(wiggleAnimation);
                             } else if (animationTime < stepDuration * 2) {
-                                // 左に回転（-15度 = -0.2618ラジアン）
+                                // 左に回転（-20度 = -0.3491ラジアン）
                                 const progress = (animationTime - stepDuration) / stepDuration;
                                 const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                                targetRotationRef.current.y = 0.2618 - (0.5236 * easeProgress); // 0.2618から-0.2618へ
+                                targetRotationRef.current.y = 0.3491 - (0.6982 * easeProgress); // 0.3491から-0.3491へ
                                 requestAnimationFrame(wiggleAnimation);
                             } else if (animationTime < stepDuration * 3) {
                                 // 正面に戻る（0ラジアン）
                                 const progress = (animationTime - stepDuration * 2) / stepDuration;
                                 const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                                targetRotationRef.current.y = -0.2618 + (0.2618 * easeProgress); // -0.2618から0へ
+                                targetRotationRef.current.y = -0.3491 + (0.3491 * easeProgress); // -0.3491から0へ
                                 requestAnimationFrame(wiggleAnimation);
                             } else {
                                 // アニメーション終了
@@ -1082,22 +1082,22 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                     
                     if (wiggleAnimationRef.current === initialWiggleAnimation) {
                         if (animationTime < stepDuration) {
-                            // 右に回転（15度 = 0.2618ラジアン）
+                            // 右に回転（20度 = 0.3491ラジアン）
                             const progress = animationTime / stepDuration;
                             const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                            targetRotationRef.current.y = 0.2618 * easeProgress;
+                            targetRotationRef.current.y = 0.3491 * easeProgress;
                             requestAnimationFrame(initialWiggleAnimation);
                         } else if (animationTime < stepDuration * 2) {
-                            // 左に回転（-15度 = -0.2618ラジアン）
+                            // 左に回転（-20度 = -0.3491ラジアン）
                             const progress = (animationTime - stepDuration) / stepDuration;
                             const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                            targetRotationRef.current.y = 0.2618 - (0.5236 * easeProgress); // 0.2618から-0.2618へ
+                            targetRotationRef.current.y = 0.3491 - (0.6982 * easeProgress); // 0.3491から-0.3491へ
                             requestAnimationFrame(initialWiggleAnimation);
                         } else if (animationTime < stepDuration * 3) {
                             // 正面に戻る（0ラジアン）
                             const progress = (animationTime - stepDuration * 2) / stepDuration;
                             const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
-                            targetRotationRef.current.y = -0.2618 + (0.2618 * easeProgress); // -0.2618から0へ
+                            targetRotationRef.current.y = -0.3491 + (0.3491 * easeProgress); // -0.3491から0へ
                             requestAnimationFrame(initialWiggleAnimation);
                         } else {
                             // アニメーション終了、自動切り替えタイマーを開始
@@ -1285,10 +1285,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 const normalizedX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
                 const normalizedY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
                 
-                // 範囲内でのタッチで回転を適用
+                // 範囲内でのタッチで回転を適用（感度アップ）
                 if (Math.abs(normalizedX) <= 1.0 && Math.abs(normalizedY) <= 1.0) {
-                    targetRotationRef.current.y = normalizedX * 0.8;
-                    targetRotationRef.current.x = -normalizedY * 0.8;
+                    targetRotationRef.current.y = normalizedX * 1.2;
+                    targetRotationRef.current.x = -normalizedY * 1.2;
                     isRotating = true;
                 }
             }
