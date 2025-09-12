@@ -293,3 +293,54 @@ body:active {
 .create-neon-btn {
     margin-top: 8px;
 }
+
+/* モバイル版対応 */
+@media screen and (max-width: 1280px), (pointer: coarse) {
+    #container {
+        top: -8% !important;
+        height: 65vh  !important;
+    }
+    
+    .click-prompt {
+        top: 20% !important;
+    }
+    
+    .navigation {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .nav-left {
+        left: 20px;
+    }
+    
+    .nav-right {
+        right: 20px;
+    }
+    
+    .hover-tooltip-right {
+        width: 250px;
+        height: 250px;
+        left: 55%;
+    }
+    
+    .hover-tooltip-left {
+        width: 250px;
+        right: 55%;
+        max-width: 35vw;
+    }
+    
+    .tooltip-title {
+        font-size: 18px;
+    }
+    
+    .tooltip-description {
+        font-size: 13px;
+    }
+    
+    .download-project-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}

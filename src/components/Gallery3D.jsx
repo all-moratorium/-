@@ -970,20 +970,8 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         // ライティング
         setupLighting();
 
-        // デバイス判定でプリロード制御
-        const isMobile = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;;
-        
-        if (isMobile) {
-            // スマホ：プリロードなし、直接モデル作成
-            createModels();
-            updateModelPositions();
-            // アニメーションをAnimationManagerに登録
-            animationCleanupRef.current = animationManager.addCallback(animate, 'Gallery3D');
-            recordUserInteraction();
-            setLoading(false);
-        } else {
-            // PC：プリロードあり
-            preloadAllModels().then(() => {
+        // 全デバイスでプリロードを実行
+        preloadAllModels().then(() => {
             // モデル作成
             createModels();
             updateModelPositions();
@@ -995,8 +983,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             recordUserInteraction();
             
             setLoading(false);
-            });
-        }
+        });
 
         // イベントリスナー
         const handleMouseMove = (event) => {
