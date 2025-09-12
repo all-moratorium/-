@@ -609,6 +609,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 
                 centerModel.add(model);
                 centerModel.userData.isImage = false;
+                
+                // 新しいモデルが中央に来たら視点を初期化
+                targetRotationRef.current.x = 0;
+                targetRotationRef.current.y = 0;
             }).catch((error) => {
                 console.error('中央モデル更新エラー:', error);
             });
@@ -848,6 +852,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 // 新しい中央モデルに3Dモデルを更新
                 updateCenterModel();
                 updateModelPositions();
+                // 視点を初期化（まっすぐ正面向き）
+                targetRotationRef.current.x = 0;
+                targetRotationRef.current.y = 0;
                 isTransitioningRef.current = false;
             }
         };
@@ -862,6 +869,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         }
         autoSwitchTimerRef.current = setTimeout(() => {
             if (!isTransitioningRef.current && !isTooltipShownRef.current) {
+                // 自動切り替えでも視点をリセット
+                targetRotationRef.current.x = 0;
+                targetRotationRef.current.y = 0;
                 switchToModel(1);
             }
             recordUserInteraction();
@@ -911,11 +921,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             const isImagePlane = model.userData.isImage;
             
             if (model === currentCenterModel && !isImagePlane && !isTransitioningRef.current) {
-                // パソコン版のみマウスに応じた回転アニメーション
-                if (!isMobileDevice) {
-                    model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
-                    model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
-                }
+                // 中央の3Dモデルの回転アニメーション（PC・モバイル共通）
+                model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
+                model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
                 model.position.y = 0;
             } else if (isImagePlane) {
                 // 画像プレーンは常に正面向きに固定
@@ -981,6 +989,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             // モデル作成
             createModels();
             updateModelPositions();
+            
+            // 初期視点を正面向きに設定
+            targetRotationRef.current.x = 0;
+            targetRotationRef.current.y = 0;
             
             // アニメーションをAnimationManagerに登録
             animationCleanupRef.current = animationManager.addCallback(animate, 'Gallery3D');
@@ -1069,6 +1081,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         const handlePrevClick = () => {
             recordUserInteraction();
             if (!isTransitioningRef.current) {
+                // 回転をリセット
+                targetRotationRef.current.x = 0;
+                targetRotationRef.current.y = 0;
                 switchToModel(-1);
                 hideTooltip();
                 hideClickPrompt();
@@ -1078,6 +1093,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         const handleNextClick = () => {
             recordUserInteraction();
             if (!isTransitioningRef.current) {
+                // 回転をリセット
+                targetRotationRef.current.x = 0;
+                targetRotationRef.current.y = 0;
                 switchToModel(1);
                 hideTooltip();
                 hideClickPrompt();
@@ -1119,14 +1137,17 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         let touchStartX = 0;
         let touchStartY = 0;
         let isDragging = false;
+        let isRotating = false;
         
         const handleTouchStart = (event) => {
             if (!isMobileDevice || !isInitializedRef.current) return;
             
             recordUserInteraction();
-            touchStartX = event.touches[0].clientX;
-            touchStartY = event.touches[0].clientY;
+            const touch = event.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
             isDragging = false;
+            isRotating = false;
         };
         
         const handleTouchMove = (event) => {
@@ -1137,21 +1158,22 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             const deltaY = touch.clientY - touchStartY;
             
             // ドラッグの閾値を超えた場合
-            if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
                 isDragging = true;
             }
             
-            // 横方向のドラッグでモデル回転（中央モデルのみ）
-            if (isDragging && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (isDragging) {
                 event.preventDefault(); // スクロールを防止
                 
                 const rect = rendererRef.current.domElement.getBoundingClientRect();
                 const normalizedX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
                 const normalizedY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
                 
-                if (Math.abs(normalizedX) <= 0.4 && Math.abs(normalizedY) <= 0.8) {
-                    targetRotationRef.current.y = normalizedX * 0.5;
-                    targetRotationRef.current.x = -normalizedY * 0.5;
+                // 範囲内でのタッチで回転を適用
+                if (Math.abs(normalizedX) <= 1.0 && Math.abs(normalizedY) <= 1.0) {
+                    targetRotationRef.current.y = normalizedX * 0.8;
+                    targetRotationRef.current.x = -normalizedY * 0.8;
+                    isRotating = true;
                 }
             }
         };
@@ -1159,21 +1181,30 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         const handleTouchEnd = (event) => {
             if (!isMobileDevice || !isInitializedRef.current) return;
             
-            const touchEndX = event.changedTouches[0].clientX;
-            const deltaX = touchEndX - touchStartX;
+            // 回転していた場合は中央に戻す
+            if (isRotating) {
+                targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.15;
+                targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.15;
+            }
             
-            // スワイプでモデル切り替え（ドラッグでない場合のみ）
-            if (!isDragging && Math.abs(deltaX) > 50) {
-                if (deltaX > 0) {
-                    // 右スワイプ（前のモデル）
-                    handlePrevClick();
-                } else {
-                    // 左スワイプ（次のモデル）
-                    handleNextClick();
+            // スワイプでモデル切り替え（回転していない場合のみ）
+            if (isDragging && !isRotating) {
+                const touchEndX = event.changedTouches[0].clientX;
+                const deltaX = touchEndX - touchStartX;
+                
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        // 右スワイプ（前のモデル）
+                        handlePrevClick();
+                    } else {
+                        // 左スワイプ（次のモデル）
+                        handleNextClick();
+                    }
                 }
             }
             
             isDragging = false;
+            isRotating = false;
         };
 
         document.addEventListener('mousemove', handleMouseMove);
