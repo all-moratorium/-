@@ -1759,6 +1759,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               
               {/* Sample Viewer Button */}
               <button
+                onClick={() => setCurrentPage('sampleGallery')}
                 className="mobile-create-button button-blue"
                 style={{ marginBottom: '15px' }}
               >
@@ -2166,6 +2167,40 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               </div>
             </div>
           );
+      case 'sampleGallery':
+        return (
+          <div className="main-content sample-gallery-content">
+            <div className="sample-gallery-header">
+              <button 
+                onClick={() => setCurrentPage('home')} 
+                className="back-button"
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  left: '20px',
+                  background: 'rgba(37, 100, 235, 0.45)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(37, 99, 235, 0.7)',
+                  color: 'white',
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  zIndex: 1000
+                }}
+              >
+                ← ホームに戻る
+              </button>
+              <h1 style={{ textAlign: 'center', color: 'white', marginTop: '60px' }}>サンプルギャラリー</h1>
+            </div>
+            <div className="sample-gallery-3d" style={{ 
+              width: '100%', 
+              height: 'calc(100vh - 120px)',
+              position: 'relative'
+            }}>
+              <Gallery3D onPreloadingChange={setIsPreloadingModels} />
+            </div>
+          </div>
+        );
       default:
         return null;
     }
