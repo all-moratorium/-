@@ -492,6 +492,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
   const [can3DPreview, setCan3DPreview] = useState(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
   const [quantityInputText, setQuantityInputText] = useState('1');
+  const [showGallery3D, setShowGallery3D] = useState(false);
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
   
   // モバイル版用：3Dプレビューデータを一時保存
@@ -916,6 +917,19 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       window.removeEventListener('resize', checkMobile);
     };
   }, []);
+
+  // sampleGalleryページでのGallery3D遅延表示制御
+  useEffect(() => {
+    if (currentPage === 'sampleGallery') {
+      setShowGallery3D(false);
+      const timer = setTimeout(() => {
+        setShowGallery3D(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setShowGallery3D(false);
+    }
+  }, [currentPage]);
   
   // ホームページに戻ってもデータはクリアしない（作業継続のため）
   // データクリアは明示的な操作（新しいファイル読み込み等）でのみ行う
@@ -1056,6 +1070,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 
   // Toggle mobile sidebar
   const toggleMobileSidebar = () => {
+    // プリロード中はサイドバーを開けない（モバイル版のみ）
+    if (isMobile && isPreloadingModels) {
+      return;
+    }
     setMobileSidebarOpen(!mobileSidebarOpen);
   };
 
@@ -2176,7 +2194,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               position: 'relative',
               paddingTop: '55px'
             }}>
-              <Gallery3D onPreloadingChange={setIsPreloadingModels} />
+              {showGallery3D && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
             </div>
             <button 
               onClick={() => setCurrentPage('home')} 
@@ -2442,7 +2460,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             </div>
           )}
           <div className="mobile-menu-button-wrapper">
-            <button className="mobile-menu-button" onClick={toggleMobileSidebar}>
+            <button 
+              className={`mobile-menu-button ${isMobile && isPreloadingModels ? 'disabled' : ''}`} 
+              onClick={toggleMobileSidebar}
+              style={{
+                opacity: isMobile && isPreloadingModels ? 0.5 : 1,
+                cursor: isMobile && isPreloadingModels ? 'not-allowed' : 'pointer'
+              }}
+            >
               ☰
             </button>
             <div className="mobile-menu-button-protection" onClick={(e) => e.stopPropagation()}></div>
@@ -2482,6 +2507,20 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                             <div className="tooltip">ホーム</div>
                         )}
                     </button>
+                    {isMobile && (
+                        <button className={currentPage === 'sampleGallery' ? "nav-item active" : "nav-item"} onClick={() => { 
+                          setMobileSidebarOpen(false); 
+                          setCurrentPage('sampleGallery');
+                        }}>
+                            <div className="nav-icon">
+                                <Eye />
+                            </div>
+                            <span className="nav-text">サンプルモデル</span>
+                            {!sidebarExpanded && (
+                                <div className="tooltip">サンプルモデル</div>
+                            )}
+                        </button>
+                    )}
                     <button className={currentPage === 'textGeneration' ? "nav-item active" : "nav-item"} onClick={() => { setCurrentPage('textGeneration'); setMobileSidebarOpen(false); }}>
                         <div className="nav-icon">
                             <Type />
