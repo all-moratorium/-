@@ -25,6 +25,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     const cachedModelsRef = useRef({}); // 複数GLBモデルをキャッシュ
     const preloadStatusRef = useRef({}); // プリロード状況を管理
     const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
+    const wiggleAnimationRef = useRef(null); // 揺れアニメーション停止用
 
     const [loading, setLoading] = useState(true);
     const [modelScales, setModelScales] = useState({});
@@ -855,6 +856,58 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 // 視点を初期化（まっすぐ正面向き）
                 targetRotationRef.current.x = 0;
                 targetRotationRef.current.y = 0;
+                
+                // モバイル版でのみ、左右に揺れるアニメーションでタッチ操作をアピール
+                if (isMobileDevice) {
+                    let startTime = performance.now();
+                    const delayStart = 200; // 0.2秒待機
+                    const stepDuration = 200; // 各段階0.2秒間（さらに早く）
+                    
+                    const wiggleAnimation = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        
+                        if (elapsed < delayStart) {
+                            requestAnimationFrame(wiggleAnimation);
+                            return;
+                        }
+                        
+                        const animationTime = elapsed - delayStart;
+                        
+                        if (wiggleAnimationRef.current === wiggleAnimation) {
+                            if (animationTime < stepDuration) {
+                                // 右に回転（15度 = 0.2618ラジアン）
+                                const progress = animationTime / stepDuration;
+                                const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                                targetRotationRef.current.y = 0.2618 * easeProgress;
+                                requestAnimationFrame(wiggleAnimation);
+                            } else if (animationTime < stepDuration * 2) {
+                                // 左に回転（-15度 = -0.2618ラジアン）
+                                const progress = (animationTime - stepDuration) / stepDuration;
+                                const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                                targetRotationRef.current.y = 0.2618 - (0.5236 * easeProgress); // 0.2618から-0.2618へ
+                                requestAnimationFrame(wiggleAnimation);
+                            } else if (animationTime < stepDuration * 3) {
+                                // 正面に戻る（0ラジアン）
+                                const progress = (animationTime - stepDuration * 2) / stepDuration;
+                                const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                                targetRotationRef.current.y = -0.2618 + (0.2618 * easeProgress); // -0.2618から0へ
+                                requestAnimationFrame(wiggleAnimation);
+                            } else {
+                                // アニメーション終了
+                                targetRotationRef.current.y = 0;
+                                wiggleAnimationRef.current = null;
+                            }
+                        } else {
+                            // 停止された場合
+                            targetRotationRef.current.y = 0;
+                            wiggleAnimationRef.current = null;
+                        }
+                    };
+                    
+                    wiggleAnimationRef.current = wiggleAnimation;
+                    requestAnimationFrame(wiggleAnimation);
+                }
+                
                 isTransitioningRef.current = false;
             }
         };
@@ -864,6 +917,14 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
     const recordUserInteraction = useCallback(() => {
         lastInteractionTimeRef.current = Date.now();
+        
+        // 揺れアニメーション中なら停止
+        if (wiggleAnimationRef.current) {
+            wiggleAnimationRef.current = null;
+            targetRotationRef.current.x = 0;
+            targetRotationRef.current.y = 0;
+        }
+        
         if (autoSwitchTimerRef.current) {
             clearTimeout(autoSwitchTimerRef.current);
         }
@@ -997,10 +1058,65 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             // アニメーションをAnimationManagerに登録
             animationCleanupRef.current = animationManager.addCallback(animate, 'Gallery3D');
             
-            // 自動切り替えタイマー開始
-            recordUserInteraction();
-            
+            // 自動切り替えタイマー開始（初回揺れアニメーション後に実行）
             setLoading(false);
+            
+            // モバイル版でのみ、初回読み込み後に揺れアニメーション
+            if (isMobileDevice) {
+                // setLoadingを先に実行してから確実にアニメーション開始
+                setTimeout(() => {
+                    if (!wiggleAnimationRef.current) { // 重複実行防止
+                        let startTime = performance.now();
+                        const delayStart = 300; // 0.3秒待機（短縮）
+                        const stepDuration = 200; // 各段階0.2秒間（さらに早く）
+                
+                const initialWiggleAnimation = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    
+                    if (elapsed < delayStart) {
+                        requestAnimationFrame(initialWiggleAnimation);
+                        return;
+                    }
+                    
+                    const animationTime = elapsed - delayStart;
+                    
+                    if (wiggleAnimationRef.current === initialWiggleAnimation) {
+                        if (animationTime < stepDuration) {
+                            // 右に回転（15度 = 0.2618ラジアン）
+                            const progress = animationTime / stepDuration;
+                            const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                            targetRotationRef.current.y = 0.2618 * easeProgress;
+                            requestAnimationFrame(initialWiggleAnimation);
+                        } else if (animationTime < stepDuration * 2) {
+                            // 左に回転（-15度 = -0.2618ラジアン）
+                            const progress = (animationTime - stepDuration) / stepDuration;
+                            const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                            targetRotationRef.current.y = 0.2618 - (0.5236 * easeProgress); // 0.2618から-0.2618へ
+                            requestAnimationFrame(initialWiggleAnimation);
+                        } else if (animationTime < stepDuration * 3) {
+                            // 正面に戻る（0ラジアン）
+                            const progress = (animationTime - stepDuration * 2) / stepDuration;
+                            const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // イージング
+                            targetRotationRef.current.y = -0.2618 + (0.2618 * easeProgress); // -0.2618から0へ
+                            requestAnimationFrame(initialWiggleAnimation);
+                        } else {
+                            // アニメーション終了、自動切り替えタイマーを開始
+                            targetRotationRef.current.y = 0;
+                            wiggleAnimationRef.current = null;
+                            recordUserInteraction(); // ここでタイマー開始
+                        }
+                    } else {
+                        // 停止された場合
+                        targetRotationRef.current.y = 0;
+                        wiggleAnimationRef.current = null;
+                    }
+                };
+                
+                        wiggleAnimationRef.current = initialWiggleAnimation;
+                        requestAnimationFrame(initialWiggleAnimation);
+                    }
+                }, 500); // 0.5秒後に実行（確実にローディング完了後）
+            }
         });
 
         // イベントリスナー
@@ -1181,10 +1297,32 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         const handleTouchEnd = (event) => {
             if (!isMobileDevice || !isInitializedRef.current) return;
             
-            // 回転していた場合は中央に戻す
+            // 回転していた場合は滑らかに中央に戻す
             if (isRotating) {
-                targetRotationRef.current.y += (0 - targetRotationRef.current.y) * 0.15;
-                targetRotationRef.current.x += (0 - targetRotationRef.current.x) * 0.15;
+                const startRotationY = targetRotationRef.current.y;
+                const startRotationX = targetRotationRef.current.x;
+                const startTime = performance.now();
+                const returnDuration = 600; // 戻るアニメーション時間
+                
+                const returnToCenter = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / returnDuration, 1);
+                    
+                    // イージングアウト効果
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    
+                    targetRotationRef.current.y = startRotationY * (1 - easeProgress);
+                    targetRotationRef.current.x = startRotationX * (1 - easeProgress);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(returnToCenter);
+                    } else {
+                        targetRotationRef.current.x = 0;
+                        targetRotationRef.current.y = 0;
+                    }
+                };
+                
+                requestAnimationFrame(returnToCenter);
             }
             
             // スワイプでモデル切り替え（回転していない場合のみ）
