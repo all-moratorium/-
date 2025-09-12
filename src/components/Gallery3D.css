@@ -297,8 +297,8 @@ body:active {
 /* モバイル版対応 */
 @media screen and (max-width: 1280px), (pointer: coarse) {
     #container {
-        top: -8% !important;
-        height: 65vh  !important;
+        top: -7% !important;
+        height: 58vh  !important;
     }
     
     .click-prompt {
@@ -319,16 +319,13 @@ body:active {
         right: 20px;
     }
     
-    .hover-tooltip-right {
-        width: 250px;
-        height: 250px;
-        left: 55%;
+    .hover-tooltip-right,
+    .hover-tooltip-left {
+        display: none !important;
     }
     
-    .hover-tooltip-left {
-        width: 250px;
-        right: 55%;
-        max-width: 35vw;
+    .click-prompt {
+        display: none !important;
     }
     
     .tooltip-title {

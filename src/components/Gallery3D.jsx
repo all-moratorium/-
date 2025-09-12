@@ -212,8 +212,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     // 使用するモデルデータ
     const paintingData = models.length > 0 ? models : modelConfigs;
 
-    // モデル間の間隔
-    const spacing = 9;
+    // モデル間の間隔（モバイル版では狭くする）
+    const isMobileDevice = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
+    const spacing = isMobileDevice ? 6 : 9;
 
     const setupLighting = useCallback(() => {
         const scene = sceneRef.current;
@@ -868,6 +869,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     }, [switchToModel]);
 
     const checkHover = useCallback((event) => {
+        // モバイル版では無効化
+        if (isMobileDevice) return;
+        
         const rect = rendererRef.current.domElement.getBoundingClientRect();
         const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -896,7 +900,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 isHoveringModelRef.current = false;
             }
         }
-    }, [getCenterModel, showClickPrompt, hideClickPrompt]);
+    }, [getCenterModel, showClickPrompt, hideClickPrompt, isMobileDevice]);
 
     const animate = useCallback(() => {
         if (!isInitializedRef.current) return;
@@ -907,9 +911,11 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             const isImagePlane = model.userData.isImage;
             
             if (model === currentCenterModel && !isImagePlane && !isTransitioningRef.current) {
-                // 中央の3Dモデルのみアニメーション（切り替え中は停止）
-                model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
-                model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
+                // パソコン版のみマウスに応じた回転アニメーション
+                if (!isMobileDevice) {
+                    model.rotation.y += (targetRotationRef.current.y - model.rotation.y) * 0.1;
+                    model.rotation.x += (targetRotationRef.current.x - model.rotation.x) * 0.1;
+                }
                 model.position.y = 0;
             } else if (isImagePlane) {
                 // 画像プレーンは常に正面向きに固定
@@ -925,7 +931,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         if (rendererRef.current && sceneRef.current && cameraRef.current) {
             rendererRef.current.render(sceneRef.current, cameraRef.current);
         }
-    }, [getCenterModel, updateModelPositions]);
+    }, [getCenterModel, updateModelPositions, isMobileDevice]);
 
     // リサイズ処理を最適化
     const updateRendererSize = useCallback(() => {
@@ -987,7 +993,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
         // イベントリスナー
         const handleMouseMove = (event) => {
-            if (!isInitializedRef.current) return;
+            if (!isInitializedRef.current || isMobileDevice) return;
             
             recordUserInteraction();
             const rect = rendererRef.current.domElement.getBoundingClientRect();
@@ -1030,6 +1036,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             if (!isInitializedRef.current) return;
             
             recordUserInteraction();
+            
+            // モバイル版ではクリック詳細表示を無効化
+            if (isMobileDevice) return;
+            
             const rect = rendererRef.current.domElement.getBoundingClientRect();
             mouseVectorRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             mouseVectorRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1105,12 +1115,80 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             resizeObserver.observe(containerRef.current);
         }
 
+        // モバイル版タッチイベント
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isDragging = false;
+        
+        const handleTouchStart = (event) => {
+            if (!isMobileDevice || !isInitializedRef.current) return;
+            
+            recordUserInteraction();
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+            isDragging = false;
+        };
+        
+        const handleTouchMove = (event) => {
+            if (!isMobileDevice || !isInitializedRef.current) return;
+            
+            const touch = event.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            
+            // ドラッグの閾値を超えた場合
+            if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+                isDragging = true;
+            }
+            
+            // 横方向のドラッグでモデル回転（中央モデルのみ）
+            if (isDragging && Math.abs(deltaX) > Math.abs(deltaY)) {
+                event.preventDefault(); // スクロールを防止
+                
+                const rect = rendererRef.current.domElement.getBoundingClientRect();
+                const normalizedX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+                const normalizedY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+                
+                if (Math.abs(normalizedX) <= 0.4 && Math.abs(normalizedY) <= 0.8) {
+                    targetRotationRef.current.y = normalizedX * 0.5;
+                    targetRotationRef.current.x = -normalizedY * 0.5;
+                }
+            }
+        };
+        
+        const handleTouchEnd = (event) => {
+            if (!isMobileDevice || !isInitializedRef.current) return;
+            
+            const touchEndX = event.changedTouches[0].clientX;
+            const deltaX = touchEndX - touchStartX;
+            
+            // スワイプでモデル切り替え（ドラッグでない場合のみ）
+            if (!isDragging && Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    // 右スワイプ（前のモデル）
+                    handlePrevClick();
+                } else {
+                    // 左スワイプ（次のモデル）
+                    handleNextClick();
+                }
+            }
+            
+            isDragging = false;
+        };
+
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseleave', handleMouseLeave);
         
         const container = containerRef.current;
         if (container) {
             container.addEventListener('click', handleClick);
+            
+            // タッチイベントを追加
+            if (isMobileDevice) {
+                container.addEventListener('touchstart', handleTouchStart, { passive: false });
+                container.addEventListener('touchmove', handleTouchMove, { passive: false });
+                container.addEventListener('touchend', handleTouchEnd, { passive: false });
+            }
         }
         
 
@@ -1148,6 +1226,13 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             document.removeEventListener('mouseleave', handleMouseLeave);
             if (container) {
                 container.removeEventListener('click', handleClick);
+                
+                // タッチイベントのクリーンアップ
+                if (isMobileDevice) {
+                    container.removeEventListener('touchstart', handleTouchStart);
+                    container.removeEventListener('touchmove', handleTouchMove);
+                    container.removeEventListener('touchend', handleTouchEnd);
+                }
             }
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
