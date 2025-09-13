@@ -928,6 +928,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       return () => clearTimeout(timer);
     } else {
       setShowGallery3D(false);
+      // sampleGallery以外のページに移動した時はプリロード状態をリセット
+      setIsPreloadingModels(false);
     }
   }, [currentPage]);
   

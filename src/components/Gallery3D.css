@@ -298,7 +298,7 @@ body:active {
 @media screen and (max-width: 1280px), (pointer: coarse) {
     #container {
         top: -4% !important;
-        height: 55dvh  !important;
+        height: 47dvh  !important;
     }
     
     .click-prompt {
