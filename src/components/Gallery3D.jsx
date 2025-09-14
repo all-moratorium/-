@@ -1427,54 +1427,134 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
     }, []); // 依存配列を空にして初期化は一度だけ実行
 
+    const getCurrentModelInfo = useCallback(() => {
+        const centerModel = getCenterModel();
+        if (!centerModel) return null;
+        return centerModel.userData.paintingData;
+    }, [getCenterModel]);
+
     return (
-        <div id="container" ref={containerRef}>
-            <div className="background-strip" id="backgroundStrip"></div>
-            {loading && (
-                <div className="loading" id="loading">
-                    {isPreloading ? (
-                        isMobileDevice ? (
-                            <>
-                                <div style={{ fontSize: '12px', marginBottom: '6px', whiteSpace: 'nowrap'}}>
-                                    ネオンサインモデルを読み込み中...
-                                </div>
-                                <div style={{fontSize: '12px'}}>
-                                    進行状況: {Math.round(preloadProgress)}%
-                                </div>
-                            </>
+        <div className="gallery3d-container">
+            <div id="container" ref={containerRef}>
+                <div className="background-strip" id="backgroundStrip"></div>
+                {loading && (
+                    <div className="loading" id="loading">
+                        {isPreloading ? (
+                            isMobileDevice ? (
+                                <>
+                                    <div style={{ fontSize: '12px', marginBottom: '6px', whiteSpace: 'nowrap'}}>
+                                        ネオンサインモデルを読み込み中...
+                                    </div>
+                                    <div style={{fontSize: '12px'}}>
+                                        進行状況: {Math.round(preloadProgress)}%
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    ネオンサインモデルを読み込み中...<br/>
+                                    <div style={{fontSize: '14px', marginTop: '10px'}}>
+                                        進行状況: {Math.round(preloadProgress)}%
+                                    </div>
+                                </>
+                            )
                         ) : (
-                            <>
-                                ネオンサインモデルを読み込み中...<br/>
-                                <div style={{fontSize: '14px', marginTop: '10px'}}>
-                                    進行状況: {Math.round(preloadProgress)}%
-                                </div>
-                            </>
-                        )
-                    ) : (
-                        'ギャラリーを読み込み中...'
-                    )}
+                            'ギャラリーを読み込み中...'
+                        )}
+                    </div>
+                )}
+                <div className="navigation nav-left" id="prevBtn">‹</div>
+                <div className="navigation nav-right" id="nextBtn">›</div>
+
+                <div className="click-prompt" id="clickPrompt">クリックで詳細</div>
+
+                <div className="hover-tooltip-right" id="hoverTooltipRight">
+                    <div className="tooltip-image" id="tooltipImage"></div>
+                </div>
+
+                <div className="hover-tooltip-left" id="hoverTooltipLeft">
+                    <div className="tooltip-title" id="tooltipTitle"></div>
+                    <div className="tooltip-description" id="tooltipDescription"></div>
+                    <button
+                        className="download-project-btn"
+                        id="downloadProjectBtn"
+                        onClick={handleDownloadProject}
+                    >
+                        プロジェクトファイルをダウンロード
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Information Section */}
+            {isMobileDevice && !loading && (
+                <div className="mobile-description-card">
+                    <div className="mobile-product-header">
+                        <div className="mobile-product-image">
+                            <img
+                                src={getCurrentModelInfo()?.imagePath || '/neon sample pictures/蝶々2d.png'}
+                                alt="model preview"
+                            />
+                        </div>
+
+                        <div className="mobile-product-info">
+                            <h2 className="mobile-title">{getCurrentModelInfo()?.name || 'ネオンバタフライ・アート'}</h2>
+                            <div className="mobile-price-section">
+                                <div className="mobile-price-label">価格</div>
+                                <div className="mobile-price">¥24,800</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mobile-spec-grid">
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">サイズ(幅x高)</span>
+                            <span className="mobile-spec-value">300x400mm</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">6mmチューブ(本数)</span>
+                            <span className="mobile-spec-value">12本</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">8mmチューブ(本数)</span>
+                            <span className="mobile-spec-value">8本</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">6mmチューブ長さ</span>
+                            <span className="mobile-spec-value">2.5m</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">8mmチューブ長さ</span>
+                            <span className="mobile-spec-value">3.2m</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">OFF時のチューブカラー</span>
+                            <span className="mobile-spec-value">クリア</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">ベースプレート色</span>
+                            <span className="mobile-spec-value">ブラック</span>
+                        </div>
+                        <div className="mobile-spec-item">
+                            <span className="mobile-spec-label">タイプ</span>
+                            <span className="mobile-spec-value">アート</span>
+                        </div>
+                    </div>
+
+                    <button
+                        className="mobile-download-btn"
+                        onClick={handleDownloadProject}
+                        disabled={isDownloading}
+                    >
+                        <svg className="mobile-download-icon" viewBox="0 0 24 24">
+                            <path d="M12 15.577L8.462 12.038L9.877 10.623L11 11.746V5h2v6.746l1.123-1.123l1.415 1.415L12 15.577zM2 17h20v2H2v-2z"/>
+                        </svg>
+                        プロジェクトファイルをダウンロード(無料)
+                    </button>
+
+                    <div className="mobile-description-text">
+                        このネオンバタフライアートは、鮮やかな蝶の羽根をネオンライトで表現した美しいアート作品です。RGB LEDストリップを使用し、滑らかなカラーグラデーションと動的なアニメーションパターンを実現。リビングやオフィス空間を華やかに演出します。
+                    </div>
                 </div>
             )}
-            <div className="navigation nav-left" id="prevBtn">‹</div>
-            <div className="navigation nav-right" id="nextBtn">›</div>
-
-            <div className="click-prompt" id="clickPrompt">クリックで詳細</div>
-
-            <div className="hover-tooltip-right" id="hoverTooltipRight">
-                <div className="tooltip-image" id="tooltipImage"></div>
-            </div>
-
-            <div className="hover-tooltip-left" id="hoverTooltipLeft">
-                <div className="tooltip-title" id="tooltipTitle"></div>
-                <div className="tooltip-description" id="tooltipDescription"></div>
-                <button 
-                    className="download-project-btn" 
-                    id="downloadProjectBtn"
-                    onClick={handleDownloadProject}
-                >
-                    プロジェクトファイルをダウンロード
-                </button>
-            </div>
         </div>
     );
 };
