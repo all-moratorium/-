@@ -325,19 +325,6 @@ body:active {
     margin-bottom: 20px;
 }
 
-.mobile-product-image {
-    width: 120px;
-    height: 90px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #10a98b;
-    backdrop-filter: blur(10px);
-    flex-shrink: 0;
-    overflow: hidden;
-}
 
 .mobile-product-image img {
     width: 100%;
@@ -346,22 +333,20 @@ body:active {
 }
 
 .mobile-product-info {
-    flex: 1;
+    flex: 1
 }
 
 .mobile-title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 12px;
-    color: #10a98b;
+    color:rgb(255, 255, 255);
 }
 
 .mobile-price-section {
     background: rgba(0, 0, 0, 0.6);
-    border-radius: 15px;
-    padding: 12px 16px;
-    border: 1px solid #10a98b;
-    backdrop-filter: blur(10px);
+    border-radius: 0px;
+    padding:0px 16px;
 }
 
 .mobile-price-label {
@@ -519,16 +504,32 @@ body:active {
         bottom: 0;
         left: 0;
         right: 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .mobile-product-header {
-        gap: 15px;
-        margin-bottom: 15px;
+        height: 35%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+        overflow: hidden;
     }
 
     .mobile-product-image {
-        width: 80px;
-        height: 60px;
+        height: 93%;
+        margin-top: 5px;
+        aspect-ratio: 1/1;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #10a98b;
+        flex-shrink: 0;
+        overflow: hidden;
     }
 
     .mobile-title {
@@ -541,34 +542,41 @@ body:active {
     }
 
     .mobile-spec-grid {
-        gap: 8px;
-        margin-bottom: 15px;
+        height: 50%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+        align-content: center;
     }
 
     .mobile-spec-item {
-        padding: 8px 10px;
+        padding: 6px 8px;
     }
 
     .mobile-spec-label {
-        font-size: 10px;
+        font-size: 9px;
     }
 
     .mobile-spec-value {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .mobile-download-btn {
-        margin-bottom: 15px;
-        padding: 10px;
-        font-size: 13px;
+        height: 12%;
+        margin-bottom: 0;
+        padding: 8px;
+        margin-bottom: 3%;
+        font-size: 12px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .mobile-download-icon {
-        width: 16px;
-        height: 16px;
-    }
-
-    .mobile-description-text {
-        font-size: 12px;
+        width: 14px;
+        height: 14px;
     }
 }

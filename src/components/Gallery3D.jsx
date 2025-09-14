@@ -1549,10 +1549,6 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                         </svg>
                         プロジェクトファイルをダウンロード(無料)
                     </button>
-
-                    <div className="mobile-description-text">
-                        このネオンバタフライアートは、鮮やかな蝶の羽根をネオンライトで表現した美しいアート作品です。RGB LEDストリップを使用し、滑らかなカラーグラデーションと動的なアニメーションパターンを実現。リビングやオフィス空間を華やかに演出します。
-                    </div>
                 </div>
             )}
         </div>
