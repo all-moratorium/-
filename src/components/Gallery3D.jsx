@@ -1496,7 +1496,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                         </div>
 
                         <div className="mobile-product-info">
-                            <h2 className="mobile-title">{getCurrentModelInfo()?.name || 'ネオンバタフライ・アート'}</h2>
+                            <h2 className="mobile-product-title">{getCurrentModelInfo()?.name || 'ネオンバタフライ・アート'}</h2>
                             <div className="mobile-price-section">
                                 <div className="mobile-price-label">価格</div>
                                 <div className="mobile-price">¥24,800</div>
