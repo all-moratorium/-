@@ -2198,28 +2198,6 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             }}>
               {showGallery3D && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
             </div>
-            <button 
-              onClick={() => setCurrentPage('home')} 
-              className="back-button"
-              style={{
-                position: 'fixed',
-                bottom: '20px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'rgba(37, 100, 235, 0.45)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(37, 99, 235, 0.7)',
-                color: 'white',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                zIndex: 1000,
-                fontSize: '16px',
-                fontWeight: 'bold'
-              }}
-            >
-              ← ホームに戻る
-            </button>
           </div>
         );
       default:
