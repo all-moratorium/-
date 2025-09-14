@@ -504,7 +504,7 @@ body:active {
     }
 
     .gallery3d-container {
-        height: calc(100vh - 55px);
+        height: calc(100dvh - 55px);
         overflow: hidden;
     }
 
