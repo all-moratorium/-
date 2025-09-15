@@ -605,14 +605,22 @@
     background: rgb(0, 0, 0);
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
-  box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .customize-sidebar.collapsed .customize-toggle-sidebar-button:hover {
     background: rgb(0, 0, 0);
   border-color: rgba(255, 255, 255, 1.0);
   color: #ffffff;
-  box-shadow: 0px 0px 25px 0px rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 0 35px rgba(255, 255, 255, 0.5),
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 
@@ -687,9 +695,23 @@
         left: auto !important;
         bottom: auto !important;
     }
-    
+
     .customize-toggle-sidebar-button:hover {
         box-shadow: rgba(16, 185, 129, 0.65) 0px 0px 20px 0px;
+    }
+
+    .customize-sidebar.collapsed .customize-toggle-sidebar-button {
+        background: rgb(0, 0, 0);
+        border-color: rgba(255, 255, 255, 1.0);
+        color: #ffffff;
+        box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
+    }
+
+    .customize-sidebar.collapsed .customize-toggle-sidebar-button:hover {
+        background: rgb(0, 0, 0);
+        border-color: rgba(255, 255, 255, 1.0);
+        color: #ffffff;
+        box-shadow: 0px 0px 25px 0px rgba(255, 255, 255, 0.7);
     }
     
     .customize-header {
