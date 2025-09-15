@@ -409,8 +409,12 @@ body:active {
     width: 80%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-    animation: wave-sweep 1.2s ease-in-out;
     pointer-events: none;
+    opacity: 0;
+}
+
+.mobile-description-card.active .mobile-spec-item::before {
+    animation: wave-sweep 1.2s ease-in-out;
 }
 
 @keyframes wave-sweep {
@@ -641,9 +645,12 @@ body:active {
         width: 80%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-        animation: wave-sweep 1.2s ease-in-out;
-        animation-delay: calc(var(--item-index, 0) * 0.1s);
         pointer-events: none;
+        opacity: 0;
+    }
+
+    .mobile-description-card.active .mobile-spec-item::before {
+        animation: wave-sweep 1.2s ease-in-out;
     }
 
     .mobile-spec-label {
