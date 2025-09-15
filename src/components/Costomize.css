@@ -1093,6 +1093,10 @@
         left: 38px !important;
     }
 
+    .neon-switch-handle.off {
+        left: 3px !important;
+    }
+
     .neon-background-controls {
         gap: 6px !important;
         padding-right: 20px !important;
