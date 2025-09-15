@@ -1513,6 +1513,13 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 </button>
             )}
 
+            {/* Mobile Home Button - Landscape */}
+            {isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
+                <button className="mobile-home-btn" onClick={() => window.location.href = '/'}>
+                    ホームに戻る
+                </button>
+            )}
+
             {/* Landscape Notice - Landscape only */}
             {isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
                 <div className="landscape-notice">
