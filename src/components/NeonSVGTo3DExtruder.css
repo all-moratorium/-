@@ -501,15 +501,15 @@
   .neon3d-glow-switch-handle {
     width: 20px !important;
     height: 20px !important;
-    top: 1px !important;
+    top: 1.4px !important;
   }
 
   .neon3d-glow-switch-handle.on {
-    left: 27px !important;
+    left: 25px !important;
   }
 
   .neon3d-glow-switch-handle.off {
-    left: 1px !important;
+    left: 3px !important;
   }
 
   .neon3d-lighting-controls {
@@ -822,11 +822,11 @@
 }
 
 .neon3d-glow-switch-handle.on {
-  left: 38px;
+  left: 35px;
 }
 
 .neon3d-glow-switch-handle.off {
-  left: 2px;
+  left: 4px;
 }
 
 /* モデル詳細情報表示セクション */

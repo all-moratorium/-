@@ -1847,11 +1847,11 @@ html, body {
 }
 
 .neon-switch-handle.on {
-    left: 43px;
+    left: 44px;
 }
 
 .neon-switch-handle.off {
-    left: 3px;
+    left: 4px;
 }
 
 .neon-background-controls {
