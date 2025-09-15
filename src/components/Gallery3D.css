@@ -304,7 +304,7 @@ body:active {
 
 /* Mobile Information Section - Based on provided HTML design */
 .mobile-description-card {
-    background-color: rgba(0, 0, 0, 0.17);
+    background: linear-gradient(to bottom right,rgb(39, 39, 39),rgb(7, 7, 7),rgb(0, 0, 0));
     border: 2px solid rgba(16, 185, 129, 0.7);
     border-radius: 20px;
     box-shadow:
@@ -390,9 +390,8 @@ body:active {
     justify-content: space-between;
     align-items: center;
     padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.5);
+    background: transparent;
     border-radius: 10px;
-    backdrop-filter: blur(5px);
     transition: all 0.3s ease;
 }
 
@@ -639,8 +638,11 @@ body:active {
         justify-content: space-between;
         align-items: center;
         min-height: 0;
-        background: rgba(19, 18, 18, 0);
+        background: rgba(161, 161, 161, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 4px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         position: relative;
         overflow: hidden;
     }
