@@ -218,7 +218,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     // モデル間の間隔（モバイル横向きのみ調整）
     const isMobileDevice = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
     const isMobileLandscape = isMobileDevice && window.innerWidth > window.innerHeight;
-    const spacing = isMobileLandscape ? 7.2 : (isMobileDevice ? 6.2 : 9);
+    const spacing = isMobileLandscape ? 7.8 : (isMobileDevice ? 6.2 : 9);
 
     const setupLighting = useCallback(() => {
         const scene = sceneRef.current;
