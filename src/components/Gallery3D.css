@@ -548,7 +548,7 @@ body:active {
         padding-left: 2%;
         padding-top: 0;
         padding-bottom: 0;
-        border-radius: 16px;
+        border-radius: 10px;
         width: 92%;
         max-width: 700px;
         height: calc(100vh - 48dvh);
