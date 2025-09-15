@@ -32,6 +32,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     const [preloadProgress, setPreloadProgress] = useState(0); // プリロード進行状況
     const [isPreloading, setIsPreloading] = useState(false); // プリロード中フラグ
     const [mobileInfoTransition, setMobileInfoTransition] = useState(true); // モバイル情報セクションの表示状態
+    const [currentModelInfo, setCurrentModelInfo] = useState(null); // 現在の中央モデル情報
     
     // プリロード状態が変更された時に親コンポーネントに通知
     useEffect(() => {
@@ -529,6 +530,9 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         const centerModel = getCenterModel();
         if (!centerModel) return;
 
+        // 中央モデル情報を更新
+        setCurrentModelInfo(centerModel.userData.paintingData);
+
         // 全てのモデルを画像プレーンに戻す
         allModelsRef.current.forEach(model => {
             if (model !== centerModel && !model.userData.isImage) {
@@ -542,7 +546,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                 // ネオンサイン画像プレーンを追加
                 const paintingData = model.userData.paintingData;
                 const imagePath = paintingData.imagePath;
-                
+
                 const textureLoader = new THREE.TextureLoader();
                 const planeGeometry = new THREE.PlaneGeometry(1, 1);
                 const planeMaterial = new THREE.MeshBasicMaterial({
@@ -550,15 +554,15 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                     opacity: 0, // 初期状態で透明
                     visible: false // 初期状態で非表示
                 });
-                
+
                 textureLoader.load(imagePath, (texture) => {
                     texture.colorSpace = THREE.SRGBColorSpace;
                     planeMaterial.map = texture;
-                    
+
                     // 画像の元比率を取得
                     const aspectRatio = texture.image.width / texture.image.height;
                     const scale = paintingData.imageScale || 6;
-                    
+
                     // 比率を保ったままサイズ調整
                     if (aspectRatio >= 1) {
                         // 横長画像：幅をscaleにして高さを比率で調整
@@ -567,13 +571,13 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                         // 縦長画像：高さをscaleにして幅を比率で調整
                         planeGeometry.scale(scale * aspectRatio, scale, 1);
                     }
-                    
+
                     // 画像が読み込まれてから表示
                     planeMaterial.opacity = 1.0;
                     planeMaterial.visible = true;
                     planeMaterial.needsUpdate = true;
                 });
-                
+
                 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
                 plane.rotation.set(0, 0, 0);
                 model.add(plane);
@@ -599,19 +603,19 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             // 3Dモデルを非同期で読み込み（即座に画像プレーンをクリア）
             loadCachedModel(modelPath).then((originalModel) => {
                 const model = originalModel.clone();
-                
+
                 // 個別スケール値を取得（設定値 > カスタム値 > デフォルト値の順）
                 const modelKey = centerModel.userData.modelKey;
                 const customScale = modelScales[modelKey] || paintingData.modelScale || 0.006;
                 model.scale.set(customScale, customScale, customScale);
-                
+
                 const box = new THREE.Box3().setFromObject(model);
                 const center = box.getCenter(new THREE.Vector3());
                 model.position.sub(center);
-                
+
                 centerModel.add(model);
                 centerModel.userData.isImage = false;
-                
+
                 // 新しいモデルが中央に来たら視点を初期化
                 targetRotationRef.current.x = 0;
                 targetRotationRef.current.y = 0;
@@ -1063,7 +1067,13 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             // モデル作成
             createModels();
             updateModelPositions();
-            
+
+            // 初期の中央モデル情報を設定
+            const initialCenterModel = getCenterModel();
+            if (initialCenterModel) {
+                setCurrentModelInfo(initialCenterModel.userData.paintingData);
+            }
+
             // 初期視点を正面向きに設定
             targetRotationRef.current.x = 0;
             targetRotationRef.current.y = 0;
@@ -1441,10 +1451,8 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     }, []); // 依存配列を空にして初期化は一度だけ実行
 
     const getCurrentModelInfo = useCallback(() => {
-        const centerModel = getCenterModel();
-        if (!centerModel) return null;
-        return centerModel.userData.paintingData;
-    }, [getCenterModel]);
+        return currentModelInfo;
+    }, [currentModelInfo]);
 
     return (
         <div className="gallery3d-container">
