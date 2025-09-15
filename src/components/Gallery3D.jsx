@@ -31,6 +31,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     const [modelScales, setModelScales] = useState({});
     const [preloadProgress, setPreloadProgress] = useState(0); // プリロード進行状況
     const [isPreloading, setIsPreloading] = useState(false); // プリロード中フラグ
+    const [mobileInfoTransition, setMobileInfoTransition] = useState(true); // モバイル情報セクションの表示状態
     
     // プリロード状態が変更された時に親コンポーネントに通知
     useEffect(() => {
@@ -818,6 +819,11 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
         isTransitioningRef.current = true;
 
+        // モバイル情報セクションの遷移アニメーション開始
+        if (isMobileDevice) {
+            setMobileInfoTransition(false);
+        }
+
         if (isHoveringModelRef.current) {
             isHoveringModelRef.current = false;
             hideClickPrompt();
@@ -907,8 +913,15 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                     wiggleAnimationRef.current = wiggleAnimation;
                     requestAnimationFrame(wiggleAnimation);
                 }
-                
+
                 isTransitioningRef.current = false;
+
+                // モバイル情報セクションの遷移アニメーション完了後、新しい内容で表示
+                if (isMobileDevice) {
+                    setTimeout(() => {
+                        setMobileInfoTransition(true);
+                    }, 100);
+                }
             }
         };
 
@@ -1486,7 +1499,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
             {/* Mobile Information Section */}
             {isMobileDevice && !loading && (
-                <div className="mobile-description-card">
+                <div className={`mobile-description-card ${mobileInfoTransition ? 'active' : ''}`}>
                     <div className="mobile-product-header">
                         <div className="mobile-product-image">
                             <img

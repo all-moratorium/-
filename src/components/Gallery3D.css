@@ -318,6 +318,23 @@ body:active {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.mobile-description-card .mobile-product-image img,
+.mobile-description-card .mobile-product-title,
+.mobile-description-card .mobile-price,
+.mobile-description-card .mobile-spec-value {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-description-card.active .mobile-product-image img,
+.mobile-description-card.active .mobile-product-title,
+.mobile-description-card.active .mobile-price,
+.mobile-description-card.active .mobile-spec-value {
+    opacity: 1;
+    visibility: visible;
+}
+
 .mobile-product-header {
     display: flex;
     align-items: center;
@@ -519,9 +536,14 @@ body:active {
     }
 
     .mobile-description-card {
-        margin: 0 12px 12px 12px;
+        margin: 0 auto;
+        margin-bottom: 4%;
+        margin-left: auto;
+        margin-right: auto;
         padding: 5px 10px;
         border-radius: 16px;
+        width: 92%;
+        max-width: 700px;
         height: calc(100vh - 48dvh);
         overflow-y: auto;
         position: absolute;
@@ -531,6 +553,23 @@ body:active {
         right: 0;
         display: flex;
         flex-direction: column;
+    }
+
+    .mobile-description-card .mobile-product-image img,
+    .mobile-description-card .mobile-product-title,
+    .mobile-description-card .mobile-price,
+    .mobile-description-card .mobile-spec-value {
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-description-card.active .mobile-product-image img,
+    .mobile-description-card.active .mobile-product-title,
+    .mobile-description-card.active .mobile-price,
+    .mobile-description-card.active .mobile-spec-value {
+        opacity: 1;
+        visibility: visible;
     }
 
     .mobile-product-header {
@@ -622,10 +661,13 @@ body:active {
     }
 
     .mobile-download-btn {
-        height: 12%;
+        height: 13%;
+        max-height: 40px;
+        align-items: center;
         margin-bottom: 0;
         padding: 8px;
-        margin-bottom: 3%;
+        margin-bottom: 2%;
+        margin-top: 2%;
         font-size: clamp(11px, 3.2vw, 14px);
         flex-shrink: 0;
         display: flex;
