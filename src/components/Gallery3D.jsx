@@ -215,9 +215,10 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
     // 使用するモデルデータ
     const paintingData = models.length > 0 ? models : modelConfigs;
 
-    // モデル間の間隔（モバイル版では狭くする）
+    // モデル間の間隔（モバイル横向きのみ調整）
     const isMobileDevice = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
-    const spacing = isMobileDevice ? 6.2 : 9;
+    const isMobileLandscape = isMobileDevice && window.innerWidth > window.innerHeight;
+    const spacing = isMobileLandscape ? 7.2 : (isMobileDevice ? 6.2 : 9);
 
     const setupLighting = useCallback(() => {
         const scene = sceneRef.current;
@@ -1504,6 +1505,20 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Mobile Home Button - Portrait only */}
+            {isMobileDevice && !loading && window.innerHeight > window.innerWidth && (
+                <button className="mobile-home-btn" onClick={() => window.location.href = '/'}>
+                    ホームに戻る
+                </button>
+            )}
+
+            {/* Landscape Notice - Landscape only */}
+            {isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
+                <div className="landscape-notice">
+                    製品の詳細情報をご覧いただくには、画面を縦向きでご利用ください
+                </div>
+            )}
 
             {/* Mobile Information Section */}
             {isMobileDevice && !loading && (
