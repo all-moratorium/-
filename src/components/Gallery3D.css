@@ -299,7 +299,7 @@ body:active {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100dvh - 55px);
+    height: 100%;
 }
 
 /* Mobile Information Section - Based on provided HTML design */
