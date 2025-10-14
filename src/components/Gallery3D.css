@@ -727,7 +727,7 @@ body:active {
 }
 
 /* モバイル版対応 - 大きめの縦向き画面のみ（高さ900px以上かつ横幅500px以上） */
-@media screen and (max-width: 1280px) and (orientation: portrait) and (min-height: 500px) and (min-width: 500px) {
+@media screen and (max-width: 1280px) and (orientation: portrait) and (min-height: 1200px) and (min-width: 500px) {
     #container {
         height: 54dvh !important;
     }
