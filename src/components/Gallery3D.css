@@ -488,7 +488,7 @@ body:active {
 /* モバイル版対応 */
 @media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
     #container {
-        top: -2.6% !important;
+        top: -1.5% !important;
         height: 46dvh !important;
         flex-shrink: 0;
     }
@@ -548,7 +548,7 @@ body:active {
         padding-top: 0;
         padding-bottom: 0;
         border-radius: 10px;
-        width: 85%;
+        width: 88%;
         max-width: 500px;
         height: 47dvh;
         overflow-y: auto;
@@ -733,7 +733,7 @@ body:active {
     }
 
     .mobile-description-card {
-        height: calc(100vh - 56dvh) !important;
+        height: 44dvh !important;
         max-width: 600px !important;
         border-radius: 15px;
 
