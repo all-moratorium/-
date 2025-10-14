@@ -488,8 +488,8 @@ body:active {
 /* モバイル版対応 */
 @media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
     #container {
-        top: -3.5% !important;
-        height: 44.5dvh !important;
+        top: -2.6% !important;
+        height: 46dvh !important;
         flex-shrink: 0;
     }
 
@@ -540,7 +540,7 @@ body:active {
 
     .mobile-description-card {
         margin: 0 auto;
-        margin-bottom: 4%;
+        margin-bottom: max(20px, 3%);
         margin-left: auto;
         margin-right: auto;
         padding-right: 2%;
@@ -548,9 +548,9 @@ body:active {
         padding-top: 0;
         padding-bottom: 0;
         border-radius: 10px;
-        width: 92%;
-        max-width: 550px;
-        height: calc(100vh - 48dvh);
+        width: 85%;
+        max-width: 500px;
+        height: 47dvh;
         overflow-y: auto;
         position: absolute;
         box-sizing: border-box;
@@ -727,9 +727,9 @@ body:active {
 }
 
 /* モバイル版対応 - 大きめの縦向き画面のみ（高さ900px以上かつ横幅500px以上） */
-@media screen and (max-width: 1280px) and (orientation: portrait) and (min-height: 900px) and (min-width: 500px) {
+@media screen and (max-width: 1280px) and (orientation: portrait) and (min-height: 500px) and (min-width: 500px) {
     #container {
-        height: 56dvh !important;
+        height: 54dvh !important;
     }
 
     .mobile-description-card {
