@@ -5,6 +5,7 @@
 .text-generator-app-container {
     position: relative;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
     background-color:rgb(7, 7, 7);
     color:rgb(0, 0, 0);
