@@ -876,7 +876,7 @@
 }
 
 /* 縦向き時の縦レイアウト */
-@media screen and (max-width: 1280px) and (orientation: portrait), (pointer: coarse) and (orientation: portrait) {
+@media screen and (max-width: 1280px) and (max-aspect-ratio: 5/6), (pointer: coarse) and (max-aspect-ratio: 5/6) {
   /* モーダルコンテンツ - 縦レイアウトに変更 */
   .text-generator-modal-content {
     flex-direction: column !important;
