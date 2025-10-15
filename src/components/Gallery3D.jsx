@@ -1549,7 +1549,7 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
 
                     <div className="mobile-spec-grid">
                         <div className="mobile-spec-item">
-                            <span className="mobile-spec-label">サイズ(幅x高)</span>
+                            <span className="mobile-spec-label">サイズ<br/>(幅x高)</span>
                             <span className="mobile-spec-value">300x400mm</span>
                         </div>
                         <div className="mobile-spec-item">
@@ -1569,11 +1569,11 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
                             <span className="mobile-spec-value">3.2m</span>
                         </div>
                         <div className="mobile-spec-item">
-                            <span className="mobile-spec-label">OFF時のチューブカラー</span>
+                            <span className="mobile-spec-label">OFF時の<br/>チューブカラー</span>
                             <span className="mobile-spec-value">クリア</span>
                         </div>
                         <div className="mobile-spec-item">
-                            <span className="mobile-spec-label">ベースプレート色</span>
+                            <span className="mobile-spec-label">ベース<br/>プレートカラー</span>
                             <span className="mobile-spec-value">ブラック</span>
                         </div>
                         <div className="mobile-spec-item">
