@@ -2429,13 +2429,13 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       <div className="layout-container">
         {/* Mobile Header */}
         <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${currentPage === 'info' ? 'mobile-header-portrait' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
-          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && aspectRatio > 1.2 && (
+          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && (aspectRatio < 0.83 || aspectRatio > 1.2) && (
             <div className="rotation-message">
               <div className="rotation-icon"></div>
               <div className="rotation-text">横画面でご利用ください</div>
             </div>
           )}
-          {currentPage === 'info' && aspectRatio > 1.2 && (
+          {currentPage === 'info' && (aspectRatio < 0.83 || aspectRatio > 1.2) && (
             <div className="portrait-rotation-message">
               <div className="portrait-rotation-icon"></div>
               <div className="portrait-rotation-text">縦画面でご利用ください</div>

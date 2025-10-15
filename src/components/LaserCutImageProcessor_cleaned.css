@@ -3089,8 +3089,8 @@ canvas {
     50% { transform: rotate(0deg); }
   }
 
-  /* Hide portrait rotation overlay in portrait mode, when width >= 1280px, or when height >= 600px */
-  @media (orientation: portrait), (min-width: 1280px), (min-height: 600px) {
+  /* Hide portrait rotation overlay in portrait mode, when width >= 1280px, when height >= 600px, or when aspect ratio is between 0.83 and 1.2 */
+  @media (orientation: portrait), (min-width: 1280px), (min-height: 600px), ((min-aspect-ratio: 5/6) and (max-aspect-ratio: 6/5)) {
     .mobile-header.mobile-header-portrait::before,
     .portrait-rotation-message {
       display: none;
@@ -3110,8 +3110,8 @@ canvas {
     z-index: 10000;
   }
 
-  /* Hide rotation overlay in landscape mode or when width >= 768px */
-  @media (orientation: landscape), (min-width: 768px) {
+  /* Hide rotation overlay in landscape mode, when width >= 768px, or when aspect ratio is between 0.83 and 1.2 */
+  @media (orientation: landscape), (min-width: 768px), ((min-aspect-ratio: 5/6) and (max-aspect-ratio: 6/5)) {
     .mobile-header.mobile-header-minimal::before,
     .rotation-message {
       display: none;
