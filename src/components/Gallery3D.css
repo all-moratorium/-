@@ -588,7 +588,7 @@ body:active {
         overflow: hidden;
         box-sizing: border-box;
         padding-top: 3%;
-        margin: 0px 3%;
+        margin: 0px 2%;
     }
 
     .mobile-product-image {
@@ -624,7 +624,7 @@ body:active {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
-        gap: clamp(6px, 1.5vw, 10px);
+        gap: 6px;
         padding-top: 3%;
         padding-bottom: 0%;
         margin-top: 0;
