@@ -486,7 +486,7 @@ body:active {
 }
 
 /* モバイル版対応 */
-@media screen and (max-width: 1280px) and (max-aspect-ratio: 23/20), (pointer: coarse) and (max-aspect-ratio: 23/20) {
+@media screen and (max-width: 1280px) and (max-aspect-ratio: 6/5), (pointer: coarse) and (max-aspect-ratio: 6/5) {
     #container {
         top: -1.5% !important;
         height: 46dvh !important;
@@ -749,7 +749,7 @@ body:active {
 }
 
 /* 横向きモバイル版対応 */
-@media screen and (max-width: 1280px) and (min-aspect-ratio: 23/20), (pointer: coarse) and (min-aspect-ratio: 23/20) {
+@media screen and (max-width: 1280px) and (min-aspect-ratio: 6/5), (pointer: coarse) and (min-aspect-ratio: 6/5) {
     #container {
         top: 48% !important;
         left: 50% !important;
