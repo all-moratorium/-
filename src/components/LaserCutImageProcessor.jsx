@@ -491,6 +491,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
   const [can3DPreview, setCan3DPreview] = useState(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
+  const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [showGallery3D, setShowGallery3D] = useState(false);
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
@@ -808,9 +809,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       const previousLandscape = isLandscape;
       const newLandscape = window.innerWidth > window.innerHeight;
       const isTablet = window.innerWidth >= 768;
-      
+
       setIsLandscape(newLandscape);
       setCan3DPreview(newLandscape || isTablet);
+      setAspectRatio(window.innerWidth / window.innerHeight);
       
       // 3Dプレビューページが開いている時のみ処理
       if (isMobile && currentPage === 'neonSvg3dPreview' && neonSvgData) {
@@ -2427,13 +2429,13 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       <div className="layout-container">
         {/* Mobile Header */}
         <div className={`mobile-header ${['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) ? 'mobile-header-minimal' : ''} ${currentPage === 'info' ? 'mobile-header-portrait' : ''} ${mobileSidebarOpen ? 'sidebar-open' : ''}`}>
-          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && (
+          {['textGeneration', 'neonDrawing', 'customize', 'neonSvg3dPreview'].includes(currentPage) && !can3DPreview && aspectRatio > 1.2 && (
             <div className="rotation-message">
               <div className="rotation-icon"></div>
               <div className="rotation-text">横画面でご利用ください</div>
             </div>
           )}
-          {currentPage === 'info' && (
+          {currentPage === 'info' && aspectRatio > 1.2 && (
             <div className="portrait-rotation-message">
               <div className="portrait-rotation-icon"></div>
               <div className="portrait-rotation-text">縦画面でご利用ください</div>
