@@ -2156,7 +2156,6 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   <div className="payment-icons">
                     <img src="/icons/visa.svg" alt="Visa" className="payment-icon" />
                     <img src="/icons/mc_symbol.svg" alt="Mastercard" className="payment-icon" />
-                    <img src="/icons/American Express BB Logo.jpg" alt="American Express" className="payment-icon" />
                     <img src="/icons/jcb-logomark-img-03.webp" alt="JCB" className="payment-icon" />
                     <img src="/icons/Logo_RakutenPay_Horizontal.png" alt="Rakuten Pay" className="payment-icon" />
                     <img src="/icons/paypay_3_rgb.png" alt="PayPay" className="payment-icon" />
