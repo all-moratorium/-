@@ -234,16 +234,21 @@
 }
 
 .preview3d-video-section:fullscreen .preview3d-video-container {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100vw;
+  max-height: 100dvh;
   border: none;
   box-shadow: none;
   background: transparent;
+  aspect-ratio: 16/9;
 }
 
 .preview3d-video-section:fullscreen video {
   width: 100%;
   height: 100%;
+  max-width: 100vw;
+  max-height: 100dvh;
   object-fit: contain;
 }
 
