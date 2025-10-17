@@ -4238,7 +4238,7 @@ canvas {
 
 /* NeonSVGTo3DExtruder モバイル版スタイル */
 .neon-3d-extruder-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -4250,6 +4250,7 @@ canvas {
 .preview3d-mobile-empty-state {
   display: flex;
   align-items: center;
+  position: fixed;
   justify-content: center;
   height: 100dvh;
   width: 100%;
@@ -4264,6 +4265,7 @@ canvas {
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: flex;
+  position: fixed;
   flex-direction: column;
   justify-content: center;
 }
