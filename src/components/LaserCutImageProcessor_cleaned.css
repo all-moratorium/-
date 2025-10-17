@@ -3457,13 +3457,13 @@ canvas {
     margin-left: 0 !important;
     overflow-x: hidden !important;
     height: calc(var(--vh, 1vh) * 100) !important;
-    position: relative !important;
+    position: fixed!important;
   }
 
   .layout-container {
     padding-top: 0;
     height: calc(var(--vh, 1vh) * 100) !important;
-    position: relative !important;
+ 
     margin: 0px !important;
     padding: 0px !important;
   }
