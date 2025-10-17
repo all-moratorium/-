@@ -3121,7 +3121,7 @@ canvas {
   /* Mobile Content */
   .mobile-content {
     padding-top: 55px;
-    min-height: 100dvh;
+    min-height: calc(var(--vh, 1vh) * 100);
     overflow-y: auto;
     width: 100%;
     max-width: 100vw;
@@ -3388,7 +3388,7 @@ canvas {
     top: 55px;
     left: -260px;
     width: 250px !important;
-    height: calc(100dvh - 55px);
+    height: calc(var(--vh, 1vh) * 100 - 55px);
     z-index: 1500;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     overflow-y: auto !important;

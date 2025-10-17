@@ -911,12 +911,22 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       const isMobileDevice = window.innerWidth <= 1280 || navigator.maxTouchPoints > 0;
       setIsMobile(isMobileDevice);
     };
-    
+
+    // Fix dvh for PWA standalone mode
+    const updateHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
     checkMobile();
+    updateHeight();
+
     window.addEventListener('resize', checkMobile);
-    
+    window.addEventListener('resize', updateHeight);
+
     return () => {
       window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('resize', updateHeight);
     };
   }, []);
 
