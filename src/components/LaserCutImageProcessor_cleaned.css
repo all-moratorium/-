@@ -3463,7 +3463,7 @@ canvas {
   .layout-container {
     padding-top: 0;
     height: calc(var(--vh, 1vh) * 100) !important;
-
+    position: fixed !important;
   }
 
   /* Enable scrolling and hide desktop elements */
