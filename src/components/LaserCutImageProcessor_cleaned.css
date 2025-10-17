@@ -3463,6 +3463,7 @@ canvas {
   .layout-container {
     padding-top: 0;
     height: calc(var(--vh, 1vh) * 100) !important;
+    position: relative !important;
     margin: 0px !important;
     padding: 0px !important;
   }
