@@ -1762,8 +1762,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             
             {/* Mobile Layout */}
             <div className="mobile-content">
-              {/* Hero Section - Placeholder for animation/video */}
+              {/* Hero Section - Video background with overlay content */}
               <div className="mobile-hero-section">
+                {/* Background Video */}
                 <video
                   autoPlay
                   loop
@@ -1773,41 +1774,41 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 >
                   <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
                 </video>
-              </div>
-              
-              {/* Title */}
-              <div className="mobile-title">Image To LED Neon Sign</div>
-              
-              {/* Guide Button */}
-              <div className="mobile-guide-container">
-                <button
-                  onClick={handleOpenModal}
-                  className={`info-button mobile-guide-info-button ${isEffectStopped ? 'stopped' : ''}`}
-                >
-                </button>
-                <span className="mobile-guide-text">
-                  一度お読みください
-                </span>
-              </div>
 
-              {/* Sample Viewer Button */}
-              <button
-                onClick={() => setCurrentPage('sampleGallery')}
-                className="mobile-create-button button-blue mobile-sample-button"
-              >
-                サンプルを見る
-              </button>
-              
-              {/* Create Button */}
-              <button
-                onClick={() => setShowCreationModal(true)}
-                className="mobile-create-button"
-              >
-                さっそく作成する
-              </button>
-              
-              
-              
+                {/* Overlay Content */}
+                <div className="mobile-hero-overlay">
+                  {/* Title */}
+                  <div className="mobile-title">Image To LED Neon Sign</div>
+
+                  {/* Guide Button */}
+                  <div className="mobile-guide-container">
+                    <button
+                      onClick={handleOpenModal}
+                      className={`info-button mobile-guide-info-button ${isEffectStopped ? 'stopped' : ''}`}
+                    >
+                    </button>
+                    <span className="mobile-guide-text">
+                      一度お読みください
+                    </span>
+                  </div>
+
+                  {/* Sample Viewer Button */}
+                  <button
+                    onClick={() => setCurrentPage('sampleGallery')}
+                    className="mobile-create-button button-blue mobile-sample-button"
+                  >
+                    サンプルを見る
+                  </button>
+
+                  {/* Create Button */}
+                  <button
+                    onClick={() => setShowCreationModal(true)}
+                    className="mobile-create-button"
+                  >
+                    さっそく作成する
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="home-bottom-layout">

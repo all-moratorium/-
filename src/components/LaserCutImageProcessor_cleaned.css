@@ -3176,19 +3176,22 @@ canvas {
     height: 100%;
     object-fit: cover;
   }
+  
 
   /* Main content sections */
   .mobile-hero-section {
     width: 100%;
     height: calc(100dvh - 55px);
-    background: #444;
+    background: transpalent;
     margin: 0;
     border-radius: 0px;
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 16px;
+    position: relative;
+    z-index: 1;
   }
 
   .mobile-action-row {
