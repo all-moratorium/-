@@ -1769,11 +1769,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   loop
                   muted
                   playsInline
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
+                  className="mobile-hero-video"
                 >
                   <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
                 </video>
@@ -1783,29 +1779,21 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               <div className="mobile-title">Image To LED Neon Sign</div>
               
               {/* Guide Button */}
-              <div style={{textAlign: 'center', margin: '30px 0'}}>
-                <button 
+              <div className="mobile-guide-container">
+                <button
                   onClick={handleOpenModal}
-                  className={`info-button ${isEffectStopped ? 'stopped' : ''}`}
-                  style={{
-                    width: '28px',
-                    height: '28px',
-                    fontSize: '16px',
-                    display: 'inline-block',
-                    marginRight: '1px'
-                  }}
+                  className={`info-button mobile-guide-info-button ${isEffectStopped ? 'stopped' : ''}`}
                 >
                 </button>
-                <span style={{color: 'white', fontSize: '15px', verticalAlign: 'middle'}}>
+                <span className="mobile-guide-text">
                   一度お読みください
                 </span>
               </div>
-              
+
               {/* Sample Viewer Button */}
               <button
                 onClick={() => setCurrentPage('sampleGallery')}
-                className="mobile-create-button button-blue"
-                style={{ marginBottom: '15px' }}
+                className="mobile-create-button button-blue mobile-sample-button"
               >
                 サンプルを見る
               </button>
