@@ -1764,7 +1764,19 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <div className="mobile-content">
               {/* Hero Section - Placeholder for animation/video */}
               <div className="mobile-hero-section">
-                <div>アニメーション/動画エリア<br />（未実装）</div>
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                >
+                  <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                </video>
               </div>
               
               {/* Title */}

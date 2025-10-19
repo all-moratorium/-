@@ -3146,7 +3146,7 @@ canvas {
   /* Main content sections */
   .mobile-hero-section {
     width: 100%;
-    aspect-ratio: 1;
+    height: 55dvh;
     background: #444;
     margin: 0;
     border-radius: 0px;
