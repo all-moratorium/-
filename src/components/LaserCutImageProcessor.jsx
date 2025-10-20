@@ -1790,28 +1790,33 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 
                   {/* Action Box Container */}
                   <div className="mobile-action-box">
-                    {/* Notice Box */}
-                    <div className="mobile-notice-box">
-                      <div className="mobile-notice-text">
-                        作成前に一度ガイドをご確認ください
-                      </div>
-                    </div>
-
                     {/* Button Row */}
                     <div className="mobile-button-row">
                       <button
                         onClick={() => setCurrentPage('sampleGallery')}
-                        className="mobile-button-secondary"
+                        className="mobile-button-secondary mobile-button-with-text"
                       >
-                        <span className="button-icon">✨</span>
-                        サンプル
+                        <div className="button-content-vertical">
+                          <div className="button-main-text">
+                            サンプル
+                          </div>
+                          <div className="button-sub-text">
+                            デザインの参考に
+                          </div>
+                        </div>
                       </button>
                       <button
                         onClick={handleOpenModal}
-                        className="mobile-button-secondary"
+                        className="mobile-button-secondary mobile-button-with-text"
                       >
-                        <span className="button-icon">→</span>
-                        ガイド
+                        <div className="button-content-vertical">
+                          <div className="button-main-text">
+                            ガイド
+                          </div>
+                          <div className="button-sub-text">
+                            作成前に一度ご確認ください
+                          </div>
+                        </div>
                       </button>
                     </div>
 

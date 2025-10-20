@@ -3301,7 +3301,7 @@ canvas {
   /* Button Row */
   .mobile-button-row {
     display: flex;
-    gap: 0px;
+    gap: 10px;
     width: 80%;
     max-width: 500px;
     margin: 0px auto 15px auto;
@@ -3309,13 +3309,13 @@ canvas {
 
   .mobile-button-secondary {
     flex: 1;
-    padding: 15px 20px;
+    padding: 0px 0px;
     background: linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(31, 41, 55, 0.8));
     backdrop-filter: blur(24px);
     color: #e5e7eb;
     border-radius: 8px;
     border: 1px solid rgba(55, 65, 81, 0.3);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
@@ -3334,6 +3334,34 @@ canvas {
 
   .button-icon {
     font-size: 18px;
+  }
+
+  /* ガイドボタンのテキスト配置 */
+  .mobile-button-with-text {
+    flex-direction: column;
+    padding: 5px 5px;
+  }
+
+  .button-content-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .button-main-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .button-sub-text {
+    font-size: 10px;
+    font-weight: 400;
+    color: #e5e7eb;
+    white-space: nowrap;
   }
 
   /* Create Button Large */
