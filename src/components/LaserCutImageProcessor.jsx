@@ -1794,8 +1794,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     <div className="mobile-button-row">
                       <button
                         onClick={() => setCurrentPage('sampleGallery')}
-                        className="mobile-button-secondary mobile-button-with-text"
+                        className="mobile-button-secondary mobile-button-with-text mobile-button-shadow"
                       >
+                        <div className="shadow-light"></div>
                         <div className="button-content-vertical">
                           <div className="button-main-text">
                             サンプル
@@ -1807,8 +1808,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                       </button>
                       <button
                         onClick={handleOpenModal}
-                        className="mobile-button-secondary mobile-button-with-text"
+                        className="mobile-button-secondary mobile-button-with-text mobile-button-shadow"
                       >
+                        <div className="shadow-light"></div>
                         <div className="button-content-vertical">
                           <div className="button-main-text">
                             ガイド
