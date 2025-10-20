@@ -1788,37 +1788,39 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                     </p>
                   </div>
 
-                  {/* Notice Box */}
-                  <div className="mobile-notice-box">
-                    <div className="mobile-notice-title">ご注文前に必ずお読みください</div>
-                    <div className="mobile-notice-text">作成ガイドで注文方法や注意点をご確認いただけます</div>
-                  </div>
+                  {/* Action Box Container */}
+                  <div className="mobile-action-box">
+                    {/* Notice Box */}
+                    <div className="mobile-notice-box">
+                      <div className="mobile-notice-text">作成前に一度ガイドをご確認ください</div>
+                    </div>
 
-                  {/* Button Row */}
-                  <div className="mobile-button-row">
+                    {/* Button Row */}
+                    <div className="mobile-button-row">
+                      <button
+                        onClick={() => setCurrentPage('sampleGallery')}
+                        className="mobile-button-secondary"
+                      >
+                        <span className="button-icon">✨</span>
+                        サンプル
+                      </button>
+                      <button
+                        onClick={handleOpenModal}
+                        className="mobile-button-secondary"
+                      >
+                        <span className="button-icon">→</span>
+                        ガイド
+                      </button>
+                    </div>
+
+                    {/* Create Button */}
                     <button
-                      onClick={() => setCurrentPage('sampleGallery')}
-                      className="mobile-button-secondary"
+                      onClick={() => setShowCreationModal(true)}
+                      className="mobile-create-button-large"
                     >
-                      <span className="button-icon">✨</span>
-                      サンプル
-                    </button>
-                    <button
-                      onClick={handleOpenModal}
-                      className="mobile-button-secondary"
-                    >
-                      <span className="button-icon">→</span>
-                      ガイド
+                      今すぐ作成する
                     </button>
                   </div>
-
-                  {/* Create Button */}
-                  <button
-                    onClick={() => setShowCreationModal(true)}
-                    className="mobile-create-button-large"
-                  >
-                    今すぐ作成する
-                  </button>
 
                   {/* Footer Text */}
                   <div className="mobile-footer-text">より快適にご利用いただくため、PCでのアクセスを推奨しています</div>
