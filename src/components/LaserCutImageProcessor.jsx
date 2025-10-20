@@ -1792,7 +1792,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   <div className="mobile-action-box">
                     {/* Notice Box */}
                     <div className="mobile-notice-box">
-                      <div className="mobile-notice-text">作成前に一度ガイドをご確認ください</div>
+                      <div className="mobile-notice-text">
+                        作成前に一度ガイドをご確認ください
+                      </div>
                     </div>
 
                     {/* Button Row */}
