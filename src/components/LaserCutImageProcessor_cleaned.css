@@ -3201,12 +3201,143 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding:  20px;
     pointer-events: none;
+    box-sizing: border-box;
   }
 
   .mobile-hero-overlay > * {
     pointer-events: auto;
+  }
+
+  /* Title Section */
+  .mobile-title-section {
+    text-align: center;
+    margin-bottom: 8rem;
+    margin-top: 1rem;
+  }
+
+  /* Main Title */
+  .mobile-main-title {
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .mobile-title-line1 {
+    display: block;
+    color: #d1d5db;
+    margin-bottom: 0.2rem;
+  }
+
+  .mobile-title-line2 {
+    display: block;
+    color: #4ade80;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.5), 0 0 40px rgba(74, 222, 128, 0.3);
+  }
+
+  .mobile-subtitle {
+    color:rgba(255, 255, 255, 0.77);
+    font-size: 10px;
+    margin-top: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* Notice Box */
+  .mobile-notice-box {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 500px;
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-notice-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .mobile-notice-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Button Row */
+  .mobile-button-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    margin: 15px 0;
+  }
+
+  .mobile-button-secondary {
+    flex: 1;
+    padding: 15px 20px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .mobile-button-secondary:hover {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(148, 163, 184, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .button-icon {
+    font-size: 18px;
+  }
+
+  /* Create Button Large */
+  .mobile-create-button-large {
+    width: 100%;
+    max-width: 500px;
+    padding: 18px 30px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    margin: 15px 0;
+  }
+
+  .mobile-create-button-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(16, 185, 129, 0.6);
+  }
+
+  /* Footer Text */
+  .mobile-footer-text {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-top: 10px;
   }
 
   .mobile-action-row {

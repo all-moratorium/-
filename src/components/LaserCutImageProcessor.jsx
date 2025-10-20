@@ -1777,36 +1777,51 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 
                 {/* Overlay Content */}
                 <div className="mobile-hero-overlay">
-                  {/* Title */}
-                  <div className="mobile-title">Image To LED Neon Sign</div>
-
-                  {/* Guide Button */}
-                  <div className="mobile-guide-container">
-                    <button
-                      onClick={handleOpenModal}
-                      className={`info-button mobile-guide-info-button ${isEffectStopped ? 'stopped' : ''}`}
-                    >
-                    </button>
-                    <span className="mobile-guide-text">
-                      一度お読みください
-                    </span>
+                  {/* Title Section */}
+                  <div className="mobile-title-section">
+                    <h1 className="mobile-main-title">
+                      <span className="mobile-title-line1">IMAGE TO</span>
+                      <span className="mobile-title-line2">LED NEON SIGN</span>
+                    </h1>
+                    <p className="mobile-subtitle">
+                      あなただけのオリジナルネオンサインを<br />画像から簡単に作成・注文
+                    </p>
                   </div>
 
-                  {/* Sample Viewer Button */}
-                  <button
-                    onClick={() => setCurrentPage('sampleGallery')}
-                    className="mobile-create-button button-blue mobile-sample-button"
-                  >
-                    サンプルを見る
-                  </button>
+                  {/* Notice Box */}
+                  <div className="mobile-notice-box">
+                    <div className="mobile-notice-title">ご注文前に必ずお読みください</div>
+                    <div className="mobile-notice-text">作成ガイドで注文方法や注意点をご確認いただけます</div>
+                  </div>
+
+                  {/* Button Row */}
+                  <div className="mobile-button-row">
+                    <button
+                      onClick={() => setCurrentPage('sampleGallery')}
+                      className="mobile-button-secondary"
+                    >
+                      <span className="button-icon">✨</span>
+                      サンプル
+                    </button>
+                    <button
+                      onClick={handleOpenModal}
+                      className="mobile-button-secondary"
+                    >
+                      <span className="button-icon">→</span>
+                      ガイド
+                    </button>
+                  </div>
 
                   {/* Create Button */}
                   <button
                     onClick={() => setShowCreationModal(true)}
-                    className="mobile-create-button"
+                    className="mobile-create-button-large"
                   >
-                    さっそく作成する
+                    今すぐ作成する
                   </button>
+
+                  {/* Footer Text */}
+                  <div className="mobile-footer-text">より快適にご利用いただくため、PCでのアクセスを推奨しています</div>
                 </div>
               </div>
             </div>
