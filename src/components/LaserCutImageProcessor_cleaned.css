@@ -3250,7 +3250,7 @@ canvas {
   .mobile-action-box {
     width: 100%;
     position:fixed;
-    bottom: 10%;
+    bottom: 17%;
   }
 
   /* Notice Box */
@@ -3284,10 +3284,10 @@ canvas {
   /* Button Row */
   .mobile-button-row {
     display: flex;
-    gap: 15px;
-    width: 90%;
+    gap: 0px;
+    width: 80%;
     max-width: 500px;
-    margin: 10px auto;
+    margin: 15px auto;
   }
 
   .mobile-button-secondary {
