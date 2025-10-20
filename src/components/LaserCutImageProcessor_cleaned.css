@@ -3220,7 +3220,7 @@ canvas {
 
   /* Main Title */
   .mobile-main-title {
-    font-size: 2.4rem;
+    font-size: clamp(2.45rem, 5.9vw, 3.2rem);
     font-weight: bold;
     letter-spacing: -0.025em;
     line-height: 1.2;
@@ -3241,7 +3241,7 @@ canvas {
 
   .mobile-subtitle {
     color:rgba(255, 255, 255, 0.9);
-    font-size: 11px;
+    font-size: clamp(11px, 1.5vh, 13px);
     margin-top: 1rem;
     line-height: 1.6;
   }
