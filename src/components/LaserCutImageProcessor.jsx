@@ -1797,9 +1797,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         </text>
                       </svg>
                     </div>
-                    <p className="mobile-subtitle">
-                      あなただけのオリジナルネオンサインを<br />画像から簡単に作成・注文
-                    </p>
+                    <div className="mobile-subtitle-wrapper">
+                      <p className="mobile-subtitle">
+                        あなただけのオリジナルネオンサインを<br />画像から簡単に作成・注文
+                      </p>
+                    </div>
                   </div>
 
                   {/* Action Box Container */}

@@ -3310,18 +3310,30 @@ canvas {
     }
   }
 
+  .mobile-subtitle-wrapper {
+    opacity: 0;
+    animation: slideUpFadeIn 0.4s ease-out 2s forwards;
+  }
+
   .mobile-subtitle {
     color:rgba(255, 255, 255, 0.9);
     font-size: clamp(11px, 1.5vh, 13px);
     margin-top: clamp(0.6rem, 1.5vh, 1.6rem);
     line-height: 1.6;
-    opacity: 0;
-    animation: simpleFadeIn 0.4s ease-out 2s forwards;
   }
 
-  @keyframes simpleFadeIn {
-    to {
+  @keyframes slideUpFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    99% {
       opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
     }
   }
 
