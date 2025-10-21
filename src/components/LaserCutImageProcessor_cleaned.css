@@ -3310,16 +3310,16 @@ canvas {
   .mobile-button-secondary {
     flex: 1;
     padding: 0px 0px;
-    background: linear-gradient(to bottom right, rgba(168, 168, 168, 0.36), rgba(231, 231, 231, 0.34));
-    backdrop-filter: blur(8px);
-    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
-    border: 1px solid rgba(219, 219, 219, 0.81);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3327,13 +3327,13 @@ canvas {
   }
 
   .mobile-button-secondary:hover {
-    background: linear-gradient(to bottom right, rgba(155, 155, 155, 0.45), rgba(161, 161, 161, 0.47));
+    background: rgba(255, 255, 255, 0.22);
     color: #ffffff;
-    border: 1px solid rgba(219, 219, 219, 0.81);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 
   .mobile-button-secondary:active {
-    border: 1px solid rgba(219, 219, 219, 0.81);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 
   .button-icon {
