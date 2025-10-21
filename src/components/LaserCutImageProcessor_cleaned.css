@@ -3386,6 +3386,19 @@ canvas {
     width: 75%;
     max-width: 350px;
     margin: 0px auto 20px auto;
+    opacity: 0;
+    animation: slideDownFadeIn 0.6s ease-out 2.5s forwards;
+  }
+
+  @keyframes slideDownFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .mobile-button-secondary {
@@ -3498,6 +3511,8 @@ canvas {
     user-select: none;
     position: relative;
     overflow: hidden;
+    opacity: 0;
+    animation: slideDownFadeIn 0.6s ease-out 2.7s forwards;
   }
 
   .mobile-create-button-large::before {
