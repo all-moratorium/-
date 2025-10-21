@@ -604,6 +604,28 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     }
   }, [currentPage]);
 
+  // PWA更新時の高さ再計算
+  useEffect(() => {
+    if (currentPage === 'home' && mobileHeroSectionRef.current) {
+      const updateHeight = () => {
+        if (mobileHeroSectionRef.current) {
+          const vh = window.innerHeight;
+          mobileHeroSectionRef.current.style.height = `${vh - 55}px`;
+        }
+      };
+
+      // 初期設定
+      updateHeight();
+
+      // リサイズ時も更新
+      window.addEventListener('resize', updateHeight);
+
+      return () => {
+        window.removeEventListener('resize', updateHeight);
+      };
+    }
+  }, [currentPage]);
+
   // 横向き時の自動スクロール処理
   useEffect(() => {
     if (currentPage === 'home' && mobileHeroSectionRef.current) {
