@@ -3215,7 +3215,7 @@ canvas {
   .mobile-title-section {
     text-align: center;
     position:fixed;
-    top:22%;
+    top:21%;
   }
 
   /* Main Title */
@@ -3223,7 +3223,7 @@ canvas {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: clamp(0.6rem, 1.6vw, 1rem);
   }
 
   .mobile-title-svg {
@@ -3233,7 +3233,7 @@ canvas {
   }
 
   .mobile-title-line1 {
-    font-size: clamp(3.5rem, 7vw, 4.5rem);
+    font-size: clamp(3.5rem, 7.2vw, 4.3rem);
     font-weight: 580;
     letter-spacing: -0.025em;
     fill: #d1d5db;
@@ -3247,7 +3247,7 @@ canvas {
   }
 
   .mobile-title-line2 {
-    font-size: clamp(3.5rem, 7vw, 4.5rem);
+    font-size: clamp(3.5rem, 7.2vw, 4.3rem);
     font-weight: 580;
     letter-spacing: -0.025em;
     fill: #4ade80;
@@ -3313,7 +3313,7 @@ canvas {
   .mobile-subtitle {
     color:rgba(255, 255, 255, 0.9);
     font-size: clamp(11px, 1.5vh, 13px);
-    margin-top: 1rem;
+    margin-top: clamp(0.6rem, 1.5vh, 1.6rem);
     line-height: 1.6;
     opacity: 0;
     transform: translateY(20px);
