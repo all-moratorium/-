@@ -3310,11 +3310,11 @@ canvas {
   .mobile-button-secondary {
     flex: 1;
     padding: 0px 0px;
-    background: linear-gradient(to bottom right, rgba(173, 173, 173, 0.43), rgba(165, 165, 165, 0.42));
-    backdrop-filter: blur(10px);
+    background: linear-gradient(to bottom right, rgba(168, 168, 168, 0.36), rgba(231, 231, 231, 0.34));
+    backdrop-filter: blur(12px);
     color: #e5e7eb;
     border-radius: 8px;
-    border: 1px solid rgba(219, 219, 219, 0.47);
+    border: 1px solid rgba(219, 219, 219, 0.81);
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -3329,11 +3329,11 @@ canvas {
   .mobile-button-secondary:hover {
     background: linear-gradient(to bottom right, rgba(155, 155, 155, 0.45), rgba(161, 161, 161, 0.47));
     color: #ffffff;
-    border: 1px solid rgba(219, 219, 219, 0.47);
+    border: 1px solid rgba(219, 219, 219, 0.81);
   }
 
   .mobile-button-secondary:active {
-    border: 1px solid rgba(219, 219, 219, 0.47);
+    border: 1px solid rgba(219, 219, 219, 0.81);
   }
 
   .button-icon {
