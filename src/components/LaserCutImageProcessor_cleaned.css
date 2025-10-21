@@ -3220,7 +3220,7 @@ canvas {
 
   /* Main Title */
   .mobile-main-title {
-    font-size: clamp(2.55rem, 5.9vw, 4rem);
+    font-size: clamp(2.55rem, 5.7vw, 3.2rem);
     font-weight: bold;
     letter-spacing: -0.025em;
     line-height: 1.2;
