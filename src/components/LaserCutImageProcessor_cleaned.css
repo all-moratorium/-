@@ -3214,7 +3214,7 @@ canvas {
   }
 
   /* 横向き時のスクロール対応 */
-  @media (orientation: landscape) and (max-height: 530px) {
+  @media (orientation: landscape) and (max-height: 510px) {
     .mobile-hero-section {
       overflow-y: auto !important;
     }
@@ -3251,7 +3251,7 @@ canvas {
 
     .mobile-footer-text {
       position: static !important;
-      margin-top: 25px;
+      margin-top: 23px;
       margin-bottom: 15px;
     }
   }

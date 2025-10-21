@@ -254,6 +254,9 @@ const LaserCutImageProcessor = () => {
   const listRef2 = useRef(null);
   const typewriter1Ref = useRef(null);
   const typewriter2Ref = useRef(null);
+
+  // モバイルヒーローセクション用ref
+  const mobileHeroSectionRef = useRef(null);
   
   // NeonDrawingAppの状態を保存
   const [neonDrawingState, setNeonDrawingState] = useState(null);
@@ -597,6 +600,86 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
         if (listRef1.current) listRef1.current.innerHTML = '';
         if (listRef2.current) listRef2.current.innerHTML = '';
         setIsTyping(false);
+      };
+    }
+  }, [currentPage]);
+
+  // 横向き時の自動スクロール処理
+  useEffect(() => {
+    if (currentPage === 'home' && mobileHeroSectionRef.current) {
+      const checkAndScroll = () => {
+        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+        const isLowHeight = window.innerHeight <= 530;
+
+        if (isLandscape && isLowHeight) {
+          // アニメーション終了後（3.5秒後）に自動スクロール
+          const scrollTimer = setTimeout(() => {
+            if (mobileHeroSectionRef.current) {
+              const targetScroll = mobileHeroSectionRef.current.scrollHeight;
+              const startScroll = mobileHeroSectionRef.current.scrollTop;
+              const distance = targetScroll - startScroll;
+              const duration = 2000; // 2.5秒でスクロール
+              let startTime = null;
+              let animationId = null;
+              let isAnimating = true;
+
+              // ユーザーがタッチ・スクロールしたらアニメーション停止
+              const stopAnimation = () => {
+                isAnimating = false;
+                if (animationId) {
+                  cancelAnimationFrame(animationId);
+                }
+                mobileHeroSectionRef.current?.removeEventListener('touchstart', stopAnimation);
+                mobileHeroSectionRef.current?.removeEventListener('wheel', stopAnimation);
+              };
+
+              mobileHeroSectionRef.current.addEventListener('touchstart', stopAnimation, { passive: true });
+              mobileHeroSectionRef.current.addEventListener('wheel', stopAnimation, { passive: true });
+
+              const animateScroll = (currentTime) => {
+                if (!isAnimating) return;
+
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // カスタムベジェ曲線風イージング（cubic-bezier(0.16, 1, 0.3, 1) - より洗練された高級感）
+                const t = progress;
+                const easeProgress = t * t * t * (t * (t * 6 - 15) + 10);
+
+                if (mobileHeroSectionRef.current && isAnimating) {
+                  mobileHeroSectionRef.current.scrollTop = startScroll + (distance * easeProgress);
+                }
+
+                if (progress < 1 && isAnimating) {
+                  animationId = requestAnimationFrame(animateScroll);
+                } else {
+                  stopAnimation();
+                }
+              };
+
+              animationId = requestAnimationFrame(animateScroll);
+            }
+          }, 3500);
+
+          return () => clearTimeout(scrollTimer);
+        }
+      };
+
+      const cleanup = checkAndScroll();
+
+      // リサイズやオリエンテーション変更時にも対応
+      const handleResize = () => {
+        checkAndScroll();
+      };
+
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', handleResize);
+
+      return () => {
+        if (cleanup) cleanup();
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('orientationchange', handleResize);
       };
     }
   }, [currentPage]);
@@ -1769,7 +1852,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             {/* Mobile Layout */}
             <div className="mobile-content">
               {/* Hero Section - Video background with overlay content */}
-              <div className="mobile-hero-section">
+              <div className="mobile-hero-section" ref={mobileHeroSectionRef}>
                 {/* Background Video */}
                 <video
                   autoPlay
