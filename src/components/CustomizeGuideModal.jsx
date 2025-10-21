@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './CustomizeGuideModal.css';
 
 const CustomizeGuideModal = ({ isOpen, onClose }) => {
@@ -254,7 +255,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="customize-guide-modal-overlay">
       <div className="customize-guide-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* ヘッダー */}
@@ -500,7 +501,8 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -979,7 +979,7 @@
     inset: 0;
     background-color: transparent;
     display: flex;
-    z-index: 1100;
+    z-index: 10002;
     backdrop-filter: none !important;
     filter: none !important;
     pointer-events: none;

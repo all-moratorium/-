@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './NeonDrawingGuideModal.css';
 
 const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
@@ -318,7 +319,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="neon-drawing-guide-modal-overlay">
       <div className="neon-drawing-guide-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* ヘッダー */}
@@ -833,7 +834,8 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

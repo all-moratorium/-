@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import './NeonDrawingApp.css';
 import { calculateSvgSizeCm, calculateTotalLength, scalePathsToSize } from '../utils/sizeCalculations';
 import NeonDrawingGuideModal from './NeonDrawingGuideModal.jsx';
@@ -21,22 +22,22 @@ const MIN_HIT_RADIUS = 6; // 最小ヒット判定半径（ズーム時の保証
 // モーダルコンポーネント
 const Modal = ({ isOpen, onClose, title, children, position = 'center', className = '', showCloseButton = false }) => {
     if (!isOpen) return null;
-    
-    const modalClass = position === 'right' 
+
+    const modalClass = position === 'right'
         ? `modal-overlay ${className}`.trim()
         : `modal-overlay modal-center ${className}`.trim();
-    
+
     const contentClass = position === 'right'
         ? "modal-content modal-content-right"
         : "modal-content modal-content-center";
-    
-    return (
+
+    return createPortal(
         <div className={modalClass}>
             <div className={contentClass}>
                 <div className="modal-header">
                     <h3 className="modal-title">{title}</h3>
                     {onClose && (
-                        <button 
+                        <button
                             onClick={onClose}
                             className={showCloseButton ? "modal-close-btn" : "modal-apply-btn"}
                         >
@@ -46,7 +47,8 @@ const Modal = ({ isOpen, onClose, title, children, position = 'center', classNam
                 </div>
                 {children}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
