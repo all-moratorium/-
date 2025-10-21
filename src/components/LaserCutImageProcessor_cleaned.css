@@ -3310,7 +3310,7 @@ canvas {
   .mobile-button-secondary {
     flex: 1;
     padding: 0px 0px;
-    background: linear-gradient(to bottom right, rgba(119, 119, 119, 0.38), rgba(119, 119, 119, 0.38));
+    background: linear-gradient(to bottom right, rgba(173, 173, 173, 0.43), rgba(165, 165, 165, 0.42));
     backdrop-filter: blur(10px);
     color: #e5e7eb;
     border-radius: 8px;
@@ -3327,7 +3327,7 @@ canvas {
   }
 
   .mobile-button-secondary:hover {
-    background: linear-gradient(to bottom right, rgba(70, 70, 70, 0.57), rgba(161, 161, 161, 0.47));
+    background: linear-gradient(to bottom right, rgba(155, 155, 155, 0.45), rgba(161, 161, 161, 0.47));
     color: #ffffff;
     border: 1px solid rgba(219, 219, 219, 0.47);
   }
