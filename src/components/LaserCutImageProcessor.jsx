@@ -490,7 +490,11 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [productQuantity, setProductQuantity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
-  const [can3DPreview, setCan3DPreview] = useState(window.innerWidth > window.innerHeight || window.innerWidth >= 768);
+  const [can3DPreview, setCan3DPreview] = useState(() => {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    const isSquarish = aspectRatio >= 0.83 && aspectRatio <= 1.2;
+    return window.innerWidth > window.innerHeight || window.innerWidth >= 768 || isSquarish;
+  });
   const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [showGallery3D, setShowGallery3D] = useState(false);
@@ -809,15 +813,17 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       const previousLandscape = isLandscape;
       const newLandscape = window.innerWidth > window.innerHeight;
       const isTablet = window.innerWidth >= 768;
+      const newAspectRatio = window.innerWidth / window.innerHeight;
+      const isSquarish = newAspectRatio >= 0.83 && newAspectRatio <= 1.2;
 
       setIsLandscape(newLandscape);
-      setCan3DPreview(newLandscape || isTablet);
-      setAspectRatio(window.innerWidth / window.innerHeight);
+      setCan3DPreview(newLandscape || isTablet || isSquarish);
+      setAspectRatio(newAspectRatio);
       
       // 3Dプレビューページが開いている時のみ処理
       if (isMobile && currentPage === 'neonSvg3dPreview' && neonSvgData) {
-        if (isTablet) {
-          // タブレット: 縦→横、横→縦どちらでもリマウント
+        if (isTablet || isSquarish) {
+          // タブレットまたは四角に近い画面比率: 縦→横、横→縦どちらでもリマウント
           if (previousLandscape !== newLandscape && isMobile3DPreviewMounted) {
             setIsMobile3DPreviewMounted(false);
             setTimeout(() => {
