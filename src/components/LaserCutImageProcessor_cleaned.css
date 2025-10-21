@@ -3220,7 +3220,7 @@ canvas {
 
   /* Main Title */
   .mobile-main-title {
-    font-size: clamp(2.55rem, 5.7vw, 3.2rem);
+    font-size: clamp(2.6rem, 5.7vw, 3.2rem);
     font-weight: bold;
     letter-spacing: -0.025em;
     line-height: 1.2;
@@ -3302,7 +3302,7 @@ canvas {
   .mobile-button-row {
     display: flex;
     gap: 10px;
-    width: 77%;
+    width: 75%;
     max-width: 400px;
     margin: 0px auto 20px auto;
   }
@@ -3398,7 +3398,7 @@ canvas {
 
   /* Create Button Large */
   .mobile-create-button-large {
-    width: 77%;
+    width: 75%;
     max-width: 400px;
     padding: 10px 30px;
     background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
