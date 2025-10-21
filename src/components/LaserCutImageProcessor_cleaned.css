@@ -3213,6 +3213,49 @@ canvas {
     pointer-events: auto;
   }
 
+  /* 横向き時のスクロール対応 */
+  @media (orientation: landscape) and (max-height: 530px) {
+    .mobile-hero-section {
+      overflow-y: auto !important;
+    }
+    .mobile-hero-video {
+      height: 100%;
+      position: fixed !important;
+    }
+    .mobile-hero-overlay {
+      height: auto;
+      min-height: 100%;
+      overflow-y: visible;
+      justify-content: flex-start;
+      gap: 20px;
+      padding-bottom: 0px;
+    }
+
+    .mobile-title-section {
+      position: static !important;
+      margin-top: 30px;
+    }
+
+    .mobile-action-box {
+      position: static !important;
+      margin-top: 30px;
+    }
+    .mobile-button-row {
+      gap: 10px !important;
+      margin-bottom: 12px !important;
+      max-width: 320px !important;
+    }
+    .mobile-create-button-large {
+      max-width: 320px !important;
+    }
+
+    .mobile-footer-text {
+      position: static !important;
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+  }
+
   /* Title Section */
   .mobile-title-section {
     text-align: center;
