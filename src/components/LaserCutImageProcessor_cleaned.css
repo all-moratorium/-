@@ -3215,28 +3215,99 @@ canvas {
   .mobile-title-section {
     text-align: center;
     position:fixed;
-    top:20%;
+    top:22%;
   }
 
   /* Main Title */
   .mobile-main-title {
-    font-size: clamp(2.6rem, 5.7vw, 3.2rem);
-    font-weight: bold;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .mobile-title-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
   }
 
   .mobile-title-line1 {
-    display: block;
-    color: #d1d5db;
-    margin-bottom: 0.3rem;
+    font-size: clamp(3.5rem, 7vw, 4.5rem);
+    font-weight: 580;
+    letter-spacing: -0.025em;
+    fill: #d1d5db;
+    fill-opacity: 0;
+    stroke: #d1d5db;
+    stroke-width: 0.5;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: dash 2s linear forwards, filling 2s ease-in forwards;
+    paint-order: stroke fill;
   }
 
   .mobile-title-line2 {
-    display: block;
-    color: #4ade80;
-    text-shadow: 0 0 20px rgba(74, 222, 128, 0.5), 0 0 40px rgba(74, 222, 128, 0.3);
+    font-size: clamp(3.5rem, 7vw, 4.5rem);
+    font-weight: 580;
+    letter-spacing: -0.025em;
+    fill: #4ade80;
+    fill-opacity: 0;
+    stroke: #4ade80;
+    stroke-width: 0.5;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: dash 2s linear 0.3s forwards, filling 2s ease-in 0.3s forwards;
+    paint-order: stroke fill;
+  }
+
+  .mobile-title-line2-svg {
+    filter: drop-shadow(0 0 0px rgba(74, 222, 128, 0)) drop-shadow(0 0 0px rgba(74, 222, 128, 0));
+    animation: glowFlicker 0.6s 2.5s forwards;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes filling {
+    0%, 90% {
+      fill-opacity: 0;
+    }
+    100% {
+      fill-opacity: 1;
+    }
+  }
+
+  @keyframes glowFlicker {
+    0% {
+      filter: drop-shadow(0 0 3px rgba(74, 222, 128, 0.2)) drop-shadow(0 0 6px rgba(74, 222, 128, 0.1));
+    }
+    8% {
+      filter: drop-shadow(0 0 15px rgba(74, 222, 128, 0.7)) drop-shadow(0 0 30px rgba(74, 222, 128, 0.5));
+    }
+    15% {
+      filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.3)) drop-shadow(0 0 10px rgba(74, 222, 128, 0.2));
+    }
+    25% {
+      filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.6)) drop-shadow(0 0 24px rgba(74, 222, 128, 0.4));
+    }
+    35% {
+      filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.35)) drop-shadow(0 0 12px rgba(74, 222, 128, 0.25));
+    }
+    50% {
+      filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.65)) drop-shadow(0 0 28px rgba(74, 222, 128, 0.45));
+    }
+    65% {
+      filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.4)) drop-shadow(0 0 16px rgba(74, 222, 128, 0.3));
+    }
+    80% {
+      filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.55)) drop-shadow(0 0 24px rgba(74, 222, 128, 0.35));
+    }
+    100% {
+      filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.5)) drop-shadow(0 0 20px rgba(74, 222, 128, 0.3));
+    }
   }
 
   .mobile-subtitle {
@@ -3244,6 +3315,16 @@ canvas {
     font-size: clamp(11px, 1.5vh, 13px);
     margin-top: 1rem;
     line-height: 1.6;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpFadeIn 0.4s ease-out 2s forwards;
+  }
+
+  @keyframes slideUpFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Action Box Container */

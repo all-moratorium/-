@@ -1785,10 +1785,18 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="mobile-hero-overlay">
                   {/* Title Section */}
                   <div className="mobile-title-section">
-                    <h1 className="mobile-main-title">
-                      <span className="mobile-title-line1">IMAGE TO</span>
-                      <span className="mobile-title-line2">LED NEON SIGN</span>
-                    </h1>
+                    <div className="mobile-main-title">
+                      <svg className="mobile-title-svg mobile-title-line1-svg" viewBox="0 0 400 60" preserveAspectRatio="xMidYMid meet">
+                        <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" className="mobile-title-line1">
+                          IMAGE TO
+                        </text>
+                      </svg>
+                      <svg className="mobile-title-svg mobile-title-line2-svg" viewBox="0 0 400 60" preserveAspectRatio="xMidYMid meet">
+                        <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" className="mobile-title-line2">
+                          LED NEON SIGN
+                        </text>
+                      </svg>
+                    </div>
                     <p className="mobile-subtitle">
                       あなただけのオリジナルネオンサインを<br />画像から簡単に作成・注文
                     </p>
