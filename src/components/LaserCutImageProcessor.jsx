@@ -470,6 +470,7 @@ const LaserCutImageProcessor = () => {
   const [autoStart3DGeneration, setAutoStart3DGeneration] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [isPreloadingModels, setIsPreloadingModels] = useState(false); // 3Dモデルプリロード中フラグ
+  const [titleAnimationStart, setTitleAnimationStart] = useState(false); // タイトルアニメーション開始フラグ
   const [svgGenerationProgress, setSvgGenerationProgress] = useState(0);
 const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
@@ -1055,7 +1056,19 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setIsPreloadingModels(false);
     }
   }, [currentPage]);
-  
+
+  // プリロードが完了して0.5秒後にタイトルアニメーションを開始
+  useEffect(() => {
+    if (!isPreloadingModels && currentPage === 'home') {
+      const timer = setTimeout(() => {
+        setTitleAnimationStart(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    } else if (currentPage !== 'home') {
+      setTitleAnimationStart(false);
+    }
+  }, [isPreloadingModels, currentPage]);
+
   // ホームページに戻ってもデータはクリアしない（作業継続のため）
   // データクリアは明示的な操作（新しいファイル読み込み等）でのみ行う
 
@@ -1865,7 +1878,13 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 )}
             
             {/* Desktop Layout */}
-            <h1 className="page-title">Image To LED Neon Sign</h1>
+            <div className={`page-title-wrapper ${titleAnimationStart ? 'animate' : ''}`}>
+              <svg className="page-title-svg" viewBox="0 0 650 80" preserveAspectRatio="xMidYMid meet">
+                <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" className="page-title-text">
+                  IMAGE TO LED NEON SIGN
+                </text>
+              </svg>
+            </div>
             
             <div className="preview-container">
             {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
