@@ -1879,9 +1879,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             
             {/* Desktop Layout */}
             <div className={`page-title-wrapper ${titleAnimationStart ? 'animate' : ''}`}>
-              <svg className="page-title-svg" viewBox="0 0 650 80" preserveAspectRatio="xMidYMid meet">
-                <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" className="page-title-text">
-                  IMAGE TO LED NEON SIGN
+              <svg className="page-title-svg-line1" viewBox="0 0 240 60" preserveAspectRatio="xMaxYMid meet">
+                <text x="100%" y="50%" dominantBaseline="middle" textAnchor="end" className="page-title-line1">
+                  IMAGE TO
+                </text>
+              </svg>
+              <svg className="page-title-svg-line2" viewBox="0 0 340 60" preserveAspectRatio="xMinYMid meet">
+                <text x="0%" y="50%" dominantBaseline="middle" textAnchor="start" className="page-title-line2">
+                  LED NEON SIGN
                 </text>
               </svg>
             </div>
