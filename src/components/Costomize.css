@@ -817,7 +817,25 @@
     }
     .grid-toggle-container {
         margin-left:9%;
-        margin-right:6%;
+        margin-right:22px !important;
+    }
+    .settings-button-customize {
+        width: 80px !important;
+        padding: 10px 0;
+        background-color:rgba(22, 22, 22, 0);
+        color: white;
+        border: 1px solid #6b7280;
+        font-weight: bold;
+        font-size: 11px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin: 0 0px 0  40px !important;
+        background: rgba(156, 163, 175, 0.55);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(156, 163, 175, 0.8);
+        transition: all 0.3s ease;
+        color: white;
     }
     .customize-setting-title {
         font-size: 14px !important;
@@ -2361,8 +2379,8 @@ html, body {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-left:9%;
-    margin-right:6%;
+    margin-left:25px;
+    margin-right:23px;
 }
 
 .grid-toggle-label {
@@ -3722,7 +3740,7 @@ html, body {
 
 /* 設定ボタン - 色仕様カスタマイズ用 */
 .settings-button-customize {
-    width: 90px;
+    width: 85px;
     padding: 10px 0;
     background-color:rgba(22, 22, 22, 0);
     color: white;
