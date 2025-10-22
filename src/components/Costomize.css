@@ -1105,7 +1105,7 @@
     .neon-switch-handle {
         width: 26px !important;
         height: 26px !important;
-        top: 3px !important;
+        top: 2.5px !important;
     }
 
     .neon-switch-handle.on {
