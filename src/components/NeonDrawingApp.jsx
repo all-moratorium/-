@@ -3930,7 +3930,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
                     {/* グリッド表示・背景色 */}
                     <div className="grid-bg-controls">
-                        <div className="grid-toggle-container">
+                        <div className="grid-toggle-container-drawing">
                             <label className="grid-toggle-label">グリッド表示</label>
                             <button
                                 onClick={() => {

@@ -194,7 +194,7 @@
 .neon-sidebar.collapsed .tube-thickness-selector,
 .neon-sidebar.collapsed .tube-thickness-select,
 .neon-sidebar.collapsed .grid-bg-controls,
-.neon-sidebar.collapsed .grid-toggle-container,
+.neon-sidebar.collapsed .grid-toggle-container-drawing,
 .neon-sidebar.collapsed .grid-toggle-label,
 .neon-sidebar.collapsed .grid-toggle-button,
 .neon-sidebar.collapsed .background-controls,
@@ -434,7 +434,7 @@
     align-items: center;
     gap: 0px;
     padding: 0px;
-    padding-right: 40px;
+    padding-right: 46px;
     margin-top: 25px;
 }
 
@@ -524,11 +524,14 @@
 }
 
 /* グリッド切り替えコンテナ */
-.grid-toggle-container {
+.grid-toggle-container-drawing {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
+    margin-left:39px;
+    margin-right:39px;
 }
 
 .grid-toggle-label {
@@ -2527,7 +2530,13 @@
         padding-right: 22px !important;
         margin-top: 20px !important;
     }
-    
+
+    .grid-toggle-container-drawing {
+        margin-left:31.5px;
+        gap : 11px !important;
+        margin-right:30px;
+    }
+
     .grid-toggle-button {
         width: 40px !important;
         height: 25px !important;

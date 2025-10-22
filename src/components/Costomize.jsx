@@ -2535,7 +2535,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                         </div>
                         
                         {/* グリッド表示切り替え */}
-                        <div className="grid-toggle-container">
+                        <div className="grid-toggle-container-customize">
                             <label className="grid-toggle-label">グリッド表示</label>
                             <button
                                 onClick={() => setShowGrid(!showGrid)}

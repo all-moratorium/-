@@ -815,7 +815,7 @@
         margin-bottom: 16px !important;
         padding-bottom: 16px !important;
     }
-    .grid-toggle-container {
+    .grid-toggle-container-customize {
         margin-left:9%;
         margin-right:19px !important;
     }
@@ -2373,7 +2373,7 @@ html, body {
     margin-bottom: 20px;
 }
 
-.grid-toggle-container {
+.grid-toggle-container-customize {
     display: flex;
     flex-direction: row;
     align-items: center;
