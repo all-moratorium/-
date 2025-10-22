@@ -2545,7 +2545,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             </button>
                             <button
                                 onClick={() => setShowBgModalPC(true)}
-                                className="settings-button"
+                                className="settings-button-customize"
                             >
                                 背景画像
                             </button>

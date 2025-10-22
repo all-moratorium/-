@@ -3826,7 +3826,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             setShowBgModal(true);
                             setSidebarVisible(false);
                         }}
-                        className="settings-button"
+                        className="settings-button-drawing"
                     >
                         背景画像
                     </button>

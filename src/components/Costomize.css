@@ -3717,3 +3717,24 @@ html, body {
     margin: 0px 0 15px 0 !important;
     line-height: 1.4;
 }
+
+/* 設定ボタン - 色仕様カスタマイズ用 */
+.settings-button-customize {
+    width: 26%;
+    padding: 10px 0;
+    background-color:rgba(22, 22, 22, 0);
+    color: white;
+    border: 1px solid #6b7280;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    background: rgba(156, 163, 175, 0.55);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(156, 163, 175, 0.8);
+          transition: all 0.3s ease;
+          color: white;
+}

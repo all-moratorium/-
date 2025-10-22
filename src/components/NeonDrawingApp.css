@@ -183,7 +183,7 @@
 .neon-sidebar.collapsed .draw-mode-buttons,
 .neon-sidebar.collapsed .draw-mode-button,
 .neon-sidebar.collapsed .new-path-button,
-.neon-sidebar.collapsed .settings-button,
+.neon-sidebar.collapsed .settings-button-drawing,
 .neon-sidebar.collapsed .edit-tools-title,
 .neon-sidebar.collapsed .edit-mode-buttons,
 .neon-sidebar.collapsed .edit-mode-button,
@@ -904,8 +904,8 @@
     /* hover effect removed */
 }
 
-/* 設定ボタン */
-.settings-button {
+/* 設定ボタン - ネオン下絵用 */
+.settings-button-drawing {
     width: 26%;
     padding: 10px 0;
     background-color:rgba(22, 22, 22, 0);
@@ -2491,7 +2491,7 @@
     }
     
     /* 設定ボタン */
-    .settings-button {
+    .settings-button-drawing {
         width: 80px !important;
         font-size: 12px !important;
         padding:0 !important;
