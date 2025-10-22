@@ -9,12 +9,10 @@
 
 @keyframes preview3d-bookOpen {
   from {
-    transform: scale(0.8);
-    opacity: 0;
+    transform: scale(0.95);
   }
   to {
     transform: scale(1);
-    opacity: 1;
   }
 }
 
@@ -52,6 +50,7 @@
   display: flex ;
   flex-direction: column ;
   animation: preview3d-bookOpen 0.3s ease-out ;
+  isolation: isolate;
 }
 
 .preview3d-guide-modal-body {
