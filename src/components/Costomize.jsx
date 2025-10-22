@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import './Costomize.css';
 import CustomizeGuideModal from './CustomizeGuideModal.jsx';
 
@@ -6,6 +7,39 @@ import CustomizeGuideModal from './CustomizeGuideModal.jsx';
 
 // カスタマイズデータを保存するためのローカルストレージキー
 const CUSTOMIZE_DATA_KEY = 'neon-customize-data';
+
+// モーダルコンポーネント
+const Modal = ({ isOpen, onClose, title, children, position = 'center', className = '', showCloseButton = false }) => {
+    if (!isOpen) return null;
+
+    const modalClass = position === 'right'
+        ? `modal-overlay ${className}`.trim()
+        : `modal-overlay modal-center ${className}`.trim();
+
+    const contentClass = position === 'right'
+        ? "modal-content modal-content-right"
+        : "modal-content modal-content-center";
+
+    return createPortal(
+        <div className={modalClass}>
+            <div className={contentClass}>
+                <div className="modal-header">
+                    <h3 className="modal-title">{title}</h3>
+                    {onClose && (
+                        <button
+                            onClick={onClose}
+                            className={showCloseButton ? "modal-close-btn" : "modal-apply-btn"}
+                        >
+                            {showCloseButton ? "×" : "適用"}
+                        </button>
+                    )}
+                </div>
+                {children}
+            </div>
+        </div>,
+        document.body
+    );
+};
 
 // 座標制限関数（3m×3m = 原点から1.5m四方制限）
 const limitCoordinates = (x, y) => {
@@ -69,13 +103,94 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     });
     const [installationEnvironment, setInstallationEnvironment] = useState(initialState?.installationEnvironment || 'indoor'); // 'indoor' or 'outdoor'
     const [offTubeColor, setOffTubeColor] = useState(initialState?.offTubeColor || 'matching'); // 'white' or 'matching'
-    
+
+    // 背景画像関連のstate
+    const [showBgModalPC, setShowBgModalPC] = useState(false);
+    const [backgroundImage, setBackgroundImage] = useState(initialState?.backgroundImage || null);
+    const [loadedBackgroundImage, setLoadedBackgroundImage] = useState(null);
+    const [initialBgImageWidth, setInitialBgImageWidth] = useState(initialState?.initialBgImageWidth || 0);
+    const [initialBgImageHeight, setInitialBgImageHeight] = useState(initialState?.initialBgImageHeight || 0);
+    const [bgImageScale, setBgImageScale] = useState(initialState?.bgImageScale || 1.0);
+    const [bgImageX, setBgImageX] = useState(initialState?.bgImageX || 0);
+    const [bgImageY, setBgImageY] = useState(initialState?.bgImageY || 0);
+    const [bgImageOpacity, setBgImageOpacity] = useState(initialState?.bgImageOpacity || 1.0);
+
     // 寸法表示用の状態
     const [modelSize, setModelSize] = useState({
         width: 0,
         height: 0,
         totalLength: 0
     });
+
+    // 画像圧縮関数
+    const compressImage = useCallback((file, quality = 0.7, maxWidth = 1920) => {
+        return new Promise((resolve) => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.onload = () => {
+                // アスペクト比を保持してリサイズ
+                let { width, height } = img;
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // 画像を描画
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // 圧縮してBase64で出力
+                const compressedDataURL = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedDataURL);
+            };
+
+            img.src = URL.createObjectURL(file);
+        });
+    }, []);
+
+    // 背景画像ファイルのアップロード
+    const handleImageUpload = useCallback(async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // 1.5MB以上は自動で圧縮
+            if (file.size > 1.5 * 1024 * 1024) {
+                try {
+                    console.log(`画像が大きいため圧縮します (${Math.round(file.size / 1024 / 1024 * 10) / 10}MB)`);
+                    const compressedImage = await compressImage(file, 0.7, 1920);
+                    console.log('圧縮完了:', Math.round(compressedImage.length / 1024), 'KB');
+                    setBackgroundImage(compressedImage);
+                    return;
+                } catch (error) {
+                    console.error('画像圧縮エラー:', error);
+                    // 圧縮に失敗した場合は元の画像で続行
+                }
+            }
+
+            // 通常の読み込み処理（1.5MB以下または圧縮失敗時）
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const result = reader.result;
+                console.log('背景画像を読み込みました:', Math.round(result.length / 1024), 'KB');
+                setBackgroundImage(result);
+            };
+            reader.readAsDataURL(file);
+        }
+    }, [compressImage]);
+
+    // 背景画像をクリア
+    const clearBackgroundImage = useCallback(() => {
+        setBackgroundImage(null);
+        setInitialBgImageWidth(0);
+        setInitialBgImageHeight(0);
+        setBgImageScale(1.0);
+        setBgImageX(0);
+        setBgImageY(0);
+        setBgImageOpacity(1.0);
+    }, []);
 
     // モデルサイズを計算する関数
     const calculateModelSize = useCallback(() => {
@@ -268,6 +383,69 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
     
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
+    const widthInputRef = useRef(null);
+    const isUserTypingRef = useRef(false);
+
+    // スライダー変更時に入力フィールドを更新（ユーザーが入力中でない場合のみ）
+    useEffect(() => {
+        if (widthInputRef.current && initialBgImageWidth > 0 && !isUserTypingRef.current) {
+            const currentWidth = (initialBgImageWidth * bgImageScale) / 25;
+            // 整数の場合は小数点を表示しない
+            widthInputRef.current.value = currentWidth % 1 === 0 ? currentWidth.toString() : currentWidth.toFixed(1);
+        }
+    }, [bgImageScale, initialBgImageWidth]);
+
+    // 背景画像のロード処理
+    useEffect(() => {
+        if (backgroundImage) {
+            const img = new Image();
+            img.onload = () => {
+                setLoadedBackgroundImage(img);
+
+                // sessionStorageから復元された場合はサイズ計算のみ行い、設定値は保持する
+                const isRestoredFromStorage = bgImageScale !== 1.0 || bgImageX !== 0 || bgImageY !== 0 || bgImageOpacity !== 1.0;
+
+                const drawingAreaWidth = 800; // 仮想的な初期サイズ
+                const drawingAreaHeight = 600;
+
+                let fittedWidth, fittedHeight;
+                // 画像のアスペクト比に合わせてフィットさせる
+                if (img.width / img.height > drawingAreaWidth / drawingAreaHeight) {
+                    fittedWidth = drawingAreaWidth;
+                    fittedHeight = img.height * (drawingAreaWidth / img.width);
+                } else {
+                    fittedHeight = drawingAreaHeight;
+                    fittedWidth = img.width * (drawingAreaHeight / img.height);
+                }
+
+                setInitialBgImageWidth(fittedWidth);
+                setInitialBgImageHeight(fittedHeight);
+
+                // 新しい画像の場合のみ設定をリセット
+                if (!isRestoredFromStorage) {
+                    setBgImageScale(1.0);
+                    setBgImageX(0);
+                    setBgImageY(0);
+                    setBgImageOpacity(1.0);
+                }
+            };
+            img.onerror = () => {
+                console.error("背景画像の読み込みに失敗しました。");
+                setBackgroundImage(null); // エラー時は画像をクリア
+                setLoadedBackgroundImage(null);
+            };
+            img.src = backgroundImage;
+        } else {
+            setLoadedBackgroundImage(null);
+            // 画像がクリアされた時は全ての設定をリセット
+            setInitialBgImageWidth(0);
+            setInitialBgImageHeight(0);
+            setBgImageScale(1.0);
+            setBgImageX(0);
+            setBgImageY(0);
+            setBgImageOpacity(1.0);
+        }
+    }, [backgroundImage, bgImageScale, bgImageX, bgImageY, bgImageOpacity]);
 
     // selectedTubesが変更された時に新しく追加されたチューブに設定を適用
     useEffect(() => {
@@ -332,11 +510,18 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 offTubeColor,
                 scale: canvasSettings.scale,
                 offsetX: canvasSettings.offsetX,
-                offsetY: canvasSettings.offsetY
+                offsetY: canvasSettings.offsetY,
+                backgroundImage,
+                initialBgImageWidth,
+                initialBgImageHeight,
+                bgImageScale,
+                bgImageX,
+                bgImageY,
+                bgImageOpacity
             };
             onStateChange(currentState);
         }
-    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, offTubeColor, canvasSettings, onStateChange]);
+    }, [selectedColor, thickness, sidebarVisible, neonPower, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, pathColors, pathThickness, isTubeSettingsMinimized, installationEnvironment, offTubeColor, canvasSettings, onStateChange, backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity]);
 
     // 最小化状態が変更された時に状態を保存
     useEffect(() => {
@@ -349,6 +534,13 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             saveCurrentState();
         }
     }, [canvasSettings, isDataLoaded, saveCurrentState]);
+
+    // 背景画像の状態が変更された時に状態を保存
+    useEffect(() => {
+        if (isDataLoaded) {
+            saveCurrentState();
+        }
+    }, [backgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, isDataLoaded, saveCurrentState]);
 
     const neonPresetColors = [
         '#ff0000', '#ff8000', '#ffee00', '#ffff40',
@@ -1885,8 +2077,19 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         // 背景色（ON/OFF時で切り替え）
         const currentBgColor = neonPower ? backgroundColor : backgroundColorOff;
         ctx.fillStyle = currentBgColor;
-        ctx.fillRect(visibleLeft - 1000, visibleTop - 1000, 
+        ctx.fillRect(visibleLeft - 1000, visibleTop - 1000,
                      (visibleRight - visibleLeft) + 2000, (visibleBottom - visibleTop) + 2000);
+
+        // 背景画像を描画
+        if (loadedBackgroundImage && initialBgImageWidth > 0 && initialBgImageHeight > 0) {
+            ctx.globalAlpha = bgImageOpacity;
+            const currentBgWidth = initialBgImageWidth * bgImageScale;
+            const currentBgHeight = initialBgImageHeight * bgImageScale;
+            const drawX = bgImageX - (currentBgWidth / 2); // 画像の中心を基準に描画
+            const drawY = bgImageY - (currentBgHeight / 2);
+            ctx.drawImage(loadedBackgroundImage, drawX, drawY, currentBgWidth, currentBgHeight);
+            ctx.globalAlpha = 1;
+        }
 
         // 無限グリッドを描画（グリッド間隔に応じて）
         if (showGrid) {
@@ -2126,7 +2329,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes, offTubeColor]);
+    }, [neonPaths, pathColors, pathThickness, canvasSettings, neonColors, neonLineWidths, canvasWidth, canvasHeight, backgroundColor, backgroundColorOff, gridColor, gridColorOff, showGrid, gridOpacity, neonPower, isDataLoaded, highlightedTube, highlightedBase, isCanvasSelectionMode, selectedTubes, offTubeColor, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity]);
 
     // キャンバスのdevicePixelRatio対応設定
     useEffect(() => {
@@ -2340,9 +2543,15 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             >
                                 {showGrid ? 'ON' : 'OFF'}
                             </button>
+                            <button
+                                onClick={() => setShowBgModalPC(true)}
+                                className="settings-button"
+                            >
+                                背景画像
+                            </button>
                         </div>
-                        
-                       
+
+
                     </div>
 
 
@@ -3362,11 +3571,150 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 </div>
             )}
 
+            {/* 背景画像設定モーダル */}
+            <Modal isOpen={showBgModalPC} onClose={() => {
+                setShowBgModalPC(false);
+            }} title="背景画像設定" position="right" className="bg-modal">
+                <div className="modal-content-inner">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="file-input"
+                    />
+                    {loadedBackgroundImage && (
+                        <>
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageScale" className="modal-label">
+                                    画像サイズ : {(bgImageScale * 100).toFixed(1)}%
+                                    ({((initialBgImageWidth * bgImageScale) / 25).toFixed(1)}×{((initialBgImageHeight * bgImageScale) / 25).toFixed(1)}cm)
+                                </label>
+                                <input
+                                    id="bgImageScale"
+                                    type="range"
+                                    min="0.1"
+                                    max="10.0"
+                                    step="0.001"
+                                    value={bgImageScale}
+                                    onChange={(e) => setBgImageScale(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                                <div className="bg-scale-input-container">
+                                    <label className="direct-input-label">画像横幅 :</label>
+                                    <input
+                                        ref={widthInputRef}
+                                        type="number"
+                                        min="0.5"
+                                        placeholder="横幅を入力"
+                                        onInput={() => {
+                                            isUserTypingRef.current = true;
+                                        }}
+                                        onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            if (inputValue === '') return;
+
+                                            const targetWidthCm = parseFloat(inputValue);
+                                            if (!isNaN(targetWidthCm) && targetWidthCm >= 0.5 && initialBgImageWidth > 0) {
+                                                const newScale = (targetWidthCm * 25) / initialBgImageWidth;
+                                                setBgImageScale(Math.max(0.1, Math.min(10.0, newScale)));
+                                            }
+                                        }}
+                                        onFocus={(e) => {
+                                            isUserTypingRef.current = true;
+                                            e.target.select();
+                                        }}
+                                        onBlur={() => {
+                                            isUserTypingRef.current = false;
+                                        }}
+                                        onWheel={(e) => {
+                                            e.target.blur();
+                                        }}
+                                        className="direct-number-input"
+                                    />
+                                    <span className="input-unit">cm</span>
+                                </div>
+                            </div>
+                            {/* X/Y position controls */}
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageX" className="modal-label">
+                                    X位置 : {(bgImageX / 25).toFixed(1)}cm
+                                </label>
+                                <input
+                                    id="bgImageX"
+                                    type="range"
+                                    min="-2500"
+                                    max="2500"
+                                    step="25"
+                                    value={bgImageX}
+                                    onChange={(e) => setBgImageX(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                            </div>
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageY" className="modal-label">
+                                    Y位置 : {(bgImageY / 25).toFixed(1)}cm
+                                </label>
+                                <input
+                                    id="bgImageY"
+                                    type="range"
+                                    min="-2500"
+                                    max="2500"
+                                    step="25"
+                                    value={bgImageY}
+                                    onChange={(e) => setBgImageY(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                            </div>
+                            <div className="modal-setting-item">
+                                <label htmlFor="bgImageOpacity" className="modal-label">
+                                    透明度 : {(bgImageOpacity * 100).toFixed(0)}%
+                                </label>
+                                <input
+                                    id="bgImageOpacity"
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value={bgImageOpacity}
+                                    onChange={(e) => setBgImageOpacity(Number(e.target.value))}
+                                    className="range-input"
+                                />
+                            </div>
+                            <div className="modal-buttons-container">
+                                <button
+                                    onClick={() => {
+                                        setBgImageX(0);
+                                        setBgImageY(0);
+                                    }}
+                                    className="reset-position-button"
+                                >
+                                    位置をリセット
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setBgImageScale(1.0);
+                                        setBgImageOpacity(1.0);
+                                    }}
+                                    className="reset-size-button"
+                                >
+                                    サイズ・透明度をリセット
+                                </button>
+                                <button
+                                    onClick={clearBackgroundImage}
+                                    className="clear-image-button"
+                                >
+                                    画像をクリア
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </Modal>
 
             {/* ガイドモーダル */}
-            <CustomizeGuideModal 
-                isOpen={isGuideModalOpen} 
-                onClose={() => setIsGuideModalOpen(false)} 
+            <CustomizeGuideModal
+                isOpen={isGuideModalOpen}
+                onClose={() => setIsGuideModalOpen(false)}
             />
 
         </div>
