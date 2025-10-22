@@ -682,6 +682,7 @@
     max-height: 1400px !important;
     max-width: 1400px !important;
     flex-direction: column;
+    animation: none !important;
   }
   
   /* ヘッダー - モーダルサイズに応じて調整 */
