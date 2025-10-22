@@ -817,10 +817,10 @@
     }
     .grid-toggle-container {
         margin-left:9%;
-        margin-right:22px !important;
+        margin-right:19px !important;
     }
     .settings-button-customize {
-        width: 80px !important;
+        width: 70px !important;
         padding: 10px 0;
         background-color:rgba(22, 22, 22, 0);
         color: white;
@@ -830,7 +830,7 @@
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s;
-        margin: 0 0px 0  40px !important;
+        margin: 0 0px 0  20px !important;
         background: rgba(156, 163, 175, 0.55);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(156, 163, 175, 0.8);
@@ -1877,7 +1877,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-right:25px;
+    padding-right:50px;
 }
 
 .background-label {
@@ -2379,8 +2379,8 @@ html, body {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-left:25px;
-    margin-right:23px;
+    margin-left:30px;
+    margin-right:48px;
 }
 
 .grid-toggle-label {
@@ -2401,7 +2401,7 @@ html, body {
     font-size: 12px;
     cursor: pointer;
     transition: all 0.2s;
-    margin-right: 18px;
+    margin-right: 15px;
 }
 
 .grid-toggle-button.on {
@@ -3740,7 +3740,7 @@ html, body {
 
 /* 設定ボタン - 色仕様カスタマイズ用 */
 .settings-button-customize {
-    width: 85px;
+    width: 80px;
     padding: 10px 0;
     background-color:rgba(22, 22, 22, 0);
     color: white;
@@ -3749,7 +3749,7 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-    margin: 0 0px 0  50px;
+    margin: 0 0px 0  40px;
     background: rgba(156, 163, 175, 0.55);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(156, 163, 175, 0.8);
