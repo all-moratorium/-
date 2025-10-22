@@ -816,7 +816,8 @@
         padding-bottom: 16px !important;
     }
     .grid-toggle-container {
-        width: 132px !important;
+        margin-left:9%;
+        margin-right:6%;
     }
     .customize-setting-title {
         font-size: 14px !important;
@@ -2360,14 +2361,15 @@ html, body {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    width:156px;
-    margin:0 auto;
+    margin-left:9%;
+    margin-right:6%;
 }
 
 .grid-toggle-label {
     font-size: 14px;
     color: #d1d5db;
     margin-left: -3px;
+    white-space: nowrap;
     
 }
 
@@ -3720,7 +3722,7 @@ html, body {
 
 /* 設定ボタン - 色仕様カスタマイズ用 */
 .settings-button-customize {
-    width: 26%;
+    width: 90px;
     padding: 10px 0;
     background-color:rgba(22, 22, 22, 0);
     color: white;
@@ -3729,9 +3731,7 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-    margin: 0 auto;
-    margin-top: 10px;
-    margin-bottom: 0px;
+    margin: 0 0px 0  50px;
     background: rgba(156, 163, 175, 0.55);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(156, 163, 175, 0.8);
