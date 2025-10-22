@@ -335,7 +335,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
         {/* ページコンテンツエリア */}
         <div className="neon-drawing-guide-modal-body">
           {/* ページ1 */}
-          <div className={`neon-drawing-guide-page ${currentPage === 1 ? 'active' : ''}`}>
+          <div className={`neon-drawing-guide-page active ${currentPage !== 1 ? 'hidden' : ''}`}>
             <div className="neon-drawing-guide-content">
               <div className="neon-drawing-modal-content">
                 <div className="neon-drawing-video-section" onMouseMove={handleMouseMove}>

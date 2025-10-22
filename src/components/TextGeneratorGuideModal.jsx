@@ -259,7 +259,7 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
         {/* ページコンテンツエリア */}
         <div className="text-generator-guide-modal-body">
           {/* ページ1 */}
-          <div className={`text-generator-guide-page ${currentPage === 1 ? 'active' : ''}`}>
+          <div className={`text-generator-guide-page active ${currentPage !== 1 ? 'hidden' : ''}`}>
             <div className="text-generator-guide-content">
               <div className="text-generator-modal-content">
                 <div className="text-generator-video-section" onMouseMove={handleMouseMove}>

@@ -271,7 +271,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
         {/* ページコンテンツエリア */}
         <div className="customize-guide-modal-body">
           {/* ページ1 */}
-          <div className={`customize-guide-page ${currentPage === 1 ? 'active' : ''}`}>
+          <div className={`customize-guide-page active ${currentPage !== 1 ? 'hidden' : ''}`}>
             <div className="customize-guide-content">
               <div className="customize-modal-content">
                 <div className="customize-video-section" onMouseMove={handleMouseMove}>

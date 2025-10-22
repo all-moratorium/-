@@ -45,7 +45,7 @@
   color: white ;
   overflow: hidden ;
   border: 2px solid rgba(16, 185, 129, 0.7) ;
-  box-shadow: 
+  box-shadow:
     0 0 10px rgba(16, 185, 129, 0.5),
     0 0 20px rgba(16, 185, 129, 0.3),
     0 0 30px rgba(16, 185, 129, 0.1) ;
@@ -112,6 +112,12 @@
 .customize-guide-page.active {
   opacity: 1;
   visibility: visible;
+}
+
+.customize-guide-page.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
 }
 
 .customize-guide-modal-header .customize-guide-header {
