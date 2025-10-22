@@ -3710,3 +3710,10 @@ html, body {
     gap: 8px;
     margin-top: 8px;
 }
+
+.bg-image-compress-notice {
+    font-size: 12px !important;
+    color: white;
+    margin: 0px 0 15px 0 !important;
+    line-height: 1.4;
+}

@@ -4330,6 +4330,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         onChange={handleImageUpload}
                         className="file-input"
                     />
+                    <p className="bg-image-compress-notice">
+                        ※ 1.5MB以上の画像は自動的に圧縮されます
+                    </p>
                     {loadedBackgroundImage && (
                         <>
                             <div className="modal-setting-item">

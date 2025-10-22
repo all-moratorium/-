@@ -1029,7 +1029,7 @@
     flex-direction: column;
     animation: modalSlideIn 0.3s ease-out !important;
     border: none;
-    padding: 15px 24px 15px 24px;
+    padding: 15px 24px 24px 24px;
 }
 
 /* 土台自動生成モーダル専用スタイル */
@@ -1053,7 +1053,7 @@
     animation: bgModalSlideIn 0.3s ease-out !important;
     border: none;
     background-color: rgb(10, 10, 10) !important;
-    padding: 15px 24px 24px 24px;
+    padding: 15px 24px 10px 24px;
 }
 
 @keyframes modalSlideIn {
@@ -1222,7 +1222,7 @@
     border-radius: 6px;
     color: #d1d5db;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     box-sizing: border-box;
 }
 
@@ -3203,5 +3203,11 @@
             inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     }
 
+.bg-image-compress-notice {
+    font-size: 10px !important;
+    color: white;
+    margin: 0px 0 15px 0 !important;
+    line-height: 1.4;
+}
 
 }
