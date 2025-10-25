@@ -1,0 +1,457 @@
+/* ベーススタイル */
+.neon-gallery2 {
+  min-height: 100vh;
+  background: #000000;
+}
+
+/* メインコンテンツ */
+.main-content2 {
+  padding: 1.5rem 1rem;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+/* モデルカウンター */
+.model-counter2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.counter-text2 {
+  color: #a1a1aa;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.model-type2 {
+  color: #d4d4d8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #27272a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+/* 3Dモデル表示エリア */
+.model-display2 {
+  position: relative;
+  background: #18181b;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  margin-bottom: 1.5rem;
+  border: 1px solid #27272a;
+}
+
+.model-image-container2 {
+  aspect-ratio: 1 / 1;
+  position: relative;
+}
+
+.model-image2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay2 {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+}
+
+/* ナビゲーションボタン */
+.nav-button2 {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(39, 39, 42, 0.9);
+  backdrop-filter: blur(4px);
+  color: white;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid #3f3f46;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-button2:hover {
+  background: #3f3f46;
+}
+
+.nav-button-left2 {
+  left: 0.5rem;
+}
+
+.nav-button-right2 {
+  right: 0.5rem;
+}
+
+/* タイトルとアクションボタン */
+.title-actions2 {
+  margin-bottom: 1.5rem;
+}
+
+.model-title2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.action-buttons2 {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ダウンロードボタン */
+.download-button2 {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid rgba(16, 169, 139, 0.7);
+  border-radius: 0.5rem;
+  background: transparent;
+  background-image: linear-gradient(90deg, rgba(16, 169, 139, 0.35) 0%, rgba(16, 169, 139, 0.18) 100%);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0px 0px 15px 0px rgba(16, 169, 139, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.download-button2:hover {
+  background-image: linear-gradient(90deg, rgba(16, 169, 139, 0.45) 0%, rgba(16, 169, 139, 0.28) 100%);
+  box-shadow: 0px 0px 20px 0px rgba(16, 169, 139, 0.7);
+}
+
+/* インフォボタン */
+.info-button2 {
+  background: #27272a;
+  color: white;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #3f3f46;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.info-button2:hover {
+  background: #3f3f46;
+}
+
+/* 詳細情報 */
+.details-container2 {
+  transition: all 0.3s;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.details-container2.details-visible2 {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.details-content2 {
+  background: #18181b;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #27272a;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* 詳細画像セクション */
+.details-image-section2 {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.details-image2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-image-overlay2 {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+}
+
+/* 価格オーバーレイ */
+.price-overlay2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+}
+
+.price-content2 {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.price-label2 {
+  color: #71717a;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price-value2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.4));
+  margin: 0 !important;
+}
+
+.type-badge2 {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.type-text2 {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* パラメーターセクション */
+.parameters-section2 {
+  padding: 1.5rem;
+  background: linear-gradient(to bottom, #18181b, #000000);
+}
+
+.parameter-group2 {
+  margin-bottom: 1rem;
+}
+
+.parameter-header2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.parameter-line2 {
+  width: 0.25rem;
+  height: 1.25rem;
+  background: white;
+  border-radius: 9999px;
+}
+
+.parameter-title2 {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.parameter-content2 {
+  padding-left: 1.25rem;
+}
+
+.parameter-value2 {
+  color: #d4d4d8;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+/* パラメーター区切り線 */
+.parameter-divider2 {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #27272a, transparent);
+  margin: 1rem 0;
+}
+
+/* チューブ情報 */
+.tube-item2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background 0.3s;
+  margin-bottom: 0.75rem;
+}
+
+.tube-item2:hover {
+  background: rgba(39, 39, 42, 0.3);
+}
+
+.tube-label2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tube-dot2 {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: #52525b;
+}
+
+.tube-name2 {
+  color: #a1a1aa;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tube-values2 {
+  text-align: right;
+}
+
+.tube-length2 {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.tube-count2 {
+  color: #71717a;
+  font-size: 0.75rem;
+}
+
+/* カラー情報 */
+.color-item2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background 0.3s;
+  margin-bottom: 0.75rem;
+}
+
+.color-item2:hover {
+  background: rgba(39, 39, 42, 0.3);
+}
+
+.color-label2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.color-name2 {
+  color: #a1a1aa;
+  font-size: 0.875rem;
+}
+
+.color-value2 {
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+/* サムネイルナビゲーション */
+.thumbnail-container2 {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.thumbnail-container2::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnail-container2::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbnail-container2::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.thumbnail-container2::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.thumbnail2 {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 2px solid #27272a;
+  transition: all 0.3s;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.thumbnail2:hover {
+  opacity: 1;
+  border-color: #3f3f46;
+}
+
+.thumbnail2.thumbnail-active2 {
+  border-color: white;
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+}
+
+.thumbnail-image2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Coming Soon */
+.coming-soon2 {
+  margin-top: 2rem;
+  background: #18181b;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #27272a;
+}
+
+.coming-soon-title2 {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coming-soon-badge2 {
+  background: #3f3f46;
+  color: #d4d4d8;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.coming-soon-text2 {
+  color: #a1a1aa;
+  font-size: 0.875rem;
+}

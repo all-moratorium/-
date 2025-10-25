@@ -8,6 +8,7 @@ import TextGenerator from './TextGenerator'; // テキスト生成コンポー�
 import GuideModal from './GuideModal.jsx'; // ガイドモーダルコンポーネントをインポート
 import HomeLeftBottm from './HomeLeftBottm.jsx'; // レビューコンポーネントをインポート
 import RealTime3DProgressModal from './RealTime3DProgressModal.jsx'; // リアルタイム3D進捗モーダル
+import NeonGallery2 from './NeonGallery2'; // サンプルモデル2をインポート
 import { Home, Type, Edit3, Settings, Eye, Package } from 'lucide-react';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaPaypal, FaFacebookF, FaInstagram, FaTiktok, FaLinkedinIn } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -2373,13 +2374,26 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       case 'sampleGallery':
         return (
           <div className="main-content sample-gallery-content">
-            <div className="sample-gallery-3d" style={{ 
-              width: '100%', 
+            <div className="sample-gallery-3d" style={{
+              width: '100%',
               height: 'calc(100vh - 55px)',
               position: 'relative',
               paddingTop: '55px'
             }}>
               {showGallery3D && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
+            </div>
+          </div>
+        );
+      case 'sampleGallery2':
+        return (
+          <div className="main-content sample-gallery-content">
+            <div className="sample-gallery-3d" style={{
+              width: '100%',
+              height: 'calc(100vh - 55px)',
+              position: 'relative',
+              paddingTop: '55px'
+            }}>
+              <NeonGallery2 />
             </div>
           </div>
         );
@@ -2671,8 +2685,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                         )}
                     </button>
                     {isMobile && (
-                        <button className={currentPage === 'sampleGallery' ? "nav-item active" : "nav-item"} onClick={() => { 
-                          setMobileSidebarOpen(false); 
+                        <button className={currentPage === 'sampleGallery' ? "nav-item active" : "nav-item"} onClick={() => {
+                          setMobileSidebarOpen(false);
                           setCurrentPage('sampleGallery');
                         }}>
                             <div className="nav-icon">
@@ -2681,6 +2695,20 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                             <span className="nav-text">サンプルモデル</span>
                             {!sidebarExpanded && (
                                 <div className="tooltip">サンプルモデル</div>
+                            )}
+                        </button>
+                    )}
+                    {isMobile && (
+                        <button className={currentPage === 'sampleGallery2' ? "nav-item active" : "nav-item"} onClick={() => {
+                          setMobileSidebarOpen(false);
+                          setCurrentPage('sampleGallery2');
+                        }}>
+                            <div className="nav-icon">
+                                <Eye />
+                            </div>
+                            <span className="nav-text">サンプルモデル2</span>
+                            {!sidebarExpanded && (
+                                <div className="tooltip">サンプルモデル2</div>
                             )}
                         </button>
                     )}
