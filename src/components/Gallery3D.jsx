@@ -153,10 +153,10 @@ export const modelConfigs = [
     },
     {
         id: "light blue hair",
-        name: "水色髪の女の子",
-        glbPath: '/models/neon sample glb/水色髪の女の子.glb',
-        imagePath: '/neon sample pictures/水色髪の女の子2d.png',
-        description: "水色髪の女の子のネオンサイン",
+        name: "ライトブルーヘアー",
+        glbPath: '/models/neon sample glb/ライトブルーヘアー.glb',
+        imagePath: '/neon sample pictures/ライトブルーヘアー2d.png',
+        description: "ライトブルーヘアーのネオンサイン",
         modelScale: 0.006,
         imageScale: 6.0,
         sideModelScale: 1.5,
@@ -193,7 +193,8 @@ const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentMod
     const [isPreloading, setIsPreloading] = useState(false); // プリロード中フラグ
     const [mobileInfoTransition, setMobileInfoTransition] = useState(true); // モバイル情報セクションの表示状態
     const [currentModelInfo, setCurrentModelInfo] = useState(null); // 現在の中央モデル情報
-    
+    const jumpToIndexRef = useRef(null); // jumpToIndex関数への参照
+
     // プリロード状態が変更された時に親コンポーネントに通知
     useEffect(() => {
         if (onPreloadingChange) {
@@ -1238,6 +1239,43 @@ const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentMod
             }
         };
 
+        // 特定のインデックスにジャンプする関数
+        const jumpToIndex = (targetIndex) => {
+            if (isTransitioningRef.current || !allModelsRef.current.length) return;
+
+            // 現在の中央モデルのインデックスを取得
+            const centerModel = getCenterModel();
+            if (!centerModel) return;
+
+            const currentIdx = centerModel.userData.originalIndex % paintingData.length;
+            let diff = targetIndex - currentIdx;
+
+            // 最短経路を計算（ループを考慮）
+            if (Math.abs(diff) > paintingData.length / 2) {
+                diff = diff > 0 ? diff - paintingData.length : diff + paintingData.length;
+            }
+
+            if (diff === 0) return; // すでに目的のモデルが中央にある
+
+            // モデルを直接移動
+            const moveDistance = spacing * diff;
+            allModelsRef.current.forEach((model) => {
+                model.position.x -= moveDistance;
+            });
+
+            // ループ調整と更新
+            adjustForSeamlessLoop();
+            updateCenterModel();
+            updateModelPositions();
+
+            // 回転をリセット
+            targetRotationRef.current.x = 0;
+            targetRotationRef.current.y = 0;
+        };
+
+        // jumpToIndex関数をrefに保存
+        jumpToIndexRef.current = jumpToIndex;
+
         const handleKeyDown = (event) => {
             recordUserInteraction();
             switch (event.code) {
@@ -1446,6 +1484,17 @@ const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentMod
         };
 
     }, []); // 依存配列を空にして初期化は一度だけ実行
+
+    // 外部からのモデルインデックス変更を監視
+    useEffect(() => {
+        if (currentModelIndex !== null && jumpToIndexRef.current && !loading) {
+            // 少し遅延させて初期化完了を待つ
+            const timer = setTimeout(() => {
+                jumpToIndexRef.current(currentModelIndex);
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [currentModelIndex, loading]);
 
     const getCurrentModelInfo = useCallback(() => {
         return currentModelInfo;
