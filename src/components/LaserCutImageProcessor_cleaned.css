@@ -4118,11 +4118,11 @@ canvas {
   }
 
   .nav-left {
-    left: 15px !important;
+    left: 10px !important;
   }
 
   .nav-right {
-    right: 15px !important;
+    right: 10px !important;
   }
 
   /* Fix message positioning on mobile */
