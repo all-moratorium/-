@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
+import Gallery3D, { modelConfigs } from './Gallery3D';
 import './neon-gallery2.css';
 
 // サンプルデータ2
@@ -219,21 +220,67 @@ const neonModels2 = [
 export default function NeonGallery2() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
+  const [currentGalleryModel, setCurrentGalleryModel] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const currentModel = neonModels2[currentIndex];
 
+  // Gallery3Dからモデル情報を受け取る
+  const handleModelChange = (modelInfo) => {
+    setCurrentGalleryModel(modelInfo);
+  };
+
   const nextModel = () => {
-    setCurrentIndex((prev) => (prev + 1) % neonModels2.length);
+    setCurrentIndex((prev) => (prev + 1) % modelConfigs.length);
     setShowDetails(false);
   };
 
   const prevModel = () => {
-    setCurrentIndex((prev) => (prev - 1 + neonModels2.length) % neonModels2.length);
+    setCurrentIndex((prev) => (prev - 1 + modelConfigs.length) % modelConfigs.length);
     setShowDetails(false);
   };
 
+  // プロジェクトファイルダウンロード機能
+  const downloadProjectFile = (modelName) => {
+    if (isDownloading) return;
+
+    setIsDownloading(true);
+
+    const fileName = `${modelName}　プロジェクトファイル.json`;
+    const filePath = `/neon sample json/${fileName}`;
+
+    fetch(filePath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        console.error('プロジェクトファイルのダウンロードエラー:', error);
+        alert('プロジェクトファイルのダウンロードに失敗しました。');
+      })
+      .finally(() => {
+        setIsDownloading(false);
+      });
+  };
+
   const handleDownload = () => {
-    alert(`${currentModel.title}のダウンロードを開始します`);
+    if (currentGalleryModel && currentGalleryModel.name) {
+      downloadProjectFile(currentGalleryModel.name);
+    } else {
+      alert(`${currentModel.title}のダウンロードを開始します`);
+    }
   };
 
   return (
@@ -243,36 +290,30 @@ export default function NeonGallery2() {
         {/* モデルカウンター */}
         <div className="model-counter2">
           <span className="counter-text2">
-            {currentIndex + 1} / {neonModels2.length}
+            {currentIndex + 1} / {modelConfigs.length}
           </span>
-          <span className="model-type2">{currentModel.type}</span>
+          <span className="model-type2">{currentGalleryModel?.theme || currentModel.type}</span>
         </div>
 
         {/* 3Dモデル表示エリア */}
         <div className="model-display2">
-          {/* ナビゲーションボタン */}
-          <button onClick={prevModel} className="nav-button2 nav-button-left2">
-            <ChevronLeft size={24} />
-          </button>
-
-          <button onClick={nextModel} className="nav-button2 nav-button-right2">
-            <ChevronRight size={24} />
-          </button>
-
           {/* モデル画像 */}
           <div className="model-image-container2">
-            <img
-              src={currentModel.image}
-              alt={currentModel.title}
-              className="model-image2"
-            />
-            <div className="image-overlay2"></div>
+            <div className="image-overlay2">
+              <Gallery3D
+                hideUI={true}
+                currentModelIndex={currentIndex}
+                onModelChange={handleModelChange}
+              />
+            </div>
           </div>
         </div>
 
         {/* タイトルとアクションボタン */}
         <div className="title-actions2">
-          <h2 className="model-title2">{currentModel.title}</h2>
+          <h2 className="model-title2">
+            {currentGalleryModel?.name || currentModel.title}
+          </h2>
 
           <div className="action-buttons2">
             <button onClick={handleDownload} className="download-button2">
@@ -294,8 +335,8 @@ export default function NeonGallery2() {
             {/* 画像セクション */}
             <div className="details-image-section2">
               <img
-                src={currentModel.image}
-                alt={currentModel.title}
+                src={currentGalleryModel?.imagePath || currentModel.image}
+                alt={currentGalleryModel?.name || currentModel.title}
                 className="details-image2"
               />
               <div className="details-image-overlay2"></div>
@@ -390,7 +431,7 @@ export default function NeonGallery2() {
 
         {/* サムネイルナビゲーション */}
         <div className="thumbnail-container2">
-          {neonModels2.map((model, index) => (
+          {modelConfigs.map((model, index) => (
             <button
               key={model.id}
               onClick={() => {
@@ -400,8 +441,8 @@ export default function NeonGallery2() {
               className={`thumbnail2 ${index === currentIndex ? 'thumbnail-active2' : ''}`}
             >
               <img
-                src={model.image}
-                alt={model.title}
+                src={model.imagePath}
+                alt={model.name}
                 className="thumbnail-image2"
               />
             </button>

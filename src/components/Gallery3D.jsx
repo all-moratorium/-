@@ -5,7 +5,167 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import animationManager from '../utils/AnimationManager';
 import './Gallery3D.css';
 
-const Gallery3D = ({ models = [], onPreloadingChange }) => {
+// モデル設定をエクスポート
+export const modelConfigs = [
+    {
+        id: "butterfly",
+        name: "蝶々",
+        glbPath: '/models/neon sample glb/蝶々.glb',
+        imagePath: '/neon sample pictures/蝶々2d.png',
+        description: "蝶々のネオンサイン",
+        modelScale: 0.0065,
+        imageScale: 5.7,
+        sideModelScale: 1.4,
+        icon: "🦋",
+        theme: "butterfly"
+    },
+    {
+        id: "coffee",
+        name: "コーヒー",
+        glbPath: '/models/neon sample glb/コーヒー.glb',
+        imagePath: '/neon sample pictures/コーヒー2d.png',
+        description: "コーヒーのネオンサイン1",
+        modelScale: 0.015,
+        imageScale: 5.3,
+        sideModelScale: 1.4,
+        icon: "🎯",
+        theme: "coffee"
+    },
+    {
+        id: "ramen",
+        name: "ラーメン",
+        glbPath: '/models/neon sample glb/ラーメン.glb',
+        imagePath: '/neon sample pictures/ラーメン2d.png',
+        description: "ラーメンのネオンサイン1",
+        modelScale: 0.006,
+        imageScale: 4.9,
+        sideModelScale: 1.4,
+        icon: "🍜",
+        theme: "ramen"
+    },
+    {
+        id: "happy halloween",
+        name: "ハッピーハロウィン",
+        glbPath: '/models/neon sample glb/ハッピーハロウィン.glb',
+        imagePath: '/neon sample pictures/ハッピーハロウィン2d.png',
+        description: "ハッピーハロウィンのネオンサイン",
+        modelScale: 0.0085,
+        imageScale: 6.5,
+        sideModelScale: 1.5,
+        icon: "🎃",
+        theme: "halloween"
+    },
+    {
+        id: "bowling",
+        name: "ボウリング",
+        glbPath: '/models/neon sample glb/ボウリング.glb',
+        imagePath: '/neon sample pictures/ボウリング2d.png',
+        description: "ボウリングのネオンサイン",
+        modelScale: 0.0075,
+        imageScale: 5.1,
+        sideModelScale: 1.5,
+        icon: "🎳",
+        theme: "bowling"
+    },
+    {
+        id: "unicorn",
+        name: "ユニコーン",
+        glbPath: '/models/neon sample glb/ユニコーン.glb',
+        imagePath: '/neon sample pictures/ユニコーン2d.png',
+        description: "ユニコーンのネオンサイン",
+        modelScale: 0.0072,
+        imageScale: 6.2,
+        sideModelScale: 1.5,
+        icon: "🦄",
+        theme: "unicorn"
+    },
+    {
+        id: "happy birthday",
+        name: "ハッピーバースデイ",
+        glbPath: '/models/neon sample glb/ハッピーバースデイ.glb',
+        imagePath: '/neon sample pictures/ハッピーバースデイ2d.png',
+        description: "ハッピーバースデイのネオンサイン",
+        modelScale: 0.0085,
+        imageScale: 6.9,
+        sideModelScale: 1.5,
+        icon: "🎂",
+        theme: "birthday"
+    },
+    {
+        id: "cocktail",
+        name: "カクテル",
+        glbPath: '/models/neon sample glb/カクテル.glb',
+        imagePath: '/neon sample pictures/カクテル2d.png',
+        description: "カクテルのネオンサイン1",
+        modelScale: 0.0065,
+        imageScale: 5.5,
+        sideModelScale: 1.5,
+        icon: "🍸",
+        theme: "cocktail"
+    },
+    {
+        id: "rose",
+        name: "バラ",
+        glbPath: '/models/neon sample glb/バラ.glb',
+        imagePath: '/neon sample pictures/バラ2d.png',
+        description: "バラのネオンサイン1",
+        modelScale: 0.0056,
+        imageScale: 6.2,
+        sideModelScale: 1.5,
+        icon: "🌹",
+        theme: "rose"
+    },
+    {
+        id: "sports car",
+        name: "スポーツカー",
+        glbPath: '/models/neon sample glb/スポーツカー.glb',
+        imagePath: '/neon sample pictures/スポーツカー2d.png',
+        description: "スポーツカーのネオンサイン",
+        modelScale: 0.0048,
+        imageScale: 6.8,
+        sideModelScale: 1.5,
+        icon: "🚗",
+        theme: "car"
+    },
+    {
+        id: "darts-bar",
+        name: "ダーツバー",
+        glbPath: '/models/neon sample glb/ダーツバー.glb',
+        imagePath: '/neon sample pictures/ダーツバー2d.png',
+        description: "ダーツバーのネオンサイン1",
+        modelScale: 0.0068,
+        imageScale: 5.8,
+        sideModelScale: 1.5,
+        icon: "🎯",
+        theme: "darts"
+    },
+    {
+        id: "onair",
+        name: "オンエア",
+        glbPath: '/models/neon sample glb/オンエア.glb',
+        imagePath: '/neon sample pictures/オンエア2d.png',
+        description: "オンエアのネオンサイン1",
+        modelScale: 0.0086,
+        imageScale: 6.6,
+        sideModelScale: 1.5,
+        icon: "📻",
+        theme: "onair"
+    },
+    {
+        id: "light blue hair",
+        name: "水色髪の女の子",
+        glbPath: '/models/neon sample glb/水色髪の女の子.glb',
+        imagePath: '/neon sample pictures/水色髪の女の子2d.png',
+        description: "水色髪の女の子のネオンサイン",
+        modelScale: 0.006,
+        imageScale: 6.0,
+        sideModelScale: 1.5,
+        icon: "👧",
+        theme: "light blue hair"
+    }
+];
+
+const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentModelIndex = null, onModelChange = null }) => {
     const containerRef = useRef(null);
     const sceneRef = useRef(null);
     const cameraRef = useRef(null);
@@ -41,176 +201,12 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
         }
     }, [isPreloading, onPreloadingChange]);
 
-    // 個別モデル設定（各モデルごとにパラメーター管理）
-    const modelConfigs = [
-        
-        {
-            id: "butterfly",
-            name: "蝶々",
-            glbPath: '/models/neon sample glb/蝶々.glb',
-            imagePath: '/neon sample pictures/蝶々2d.png',
-            description: "蝶々のネオンサイン",
-            modelScale: 0.0065,
-            imageScale: 5.7,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "🦋",
-            theme: "butterfly"
-        },
-        {
-            id: "coffee", 
-            name: "コーヒー",
-            glbPath: '/models/neon sample glb/コーヒー.glb',
-            imagePath: '/neon sample pictures/コーヒー2d.png',
-            description: "コーヒーのネオンサイン1",
-            modelScale: 0.015,
-            imageScale: 5.3,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎯",
-            theme: "coffee"
-        },
-       
-        {
-            id: "ramen",
-            name: "ラーメン", 
-            glbPath: '/models/neon sample glb/ラーメン.glb',
-            imagePath: '/neon sample pictures/ラーメン2d.png',
-            description: "ラーメンのネオンサイン1",
-            modelScale: 0.006,
-            imageScale: 4.9,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "�",
-            theme: "ramen"
-        },
-        
-       
-        
-        {
-            id: "happy halloween",
-            name: "ハッピーハロウィン",
-            glbPath: '/models/neon sample glb/ハッピーハロウィン.glb', 
-            imagePath: '/neon sample pictures/ハッピーハロウィン2d.png',
-            description: "ハッピーハロウィンのネオンサイン",
-            modelScale: 0.0085,
-            imageScale: 6.5,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎃",
-            theme: "halloween"
-        },
-
-        {
-            id: "bowling",
-            name: "ボウリング",
-            glbPath: '/models/neon sample glb/ボウリング.glb',
-            imagePath: '/neon sample pictures/ボウリング2d.png', 
-            description: "ボウリングのネオンサイン",
-            modelScale: 0.0075,
-            imageScale: 5.1,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: " Bowling",
-            theme: "bowling"
-        },
-        {
-            id: "unicorn",
-            name: "ユニコーン", 
-            glbPath: '/models/neon sample glb/ユニコーン.glb',
-            imagePath: '/neon sample pictures/ユニコーン2d.png',
-            description: "ユニコーンのネオンサイン", 
-            modelScale: 0.0072,
-            imageScale: 6.2,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🦄",
-            theme: "unicorn"
-        },
-        {
-            id: "happy birthday",
-            name: "ハッピーバースデイ", 
-            glbPath: '/models/neon sample glb/ハッピーバースデイ.glb',
-            imagePath: '/neon sample pictures/ハッピーバースデイ2d.png',
-            description: "ハッピーバースデイのネオンサイン", 
-            modelScale: 0.0085,
-            imageScale: 6.9,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🎂",
-            theme: "birthday"
-        },
-       
-        {
-            id: "cocktail",
-            name: "カクテル",
-            glbPath: '/models/neon sample glb/カクテル.glb',
-            imagePath: '/neon sample pictures/カクテル2d.png',
-            description: "カクテルのネオンサイン1",
-            modelScale: 0.0065,
-            imageScale: 5.5,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
-            icon: "�",
-            theme: "cocktail"
-        },
-        {
-            id: "rose",
-            name: "バラ",
-            glbPath: '/models/neon sample glb/バラ.glb',
-            imagePath: '/neon sample pictures/バラ2d.png',
-            description: "バラのネオンサイン1",
-            modelScale: 0.0056,
-            imageScale: 6.2,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
-            icon: "�",
-            theme: "rose"
-        },
-        
-        {
-            id: "sports car", 
-            name: "スポーツカー",
-            glbPath: '/models/neon sample glb/スポーツカー.glb',
-            imagePath: '/neon sample pictures/スポーツカー2d.png',
-            description: "スポーツカーのネオンサイン",
-            modelScale: 0.0048,
-            imageScale: 6.8,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "🚗",
-            theme: "car"
-        },
-        {
-            id: "darts-bar",
-            name: "ダーツバー",
-            glbPath: '/models/neon sample glb/ダーツバー.glb',
-            imagePath: '/neon sample pictures/ダーツバー2d.png',
-            description: "ダーツバーのネオンサイン1",
-            modelScale: 0.0068,
-            imageScale: 5.8,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ // スケール値のみ指定、比率は自動保持
-            icon: "🎯",
-            theme: "darts"
-        },
-        {
-            id: "onair", 
-            name: "オンエア",
-            glbPath: '/models/neon sample glb/オンエア.glb',
-            imagePath: '/neon sample pictures/オンエア2d.png',
-            description: "オンエアのネオンサイン1",
-            modelScale: 0.0086,
-            imageScale: 5.2,
-            sideModelScale: 1.4, // 中央から外れた時の3Dモデルサイズ
-            icon: "",
-            theme: "onair"
-        },
-        
-        {
-            id: "light blue hair",
-            name: "ライトブルーヘアー",
-            glbPath: '/models/neon sample glb/ライトブルーヘアー.glb',
-            imagePath: '/neon sample pictures/ライトブルーヘアー2d.png',
-            description: "ライトブルーヘアーのネオンサイン",
-            modelScale: 0.0058,
-            imageScale: 6,
-            sideModelScale: 1.5, // 中央から外れた時の3Dモデルサイズ
-            icon: "",
-            theme: "light blue hair"
-        },
-        
-       
-    ];
+    // モデル情報が変更された時に親コンポーネントに通知
+    useEffect(() => {
+        if (onModelChange && currentModelInfo) {
+            onModelChange(currentModelInfo);
+        }
+    }, [currentModelInfo, onModelChange]);
 
     // 使用するモデルデータ
     const paintingData = models.length > 0 ? models : modelConfigs;
@@ -1507,28 +1503,28 @@ const Gallery3D = ({ models = [], onPreloadingChange }) => {
             </div>
 
             {/* Mobile Home Button - Portrait only */}
-            {isMobileDevice && !loading && window.innerHeight > window.innerWidth && (
+            {!hideUI && isMobileDevice && !loading && window.innerHeight > window.innerWidth && (
                 <button className="mobile-home-btn" onClick={() => window.location.href = '/'}>
                     ホームに戻る
                 </button>
             )}
 
             {/* Mobile Home Button - Landscape */}
-            {isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
+            {!hideUI && isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
                 <button className="mobile-home-btn" onClick={() => window.location.href = '/'}>
                     ホームに戻る
                 </button>
             )}
 
             {/* Landscape Notice - Landscape only */}
-            {isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
+            {!hideUI && isMobileDevice && !loading && window.innerWidth > window.innerHeight && (
                 <div className="landscape-notice">
                     製品の詳細情報をご覧いただくには、画面を縦向きでご利用ください
                 </div>
             )}
 
             {/* Mobile Information Section */}
-            {isMobileDevice && !loading && (
+            {!hideUI && isMobileDevice && !loading && (
                 <div className={`mobile-description-card ${mobileInfoTransition ? 'active' : ''}`}>
                     <div className="mobile-product-header">
                         <div className="mobile-product-image">
