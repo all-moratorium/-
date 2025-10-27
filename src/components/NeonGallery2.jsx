@@ -217,7 +217,7 @@ const neonModels2 = [
   }
 ];
 
-export default function NeonGallery2() {
+export default function NeonGallery2({ onPreloadingChange }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [currentGalleryModel, setCurrentGalleryModel] = useState(null);
@@ -304,6 +304,7 @@ export default function NeonGallery2() {
                 hideUI={true}
                 currentModelIndex={currentIndex}
                 onModelChange={handleModelChange}
+                onPreloadingChange={onPreloadingChange}
               />
             </div>
           </div>

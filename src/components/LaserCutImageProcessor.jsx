@@ -503,6 +503,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);
   const [quantityInputText, setQuantityInputText] = useState('1');
   const [showGallery3D, setShowGallery3D] = useState(false);
+  const [showGallery3D2, setShowGallery3D2] = useState(false);
   const [productDimensions, setProductDimensions] = useState({ width: 0, height: 0, thickness: 0 });
   
   // モバイル版用：3Dプレビューデータを一時保存
@@ -1055,6 +1056,23 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       setShowGallery3D(false);
       // sampleGallery以外のページに移動した時はプリロード状態をリセット
       setIsPreloadingModels(false);
+    }
+  }, [currentPage]);
+
+  // sampleGallery2ページでのNeonGallery2遅延表示制御
+  useEffect(() => {
+    if (currentPage === 'sampleGallery2') {
+      setShowGallery3D2(false);
+      const timer = setTimeout(() => {
+        setShowGallery3D2(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setShowGallery3D2(false);
+      // sampleGallery2以外のページに移動した時はプリロード状態をリセット
+      if (currentPage !== 'sampleGallery') {
+        setIsPreloadingModels(false);
+      }
     }
   }, [currentPage]);
 
@@ -2393,7 +2411,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               position: 'relative',
               paddingTop: '55px'
             }}>
-              <NeonGallery2 />
+              {showGallery3D2 && <NeonGallery2 onPreloadingChange={setIsPreloadingModels} />}
             </div>
           </div>
         );
