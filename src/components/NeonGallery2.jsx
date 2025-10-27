@@ -10,14 +10,14 @@ const neonModels2 = [
     title: "Flamingo Neon Sign",
     price: "¥19,500",
     image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=800&q=80",
-    size: "500mm × 600mm × 50mm",
+    size: "500mm × 600mm",
     tube8mmCount: 2,
     tube6mmCount: 3,
     tube8mmLength: "2,200mm",
     tube6mmLength: "1,700mm",
-    tubeColorOff: "ピンククリア",
+    tubeColorOff: "ホワイト",
     basePlateColor: "透明アクリル",
-    type: "インテリア"
+    type: "屋外 - IP67防水"
   },
   {
     id: 17,
@@ -354,72 +354,86 @@ export default function NeonGallery2({ onPreloadingChange }) {
             </div>
 
             {/* パラメーター情報 */}
-            <div className="parameters-section2">
-              {/* サイズ情報 */}
-              <div className="parameter-group2">
-                <div className="parameter-header2">
-                  <div className="parameter-line2"></div>
-                  <h3 className="parameter-title2">サイズ</h3>
-                </div>
-                <div className="parameter-content2">
-                  <p className="parameter-value2">{currentModel.size}</p>
-                </div>
-              </div>
-
-              <div className="parameter-divider2"></div>
-
-              {/* チューブ情報 */}
-              <div className="parameter-group2">
-                <div className="parameter-header2">
-                  <div className="parameter-line2"></div>
-                  <h3 className="parameter-title2">チューブ仕様</h3>
-                </div>
-                <div className="parameter-content2">
-                  <div className="tube-item2">
-                    <div className="tube-label2">
-                      <div className="tube-dot2"></div>
-                      <span className="tube-name2">8mmチューブ</span>
+            <div className="parameters-section">
+              {/* サイズセクション */}
+              <div className="param-section">
+                <h3 className="param-section-title">サイズ</h3>
+                <div className="param-section-content">
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-item-label-sub">(幅×高さ)</span>
                     </div>
-                    <div className="tube-values2">
-                      <div className="tube-length2">{currentModel.tube8mmLength}</div>
-                      <div className="tube-count2">× {currentModel.tube8mmCount}本</div>
-                    </div>
-                  </div>
-                  <div className="tube-item2">
-                    <div className="tube-label2">
-                      <div className="tube-dot2"></div>
-                      <span className="tube-name2">6mmチューブ</span>
-                    </div>
-                    <div className="tube-values2">
-                      <div className="tube-length2">{currentModel.tube6mmLength}</div>
-                      <div className="tube-count2">× {currentModel.tube6mmCount}本</div>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.size}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="parameter-divider2"></div>
-
-              {/* カラー情報 */}
-              <div className="parameter-group2">
-                <div className="parameter-header2">
-                  <div className="parameter-line2"></div>
-                  <h3 className="parameter-title2">カラー</h3>
-                </div>
-                <div className="parameter-content2">
-                  <div className="color-item2">
-                    <div className="color-label2">
-                      <div className="tube-dot2"></div>
-                      <span className="color-name2">OFF時チューブ</span>
+              {/* チューブ仕様セクション */}
+              <div className="param-section">
+                <h3 className="param-section-title">チューブ仕様</h3>
+                <div className="param-section-content">
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-dot"></span>
+                      <span className="param-item-label">8mmチューブ</span>
                     </div>
-                    <span className="color-value2">{currentModel.tubeColorOff}</span>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.tube8mmCount}本</span>
+                      <span className="param-item-sub">{currentModel.tube8mmLength}</span>
+                    </div>
                   </div>
-                  <div className="color-item2">
-                    <div className="color-label2">
-                      <div className="tube-dot2"></div>
-                      <span className="color-name2">ベースプレート</span>
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-dot"></span>
+                      <span className="param-item-label">6mmチューブ</span>
                     </div>
-                    <span className="color-value2">{currentModel.basePlateColor}</span>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.tube6mmCount}本</span>
+                      <span className="param-item-sub">{currentModel.tube6mmLength}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* カラーセクション */}
+              <div className="param-section">
+                <h3 className="param-section-title">カラー</h3>
+                <div className="param-section-content">
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-dot"></span>
+                      <span className="param-item-label">OFF時チューブ</span>
+                    </div>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.tubeColorOff}</span>
+                    </div>
+                  </div>
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-dot"></span>
+                      <span className="param-item-label">ベースプレート</span>
+                    </div>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.basePlateColor}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* その他仕様セクション */}
+              <div className="param-section">
+                <h3 className="param-section-title">その他仕様</h3>
+                <div className="param-section-content">
+                  <div className="param-item">
+                    <div className="param-item-left">
+                      <span className="param-dot"></span>
+                      <span className="param-item-label">タイプ</span>
+                    </div>
+                    <div className="param-item-right">
+                      <span className="param-item-value">{currentModel.type}</span>
+                    </div>
                   </div>
                 </div>
               </div>
