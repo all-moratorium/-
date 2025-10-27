@@ -1,6 +1,7 @@
 /* ベーススタイル */
 .neon-gallery2 {
   min-height: 100vh;
+  padding: 1.5rem 1rem;
   background: #000000;
 }
 
