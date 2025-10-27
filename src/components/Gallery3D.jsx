@@ -165,7 +165,7 @@ export const modelConfigs = [
     }
 ];
 
-const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentModelIndex = null, onModelChange = null }) => {
+const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentModelIndex = null, onModelChange = null, pauseAutoSwitch = false }) => {
     const containerRef = useRef(null);
     const sceneRef = useRef(null);
     const cameraRef = useRef(null);
@@ -932,27 +932,31 @@ const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentMod
 
     const recordUserInteraction = useCallback(() => {
         lastInteractionTimeRef.current = Date.now();
-        
+
         // 揺れアニメーション中なら停止
         if (wiggleAnimationRef.current) {
             wiggleAnimationRef.current = null;
             targetRotationRef.current.x = 0;
             targetRotationRef.current.y = 0;
         }
-        
+
         if (autoSwitchTimerRef.current) {
             clearTimeout(autoSwitchTimerRef.current);
         }
-        autoSwitchTimerRef.current = setTimeout(() => {
-            if (!isTransitioningRef.current && !isTooltipShownRef.current) {
-                // 自動切り替えでも視点をリセット
-                targetRotationRef.current.x = 0;
-                targetRotationRef.current.y = 0;
-                switchToModel(1);
-            }
-            recordUserInteraction();
-        }, 25000);
-    }, [switchToModel]);
+
+        // pauseAutoSwitchがtrueの場合は自動切り替えタイマーをセットしない
+        if (!pauseAutoSwitch) {
+            autoSwitchTimerRef.current = setTimeout(() => {
+                if (!isTransitioningRef.current && !isTooltipShownRef.current) {
+                    // 自動切り替えでも視点をリセット
+                    targetRotationRef.current.x = 0;
+                    targetRotationRef.current.y = 0;
+                    switchToModel(1);
+                }
+                recordUserInteraction();
+            }, 25000);
+        }
+    }, [switchToModel, pauseAutoSwitch]);
 
     const checkHover = useCallback((event) => {
         // モバイル版では無効化
@@ -1495,6 +1499,20 @@ const Gallery3D = ({ models = [], onPreloadingChange, hideUI = false, currentMod
             return () => clearTimeout(timer);
         }
     }, [currentModelIndex, loading]);
+
+    // pauseAutoSwitchが変更された時の処理
+    useEffect(() => {
+        if (pauseAutoSwitch) {
+            // 詳細表示時は自動切り替えタイマーをクリア
+            if (autoSwitchTimerRef.current) {
+                clearTimeout(autoSwitchTimerRef.current);
+                autoSwitchTimerRef.current = null;
+            }
+        } else {
+            // 詳細非表示時は自動切り替えを再開
+            recordUserInteraction();
+        }
+    }, [pauseAutoSwitch, recordUserInteraction]);
 
     const getCurrentModelInfo = useCallback(() => {
         return currentModelInfo;

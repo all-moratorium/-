@@ -222,6 +222,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
   const [showDetails, setShowDetails] = useState(false);
   const [currentGalleryModel, setCurrentGalleryModel] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const thumbnailRefs = useRef([]);
 
   const currentModel = neonModels2[currentIndex];
 
@@ -315,6 +316,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
                 currentModelIndex={currentIndex}
                 onModelChange={handleModelChange}
                 onPreloadingChange={onPreloadingChange}
+                pauseAutoSwitch={showDetails}
               />
             </div>
           </div>
