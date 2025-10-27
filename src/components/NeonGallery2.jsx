@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Info } from 'lucide-react';
 import Gallery3D, { modelConfigs } from './Gallery3D';
 import './neon-gallery2.css';
 
-// サンプルデータ2
+// サンプルデータ2 (modelConfigsのインデックスに対応)
 const neonModels2 = [
   {
-    id: 16,
+    id: 0,
     title: "Flamingo Neon Sign",
     price: "¥19,500",
     image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=800&q=80",
@@ -17,10 +17,10 @@ const neonModels2 = [
     tube6mmLength: "170cm",
     tubeColorOff: "ホワイト",
     basePlateColor: "透明アクリル",
-    type: "屋外 - IP67防水"
+    type: "インテリア"
   },
   {
-    id: 17,
+    id: 1,
     title: "Sushi Restaurant Sign",
     price: "¥26,000",
     image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&q=80",
@@ -229,6 +229,16 @@ export default function NeonGallery2({ onPreloadingChange }) {
   const handleModelChange = (modelInfo) => {
     setCurrentGalleryModel(modelInfo);
   };
+
+  // currentGalleryModelが変更されたら、currentIndexを同期
+  useEffect(() => {
+    if (currentGalleryModel && currentGalleryModel.id) {
+      const newIndex = modelConfigs.findIndex(m => m.id === currentGalleryModel.id);
+      if (newIndex !== -1 && newIndex !== currentIndex) {
+        setCurrentIndex(newIndex);
+      }
+    }
+  }, [currentGalleryModel]);
 
   const nextModel = () => {
     setCurrentIndex((prev) => (prev + 1) % modelConfigs.length);
