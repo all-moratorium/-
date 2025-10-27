@@ -1044,24 +1044,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
     };
   }, []);
 
-  // sampleGalleryページでのGallery3D遅延表示制御
+  // sampleGalleryページでのNeonGallery2遅延表示制御
   useEffect(() => {
     if (currentPage === 'sampleGallery') {
-      setShowGallery3D(false);
-      const timer = setTimeout(() => {
-        setShowGallery3D(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else {
-      setShowGallery3D(false);
-      // sampleGallery以外のページに移動した時はプリロード状態をリセット
-      setIsPreloadingModels(false);
-    }
-  }, [currentPage]);
-
-  // sampleGallery2ページでのNeonGallery2遅延表示制御
-  useEffect(() => {
-    if (currentPage === 'sampleGallery2') {
       setShowGallery3D2(false);
       const timer = setTimeout(() => {
         setShowGallery3D2(true);
@@ -1069,10 +1054,8 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       return () => clearTimeout(timer);
     } else {
       setShowGallery3D2(false);
-      // sampleGallery2以外のページに移動した時はプリロード状態をリセット
-      if (currentPage !== 'sampleGallery') {
-        setIsPreloadingModels(false);
-      }
+      // sampleGallery以外のページに移動した時はプリロード状態をリセット
+      setIsPreloadingModels(false);
     }
   }, [currentPage]);
 
@@ -2398,19 +2381,6 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               position: 'relative',
               paddingTop: '55px'
             }}>
-              {showGallery3D && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
-            </div>
-          </div>
-        );
-      case 'sampleGallery2':
-        return (
-          <div className="main-content sample-gallery-content">
-            <div className="sample-gallery-3d" style={{
-              width: '100%',
-              height: 'calc(100vh - 55px)',
-              position: 'relative',
-              paddingTop: '55px'
-            }}>
               {showGallery3D2 && <NeonGallery2 onPreloadingChange={setIsPreloadingModels} />}
             </div>
           </div>
@@ -2713,20 +2683,6 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                             <span className="nav-text">サンプルモデル</span>
                             {!sidebarExpanded && (
                                 <div className="tooltip">サンプルモデル</div>
-                            )}
-                        </button>
-                    )}
-                    {isMobile && (
-                        <button className={currentPage === 'sampleGallery2' ? "nav-item active" : "nav-item"} onClick={() => {
-                          setMobileSidebarOpen(false);
-                          setCurrentPage('sampleGallery2');
-                        }}>
-                            <div className="nav-icon">
-                                <Eye />
-                            </div>
-                            <span className="nav-text">サンプルモデル2</span>
-                            {!sidebarExpanded && (
-                                <div className="tooltip">サンプルモデル2</div>
                             )}
                         </button>
                     )}
