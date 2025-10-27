@@ -28,10 +28,10 @@
 
 .model-type2 {
   color: #d4d4d8;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  background:linear-gradient(180deg, rgba(255, 255, 255, 0.22)0%, rgba(255, 255, 255, 0.1) 100%);
-  padding: 0.25rem 0.5rem;
+  background:linear-gradient(180deg, rgba(255, 255, 255, 0.24)0%, rgba(255, 255, 255, 0.12) 100%);
+  padding: 0.3rem 0.6rem;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.35);
 }

@@ -349,9 +349,6 @@ export default function NeonGallery2({ onPreloadingChange }) {
                     <p className="price-label2">価格</p>
                     <p className="price-value2">{currentModel.price}</p>
                   </div>
-                  <div className="type-badge2">
-                    <span className="type-text2">{currentModel.type}</span>
-                  </div>
                 </div>
               </div>
             </div>
