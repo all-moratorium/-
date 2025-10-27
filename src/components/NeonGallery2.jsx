@@ -292,7 +292,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
           <span className="counter-text2">
             {currentIndex + 1} / {modelConfigs.length}
           </span>
-          <span className="model-type2">{currentGalleryModel?.theme || currentModel.type}</span>
+          <span className="model-type2">{currentModel.type}</span>
         </div>
 
         {/* 3Dモデル表示エリア */}

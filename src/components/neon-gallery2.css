@@ -30,9 +30,10 @@
   color: #d4d4d8;
   font-size: 0.875rem;
   font-weight: 500;
-  background: #27272a;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  background:linear-gradient(180deg, rgba(24, 24, 27, 0.88), rgba(24, 24, 27, 0.2));
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #27272a;
 }
 
 /* 3Dモデル表示エリア */
@@ -149,6 +150,34 @@
 .download-button2 {
   flex: 1;
   padding: 0;
+  border: 1px solid rgba(16, 169, 139, 0.7);
+  border-radius: 8px;
+  background: transparent;
+  background-image: linear-gradient(90deg, rgba(16, 169, 139, 0.35) 0%, rgba(16, 169, 139, 0.18) 100%);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size:clamp(11px, 2.9vw, 14px);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0px 0px 15px 0px rgba(16, 169, 139, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+}
+
+.download-button2:hover {
+  background-image: linear-gradient(90deg, rgba(16, 169, 139, 0.45) 0%, rgba(16, 169, 139, 0.28) 100%);
+  box-shadow: 0px 0px 20px 0px rgba(16, 169, 139, 0.7);
+}
+
+/* ダウンロードボタン 白バージョン */
+.download-button2-white {
+  flex: 1;
+  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
@@ -167,7 +196,7 @@
   height: 44px;
 }
 
-.download-button2:hover {
+.download-button2-white:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.2);
@@ -175,13 +204,16 @@
 
 /* インフォボタン */
 .info-button2 {
-  background: #27272a;
-  color: white;
-  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 8px;
-  border: 1px solid #3f3f46;
+  background: transparent;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.29)0%, rgba(255, 255, 255, 0.19) 100%);
+  backdrop-filter: blur(10px);
+  color: white;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.5);
   width: 44px;
   height: 44px;
   display: flex;
@@ -190,9 +222,6 @@
   flex-shrink: 0;
 }
 
-.info-button2:hover {
-  background: #3f3f46;
-}
 
 /* 詳細情報 */
 .details-container2 {
