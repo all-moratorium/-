@@ -241,13 +241,22 @@ export default function NeonGallery2({ onPreloadingChange }) {
     }
   }, [currentGalleryModel]);
 
-  // currentIndexが変更されたら、アクティブなサムネイルにスクロール
+  // currentIndexが変更されたら、アクティブなサムネイルにスクロール（横スクロールのみ）
   useEffect(() => {
-    if (thumbnailRefs.current[currentIndex]) {
-      thumbnailRefs.current[currentIndex].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
+    const thumbnail = thumbnailRefs.current[currentIndex];
+    if (thumbnail && thumbnail.parentElement) {
+      const container = thumbnail.parentElement;
+
+      // コンテナの中央位置を取得
+      const containerRect = container.getBoundingClientRect();
+      const thumbnailRect = thumbnail.getBoundingClientRect();
+
+      // 現在のスクロール位置に、サムネイルを中央に配置するために必要なオフセットを追加
+      const scrollLeft = container.scrollLeft + (thumbnailRect.left - containerRect.left) - (containerRect.width / 2) + (thumbnailRect.width / 2);
+
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
       });
     }
   }, [currentIndex]);
