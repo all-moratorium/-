@@ -13,8 +13,8 @@ const neonModels2 = [
     size: "500mm × 600mm",
     tube8mmCount: 2,
     tube6mmCount: 3,
-    tube8mmLength: "2,200mm",
-    tube6mmLength: "1,700mm",
+    tube8mmLength: "220cm",
+    tube6mmLength: "170cm",
     tubeColorOff: "ホワイト",
     basePlateColor: "透明アクリル",
     type: "屋外 - IP67防水"
@@ -27,8 +27,8 @@ const neonModels2 = [
     size: "750mm × 400mm × 60mm",
     tube8mmCount: 4,
     tube6mmCount: 2,
-    tube8mmLength: "3,100mm",
-    tube6mmLength: "1,600mm",
+    tube8mmLength: "310cm",
+    tube6mmLength: "160cm",
     tubeColorOff: "レッドクリア",
     basePlateColor: "マットブラック",
     type: "店舗サイン"
@@ -41,8 +41,8 @@ const neonModels2 = [
     size: "450mm × 700mm × 55mm",
     tube8mmCount: 2,
     tube6mmCount: 4,
-    tube8mmLength: "2,000mm",
-    tube6mmLength: "2,200mm",
+    tube8mmLength: "200cm",
+    tube6mmLength: "220cm",
     tubeColorOff: "グリーンクリア",
     basePlateColor: "透明アクリル",
     type: "インテリア"
@@ -55,8 +55,8 @@ const neonModels2 = [
     size: "400mm × 550mm × 50mm",
     tube8mmCount: 2,
     tube6mmCount: 2,
-    tube8mmLength: "1,800mm",
-    tube6mmLength: "1,500mm",
+    tube8mmLength: "180cm",
+    tube6mmLength: "150cm",
     tubeColorOff: "ピンククリア",
     basePlateColor: "マットホワイト",
     type: "店舗サイン"
@@ -69,8 +69,8 @@ const neonModels2 = [
     size: "600mm × 350mm × 55mm",
     tube8mmCount: 3,
     tube6mmCount: 2,
-    tube8mmLength: "2,400mm",
-    tube6mmLength: "1,400mm",
+    tube8mmLength: "240cm",
+    tube6mmLength: "140cm",
     tubeColorOff: "ブルークリア",
     basePlateColor: "マットブラック",
     type: "店舗サイン"
@@ -83,8 +83,8 @@ const neonModels2 = [
     size: "700mm × 400mm × 50mm",
     tube8mmCount: 5,
     tube6mmCount: 3,
-    tube8mmLength: "3,500mm",
-    tube6mmLength: "1,800mm",
+    tube8mmLength: "350cm",
+    tube6mmLength: "180cm",
     tubeColorOff: "マルチカラー",
     basePlateColor: "透明アクリル",
     type: "インテリア"
@@ -97,8 +97,8 @@ const neonModels2 = [
     size: "500mm × 400mm × 50mm",
     tube8mmCount: 2,
     tube6mmCount: 3,
-    tube8mmLength: "2,000mm",
-    tube6mmLength: "1,700mm",
+    tube8mmLength: "200cm",
+    tube6mmLength: "170cm",
     tubeColorOff: "イエロークリア",
     basePlateColor: "マットブラック",
     type: "インテリア"
@@ -111,8 +111,8 @@ const neonModels2 = [
     size: "550mm × 450mm ",
     tube8mmCount: 3,
     tube6mmCount: 3,
-    tube8mmLength: "2,600mm",
-    tube6mmLength: "1,900mm",
+    tube8mmLength: "260cm",
+    tube6mmLength: "190cm",
     tubeColorOff: "オレンジクリア",
     basePlateColor: "ウッド調",
     type: "店舗サイン"
@@ -125,8 +125,8 @@ const neonModels2 = [
     size: "800mm × 300mm",
     tube8mmCount: 4,
     tube6mmCount: 2,
-    tube8mmLength: "3,200mm",
-    tube6mmLength: "1,200mm",
+    tube8mmLength: "320cm",
+    tube6mmLength: "120cm",
     tubeColorOff: "ブルークリア",
     basePlateColor: "透明アクリル",
     type: "インテリア"
@@ -139,8 +139,8 @@ const neonModels2 = [
     size: "400mm × 600mm",
     tube8mmCount: 2,
     tube6mmCount: 2,
-    tube8mmLength: "1,900mm",
-    tube6mmLength: "1,600mm",
+    tube8mmLength: "190cm",
+    tube6mmLength: "160cm",
     tubeColorOff: "パープルクリア",
     basePlateColor: "マットブラック",
     type: "店舗サイン"
@@ -153,8 +153,8 @@ const neonModels2 = [
     size: "500mm × 550mm ",
     tube8mmCount: 3,
     tube6mmCount: 2,
-    tube8mmLength: "2,300mm",
-    tube6mmLength: "1,500mm",
+    tube8mmLength: "230cm",
+    tube6mmLength: "150cm",
     tubeColorOff: "ブルークリア",
     basePlateColor: "ウッド調",
     type: "インテリア"
@@ -167,8 +167,8 @@ const neonModels2 = [
     size: "650mm × 400mm",
     tube8mmCount: 3,
     tube6mmCount: 3,
-    tube8mmLength: "2,700mm",
-    tube6mmLength: "1,800mm",
+    tube8mmLength: "270cm",
+    tube6mmLength: "180cm",
     tubeColorOff: "グリーンクリア",
     basePlateColor: "マットホワイト",
     type: "店舗サイン"
@@ -181,8 +181,8 @@ const neonModels2 = [
     size: "400mm × 700mm",
     tube8mmCount: 3,
     tube6mmCount: 4,
-    tube8mmLength: "2,500mm",
-    tube6mmLength: "2,000mm",
+    tube8mmLength: "250cm",
+    tube6mmLength: "200cm",
     tubeColorOff: "ホワイトクリア",
     basePlateColor: "マットブラック",
     type: "インテリア"
@@ -195,8 +195,8 @@ const neonModels2 = [
     size: "500mm × 500mm",
     tube8mmCount: 2,
     tube6mmCount: 3,
-    tube8mmLength: "2,000mm",
-    tube6mmLength: "1,800mm",
+    tube8mmLength: "200cm",
+    tube6mmLength: "180cm",
     tubeColorOff: "ピンククリア",
     basePlateColor: "透明アクリル",
     type: "店舗サイン"
@@ -209,8 +209,8 @@ const neonModels2 = [
     size: "700mm × 350mm",
     tube8mmCount: 3,
     tube6mmCount: 2,
-    tube8mmLength: "2,800mm",
-    tube6mmLength: "1,400mm",
+    tube8mmLength: "280cm",
+    tube6mmLength: "140cm",
     tubeColorOff: "ブルークリア",
     basePlateColor: "ウッド調",
     type: "インテリア"
@@ -328,6 +328,10 @@ export default function NeonGallery2({ onPreloadingChange }) {
               <Info size={20} />
             </button>
           </div>
+
+          <p className="download-note2">
+            ダウンロードしたファイルはネオン下絵、または色仕様のカスタマイズの「読み込む」から編集可能です。
+          </p>
         </div>
 
         {/* 詳細情報 */}

@@ -129,7 +129,7 @@
 
 /* タイトルとアクションボタン */
 .title-actions2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .model-title2 {
@@ -200,6 +200,21 @@
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* ダウンロード補足テキスト */
+.download-note2 {
+  color:rgb(177, 177, 177);
+  font-size: clamp(9px, 2vw, 10px);
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 /* インフォボタン */
