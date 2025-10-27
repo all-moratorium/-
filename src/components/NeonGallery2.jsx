@@ -457,7 +457,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
               className={`thumbnail2 ${index === currentIndex ? 'thumbnail-active2' : ''}`}
             >
               <img
-                src={model.imagePath}
+                src={`/neon sample on image/${model.name}　サンプルイメージ.png`}
                 alt={model.name}
                 className="thumbnail-image2"
               />
