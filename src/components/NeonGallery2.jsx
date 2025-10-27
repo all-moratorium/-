@@ -241,6 +241,17 @@ export default function NeonGallery2({ onPreloadingChange }) {
     }
   }, [currentGalleryModel]);
 
+  // currentIndexが変更されたら、アクティブなサムネイルにスクロール
+  useEffect(() => {
+    if (thumbnailRefs.current[currentIndex]) {
+      thumbnailRefs.current[currentIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [currentIndex]);
+
   const nextModel = () => {
     setCurrentIndex((prev) => (prev + 1) % modelConfigs.length);
     setShowDetails(false);
@@ -462,6 +473,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
           {modelConfigs.map((model, index) => (
             <button
               key={model.id}
+              ref={(el) => (thumbnailRefs.current[index] = el)}
               onClick={() => {
                 setCurrentIndex(index);
                 setShowDetails(false);
