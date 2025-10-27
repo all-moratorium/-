@@ -341,7 +341,7 @@
 
 .param-section-title {
   color: #ffffff;
-  font-size: 0.9375rem;
+  font-size: clamp(15px, 2.9vw, 18px);
   font-weight: 600;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -383,7 +383,7 @@
 
 .param-item-label {
   color: #a1a1aa;
-  font-size: 0.9375rem;
+  font-size: clamp(16px, 2.9vw, 17px);
   font-weight: 500;
 }
 
@@ -403,14 +403,14 @@
 
 .param-item-value {
   color: #ffffff;
-  font-size: 1rem;
+  font-size: clamp(16px, 2.9vw, 18px);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
 .param-item-sub {
   color: #d4d4d8;
-  font-size: 0.9375rem;
+  font-size: clamp(16px, 2.9vw, 18px);
   font-weight: 600;
 }
 
