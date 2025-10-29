@@ -362,7 +362,7 @@ export default function NeonGallery2({ onPreloadingChange }) {
           </div>
 
           <p className="download-note2">
-            ダウンロードしたファイルはネオン下絵、または色仕様のカスタマイズの「読み込む」から編集可能です。
+            ダウンロードしたファイルはネオン下絵、または色仕様のカスタマイズの「読み込む」ボタンから読み込んだのち、編集や注文が可能です。
           </p>
         </div>
 
