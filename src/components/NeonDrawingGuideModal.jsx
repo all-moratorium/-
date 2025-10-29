@@ -340,7 +340,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
               <div className="neon-drawing-modal-content">
                 <div className="neon-drawing-video-section" onMouseMove={handleMouseMove}>
                   <div className="neon-drawing-video-container" ref={containerRef}>
-                    <video 
+                    <div className="video-loader-wrapper">
+                      <div className="video-loader"></div>
+                    </div>
+                    <video
                       ref={videoRef}
                       src="/ネオン下絵　ガイドモーダル/ネオンガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -352,6 +355,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={handleVideoClick}
+                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
                     />
                   </div>
                   <div className={`neon-drawing-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>

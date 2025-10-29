@@ -276,7 +276,10 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
               <div className="customize-modal-content">
                 <div className="customize-video-section" onMouseMove={handleMouseMove}>
                   <div className="customize-video-container" ref={containerRef}>
-                    <video 
+                    <div className="video-loader-wrapper">
+                      <div className="video-loader"></div>
+                    </div>
+                    <video
                       ref={videoRef}
                       src="/ネオン下絵　ガイドモーダル/カスタマイズガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -288,6 +291,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={handleVideoClick}
+                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
                     />
                   </div>
                   <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
@@ -386,7 +390,10 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
               <div className="customize-modal-content">
                 <div className="customize-video-section" onMouseMove={handleMouseMove}>
                   <div className="customize-video-container" ref={containerRef2}>
-                    <video 
+                    <div className="video-loader-wrapper">
+                      <div className="video-loader"></div>
+                    </div>
+                    <video
                       ref={videoRef2}
                       src="/ネオン下絵　ガイドモーダル/カスタマイズガイド2.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -398,6 +405,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={handleVideoClick}
+                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
                     />
                   </div>
                   <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
