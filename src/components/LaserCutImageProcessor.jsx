@@ -2296,7 +2296,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   {/* 左側：ロゴとSNS */}
                   <div className="footer-logo-section">
                     <div className="footer-logo">
-                      <img src="/ホーム画像/logo icon big text ki.png" alt="GG NEON" className="neon-logo-image" />
+                      <img src="/ホーム画像/logo icon big text ki.webp" alt="GG NEON" className="neon-logo-image" />
                       <p className="logo-subtitle">カスタムLEDネオンサインの専門店</p>
                     </div>
                     <div className="social-icons">
