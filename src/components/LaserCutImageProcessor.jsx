@@ -2296,7 +2296,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                   {/* 左側：ロゴとSNS */}
                   <div className="footer-logo-section">
                     <div className="footer-logo">
-                      <h2 className="neon-logo">GG NEON</h2>
+                      <img src="/ホーム画像/logo icon big text ki.png" alt="GG NEON" className="neon-logo-image" />
                       <p className="logo-subtitle">カスタムLEDネオンサインの専門店</p>
                     </div>
                     <div className="social-icons">
@@ -2637,7 +2637,9 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             </button>
             <div className="mobile-menu-button-protection" onClick={(e) => e.stopPropagation()}></div>
           </div>
-          <div className="mobile-header-logo">ロゴ</div>
+          <div className="mobile-header-logo">
+            <img src="/ホーム画像/logo icon big text ki.png" alt="GG NEON" className="mobile-logo-image" />
+          </div>
         </div>
 
         {/* Mobile Sidebar Overlay */}
@@ -2650,7 +2652,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="logo-container">
                     {sidebarExpanded && (
                         <div className="logo-area">
-                            <span className="logo">NEON</span>
+                            <img src="/ホーム画像/logo mini.webp" alt="NEON Logo" className="logo-image" />
                         </div>
                     )}
                     <button 
