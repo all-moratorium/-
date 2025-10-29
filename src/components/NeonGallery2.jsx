@@ -489,11 +489,15 @@ export default function NeonGallery2({ onPreloadingChange }) {
               }}
               className={`thumbnail2 ${index === currentIndex ? 'thumbnail-active2' : ''}`}
             >
-              <img
-                src={`/neon sample on image/${model.name}　サンプルイメージ.png`}
-                alt={model.name}
-                className="thumbnail-image2"
-              />
+              <div className="thumbnail-image-wrapper2">
+                <div className="thumbnail-loader2"></div>
+                <img
+                  src={`/neon sample on image/${model.name}　サンプルイメージ.png`}
+                  alt={model.name}
+                  className="thumbnail-image2"
+                  onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                />
+              </div>
             </button>
           ))}
         </div>
