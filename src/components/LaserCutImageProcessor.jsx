@@ -2638,7 +2638,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             <div className="mobile-menu-button-protection" onClick={(e) => e.stopPropagation()}></div>
           </div>
           <div className="mobile-header-logo">
-            <img src="/ホーム画像/logo icon big text ki.png" alt="GG NEON" className="mobile-logo-image" />
+            <img src="/ホーム画像/logo mini.webp" alt="GG NEON" className="mobile-logo-image" />
           </div>
         </div>
 

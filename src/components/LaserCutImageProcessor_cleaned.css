@@ -683,6 +683,7 @@
 
 .logo-image {
   width: auto;
+  margin-top: 5px;
   height: 125px;
   object-fit: contain;
 }
@@ -3059,9 +3060,9 @@ canvas {
   }
 
   .mobile-logo-image {
-    height: 40px;
-    margin-top: 6px;
     width: auto;
+    height: 110px;
+    margin-top: 5px;
     object-fit: contain;
   }
 
