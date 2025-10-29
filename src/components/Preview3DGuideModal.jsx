@@ -262,7 +262,10 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
               <div className="preview3d-modal-content">
                 <div className="preview3d-video-section" onMouseMove={handleMouseMove}>
                   <div className="preview3d-video-container" ref={containerRef}>
-                    <video 
+                    <div className="video-loader-wrapper">
+                      <div className="video-loader"></div>
+                    </div>
+                    <video
                       ref={videoRef}
                       src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -274,6 +277,7 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={handleVideoClick}
+                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
                     />
                   </div>
                   <div className={`preview3d-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>

@@ -264,7 +264,10 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
               <div className="text-generator-modal-content">
                 <div className="text-generator-video-section" onMouseMove={handleMouseMove}>
                   <div className="text-generator-video-container" ref={containerRef}>
-                    <video 
+                    <div className="video-loader-wrapper">
+                      <div className="video-loader"></div>
+                    </div>
+                    <video
                       ref={videoRef}
                       src="/ネオン下絵　ガイドモーダル/サンプル動画テキスト.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -276,6 +279,7 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                       disablePictureInPicture
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={handleVideoClick}
+                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
                     />
                   </div>
                   <div className={`text-generator-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
