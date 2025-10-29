@@ -2143,34 +2143,14 @@
   text-decoration: none;
 }
 
-/* Facebook */
-.social-icons a[href="#facebook"] {
-  background: #1877f2;
-  color: white;
-}
-
-/* Instagram */
-.social-icons a[href="#instagram"] {
-  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-  color: white;
-}
-
-/* X (Twitter) */
-.social-icons a[href="#x"] {
-  background: #000000;
-  color: white;
-}
-
-/* LinkedIn */
-.social-icons a[href="#linkedin"] {
-  background: #0077b5;
-  color: white;
-}
-
-/* TikTok */
+/* All Social Icons - Black on White */
+.social-icons a[href="#facebook"],
+.social-icons a[href="#instagram"],
+.social-icons a[href="#x"],
+.social-icons a[href="#linkedin"],
 .social-icons a[href="#tiktok"] {
   background: #000000;
-  color: white;
+  color: #ffffff;
 }
 
 .social-icons a:hover {
