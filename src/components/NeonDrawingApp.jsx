@@ -190,6 +190,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [isPointDeleteMode, setIsPointDeleteMode] = useState(false); // 点削除モード
     const [isNewPathDisabled, setIsNewPathDisabled] = useState(false); // 新しいパスボタンの無効化状態
 
+    // 点結合モード
+    const [isMergeMode, setIsMergeMode] = useState(false);
+    const [selectedPointsForMerge, setSelectedPointsForMerge] = useState([]); // 結合する2点を保存
+    const [hoveredPointForMerge, setHoveredPointForMerge] = useState(null); // ホバー中の点
+
     // 背景画像
     const [backgroundImage, setBackgroundImage] = useState(initialDrawingState.backgroundImage);
     const [loadedBackgroundImage, setLoadedBackgroundImage] = useState(null);
@@ -852,10 +857,27 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 pathPoints.forEach((p, ptIdx) => {
                     ctx.beginPath();
                     let pointFillStyle;
-                    
-                    // 点修正モードの場合は全ての点を青色で表示
-                    if (isModifyingPoints) {
-                        pointFillStyle = '#3b82f6'; // 点修正モード時は青
+
+                    // 点結合モードで選択された点
+                    const isSelectedForMerge = isMergeMode && selectedPointsForMerge.some(
+                        sp => sp.pathIndex === pathIdx && sp.pointIndex === ptIdx
+                    );
+
+                    // 点結合モードでホバー中の点
+                    const isHoveredForMerge = isMergeMode && hoveredPointForMerge &&
+                        hoveredPointForMerge.pathIndex === pathIdx && hoveredPointForMerge.pointIndex === ptIdx;
+
+                    // 点修正モード または 点結合モードの場合は全ての点を青色で表示
+                    if (isModifyingPoints || isMergeMode) {
+                        pointFillStyle = '#3b82f6'; // 点修正モード・点結合モード時は青
+                        // ホバー中の点はオレンジ色
+                        if (isHoveredForMerge && !isSelectedForMerge) {
+                            pointFillStyle = '#f59e0b'; // ホバー時はオレンジ
+                        }
+                        // 点結合モードで選択された点は緑色
+                        if (isSelectedForMerge) {
+                            pointFillStyle = '#10b981'; // 選択時は緑
+                        }
                     } else {
                         // パスのモードに応じて点の色を変更
                         if (pathMode === 'fill') {
@@ -868,7 +890,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         if (activePoint && activePoint.pathIndex === pathIdx && activePoint.pointIndex === ptIdx) {
                             pointFillStyle = '#3b82f6'; // アクティブ時は青
                         }
-                        
+
                         // 削除モードの場合は赤色で表示
                         if (isPathDeleteMode || isPointDeleteMode) { // 点削除モード時も赤
                             pointFillStyle = '#ef4444'; // 削除モード時は赤
@@ -949,7 +971,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, showRectangleModal, rectangleSize, showPoints]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, showPoints]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -2860,11 +2882,80 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             setLastPanX(e.clientX);
             setLastPanY(e.clientY);
         } else if (e.button === 0) { // 左クリック
-            if (isModifyingPoints) {
+            if (isMergeMode) {
                 let closestPoint = null;
                 let closestDistance = Infinity;
                 const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
-                
+
+                // 全てのパスの点をチェックして最も近い点を見つける
+                for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
+                    if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
+                    for (let ptIdx = 0; ptIdx < paths[pathIdx].points.length; ptIdx++) {
+                        const p = paths[pathIdx].points[ptIdx];
+                        const distance = Math.sqrt(
+                            Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
+                        );
+                        // ヒット判定内で最も近い点を記録
+                        if (distance < hitRadius && distance < closestDistance) {
+                            closestDistance = distance;
+                            closestPoint = { pathIndex: pathIdx, pointIndex: ptIdx, x: p.x, y: p.y };
+                        }
+                    }
+                }
+
+                // 最も近い点があれば選択リストに追加
+                if (closestPoint) {
+                    // 点結合処理が行われたことをマーク（handleMouseClickをブロックするため）
+                    didDragRef.current = true;
+
+                    setSelectedPointsForMerge(prev => {
+                        // 既に選択されている点は無視
+                        const alreadySelected = prev.some(
+                            p => p.pathIndex === closestPoint.pathIndex && p.pointIndex === closestPoint.pointIndex
+                        );
+                        if (alreadySelected) return prev;
+
+                        const newSelection = [...prev, closestPoint];
+
+                        // 2点選択されたら自動的に結合実行
+                        if (newSelection.length === 2) {
+                            const [point1, point2] = newSelection;
+
+                            // 即座にパスを更新
+                            setPaths(prevPaths => {
+                                const newPaths = JSON.parse(JSON.stringify(prevPaths));
+                                newPaths[point1.pathIndex].points[point1.pointIndex] = {
+                                    x: newPaths[point2.pathIndex].points[point2.pointIndex].x,
+                                    y: newPaths[point2.pathIndex].points[point2.pointIndex].y
+                                };
+                                saveToHistory(newPaths, currentPathIndex, drawMode, drawingType);
+                                return newPaths;
+                            });
+
+                            // 選択をクリア
+                            setSelectedPointsForMerge([]);
+
+                            // 即座に点結合モードを解除（handleMouseClickが実行される前に）
+                            setIsMergeMode(false);
+                            setHoveredPointForMerge(null);
+
+                            // 元の点表示状態に戻す
+                            if (originalShowPointsState !== null) {
+                                setShowPoints(originalShowPointsState);
+                                setOriginalShowPointsState(null);
+                            }
+
+                            return newSelection;
+                        }
+
+                        return newSelection;
+                    });
+                }
+            } else if (isModifyingPoints) {
+                let closestPoint = null;
+                let closestDistance = Infinity;
+                const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+
                 // 全てのパスの点をチェックして最も近い点を見つける
                 for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
                     if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
@@ -2880,7 +2971,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                     }
                 }
-                
+
                 // 最も近い点があれば選択
                 if (closestPoint) {
                     setActivePoint(closestPoint);
@@ -3047,15 +3138,50 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
             }
         }
-    }, [offsetX, offsetY, scale, paths, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory]);
+    }, [offsetX, offsetY, scale, paths, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory, originalShowPointsState]);
 
     const handleMouseMove = useCallback((e) => {
         // モーダル表示中はパン操作のみ許可
         if (showRectangleModal && !isPanning) return;
-        
+
         const canvas = canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
+
+        // 点結合モード時のホバー処理
+        if (isMergeMode && !isPanning && activePoint === null) {
+            const mouseContentX = (e.clientX - rect.left - offsetX) / scale;
+            const mouseContentY = (e.clientY - rect.top - offsetY) / scale;
+
+            let closestPoint = null;
+            let closestDistance = Infinity;
+            const hitRadius = Math.max(POINT_HIT_RADIUS / scale, MIN_HIT_RADIUS);
+
+            // 全てのパスの点をチェックして最も近い点を見つける
+            for (let pathIdx = 0; pathIdx < paths.length; pathIdx++) {
+                if (!paths[pathIdx] || !Array.isArray(paths[pathIdx].points)) continue;
+                for (let ptIdx = 0; ptIdx < paths[pathIdx].points.length; ptIdx++) {
+                    const p = paths[pathIdx].points[ptIdx];
+                    const distance = Math.sqrt(
+                        Math.pow(mouseContentX - p.x, 2) + Math.pow(mouseContentY - p.y, 2)
+                    );
+                    if (distance < hitRadius && distance < closestDistance) {
+                        closestDistance = distance;
+                        closestPoint = { pathIndex: pathIdx, pointIndex: ptIdx };
+                    }
+                }
+            }
+
+            // ホバー中の点を更新
+            if (closestPoint) {
+                setHoveredPointForMerge(closestPoint);
+            } else {
+                setHoveredPointForMerge(null);
+            }
+        } else if (!isMergeMode && hoveredPointForMerge !== null) {
+            // 点結合モードを抜けたらホバー状態をクリア
+            setHoveredPointForMerge(null);
+        }
 
         if (isPanning) { // パン操作中
             const dx = e.clientX - lastPanX;
@@ -3088,7 +3214,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             });
             didDragRef.current = true;
         }
-    }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale]);
+    }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale, isMergeMode, hoveredPointForMerge, paths]);
 
     const handleMouseUp = useCallback(() => {
         // モーダル表示中でもパン操作終了は許可
@@ -3329,15 +3455,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const handleMouseClick = useCallback((e) => {
         // モーダル表示中はキャンバス操作を無効化
         if (showRectangleModal) return;
-        
-        // 右クリック、パン中、ドラッグ中、修正モード、パス削除モード、点削除モード、土台モードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
-        const isModeSelecting = !isModifyingPoints && !isPathDeleteMode && !isPointDeleteMode && 
+
+        // 右クリック、パン中、ドラッグ中、修正モード、点結合モード、パス削除モード、点削除モード、土台モードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
+        const isModeSelecting = !isModifyingPoints && !isMergeMode && !isPathDeleteMode && !isPointDeleteMode &&
                                (drawMode !== 'stroke' && drawMode !== 'fill');
-        
-        // 通常の描画モードではドラッグ判定を無効化（点修正・削除モード以外）
-        const shouldBlockDrag = (isModifyingPoints || isPathDeleteMode || isPointDeleteMode) && didDragRef.current;
-        
-        if (e.button !== 0 || isPanning || shouldBlockDrag || isModifyingPoints || isPathDeleteMode || isPointDeleteMode || 
+
+        // ドラッグが行われた場合は常にブロック（モード解除後も有効）
+        if (didDragRef.current) {
+            return;
+        }
+
+        if (e.button !== 0 || isPanning || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode ||
             (drawMode === 'fill' && showFillDrawingTypeModal) || isModeSelecting) {
             return;
         }
@@ -3428,7 +3556,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             saveToHistory(newPaths, actualPathIndex, drawMode, drawingType); 
             return newPaths;
         });
-    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal, showPoints]); 
+    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal, showPoints]); 
 
     const handlePointerUp = useCallback((e) => {
         e.preventDefault();
@@ -3462,7 +3590,66 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setActivePoint(null); // アクティブな点をクリア
         setIsPathDeleteMode(false); // パス削除モードを無効化
         setIsPointDeleteMode(false); // 点削除モードを無効化
+        setIsMergeMode(false); // 点結合モードを無効化
+        setSelectedPointsForMerge([]); // 選択中の点をクリア
     }, [showPoints, originalShowPointsState]);
+
+    // 点結合モードの切り替え
+    const toggleMergeMode = useCallback(() => {
+        setIsMergeMode(prev => {
+            const newValue = !prev;
+
+            // まず他のモードをすべて無効化
+            setIsModifyingPoints(false);
+            setIsPathDeleteMode(false);
+            setIsPointDeleteMode(false);
+            setActivePoint(null);
+
+            if (newValue) {
+                // モードON: 点を表示
+                setOriginalShowPointsState(showPoints);
+                if (!showPoints) {
+                    setShowPoints(true);
+                }
+                setSelectedPointsForMerge([]); // 選択中の点をクリア
+                setHoveredPointForMerge(null); // ホバー状態をクリア
+            } else {
+                // モードOFF: 元の表示状態に戻す
+                if (originalShowPointsState !== null) {
+                    setShowPoints(originalShowPointsState);
+                    setOriginalShowPointsState(null);
+                }
+                setSelectedPointsForMerge([]); // 選択中の点をクリア
+                setHoveredPointForMerge(null); // ホバー状態をクリア
+            }
+            return newValue;
+        });
+    }, [showPoints, originalShowPointsState]);
+
+    // 点結合の実行
+    const mergePoints = useCallback(() => {
+        if (selectedPointsForMerge.length !== 2) return;
+
+        const [point1, point2] = selectedPointsForMerge;
+
+        setPaths(prevPaths => {
+            const newPaths = JSON.parse(JSON.stringify(prevPaths));
+
+            // 1つ目の点を2つ目の点の位置に移動
+            newPaths[point1.pathIndex].points[point1.pointIndex] = {
+                x: newPaths[point2.pathIndex].points[point2.pointIndex].x,
+                y: newPaths[point2.pathIndex].points[point2.pointIndex].y
+            };
+
+            saveToHistory(newPaths, currentPathIndex, drawMode, drawingType);
+            return newPaths;
+        });
+
+        setSelectedPointsForMerge([]);
+        setIsMergeMode(false);
+        setShowPoints(originalShowPointsState);
+        setOriginalShowPointsState(null);
+    }, [selectedPointsForMerge, saveToHistory, currentPathIndex, drawMode, drawingType, originalShowPointsState]);
 
     // パス削除モードの切り替え
     const togglePathDeleteMode = useCallback(() => {
@@ -3585,7 +3772,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // カーソルクラスを決定
     const getCursorClass = () => {
         if (isPanning) return 'cursor-pan';
-        if (isModifyingPoints) return 'cursor-modify';
+        if (isModifyingPoints || isMergeMode) return 'cursor-modify';
         if (isPathDeleteMode || isPointDeleteMode) return 'cursor-delete';
         return 'cursor-draw';
     };
@@ -3772,7 +3959,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* ステータスメッセージ表示エリア */}
                     <div className="status-message-area">
                         <div className="status-message">
-                            {isModifyingPoints ? '点修正モードアクティブ中' :
+                            {isMergeMode ? `点結合モードアクティブ中: ${selectedPointsForMerge.length}/2点選択中` :
+                             isModifyingPoints ? '点修正モードアクティブ中' :
                              isPathDeleteMode ? 'パス削除モードアクティブ中' :
                              isPointDeleteMode ? '点削除モードアクティブ中' :
                              drawMode === 'stroke' ? `チューブパス${currentPathIndex + 1}描画中` :
@@ -3889,6 +4077,22 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             パス削除
                         </button>
                     </div>
+
+                    {/* 点結合ツール */}
+                    {sidebarVisible && (
+                        <div className="merge-tool-container">
+                            <button
+                                onClick={toggleMergeMode}
+                                className={`edit-mode-button ${
+                                    isMergeMode
+                                        ? 'button-blue'
+                                        : 'button-secondary'
+                                }`}
+                            >
+                                点結合
+                            </button>
+                        </div>
+                    )}
 
                     {/* 拡大縮小ツール */}
                     {sidebarVisible && (

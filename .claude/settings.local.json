@@ -38,7 +38,8 @@
       "WebFetch(domain:theta-smoky.vercel.app)",
       "Bash(gunzip:*)",
       "Bash(git remote set-url:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.yellowpop.com)"
     ],
     "deny": []
   }
