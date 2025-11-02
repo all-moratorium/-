@@ -221,6 +221,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 自動長方形生成モーダル状態
     const [showRectangleModal, setShowRectangleModal] = useState(false);
     const [rectangleSize, setRectangleSize] = useState(5); // デフォルト5cm
+    const [rectangleRadius, setRectangleRadius] = useState(1); // デフォルト1cm (角の半径)
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -943,14 +944,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 if (hasValidPoints) {
                     // cmをピクセルに変換 (100px = 4cm基準)
                     const marginPx = (rectangleSize * 100) / 4;
-                    
+                    const radiusPx = (rectangleRadius * 100) / 4;
+
                     const rectangleBase = {
                         x: minX - marginPx,
                         y: minY - marginPx,
                         width: (maxX - minX) + (marginPx * 2),
                         height: (maxY - minY) + (marginPx * 2)
                     };
-                    
+
                     ctx.save();
                     // 境界線を緑色のグローで描画（土台と同じエフェクト）
                     ctx.globalAlpha = 0.85;
@@ -959,19 +961,37 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     ctx.strokeStyle = '#10b981';
                     ctx.lineWidth = lineWidths.fillBorder / scale;
                     ctx.setLineDash([]); // 実線
-                    
-                    // 長方形プレビュー
+
+                    // 長方形プレビュー（角丸対応）
                     ctx.beginPath();
-                    ctx.rect(rectangleBase.x, rectangleBase.y, rectangleBase.width, rectangleBase.height);
+                    const { x, y, width, height } = rectangleBase;
+                    const r = Math.min(radiusPx, width / 2, height / 2);
+
+                    if (r <= 0) {
+                        // 角丸なし
+                        ctx.rect(x, y, width, height);
+                    } else {
+                        // 角丸あり
+                        ctx.moveTo(x + r, y);
+                        ctx.lineTo(x + width - r, y);
+                        ctx.arcTo(x + width, y, x + width, y + r, r);
+                        ctx.lineTo(x + width, y + height - r);
+                        ctx.arcTo(x + width, y + height, x + width - r, y + height, r);
+                        ctx.lineTo(x + r, y + height);
+                        ctx.arcTo(x, y + height, x, y + height - r, r);
+                        ctx.lineTo(x, y + r);
+                        ctx.arcTo(x, y, x + r, y, r);
+                        ctx.closePath();
+                    }
                     ctx.stroke();
-                    
+
                     ctx.restore();
                 }
             }
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, showPoints]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showPoints]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -2376,39 +2396,139 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         };
     }, [calculatePathsBounds]);
 
-    // 長方形の辺上に密に点を追加する関数
-    const subdivideRectangleEdges = useCallback((rectangleBase, spacing = 10) => {
+    // 長方形の辺上に密に点を追加する関数（角丸対応）
+    const subdivideRectangleEdges = useCallback((rectangleBase, spacing = 10, radiusCm = 0) => {
         const points = [];
         const { x, y, width, height } = rectangleBase;
-        
-        // 上辺（左から右へ）
-        const topPoints = Math.max(2, Math.ceil(width / spacing));
-        for (let i = 0; i < topPoints; i++) {
-            const ratio = i / (topPoints - 1);
-            points.push({ x: x + (width * ratio), y: y });
+
+        // cmをピクセルに変換 (100px = 4cm基準)
+        const radiusPx = (radiusCm * 100) / 4;
+        const effectiveRadius = Math.min(radiusPx, width / 2, height / 2); // 半径が大きすぎる場合は制限
+
+        if (effectiveRadius <= 0) {
+            // 角丸なしの場合、従来の処理
+            const topPoints = Math.max(2, Math.ceil(width / spacing));
+            for (let i = 0; i < topPoints; i++) {
+                const ratio = i / (topPoints - 1);
+                points.push({ x: x + (width * ratio), y: y });
+            }
+
+            const rightPoints = Math.max(2, Math.ceil(height / spacing));
+            for (let i = 1; i < rightPoints; i++) {
+                const ratio = i / (rightPoints - 1);
+                points.push({ x: x + width, y: y + (height * ratio) });
+            }
+
+            const bottomPoints = Math.max(2, Math.ceil(width / spacing));
+            for (let i = 1; i < bottomPoints; i++) {
+                const ratio = i / (bottomPoints - 1);
+                points.push({ x: x + width - (width * ratio), y: y + height });
+            }
+
+            const leftPoints = Math.max(2, Math.ceil(height / spacing));
+            for (let i = 1; i < leftPoints - 1; i++) {
+                const ratio = i / (leftPoints - 1);
+                points.push({ x: x, y: y + height - (height * ratio) });
+            }
+        } else {
+            // 角丸ありの場合
+            const r = effectiveRadius;
+
+            // 上辺（左の角丸終了点から右の角丸開始点まで）
+            const topStart = x + r;
+            const topEnd = x + width - r;
+            const topLength = topEnd - topStart;
+            if (topLength > 0) {
+                const topPoints = Math.max(2, Math.ceil(topLength / spacing));
+                for (let i = 0; i < topPoints; i++) {
+                    const ratio = i / (topPoints - 1);
+                    points.push({ x: topStart + (topLength * ratio), y: y });
+                }
+            }
+
+            // 右上の角丸（90度の円弧、上から右へ）
+            // 角丸部分は非常に密に点を配置（5px間隔で滑らかに）
+            const cornerPoints = Math.max(30, Math.ceil((Math.PI * r / 2) / 5));
+            for (let i = 1; i <= cornerPoints; i++) {
+                const angle = (Math.PI / 2) * (i / cornerPoints); // 0度から90度
+                const cx = x + width - r;
+                const cy = y + r;
+                points.push({
+                    x: cx + r * Math.sin(angle),
+                    y: cy - r * Math.cos(angle)
+                });
+            }
+
+            // 右辺（上の角丸終了点から下の角丸開始点まで）
+            const rightStart = y + r;
+            const rightEnd = y + height - r;
+            const rightLength = rightEnd - rightStart;
+            if (rightLength > 0) {
+                const rightPoints = Math.max(2, Math.ceil(rightLength / spacing));
+                for (let i = 1; i < rightPoints; i++) {
+                    const ratio = i / (rightPoints - 1);
+                    points.push({ x: x + width, y: rightStart + (rightLength * ratio) });
+                }
+            }
+
+            // 右下の角丸（90度の円弧、右から下へ）
+            for (let i = 1; i <= cornerPoints; i++) {
+                const angle = (Math.PI / 2) * (i / cornerPoints);
+                const cx = x + width - r;
+                const cy = y + height - r;
+                points.push({
+                    x: cx + r * Math.cos(angle),
+                    y: cy + r * Math.sin(angle)
+                });
+            }
+
+            // 下辺（右の角丸終了点から左の角丸開始点まで）
+            const bottomStart = x + width - r;
+            const bottomEnd = x + r;
+            const bottomLength = bottomStart - bottomEnd;
+            if (bottomLength > 0) {
+                const bottomPoints = Math.max(2, Math.ceil(bottomLength / spacing));
+                for (let i = 1; i < bottomPoints; i++) {
+                    const ratio = i / (bottomPoints - 1);
+                    points.push({ x: bottomStart - (bottomLength * ratio), y: y + height });
+                }
+            }
+
+            // 左下の角丸（90度の円弧、下から左へ）
+            for (let i = 1; i <= cornerPoints; i++) {
+                const angle = (Math.PI / 2) * (i / cornerPoints);
+                const cx = x + r;
+                const cy = y + height - r;
+                points.push({
+                    x: cx - r * Math.sin(angle),
+                    y: cy + r * Math.cos(angle)
+                });
+            }
+
+            // 左辺（下の角丸終了点から上の角丸開始点まで）
+            const leftStart = y + height - r;
+            const leftEnd = y + r;
+            const leftLength = leftStart - leftEnd;
+            if (leftLength > 0) {
+                const leftPoints = Math.max(2, Math.ceil(leftLength / spacing));
+                for (let i = 1; i < leftPoints; i++) {
+                    const ratio = i / (leftPoints - 1);
+                    points.push({ x: x, y: leftStart - (leftLength * ratio) });
+                }
+            }
+
+            // 左上の角丸（90度の円弧、左から上へ）
+            for (let i = 1; i < cornerPoints; i++) {
+                const angle = (Math.PI / 2) * (i / cornerPoints);
+                const cx = x + r;
+                const cy = y + r;
+                points.push({
+                    x: cx - r * Math.cos(angle),
+                    y: cy - r * Math.sin(angle)
+                });
+            }
         }
-        
-        // 右辺（上から下へ、角を除く）
-        const rightPoints = Math.max(2, Math.ceil(height / spacing));
-        for (let i = 1; i < rightPoints; i++) {
-            const ratio = i / (rightPoints - 1);
-            points.push({ x: x + width, y: y + (height * ratio) });
-        }
-        
-        // 下辺（右から左へ、角を除く）
-        const bottomPoints = Math.max(2, Math.ceil(width / spacing));
-        for (let i = 1; i < bottomPoints; i++) {
-            const ratio = i / (bottomPoints - 1);
-            points.push({ x: x + width - (width * ratio), y: y + height });
-        }
-        
-        // 左辺（下から上へ、角を除く）
-        const leftPoints = Math.max(2, Math.ceil(height / spacing));
-        for (let i = 1; i < leftPoints - 1; i++) {
-            const ratio = i / (leftPoints - 1);
-            points.push({ x: x, y: y + height - (height * ratio) });
-        }
-        
+
         return points;
     }, []);
 
@@ -4888,16 +5008,33 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             className="scale-range-input"
                         />
                     </div>
-                    
+
+                    <label htmlFor="rectangleRadius" className="modal-label">
+                            半径: {rectangleRadius}cm
+                        </label>
+                    <div className="modal-setting-item">
+                        <input
+                            id="rectangleRadius"
+                            type="range"
+                            min="0.5"
+                            max="20"
+                            step="0.5"
+                            defaultValue="1"
+                            value={rectangleRadius}
+                            onChange={(e) => setRectangleRadius(Number(e.target.value))}
+                            className="scale-range-input"
+                        />
+                    </div>
+
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
                                 // 長方形土台を生成
                                 const rectangleBase = calculateRectangleBase(rectangleSize);
                                 if (rectangleBase) {
-                                    // 長方形の辺上に点を配置（250px間隔）
-                                    const rectanglePoints = subdivideRectangleEdges(rectangleBase, 250);
-                                    
+                                    // 長方形の辺上に点を配置（250px間隔、角丸半径付き）
+                                    const rectanglePoints = subdivideRectangleEdges(rectangleBase, 250, rectangleRadius);
+
                                     // 新しい土台パスを作成
                                     const newPath = {
                                         points: rectanglePoints,
