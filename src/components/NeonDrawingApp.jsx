@@ -867,9 +867,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     const isHoveredForMerge = isMergeMode && hoveredPointForMerge &&
                         hoveredPointForMerge.pathIndex === pathIdx && hoveredPointForMerge.pointIndex === ptIdx;
 
-                    // 点修正モード または 点結合モードの場合は全ての点を青色で表示
+                    // 点修正モード または 点結合モードの場合は全ての点をシアン色で表示
                     if (isModifyingPoints || isMergeMode) {
-                        pointFillStyle = '#3b82f6'; // 点修正モード・点結合モード時は青
+                        pointFillStyle = '#06b6d4'; // 点修正モード・点結合モード時はシアン
                         // ホバー中の点はオレンジ色
                         if (isHoveredForMerge && !isSelectedForMerge) {
                             pointFillStyle = '#f59e0b'; // ホバー時はオレンジ
@@ -2834,8 +2834,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     }, []);
 
     // 描画モードボタンの無効化条件
-    // 点修正モード中、パス削除モード中、点削除モード中の場合のみ無効化
-    const areDrawModeButtonsDisabled = isModifyingPoints || isPathDeleteMode || isPointDeleteMode;
+    // 点修正モード中、点結合モード中、パス削除モード中、点削除モード中の場合のみ無効化
+    const areDrawModeButtonsDisabled = isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode;
 
     // マウスイベントハンドラー
     const handleWheel = useCallback((e) => {
@@ -3824,9 +3824,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* スクロール可能なボタンコンテンツ部分 */}
                     <div className="mobile-function-bar-content">
                         <button
-                            className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                            className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
                             onClick={startNewPath}
-                            disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
+                            disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
                         >
                             <svg width="23" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M12 5v14M5 12h14"/>
@@ -3841,6 +3841,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
                                 <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
                                 <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L8 16h4"></path>
+                            </svg>
+                        </button>
+                        <button
+                            className={`mobile-function-btn merge-points ${isMergeMode ? 'button-active' : ''}`}
+                            onClick={toggleMergeMode}
+                        >
+                            <svg width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="7" cy="7" r="2.5" fill="currentColor" stroke="currentColor" strokeWidth="1.5"/>
+                                <circle cx="17" cy="17" r="2.5" fill="currentColor" stroke="currentColor" strokeWidth="1.5"/>
+                                <path d="M9 9L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                <path d="M14 16L17 17L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                             </svg>
                         </button>
                         <button
@@ -4002,8 +4013,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* 新しいパス */}
                     <button
                         onClick={startNewPath}
-                        disabled={isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode}
-                        className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                        disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
+                        className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
                     >
                         新しいパス
                     </button>
@@ -4021,9 +4032,33 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
                     {/* 修正ツール */}
                     <div className="edit-tools-title">修正ツール</div>
-                    
-                    {/* ←戻る・点修正・進む→ */}
-                    <div className="edit-mode-buttons">
+
+                    {/* 点修正・点結合 */}
+                    <div className="edit-mode-buttons-two">
+                        <button
+                            onClick={toggleModifyMode}
+                            className={`edit-mode-button ${
+                                isModifyingPoints
+                                            ? 'button-cyan'
+                                            : 'button-secondary'
+                            }`}
+                        >
+                            点修正
+                        </button>
+                        <button
+                            onClick={toggleMergeMode}
+                            className={`edit-mode-button ${
+                                isMergeMode
+                                    ? 'button-cyan'
+                                    : 'button-secondary'
+                            }`}
+                        >
+                            点結合
+                        </button>
+                    </div>
+
+                    {/* ←戻る・拡大縮小・進む→ */}
+                    <div className="edit-mode-buttons-three">
                         <button
                             onClick={handleUndo}
                             disabled={historyIndex === 0}
@@ -4033,16 +4068,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         >
                             ←戻る
                         </button>
-                        <button
-                            onClick={toggleModifyMode}
-                            className={`edit-mode-button ${
-                                isModifyingPoints
-                                            ? 'button-blue' 
-                                            : 'button-secondary'
-                            }`}
-                        >
-                            点修正
-                        </button>
+                        {sidebarVisible && (
+                            <button
+                                onClick={() => {
+                                    openScaleModal();
+                                    setSidebarVisible(false);
+                                }}
+                                className="edit-mode-button button-blue"
+                            >
+                                拡大縮小
+                            </button>
+                        )}
                         <button
                             onClick={handleRedo}
                             disabled={historyIndex === history.length - 1}
@@ -4060,7 +4096,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             onClick={togglePointDeleteMode}
                             className={`delete-button ${
                                 isPointDeleteMode
-                                            ? 'button-red' 
+                                            ? 'button-red'
                                             : 'button-secondary'
                             }`}
                         >
@@ -4070,44 +4106,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             onClick={togglePathDeleteMode}
                             className={`delete-button ${
                                 isPathDeleteMode
-                                            ? 'button-red' 
+                                            ? 'button-red'
                                             : 'button-secondary'
                             }`}
                         >
                             パス削除
                         </button>
                     </div>
-
-                    {/* 点結合ツール */}
-                    {sidebarVisible && (
-                        <div className="merge-tool-container">
-                            <button
-                                onClick={toggleMergeMode}
-                                className={`edit-mode-button ${
-                                    isMergeMode
-                                        ? 'button-blue'
-                                        : 'button-secondary'
-                                }`}
-                            >
-                                点結合
-                            </button>
-                        </div>
-                    )}
-
-                    {/* 拡大縮小ツール */}
-                    {sidebarVisible && (
-                        <div className="scale-tool-container">
-                            <button
-                                onClick={() => {
-                                    openScaleModal();
-                                    setSidebarVisible(false);
-                                }}
-                                className="scale-button button-secondary"
-                            >
-                                拡大縮小
-                            </button>
-                        </div>
-                    )}
 
                     {/* チューブ太さプレビュー */}
                     <div className="tube-thickness-section">

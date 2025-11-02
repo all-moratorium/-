@@ -186,6 +186,8 @@
 .neon-sidebar.collapsed .settings-button-drawing,
 .neon-sidebar.collapsed .edit-tools-title,
 .neon-sidebar.collapsed .edit-mode-buttons,
+.neon-sidebar.collapsed .edit-mode-buttons-two,
+.neon-sidebar.collapsed .edit-mode-buttons-three,
 .neon-sidebar.collapsed .edit-mode-button,
 .neon-sidebar.collapsed .delete-buttons,
 .neon-sidebar.collapsed .delete-button,
@@ -679,7 +681,7 @@
     background: rgba(16, 185, 129, 0.425);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(16, 185, 129, 0.7);
-    box-shadow: 
+    box-shadow:
       0 0 15px rgba(16, 185, 129, 0.3),
       0 4px 15px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -687,6 +689,17 @@
     color: white;
   }
 
+  .button-cyan {
+    background: rgba(6, 182, 212, 0.425);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(6, 182, 212, 0.7);
+    box-shadow:
+      0 0 15px rgba(6, 182, 212, 0.3),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+    color: white;
+  }
 
   .button-red {
     background: rgba(220, 38, 38, 0.6);
@@ -867,6 +880,26 @@
     gap: 9px;
     width:85%;
     margin: 0 auto;
+}
+
+/* 編集モードボタン（2個用） */
+.edit-mode-buttons-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    width:55.8%;
+    margin: 0 auto;
+    margin-bottom: 3px;
+}
+
+/* 編集モードボタン（3個用） */
+.edit-mode-buttons-three {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 9px;
+    width:85%;
+    margin: 0 auto;
+    margin-bottom: 3px;
 }
 
 .edit-mode-button {
@@ -2425,6 +2458,22 @@
         border-radius: 4px !important;
         grid-template-columns: 1fr 1fr 1fr !important;
     }
+
+    .edit-mode-buttons-two {
+        width: 176px !important;
+        gap: 6px !important;
+        border-radius: 4px !important;
+        grid-template-columns: 1fr 1fr !important;
+        margin-bottom: 2px !important;
+    }
+
+    .edit-mode-buttons-three {
+        width: 91% !important;
+        gap: 6px !important;
+        border-radius: 4px !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        margin-bottom: 2px !important;
+    }
     
     .edit-mode-button {
         padding: 10px 6px !important;
@@ -3005,7 +3054,18 @@
         background: rgba(107, 114, 128, 0.15) !important;
         backdrop-filter: blur(20px) !important;
         border: 1px solid rgba(107, 114, 128, 0.3) !important;
-        box-shadow: 
+        box-shadow:
+          0 0 8px rgba(107, 114, 128, 0.1),
+          0 2px 8px rgba(0, 0, 0, 0.05),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        color: rgba(255, 255, 255, 1) !important;
+    }
+
+    .mobile-function-btn.merge-points {
+        background: rgba(107, 114, 128, 0.15) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(107, 114, 128, 0.3) !important;
+        box-shadow:
           0 0 8px rgba(107, 114, 128, 0.1),
           0 2px 8px rgba(0, 0, 0, 0.05),
           inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
@@ -3013,13 +3073,24 @@
     }
 
     .mobile-function-btn.modify-points.button-active {
-        background: rgba(37, 100, 235, 0.45) !important;
+        background: rgba(6, 182, 212, 0.425) !important;
         backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(37, 99, 235, 0.7) !important;
-        box-shadow: 
-          0 0 20px rgba(37, 100, 235, 0.2),
-          0 4px 15px rgba(0, 0, 0, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        border: 1px solid rgba(6, 182, 212, 0.7) !important;
+        box-shadow:
+          0 0 15px rgba(6, 182, 212, 0.3),
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+        color: rgba(255, 255, 255, 1) !important;
+    }
+
+    .mobile-function-btn.merge-points.button-active {
+        background: rgba(6, 182, 212, 0.425) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(6, 182, 212, 0.7) !important;
+        box-shadow:
+          0 0 15px rgba(6, 182, 212, 0.3),
+          0 4px 15px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
         color: rgba(255, 255, 255, 1) !important;
     }
 
