@@ -222,6 +222,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [showRectangleModal, setShowRectangleModal] = useState(false);
     const [rectangleSize, setRectangleSize] = useState(5); // デフォルト5cm
     const [rectangleRadius, setRectangleRadius] = useState(1); // デフォルト1cm (角の半径)
+    // 自動円生成モーダル状態
+    const [showCircleModal, setShowCircleModal] = useState(false);
+    const [circleMargin, setCircleMargin] = useState(5); // デフォルト5cm
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -990,8 +993,61 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
         }
 
+        // 円形土台プレビューの描画
+        if (showCircleModal) {
+            // 境界計算をインライン実行
+            if (paths && paths.length > 0) {
+                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                let hasValidPoints = false;
+
+                paths.forEach(path => {
+                    if (path && path.points && path.points.length > 0) {
+                        path.points.forEach(point => {
+                            if (point && typeof point.x === 'number' && typeof point.y === 'number') {
+                                minX = Math.min(minX, point.x);
+                                minY = Math.min(minY, point.y);
+                                maxX = Math.max(maxX, point.x);
+                                maxY = Math.max(maxY, point.y);
+                                hasValidPoints = true;
+                            }
+                        });
+                    }
+                });
+
+                if (hasValidPoints) {
+                    // cmをピクセルに変換 (100px = 4cm基準)
+                    const marginPx = (circleMargin * 100) / 4;
+
+                    // 中心座標を計算
+                    const centerX = (minX + maxX) / 2;
+                    const centerY = (minY + maxY) / 2;
+
+                    // 半径を計算
+                    const width = maxX - minX;
+                    const height = maxY - minY;
+                    const radius = Math.sqrt(width * width + height * height) / 2 + marginPx;
+
+                    ctx.save();
+                    // 境界線を緑色のグローで描画（土台と同じエフェクト）
+                    ctx.globalAlpha = 0.85;
+                    ctx.shadowColor = '#10b981';
+                    ctx.shadowBlur = 8;
+                    ctx.strokeStyle = '#10b981';
+                    ctx.lineWidth = lineWidths.fillBorder / scale;
+                    ctx.setLineDash([]); // 実線
+
+                    // 円形プレビュー
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+
+                    ctx.restore();
+                }
+            }
+        }
+
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showPoints]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -2270,21 +2326,38 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const handleSetDrawingType = useCallback((type) => {
         if (type === 'rectangle') {
             // 自動長方形の場合は先に土台の重複チェック
-            const existingFillPaths = paths.filter(pathObj => 
+            const existingFillPaths = paths.filter(pathObj =>
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
                 alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
                 return;
             }
-            
+
             // 自動長方形の場合はモーダルを開く
             setShowRectangleModal(true);
             setSidebarVisible(false);
             setShowFillDrawingTypeModal(false);
             return;
         }
-        
+
+        if (type === 'circle') {
+            // 自動円の場合は先に土台の重複チェック
+            const existingFillPaths = paths.filter(pathObj =>
+                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+            );
+            if (existingFillPaths.length >= 1) {
+                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                return;
+            }
+
+            // 自動円の場合はモーダルを開く
+            setShowCircleModal(true);
+            setSidebarVisible(false);
+            setShowFillDrawingTypeModal(false);
+            return;
+        }
+
         if (type === 'auto-shape') {
             // 自動形状の場合は先に土台の重複チェック
             const existingFillPaths = paths.filter(pathObj => 
@@ -2395,6 +2468,48 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             height: (bounds.maxY - bounds.minY) + (marginPx * 2)
         };
     }, [calculatePathsBounds]);
+
+    // 円形土台の座標を計算する関数
+    const calculateCircleBase = useCallback((marginCm) => {
+        const bounds = calculatePathsBounds();
+        if (!bounds) return null;
+
+        // cmをピクセルに変換 (100px = 4cm基準)
+        const marginPx = (marginCm * 100) / 4;
+
+        // 中心座標を計算
+        const centerX = (bounds.minX + bounds.maxX) / 2;
+        const centerY = (bounds.minY + bounds.maxY) / 2;
+
+        // 全ての点から最も遠い点までの距離を計算
+        const width = bounds.maxX - bounds.minX;
+        const height = bounds.maxY - bounds.minY;
+        const radius = Math.sqrt(width * width + height * height) / 2 + marginPx;
+
+        return { centerX, centerY, radius };
+    }, [calculatePathsBounds]);
+
+    // 円周上に密に点を配置する関数
+    const subdivideCircleEdge = useCallback((circleBase, spacing = 5) => {
+        const points = [];
+        const { centerX, centerY, radius } = circleBase;
+
+        // 円周の長さ
+        const circumference = 2 * Math.PI * radius;
+        // 必要な点の数
+        const numPoints = Math.max(50, Math.ceil(circumference / spacing));
+
+        // 円周上に等間隔で点を配置
+        for (let i = 0; i < numPoints; i++) {
+            const angle = (2 * Math.PI * i) / numPoints;
+            points.push({
+                x: centerX + radius * Math.cos(angle),
+                y: centerY + radius * Math.sin(angle)
+            });
+        }
+
+        return points;
+    }, []);
 
     // 長方形の辺上に密に点を追加する関数（角丸対応）
     const subdivideRectangleEdges = useCallback((rectangleBase, spacing = 10, radiusCm = 0) => {
@@ -4969,18 +5084,28 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <button
                         onClick={() => handleSetDrawingType('rectangle')}
                         className={`drawing-type-button ${
-                            drawingType === 'rectangle' 
-                                ? 'button-active button-purple' 
+                            drawingType === 'rectangle'
+                                ? 'button-active button-purple'
                                 : 'button-secondary'
                         }`}
                     >
                         自動(長方形)
                     </button>
                     <button
+                        onClick={() => handleSetDrawingType('circle')}
+                        className={`drawing-type-button ${
+                            drawingType === 'circle'
+                                ? 'button-active button-purple'
+                                : 'button-secondary'
+                        }`}
+                    >
+                        自動(円)
+                    </button>
+                    <button
                         onClick={() => handleSetDrawingType('auto-shape')}
                         className={`drawing-type-button ${
-                            drawingType === 'auto-shape' 
-                                ? 'button-active button-purple' 
+                            drawingType === 'auto-shape'
+                                ? 'button-active button-purple'
                                 : 'button-secondary'
                         }`}
                     >
@@ -5083,6 +5208,82 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 </div>
             </Modal>
 
+            {/* 自動円生成モーダル */}
+            <Modal isOpen={showCircleModal} title="土台自動生成(円)" position="right" className="circle-generation-modal">
+                <div className="modal-content-inner">
+                    <label htmlFor="circleMargin" className="modal-label">
+                        余白: {circleMargin}cm
+                    </label>
+                    <div className="modal-setting-item">
+                        <input
+                            id="circleMargin"
+                            type="range"
+                            min="1.5"
+                            max="10"
+                            step="0.5"
+                            defaultValue="5"
+                            value={circleMargin}
+                            onChange={(e) => setCircleMargin(Number(e.target.value))}
+                            className="scale-range-input"
+                        />
+                    </div>
+
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // 円形土台を生成
+                                const circleBase = calculateCircleBase(circleMargin);
+                                if (circleBase) {
+                                    // 円周上に点を配置（5px間隔）
+                                    const circlePoints = subdivideCircleEdge(circleBase, 5);
+
+                                    // 新しい土台パスを作成
+                                    const newPath = {
+                                        points: circlePoints,
+                                        mode: 'fill',
+                                        type: 'straight'
+                                    };
+
+                                    // パスを追加
+                                    setPaths(prevPaths => {
+                                        const newPaths = [...prevPaths];
+                                        // 既存の土台パスを削除（1つの土台のみ許可）
+                                        const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
+                                        // 新しい土台パスを追加
+                                        filteredPaths.push(newPath);
+
+                                        // 履歴に保存（新しいパス状態で）
+                                        setTimeout(() => {
+                                            saveToHistory(filteredPaths, currentPathIndex, drawMode, drawingType);
+                                        }, 0);
+
+                                        return filteredPaths;
+                                    });
+
+                                    // 土台生成後はチューブモードに切り替え
+                                    setDrawMode('stroke');
+                                    setDrawingType('spline'); // チューブはスプライン描画
+                                }
+
+                                setShowCircleModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-generate-button"
+                        >
+                            土台を生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowCircleModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-cancel-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
+            </Modal>
 
             {/* 拡大縮小モーダル */}
             <Modal isOpen={showScaleModal} onClose={closeScaleModal} title="拡大縮小" position="right">
