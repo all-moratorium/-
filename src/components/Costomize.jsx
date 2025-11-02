@@ -2185,8 +2185,11 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
 
             // 透明の場合は塗りつぶしをスキップ
             const isTransparent = fillColorValue === 'transparent';
-            
-            if (!isTransparent) {
+
+            // 透明の場合は薄い白、それ以外は指定色
+            if (isTransparent) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.02)'; // 薄い白（透明度97%）
+            } else {
                 ctx.fillStyle = fillColorValue;
             }
             ctx.beginPath();
@@ -2212,11 +2215,9 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                 }
             }
             ctx.closePath();
-            
-            // 透明でない場合のみ塗りつぶし
-            if (!isTransparent) {
-                ctx.fill();
-            }
+
+            // 常に塗りつぶし（透明の場合も薄く塗る）
+            ctx.fill();
             
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = borderWidth;
