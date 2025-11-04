@@ -237,6 +237,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [rectTemplateRadius, setRectTemplateRadius] = useState(0); // 角の半径（cm）
     const [rectTemplateX, setRectTemplateX] = useState(0); // X位置（左下のX座標、cm）
     const [rectTemplateY, setRectTemplateY] = useState(0); // Y位置（左下のY座標、cm）
+    const [rectTemplateAngle, setRectTemplateAngle] = useState(0); // 回転角度（度）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -1023,6 +1024,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const y = posY - heightPx;
 
             ctx.save();
+
+            // 回転がある場合は、左下を中心に回転
+            if (rectTemplateAngle !== 0) {
+                ctx.translate(posX, posY);
+                ctx.rotate((rectTemplateAngle * Math.PI) / 180);
+                ctx.translate(-posX, -posY);
+            }
+
             // 境界線を緑色のグローで描画（土台と同じエフェクト）
             ctx.globalAlpha = 0.85;
             ctx.shadowColor = '#10b981';
@@ -1110,7 +1119,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, canvasWidth, canvasHeight]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, canvasWidth, canvasHeight]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -5432,6 +5441,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             setRectTemplateRadius(0);
                             setRectTemplateX(0);
                             setRectTemplateY(0);
+                            setRectTemplateAngle(0);
                             setShowTemplateModal(false);
                             setShowRectTemplateModal(true);
                         }}
@@ -5486,7 +5496,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="3"
                             max="115"
-                            step="0.1"
+                            step="0.05"
                             value={rectTemplateWidth}
                             onChange={(e) => setRectTemplateWidth(Number(e.target.value))}
                             className="template-range-input"
@@ -5537,7 +5547,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="3"
                             max="70"
-                            step="0.1"
+                            step="0.05"
                             value={rectTemplateHeight}
                             onChange={(e) => setRectTemplateHeight(Number(e.target.value))}
                             className="template-range-input"
@@ -5644,7 +5654,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="-50"
                             max="50"
-                            step="0.1"
+                            step="0.05"
                             value={rectTemplateX}
                             onChange={(e) => setRectTemplateX(Number(e.target.value))}
                             className="template-range-input"
@@ -5695,7 +5705,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="-70"
                             max="70"
-                            step="0.1"
+                            step="0.05"
                             value={rectTemplateY}
                             onChange={(e) => setRectTemplateY(Number(e.target.value))}
                             className="template-range-input"
@@ -5735,6 +5745,57 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             <span className="unit-label">cm</span>
                         </div>
                     </div>
+
+                    {/* 角度 */}
+                    <div className="template-setting-item">
+                        <label htmlFor="rectTemplateAngle" className="template-label">
+                            角度: {rectTemplateAngle}°
+                        </label>
+                        <input
+                            id="rectTemplateAngle"
+                            type="range"
+                            min="0"
+                            max="360"
+                            step="1"
+                            value={rectTemplateAngle}
+                            onChange={(e) => setRectTemplateAngle(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-y-input-container">
+                            <label className="direct-input-label">角度 :</label>
+                            <input
+                                type="number"
+                                min="0"
+                                max="360"
+                                step="1"
+                                placeholder="角度を入力"
+                                value={rectTemplateAngle}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setRectTemplateAngle(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateAngle(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateAngle(Math.max(0, Math.min(360, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">°</span>
+                        </div>
+                    </div>
                     </div>
 
                     <div className="rectangle-modal-buttons">
@@ -5768,6 +5829,22 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 // 始点と同じ座標の点を終点に追加してスプラインを閉じる
                                 if (rectanglePoints.length > 0) {
                                     rectanglePoints.push({ ...rectanglePoints[0] });
+                                }
+
+                                // 角度が0でない場合は、左下を中心に回転
+                                if (rectTemplateAngle !== 0) {
+                                    const angleRad = (rectTemplateAngle * Math.PI) / 180;
+                                    const cosA = Math.cos(angleRad);
+                                    const sinA = Math.sin(angleRad);
+                                    const centerX = posX;
+                                    const centerY = posY;
+
+                                    for (let i = 0; i < rectanglePoints.length; i++) {
+                                        const dx = rectanglePoints[i].x - centerX;
+                                        const dy = rectanglePoints[i].y - centerY;
+                                        rectanglePoints[i].x = centerX + dx * cosA - dy * sinA;
+                                        rectanglePoints[i].y = centerY + dx * sinA + dy * cosA;
+                                    }
                                 }
 
                                 // 新しいネオンチューブパスを作成
