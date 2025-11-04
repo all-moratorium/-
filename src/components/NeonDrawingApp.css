@@ -1105,7 +1105,7 @@
 
 /* 土台自動生成モーダル専用スタイル */
 .rectangle-generation-modal .modal-content-right {
-    height: 300px;
+    height: 540px;
 }
 
 /* 背景画像モーダル専用スタイル */
@@ -1283,7 +1283,9 @@
 .template-height-input-container,
 .template-radius-input-container,
 .template-x-input-container,
-.template-y-input-container {
+.template-y-input-container,
+.rectangle-margin-input-container,
+.rectangle-radius-input-container {
     display: flex;
     align-items: center;
     gap: 10px;

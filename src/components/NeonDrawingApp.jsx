@@ -5270,12 +5270,46 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="1.5"
                             max="10"
-                            step="0.5"
+                            step="0.1"
                             defaultValue="3"
                             value={rectangleSize}
                             onChange={(e) => setRectangleSize(Number(e.target.value))}
                             className="scale-range-input"
                         />
+                        <div className="rectangle-margin-input-container">
+                            <label className="direct-input-label">余白 :</label>
+                            <input
+                                type="number"
+                                min="1.5"
+                                max="10"
+                                step="0.1"
+                                placeholder="余白を入力"
+                                value={rectangleSize}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setRectangleSize(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectangleSize(3);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectangleSize(Math.max(1.5, Math.min(10, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
                     </div>
 
                     <label htmlFor="rectangleRadius" className="modal-label">
@@ -5287,12 +5321,46 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="0.5"
                             max="20"
-                            step="0.5"
+                            step="0.1"
                             defaultValue="1"
                             value={rectangleRadius}
                             onChange={(e) => setRectangleRadius(Number(e.target.value))}
                             className="scale-range-input"
                         />
+                        <div className="rectangle-radius-input-container">
+                            <label className="direct-input-label">角丸半径 :</label>
+                            <input
+                                type="number"
+                                min="0.5"
+                                max="20"
+                                step="0.1"
+                                placeholder="角丸半径を入力"
+                                value={rectangleRadius}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setRectangleRadius(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectangleRadius(1);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectangleRadius(Math.max(0.5, Math.min(20, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
                     </div>
 
                     <div className="rectangle-modal-buttons">
