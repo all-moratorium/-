@@ -240,6 +240,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [rectTemplateX, setRectTemplateX] = useState(0); // X位置（左下のX座標、cm）
     const [rectTemplateY, setRectTemplateY] = useState(0); // Y位置（左下のY座標、cm）
     const [rectTemplateAngle, setRectTemplateAngle] = useState(0); // 回転角度（度）
+    // 円テンプレート設定
+    const [circleTemplateDiameter, setCircleTemplateDiameter] = useState(10); // 直径（cm）
+    const [circleTemplateWidth, setCircleTemplateWidth] = useState(10); // 幅（cm）
+    const [circleTemplateHeight, setCircleTemplateHeight] = useState(10); // 高さ（cm）
+    const [circleTemplateX, setCircleTemplateX] = useState(0); // X位置（中心のX座標、cm）
+    const [circleTemplateY, setCircleTemplateY] = useState(0); // Y位置（中心のY座標、cm）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -6161,9 +6167,283 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 円テンプレートモーダル */}
-            <Modal isOpen={showCircleTemplateModal} title="円テンプレート" position="right" className="circle-template-modal">
+            <Modal
+                isOpen={showCircleTemplateModal}
+                onClose={() => {
+                    setShowCircleTemplateModal(false);
+                    setSidebarVisible(true);
+                }}
+                title="円テンプレート"
+                position="right"
+                className="circle-template-modal"
+                showCloseButton={true}
+            >
                 <div className="modal-content-inner">
-                    <p>円テンプレートの設定項目（後で追加）</p>
+                    {/* サイズ調整 */}
+                    <div className="template-size-section">
+                        <div className="template-size-title">サイズ調整</div>
+
+                        {/* 直径 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="circleTemplateDiameter" className="template-label">
+                            直径: {circleTemplateDiameter}cm
+                        </label>
+                        <input
+                            id="circleTemplateDiameter"
+                            type="range"
+                            min="3"
+                            max="115"
+                            step="0.05"
+                            value={circleTemplateDiameter}
+                            onChange={(e) => setCircleTemplateDiameter(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-diameter-input-container">
+                            <label className="direct-input-label">直径 :</label>
+                            <input
+                                type="number"
+                                min="3"
+                                max="115"
+                                step="0.1"
+                                placeholder="直径を入力"
+                                value={circleTemplateDiameter}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleTemplateDiameter(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleTemplateDiameter(10);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleTemplateDiameter(Math.max(3, Math.min(115, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                        {/* 幅 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="circleTemplateWidth" className="template-label">
+                            幅: {circleTemplateWidth}cm
+                        </label>
+                        <input
+                            id="circleTemplateWidth"
+                            type="range"
+                            min="3"
+                            max="115"
+                            step="0.05"
+                            value={circleTemplateWidth}
+                            onChange={(e) => setCircleTemplateWidth(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-width-input-container">
+                            <label className="direct-input-label">幅 :</label>
+                            <input
+                                type="number"
+                                min="3"
+                                max="115"
+                                step="0.1"
+                                placeholder="幅を入力"
+                                value={circleTemplateWidth}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleTemplateWidth(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleTemplateWidth(10);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleTemplateWidth(Math.max(3, Math.min(115, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* 高さ */}
+                    <div className="template-setting-item">
+                        <label htmlFor="circleTemplateHeight" className="template-label">
+                            高さ: {circleTemplateHeight}cm
+                        </label>
+                        <input
+                            id="circleTemplateHeight"
+                            type="range"
+                            min="3"
+                            max="115"
+                            step="0.05"
+                            value={circleTemplateHeight}
+                            onChange={(e) => setCircleTemplateHeight(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-height-input-container">
+                            <label className="direct-input-label">高さ :</label>
+                            <input
+                                type="number"
+                                min="3"
+                                max="115"
+                                step="0.1"
+                                placeholder="高さを入力"
+                                value={circleTemplateHeight}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleTemplateHeight(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleTemplateHeight(10);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleTemplateHeight(Math.max(3, Math.min(115, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+                    </div>
+
+                    {/* 位置調整 */}
+                    <div className="template-position-section">
+                        <div className="template-position-title">位置調整</div>
+
+                        {/* X位置 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="circleTemplateX" className="template-label">
+                            X位置: {circleTemplateX}cm
+                        </label>
+                        <input
+                            id="circleTemplateX"
+                            type="range"
+                            min="-50"
+                            max="50"
+                            step="0.05"
+                            value={circleTemplateX}
+                            onChange={(e) => setCircleTemplateX(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-x-input-container">
+                            <label className="direct-input-label">X位置 :</label>
+                            <input
+                                type="number"
+                                min="-50"
+                                max="50"
+                                step="0.1"
+                                placeholder="X位置を入力"
+                                value={circleTemplateX}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleTemplateX(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleTemplateX(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleTemplateX(Math.max(-50, Math.min(50, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* Y位置 */}
+                    <div className="template-setting-item">
+                        <label htmlFor="circleTemplateY" className="template-label">
+                            Y位置: {circleTemplateY}cm
+                        </label>
+                        <input
+                            id="circleTemplateY"
+                            type="range"
+                            min="-70"
+                            max="70"
+                            step="0.05"
+                            value={circleTemplateY}
+                            onChange={(e) => setCircleTemplateY(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-y-input-container">
+                            <label className="direct-input-label">Y位置 :</label>
+                            <input
+                                type="number"
+                                min="-70"
+                                max="70"
+                                step="0.1"
+                                placeholder="Y位置を入力"
+                                value={circleTemplateY}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleTemplateY(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleTemplateY(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleTemplateY(Math.max(-70, Math.min(70, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+                    </div>
+
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
