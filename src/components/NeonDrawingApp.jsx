@@ -227,6 +227,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [circleMargin, setCircleMargin] = useState(5); // デフォルト5cm
     // チューブ素材テンプレートモーダル状態
     const [showTemplateModal, setShowTemplateModal] = useState(false);
+    const [showRectTemplateModal, setShowRectTemplateModal] = useState(false);
+    const [showTriangleTemplateModal, setShowTriangleTemplateModal] = useState(false);
+    const [showCircleTemplateModal, setShowCircleTemplateModal] = useState(false);
+    const [showLineTemplateModal, setShowLineTemplateModal] = useState(false);
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -5315,9 +5319,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 <div className="drawing-type-buttons">
                     <button
                         onClick={() => {
-                            // 長方形テンプレート
                             setShowTemplateModal(false);
-                            setSidebarVisible(true);
+                            setShowRectTemplateModal(true);
                         }}
                         className="drawing-type-button button-secondary"
                     >
@@ -5325,9 +5328,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
-                            // 三角形テンプレート
                             setShowTemplateModal(false);
-                            setSidebarVisible(true);
+                            setShowTriangleTemplateModal(true);
                         }}
                         className="drawing-type-button button-secondary"
                     >
@@ -5335,9 +5337,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
-                            // 円テンプレート
                             setShowTemplateModal(false);
-                            setSidebarVisible(true);
+                            setShowCircleTemplateModal(true);
                         }}
                         className="drawing-type-button button-secondary"
                     >
@@ -5345,14 +5346,125 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
-                            // 直線テンプレート
                             setShowTemplateModal(false);
-                            setSidebarVisible(true);
+                            setShowLineTemplateModal(true);
                         }}
                         className="drawing-type-button button-secondary"
                     >
                         直線
                     </button>
+                </div>
+            </Modal>
+
+            {/* 長方形テンプレートモーダル */}
+            <Modal isOpen={showRectTemplateModal} title="長方形テンプレート" position="right" className="rect-template-modal">
+                <div className="modal-content-inner">
+                    <p>長方形テンプレートの設定項目（後で追加）</p>
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // 長方形テンプレート生成処理（後で実装）
+                                setShowRectTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-generate-button"
+                        >
+                            生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowRectTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-cancel-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* 三角形テンプレートモーダル */}
+            <Modal isOpen={showTriangleTemplateModal} title="三角形テンプレート" position="right" className="triangle-template-modal">
+                <div className="modal-content-inner">
+                    <p>三角形テンプレートの設定項目（後で追加）</p>
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // 三角形テンプレート生成処理（後で実装）
+                                setShowTriangleTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-generate-button"
+                        >
+                            生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowTriangleTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-cancel-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* 円テンプレートモーダル */}
+            <Modal isOpen={showCircleTemplateModal} title="円テンプレート" position="right" className="circle-template-modal">
+                <div className="modal-content-inner">
+                    <p>円テンプレートの設定項目（後で追加）</p>
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // 円テンプレート生成処理（後で実装）
+                                setShowCircleTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-generate-button"
+                        >
+                            生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowCircleTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-cancel-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* 直線テンプレートモーダル */}
+            <Modal isOpen={showLineTemplateModal} title="直線テンプレート" position="right" className="line-template-modal">
+                <div className="modal-content-inner">
+                    <p>直線テンプレートの設定項目（後で追加）</p>
+                    <div className="rectangle-modal-buttons">
+                        <button
+                            onClick={() => {
+                                // 直線テンプレート生成処理（後で実装）
+                                setShowLineTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-generate-button"
+                        >
+                            生成
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowLineTemplateModal(false);
+                                setSidebarVisible(true);
+                            }}
+                            className="rectangle-cancel-button"
+                        >
+                            キャンセル
+                        </button>
+                    </div>
                 </div>
             </Modal>
 
