@@ -3908,6 +3908,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setActivePoint(null); // アクティブな点をクリア
         setIsModifyingPoints(false); // 点修正モードを無効化
         setIsPointDeleteMode(false); // 点削除モードを無効化
+        setIsMergeMode(false); // 点結合モードを無効化
+        setSelectedPointsForMerge([]);
+        setHoveredPointForMerge(null);
     }, [showPoints, originalShowPointsState]);
 
     // 点削除モードの切り替え
@@ -3932,6 +3935,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setActivePoint(null); // アクティブな点をクリア
         setIsModifyingPoints(false); // 点修正モードを無効化
         setIsPathDeleteMode(false); // パス削除モードを無効化
+        setIsMergeMode(false); // 点結合モードを無効化
+        setSelectedPointsForMerge([]);
+        setHoveredPointForMerge(null);
     }, [showPoints, originalShowPointsState]);
 
     // 画像圧縮関数
@@ -5157,8 +5163,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 // 長方形土台を生成
                                 const rectangleBase = calculateRectangleBase(rectangleSize);
                                 if (rectangleBase) {
-                                    // 長方形の辺上に点を配置（250px間隔、角丸半径付き）
-                                    const rectanglePoints = subdivideRectangleEdges(rectangleBase, 250, rectangleRadius);
+                                    // 長方形の辺上に点を配置（4cm = 100px間隔、角丸半径付き）
+                                    const rectanglePoints = subdivideRectangleEdges(rectangleBase, 100, rectangleRadius);
 
                                     // 新しい土台パスを作成
                                     const newPath = {
