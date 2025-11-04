@@ -5480,7 +5480,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 長方形テンプレートモーダル */}
-            <Modal isOpen={showRectTemplateModal} title="長方形テンプレート" position="right" className="rect-template-modal">
+            <Modal
+                isOpen={showRectTemplateModal}
+                onClose={() => {
+                    setShowRectTemplateModal(false);
+                    setSidebarVisible(true);
+                }}
+                title="長方形テンプレート"
+                position="right"
+                className="rect-template-modal"
+                showCloseButton={true}
+            >
                 <div className="modal-content-inner">
                     {/* サイズ・角半径設定 */}
                     <div className="template-size-section">
