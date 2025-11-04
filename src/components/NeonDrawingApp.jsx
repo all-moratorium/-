@@ -5765,6 +5765,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 // 長方形の辺上に点を配置（適度な間隔、角丸半径付き）
                                 const rectanglePoints = subdivideRectangleEdges(rectangleBase, 50, rectTemplateRadius);
 
+                                // 始点と同じ座標の点を終点に追加してスプラインを閉じる
+                                if (rectanglePoints.length > 0) {
+                                    rectanglePoints.push({ ...rectanglePoints[0] });
+                                }
+
                                 // 新しいネオンチューブパスを作成
                                 const newPath = {
                                     points: rectanglePoints,
