@@ -231,12 +231,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [showTriangleTemplateModal, setShowTriangleTemplateModal] = useState(false);
     const [showCircleTemplateModal, setShowCircleTemplateModal] = useState(false);
     const [showLineTemplateModal, setShowLineTemplateModal] = useState(false);
-    // 長方形テンプレート設定
-    const [rectTemplateWidth, setRectTemplateWidth] = useState(16); // 幅（cm）
-    const [rectTemplateHeight, setRectTemplateHeight] = useState(12); // 高さ（cm）
+    // 長方形テンプレート設定（常に左下基準）
+    const [rectTemplateWidth, setRectTemplateWidth] = useState(3); // 幅（cm）
+    const [rectTemplateHeight, setRectTemplateHeight] = useState(3); // 高さ（cm）
     const [rectTemplateRadius, setRectTemplateRadius] = useState(0); // 角の半径（cm）
-    const [rectTemplateX, setRectTemplateX] = useState(0); // X位置（内部px）
-    const [rectTemplateY, setRectTemplateY] = useState(0); // Y位置（内部px）
+    const [rectTemplateX, setRectTemplateX] = useState(0); // X位置（左下のX座標、cm）
+    const [rectTemplateY, setRectTemplateY] = useState(0); // Y位置（左下のY座標、cm）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -1012,13 +1012,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             const heightPx = (rectTemplateHeight * 100) / 4;
             const radiusPx = (rectTemplateRadius * 100) / 4;
 
-            // 長方形の中心位置（rectTemplateX/Yはcm単位なので、ピクセルに変換）
-            const centerX = (rectTemplateX * 100) / 4;
-            const centerY = (rectTemplateY * 100) / 4;
+            // 位置をピクセルに変換
+            const posX = (rectTemplateX * 100) / 4;
+            const posY = (rectTemplateY * 100) / 4;
 
-            // 長方形の左上座標
-            const x = centerX - widthPx / 2;
-            const y = centerY - heightPx / 2;
+            // 常に左下基準で計算
+            // posX, posYは左下の座標
+            // 左上の座標 = (左辺のX, 下辺のY - 高さ)
+            const x = posX;
+            const y = posY - heightPx;
 
             ctx.save();
             // 境界線を緑色のグローで描画（土台と同じエフェクト）
@@ -5424,6 +5426,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 <div className="drawing-type-buttons">
                     <button
                         onClick={() => {
+                            // 初期値にリセット
+                            setRectTemplateWidth(3);
+                            setRectTemplateHeight(3);
+                            setRectTemplateRadius(0);
+                            setRectTemplateX(0);
+                            setRectTemplateY(0);
                             setShowTemplateModal(false);
                             setShowRectTemplateModal(true);
                         }}
@@ -5737,13 +5745,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 const widthPx = (rectTemplateWidth * 100) / 4;
                                 const heightPx = (rectTemplateHeight * 100) / 4;
 
-                                // 長方形の中心位置（rectTemplateX/Yはcm単位なので、ピクセルに変換）
-                                const centerX = (rectTemplateX * 100) / 4;
-                                const centerY = (rectTemplateY * 100) / 4;
+                                // 位置をピクセルに変換
+                                const posX = (rectTemplateX * 100) / 4;
+                                const posY = (rectTemplateY * 100) / 4;
 
-                                // 長方形の左上座標
-                                const x = centerX - widthPx / 2;
-                                const y = centerY - heightPx / 2;
+                                // 常に左下基準で計算
+                                // posX, posYは左下の座標
+                                // 左上の座標 = (左辺のX, 下辺のY - 高さ)
+                                const x = posX;
+                                const y = posY - heightPx;
 
                                 const rectangleBase = {
                                     x: x,
