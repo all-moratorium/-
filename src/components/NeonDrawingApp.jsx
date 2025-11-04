@@ -231,6 +231,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [showTriangleTemplateModal, setShowTriangleTemplateModal] = useState(false);
     const [showCircleTemplateModal, setShowCircleTemplateModal] = useState(false);
     const [showLineTemplateModal, setShowLineTemplateModal] = useState(false);
+    // 長方形テンプレート設定
+    const [rectTemplateWidth, setRectTemplateWidth] = useState(16); // 幅（cm）
+    const [rectTemplateHeight, setRectTemplateHeight] = useState(12); // 高さ（cm）
+    const [rectTemplateRadius, setRectTemplateRadius] = useState(0); // 角の半径（cm）
+    const [rectTemplateX, setRectTemplateX] = useState(0); // X位置（内部px）
+    const [rectTemplateY, setRectTemplateY] = useState(0); // Y位置（内部px）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -5359,7 +5365,196 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             {/* 長方形テンプレートモーダル */}
             <Modal isOpen={showRectTemplateModal} title="長方形テンプレート" position="right" className="rect-template-modal">
                 <div className="modal-content-inner">
-                    <p>長方形テンプレートの設定項目（後で追加）</p>
+                    {/* サイズ・角半径設定 */}
+                    <div className="template-size-section">
+                        <div className="template-size-title">サイズ・角半径設定</div>
+
+                        {/* 幅 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="rectTemplateWidth" className="template-label">
+                            幅: {rectTemplateWidth}cm
+                        </label>
+                        <input
+                            id="rectTemplateWidth"
+                            type="range"
+                            min="3"
+                            max="115"
+                            step="0.5"
+                            value={rectTemplateWidth}
+                            onChange={(e) => setRectTemplateWidth(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-width-input-container">
+                            <label className="direct-input-label">幅 :</label>
+                            <input
+                                type="number"
+                                min="3"
+                                max="115"
+                                step="0.5"
+                                placeholder="幅を入力"
+                                value={rectTemplateWidth}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    if (val >= 3 && val <= 115) {
+                                        setRectTemplateWidth(val);
+                                    }
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* 高さ */}
+                    <div className="template-setting-item">
+                        <label htmlFor="rectTemplateHeight" className="template-label">
+                            高さ: {rectTemplateHeight}cm
+                        </label>
+                        <input
+                            id="rectTemplateHeight"
+                            type="range"
+                            min="3"
+                            max="70"
+                            step="0.5"
+                            value={rectTemplateHeight}
+                            onChange={(e) => setRectTemplateHeight(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-height-input-container">
+                            <label className="direct-input-label">高さ :</label>
+                            <input
+                                type="number"
+                                min="3"
+                                max="70"
+                                step="0.5"
+                                placeholder="高さを入力"
+                                value={rectTemplateHeight}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    if (val >= 3 && val <= 70) {
+                                        setRectTemplateHeight(val);
+                                    }
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* 角半径 */}
+                    <div className="template-setting-item">
+                        <label htmlFor="rectTemplateRadius" className="template-label">
+                            角半径: {rectTemplateRadius}cm
+                        </label>
+                        <input
+                            id="rectTemplateRadius"
+                            type="range"
+                            min="0"
+                            max="30"
+                            step="0.5"
+                            value={rectTemplateRadius}
+                            onChange={(e) => setRectTemplateRadius(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-radius-input-container">
+                            <label className="direct-input-label">角半径 :</label>
+                            <input
+                                type="number"
+                                min="0"
+                                max="30"
+                                step="0.5"
+                                placeholder="角半径を入力"
+                                value={rectTemplateRadius}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    if (val >= 0 && val <= 30) {
+                                        setRectTemplateRadius(val);
+                                    }
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+                    </div>
+
+                    {/* 位置調整 */}
+                    <div className="template-position-section">
+                        <div className="template-position-title">位置調整</div>
+
+                        {/* X位置 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="rectTemplateX" className="template-label">
+                            X位置: {(rectTemplateX / 25).toFixed(1)}cm
+                        </label>
+                        <input
+                            id="rectTemplateX"
+                            type="range"
+                            min="-1250"
+                            max="1250"
+                            step="25"
+                            value={rectTemplateX}
+                            onChange={(e) => setRectTemplateX(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-x-input-container">
+                            <label className="direct-input-label">X位置 :</label>
+                            <input
+                                type="number"
+                                min="-50"
+                                max="50"
+                                step="1"
+                                placeholder="X位置を入力"
+                                value={(rectTemplateX / 25).toFixed(1)}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    if (val >= -50 && val <= 50) {
+                                        setRectTemplateX(val * 25);
+                                    }
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* Y位置 */}
+                    <div className="template-setting-item">
+                        <label htmlFor="rectTemplateY" className="template-label">
+                            Y位置: {(rectTemplateY / 25).toFixed(1)}cm
+                        </label>
+                        <input
+                            id="rectTemplateY"
+                            type="range"
+                            min="-1750"
+                            max="1750"
+                            step="25"
+                            value={rectTemplateY}
+                            onChange={(e) => setRectTemplateY(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="template-y-input-container">
+                            <label className="direct-input-label">Y位置 :</label>
+                            <input
+                                type="number"
+                                min="-70"
+                                max="70"
+                                step="1"
+                                placeholder="Y位置を入力"
+                                value={(rectTemplateY / 25).toFixed(1)}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    if (val >= -70 && val <= 70) {
+                                        setRectTemplateY(val * 25);
+                                    }
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+                    </div>
+
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
