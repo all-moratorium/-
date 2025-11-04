@@ -5279,7 +5279,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </div>
 
                     <label htmlFor="rectangleRadius" className="modal-label">
-                            半径: {rectangleRadius}cm
+                            角丸半径: {rectangleRadius}cm
                         </label>
                     <div className="modal-setting-item">
                         <input
@@ -5484,7 +5484,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 <div className="modal-content-inner">
                     {/* サイズ・角半径設定 */}
                     <div className="template-size-section">
-                        <div className="template-size-title">サイズ・角半径設定</div>
+                        <div className="template-size-title">サイズ・角丸半径設定</div>
 
                         {/* 幅 */}
                         <div className="template-setting-item">
@@ -5591,7 +5591,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* 角半径 */}
                     <div className="template-setting-item">
                         <label htmlFor="rectTemplateRadius" className="template-label">
-                            角半径: {rectTemplateRadius}cm
+                            角丸半径: {rectTemplateRadius}cm
                         </label>
                         <input
                             id="rectTemplateRadius"
@@ -5604,7 +5604,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             className="template-range-input"
                         />
                         <div className="template-radius-input-container">
-                            <label className="direct-input-label">角半径 :</label>
+                            <label className="direct-input-label">角丸半径 :</label>
                             <input
                                 type="number"
                                 min="0"
