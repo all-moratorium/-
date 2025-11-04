@@ -1285,7 +1285,8 @@
 .template-x-input-container,
 .template-y-input-container,
 .rectangle-margin-input-container,
-.rectangle-radius-input-container {
+.rectangle-radius-input-container,
+.circle-margin-input-container {
     display: flex;
     align-items: center;
     gap: 10px;

@@ -5432,12 +5432,46 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="1.5"
                             max="10"
-                            step="0.5"
+                            step="0.1"
                             defaultValue="5"
                             value={circleMargin}
                             onChange={(e) => setCircleMargin(Number(e.target.value))}
                             className="scale-range-input"
                         />
+                        <div className="circle-margin-input-container">
+                            <label className="direct-input-label">余白 :</label>
+                            <input
+                                type="number"
+                                min="1.5"
+                                max="10"
+                                step="0.1"
+                                placeholder="余白を入力"
+                                value={circleMargin}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleMargin(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleMargin(5);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleMargin(Math.max(1.5, Math.min(10, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
                     </div>
 
                     <div className="rectangle-modal-buttons">
