@@ -1073,6 +1073,38 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.restore();
         }
 
+        // 円テンプレートプレビューの描画
+        if (showCircleTemplateModal) {
+            // cmをピクセルに変換 (100px = 4cm基準)
+            const widthPx = (circleTemplateWidth * 100) / 4;
+            const heightPx = (circleTemplateHeight * 100) / 4;
+
+            // 位置をピクセルに変換（左下基準）
+            const posX = (circleTemplateX * 100) / 4;
+            const posY = (circleTemplateY * 100) / 4;
+
+            // 中心座標を計算（左下基準から）
+            const centerX = posX + widthPx / 2;
+            const centerY = posY - heightPx / 2;
+
+            ctx.save();
+
+            // 境界線を赤色のグローで描画
+            ctx.globalAlpha = 0.85;
+            ctx.shadowColor = '#ef4444';
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = lineWidths.fillBorder / scale;
+            ctx.setLineDash([]); // 実線
+
+            // 楕円プレビュー
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY, widthPx / 2, heightPx / 2, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
         // 円形土台プレビューの描画
         if (showCircleModal) {
             // 境界計算をインライン実行
@@ -1133,7 +1165,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, circleX, circleY, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, canvasWidth, canvasHeight]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, circleX, circleY, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, showCircleTemplateModal, circleTemplateDiameter, circleTemplateWidth, circleTemplateHeight, circleTemplateX, circleTemplateY, canvasWidth, canvasHeight]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -2574,6 +2606,30 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         return { centerX, centerY, radius };
     }, [calculatePathsBounds]);
+
+    // 楕円周上に密に点を配置する関数
+    const subdivideEllipseEdge = useCallback((ellipseBase, spacing = 5) => {
+        const points = [];
+        const { centerX, centerY, radiusX, radiusY } = ellipseBase;
+
+        // 楕円の周長の近似値（Ramanujanの公式）
+        const h = Math.pow((radiusX - radiusY), 2) / Math.pow((radiusX + radiusY), 2);
+        const circumference = Math.PI * (radiusX + radiusY) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
+
+        // 必要な点の数
+        const numPoints = Math.max(50, Math.ceil(circumference / spacing));
+
+        // 楕円周上に等間隔で点を配置
+        for (let i = 0; i < numPoints; i++) {
+            const angle = (2 * Math.PI * i) / numPoints;
+            points.push({
+                x: centerX + radiusX * Math.cos(angle),
+                y: centerY + radiusY * Math.sin(angle)
+            });
+        }
+
+        return points;
+    }, []);
 
     // 円周上に密に点を配置する関数
     const subdivideCircleEdge = useCallback((circleBase, spacing = 5) => {
@@ -5689,6 +5745,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
+                            // 初期値にリセット
+                            setCircleTemplateDiameter(6);
+                            setCircleTemplateWidth(6);
+                            setCircleTemplateHeight(6);
+                            setCircleTemplateX(0);
+                            setCircleTemplateY(0);
                             setShowTemplateModal(false);
                             setShowCircleTemplateModal(true);
                         }}
@@ -6195,7 +6257,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             max="115"
                             step="0.05"
                             value={circleTemplateDiameter}
-                            onChange={(e) => setCircleTemplateDiameter(Number(e.target.value))}
+                            onChange={(e) => {
+                                const newDiameter = Number(e.target.value);
+                                setCircleTemplateDiameter(newDiameter);
+                                setCircleTemplateWidth(newDiameter);
+                                setCircleTemplateHeight(newDiameter);
+                            }}
                             className="template-range-input"
                         />
                         <div className="template-diameter-input-container">
@@ -6213,14 +6280,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 }}
                                 onBlur={(e) => {
                                     const val = e.target.value;
+                                    let newDiameter;
                                     if (val === '' || val === '-') {
-                                        setCircleTemplateDiameter(10);
+                                        newDiameter = 10;
                                     } else {
                                         const numVal = Number(val);
                                         if (!isNaN(numVal)) {
-                                            setCircleTemplateDiameter(Math.max(3, Math.min(115, numVal)));
+                                            newDiameter = Math.max(3, Math.min(115, numVal));
+                                        } else {
+                                            newDiameter = 10;
                                         }
                                     }
+                                    setCircleTemplateDiameter(newDiameter);
+                                    setCircleTemplateWidth(newDiameter);
+                                    setCircleTemplateHeight(newDiameter);
                                 }}
                                 onFocus={(e) => {
                                     e.target.select();
@@ -6447,7 +6520,66 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // 円テンプレート生成処理（後で実装）
+                                // 円テンプレート生成処理
+                                // cmをピクセルに変換 (100px = 4cm基準)
+                                const widthPx = (circleTemplateWidth * 100) / 4;
+                                const heightPx = (circleTemplateHeight * 100) / 4;
+
+                                // 位置をピクセルに変換（左下基準）
+                                const posX = (circleTemplateX * 100) / 4;
+                                const posY = (circleTemplateY * 100) / 4;
+
+                                // 中心座標を計算（左下基準から）
+                                const centerX = posX + widthPx / 2;
+                                const centerY = posY - heightPx / 2;
+
+                                const ellipseBase = {
+                                    centerX: centerX,
+                                    centerY: centerY,
+                                    radiusX: widthPx / 2,
+                                    radiusY: heightPx / 2
+                                };
+
+                                // 楕円周上に点を配置
+                                const ellipsePoints = subdivideEllipseEdge(ellipseBase, 50);
+
+                                // 始点と同じ座標の点を終点に追加してスプラインを閉じる
+                                if (ellipsePoints.length > 0) {
+                                    ellipsePoints.push({ ...ellipsePoints[0] });
+                                }
+
+                                // 新しいネオンチューブパスを作成
+                                const newPath = {
+                                    points: ellipsePoints,
+                                    mode: 'stroke',
+                                    type: 'spline'
+                                };
+
+                                setPaths(prevPaths => {
+                                    // 最後のパスが空の場合は、それを置き換える
+                                    const lastPath = prevPaths[prevPaths.length - 1];
+                                    let newPaths;
+
+                                    if (lastPath && lastPath.points.length === 0) {
+                                        // 空のパスを置き換え
+                                        newPaths = [...prevPaths.slice(0, -1), newPath];
+                                    } else {
+                                        // 空のパスがない場合は追加
+                                        newPaths = [...prevPaths, newPath];
+                                    }
+
+                                    // currentPathIndexを新しいパスに更新
+                                    const newPathIndex = newPaths.length - 1;
+                                    setCurrentPathIndex(newPathIndex);
+
+                                    // 履歴に保存
+                                    setTimeout(() => {
+                                        saveToHistory(newPaths, newPathIndex, 'stroke', 'spline');
+                                    }, 0);
+
+                                    return newPaths;
+                                });
+
                                 setShowCircleTemplateModal(false);
                                 setSidebarVisible(true);
                             }}
