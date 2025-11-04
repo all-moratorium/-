@@ -225,6 +225,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 自動円生成モーダル状態
     const [showCircleModal, setShowCircleModal] = useState(false);
     const [circleMargin, setCircleMargin] = useState(5); // デフォルト5cm
+    const [circleX, setCircleX] = useState(0); // X位置（cm）
+    const [circleY, setCircleY] = useState(0); // Y位置（cm）
     // チューブ素材テンプレートモーダル状態
     const [showTemplateModal, setShowTemplateModal] = useState(false);
     const [showRectTemplateModal, setShowRectTemplateModal] = useState(false);
@@ -1032,11 +1034,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 ctx.translate(-posX, -posY);
             }
 
-            // 境界線を緑色のグローで描画（土台と同じエフェクト）
+            // 境界線を赤色のグローで描画
             ctx.globalAlpha = 0.85;
-            ctx.shadowColor = '#10b981';
+            ctx.shadowColor = '#ef4444';
             ctx.shadowBlur = 8;
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = '#ef4444';
             ctx.lineWidth = lineWidths.fillBorder / scale;
             ctx.setLineDash([]); // 実線
 
@@ -1089,10 +1091,16 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 if (hasValidPoints) {
                     // cmをピクセルに変換 (100px = 4cm基準)
                     const marginPx = (circleMargin * 100) / 4;
+                    const offsetXPx = (circleX * 100) / 4;
+                    const offsetYPx = (circleY * 100) / 4;
 
                     // 中心座標を計算
-                    const centerX = (minX + maxX) / 2;
-                    const centerY = (minY + maxY) / 2;
+                    let centerX = (minX + maxX) / 2;
+                    let centerY = (minY + maxY) / 2;
+
+                    // 位置調整を反映
+                    centerX += offsetXPx;
+                    centerY += offsetYPx;
 
                     // 半径を計算
                     const width = maxX - minX;
@@ -1119,7 +1127,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, canvasWidth, canvasHeight]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, circleX, circleY, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, canvasWidth, canvasHeight]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -5474,12 +5482,125 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         </div>
                     </div>
 
+                    {/* 位置調整セクション */}
+                    <div className="template-position-section">
+                        <div className="template-position-title">位置調整</div>
+
+                        {/* X位置 */}
+                        <div className="template-setting-item">
+                        <label htmlFor="circleX" className="template-label">
+                            X位置: {circleX}cm
+                        </label>
+                        <input
+                            id="circleX"
+                            type="range"
+                            min="-30"
+                            max="30"
+                            step="0.05"
+                            value={circleX}
+                            onChange={(e) => setCircleX(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="circle-x-input-container">
+                            <label className="direct-input-label">X位置 :</label>
+                            <input
+                                type="number"
+                                min="-30"
+                                max="30"
+                                step="0.1"
+                                placeholder="X位置を入力"
+                                value={circleX}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleX(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleX(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleX(Math.max(-30, Math.min(30, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    {/* Y位置 */}
+                    <div className="template-setting-item">
+                        <label htmlFor="circleY" className="template-label">
+                            Y位置: {circleY}cm
+                        </label>
+                        <input
+                            id="circleY"
+                            type="range"
+                            min="-30"
+                            max="30"
+                            step="0.05"
+                            value={circleY}
+                            onChange={(e) => setCircleY(Number(e.target.value))}
+                            className="template-range-input"
+                        />
+                        <div className="circle-y-input-container">
+                            <label className="direct-input-label">Y位置 :</label>
+                            <input
+                                type="number"
+                                min="-30"
+                                max="30"
+                                step="0.1"
+                                placeholder="Y位置を入力"
+                                value={circleY}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setCircleY(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setCircleY(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setCircleY(Math.max(-30, Math.min(30, numVal)));
+                                        }
+                                    }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
+                                }}
+                                className="direct-number-input"
+                            />
+                            <span className="unit-label">cm</span>
+                        </div>
+                    </div>
+                    </div>
+
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
                                 // 円形土台を生成
                                 const circleBase = calculateCircleBase(circleMargin);
                                 if (circleBase) {
+                                    // 位置調整を反映（cmをピクセルに変換）
+                                    const offsetXPx = (circleX * 100) / 4;
+                                    const offsetYPx = (circleY * 100) / 4;
+                                    circleBase.centerX += offsetXPx;
+                                    circleBase.centerY += offsetYPx;
+
                                     // 円周上に点を配置（5px間隔）
                                     const circlePoints = subdivideCircleEdge(circleBase, 5);
 
