@@ -225,6 +225,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 自動円生成モーダル状態
     const [showCircleModal, setShowCircleModal] = useState(false);
     const [circleMargin, setCircleMargin] = useState(5); // デフォルト5cm
+    // チューブ素材テンプレートモーダル状態
+    const [showTemplateModal, setShowTemplateModal] = useState(false);
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -4251,14 +4253,30 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         </button>
                     </div>
 
-                    {/* 新しいパス */}
-                    <button
-                        onClick={startNewPath}
-                        disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
-                        className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
-                    >
-                        新しいパス
-                    </button>
+                    {sidebarVisible && (
+                        <>
+                            {/* 新しいパス */}
+                            <button
+                                onClick={startNewPath}
+                                disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
+                                className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                            >
+                                新しいパス
+                            </button>
+
+                            {/* チューブ素材テンプレート */}
+                            <button
+                                onClick={() => {
+                                    setShowTemplateModal(true);
+                                    setSidebarVisible(false);
+                                }}
+                                disabled={drawMode === 'fill'}
+                                className={`template-button ${drawMode === 'fill' ? 'button-disabled' : ''}`}
+                            >
+                                チューブ素材テンプレート
+                            </button>
+                        </>
+                    )}
 
                     {/* 背景画像を追加 */}
                     <button
@@ -5288,6 +5306,53 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             キャンセル
                         </button>
                     </div>
+                </div>
+            </Modal>
+
+            {/* チューブ素材テンプレートモーダル */}
+            <Modal isOpen={showTemplateModal} title="素材の種類を選択" position="center" showCloseButton={true} onClose={() => { setShowTemplateModal(false); setSidebarVisible(true); }}>
+                <p className="drawing-type-description">テンプレートの種類を選択してください。</p>
+                <div className="drawing-type-buttons">
+                    <button
+                        onClick={() => {
+                            // 長方形テンプレート
+                            setShowTemplateModal(false);
+                            setSidebarVisible(true);
+                        }}
+                        className="drawing-type-button button-secondary"
+                    >
+                        長方形
+                    </button>
+                    <button
+                        onClick={() => {
+                            // 三角形テンプレート
+                            setShowTemplateModal(false);
+                            setSidebarVisible(true);
+                        }}
+                        className="drawing-type-button button-secondary"
+                    >
+                        三角形
+                    </button>
+                    <button
+                        onClick={() => {
+                            // 円テンプレート
+                            setShowTemplateModal(false);
+                            setSidebarVisible(true);
+                        }}
+                        className="drawing-type-button button-secondary"
+                    >
+                        円
+                    </button>
+                    <button
+                        onClick={() => {
+                            // 直線テンプレート
+                            setShowTemplateModal(false);
+                            setSidebarVisible(true);
+                        }}
+                        className="drawing-type-button button-secondary"
+                    >
+                        直線
+                    </button>
                 </div>
             </Modal>
 
