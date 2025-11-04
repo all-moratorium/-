@@ -824,7 +824,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             ctx.beginPath();
             ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-            
+
             if (pathType === 'spline') {
                 for (let i = 0; i < pathPoints.length - 1; i++) {
                     const p0 = (i === 0) ? pathPoints[0] : pathPoints[i - 1];
@@ -836,7 +836,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     const cp1y = p1.y + (p2.y - p0.y) / 8;
                     const cp2x = p2.x - (p3.x - p1.x) / 8;
                     const cp2y = p2.y - (p3.y - p1.y) / 8;
-                    
+
                     ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
                 }
             } else {
@@ -1005,6 +1005,55 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
         }
 
+        // 長方形テンプレートプレビューの描画
+        if (showRectTemplateModal) {
+            // cmをピクセルに変換 (100px = 4cm基準)
+            const widthPx = (rectTemplateWidth * 100) / 4;
+            const heightPx = (rectTemplateHeight * 100) / 4;
+            const radiusPx = (rectTemplateRadius * 100) / 4;
+
+            // 長方形の中心位置（rectTemplateX/Yはcm単位なので、ピクセルに変換）
+            const centerX = (rectTemplateX * 100) / 4;
+            const centerY = (rectTemplateY * 100) / 4;
+
+            // 長方形の左上座標
+            const x = centerX - widthPx / 2;
+            const y = centerY - heightPx / 2;
+
+            ctx.save();
+            // 境界線を緑色のグローで描画（土台と同じエフェクト）
+            ctx.globalAlpha = 0.85;
+            ctx.shadowColor = '#10b981';
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = lineWidths.fillBorder / scale;
+            ctx.setLineDash([]); // 実線
+
+            // 長方形プレビュー（角丸対応）
+            ctx.beginPath();
+            const r = Math.min(radiusPx, widthPx / 2, heightPx / 2);
+
+            if (r <= 0) {
+                // 角丸なし
+                ctx.rect(x, y, widthPx, heightPx);
+            } else {
+                // 角丸あり
+                ctx.moveTo(x + r, y);
+                ctx.lineTo(x + widthPx - r, y);
+                ctx.arcTo(x + widthPx, y, x + widthPx, y + r, r);
+                ctx.lineTo(x + widthPx, y + heightPx - r);
+                ctx.arcTo(x + widthPx, y + heightPx, x + widthPx - r, y + heightPx, r);
+                ctx.lineTo(x + r, y + heightPx);
+                ctx.arcTo(x, y + heightPx, x, y + heightPx - r, r);
+                ctx.lineTo(x, y + r);
+                ctx.arcTo(x, y, x + r, y, r);
+                ctx.closePath();
+            }
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
         // 円形土台プレビューの描画
         if (showCircleModal) {
             // 境界計算をインライン実行
@@ -1059,7 +1108,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, canvasWidth, canvasHeight]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -2533,29 +2582,79 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         const effectiveRadius = Math.min(radiusPx, width / 2, height / 2); // 半径が大きすぎる場合は制限
 
         if (effectiveRadius <= 0) {
-            // 角丸なしの場合、従来の処理
+            // 角丸なしの場合、角を直角に保つため角を中心に両側に点を密に配置
+            const cornerDensity = 10; // 角の各側の点の数
+            const cornerSpacing = 0.5; // 角近くの点の間隔
+
+            // 上辺（右上角の手前まで）
             const topPoints = Math.max(2, Math.ceil(width / spacing));
-            for (let i = 0; i < topPoints; i++) {
+            for (let i = 0; i < topPoints - 1; i++) {
                 const ratio = i / (topPoints - 1);
                 points.push({ x: x + (width * ratio), y: y });
             }
 
+            // 右上角：上辺側に密な点を配置
+            for (let i = cornerDensity; i >= 1; i--) {
+                points.push({ x: x + width - (i * cornerSpacing), y: y });
+            }
+            // 右上角の頂点
+            points.push({ x: x + width, y: y });
+            // 右上角：右辺側に密な点を配置
+            for (let i = 1; i <= cornerDensity; i++) {
+                points.push({ x: x + width, y: y + (i * cornerSpacing) });
+            }
+
+            // 右辺（右下角の手前まで）
             const rightPoints = Math.max(2, Math.ceil(height / spacing));
-            for (let i = 1; i < rightPoints; i++) {
+            for (let i = 1; i < rightPoints - 1; i++) {
                 const ratio = i / (rightPoints - 1);
                 points.push({ x: x + width, y: y + (height * ratio) });
             }
 
+            // 右下角：右辺側に密な点を配置
+            for (let i = cornerDensity; i >= 1; i--) {
+                points.push({ x: x + width, y: y + height - (i * cornerSpacing) });
+            }
+            // 右下角の頂点
+            points.push({ x: x + width, y: y + height });
+            // 右下角：下辺側に密な点を配置
+            for (let i = 1; i <= cornerDensity; i++) {
+                points.push({ x: x + width - (i * cornerSpacing), y: y + height });
+            }
+
+            // 下辺（左下角の手前まで）
             const bottomPoints = Math.max(2, Math.ceil(width / spacing));
-            for (let i = 1; i < bottomPoints; i++) {
+            for (let i = 1; i < bottomPoints - 1; i++) {
                 const ratio = i / (bottomPoints - 1);
                 points.push({ x: x + width - (width * ratio), y: y + height });
             }
 
+            // 左下角：下辺側に密な点を配置
+            for (let i = cornerDensity; i >= 1; i--) {
+                points.push({ x: x + (i * cornerSpacing), y: y + height });
+            }
+            // 左下角の頂点
+            points.push({ x: x, y: y + height });
+            // 左下角：左辺側に密な点を配置
+            for (let i = 1; i <= cornerDensity; i++) {
+                points.push({ x: x, y: y + height - (i * cornerSpacing) });
+            }
+
+            // 左辺（左上角の手前まで）
             const leftPoints = Math.max(2, Math.ceil(height / spacing));
             for (let i = 1; i < leftPoints - 1; i++) {
                 const ratio = i / (leftPoints - 1);
                 points.push({ x: x, y: y + height - (height * ratio) });
+            }
+
+            // 左上角：左辺側に密な点を配置
+            for (let i = cornerDensity; i >= 1; i--) {
+                points.push({ x: x, y: y + (i * cornerSpacing) });
+            }
+            // 左上角の頂点は始点なので追加しない
+            // 左上角：上辺側に密な点を配置
+            for (let i = 1; i <= cornerDensity; i++) {
+                points.push({ x: x + (i * cornerSpacing), y: y });
             }
         } else {
             // 角丸ありの場合
@@ -2574,8 +2673,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
 
             // 右上の角丸（90度の円弧、上から右へ）
-            // 角丸部分は非常に密に点を配置（5px間隔で滑らかに）
-            const cornerPoints = Math.max(30, Math.ceil((Math.PI * r / 2) / 5));
+            // 角丸部分は非常に密に点を配置（2.5px間隔で滑らかに）
+            const cornerPoints = Math.max(60, Math.ceil((Math.PI * r / 2) / 2.5));
             for (let i = 1; i <= cornerPoints; i++) {
                 const angle = (Math.PI / 2) * (i / cornerPoints); // 0度から90度
                 const cx = x + width - r;
@@ -2644,8 +2743,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
             }
 
-            // 左上の角丸（90度の円弧、左から上へ）
-            for (let i = 1; i < cornerPoints; i++) {
+            // 左上の角丸（90度の円弧、左から上へ）- 最後の点まで含める
+            for (let i = 1; i <= cornerPoints; i++) {
                 const angle = (Math.PI / 2) * (i / cornerPoints);
                 const cx = x + r;
                 const cy = y + r;
@@ -4227,7 +4326,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                              isModifyingPoints ? '点修正モードアクティブ中' :
                              isPathDeleteMode ? 'パス削除モードアクティブ中' :
                              isPointDeleteMode ? '点削除モードアクティブ中' :
-                             drawMode === 'stroke' ? `チューブパス${currentPathIndex + 1}描画中` :
+                             drawMode === 'stroke' ? `チューブパス${paths.filter(p => p.mode === 'stroke').length}描画中` :
                              drawMode === 'fill' ? '土台描画中' :
                              '描画モードを選択してください'}
                         </div>
@@ -5379,7 +5478,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="3"
                             max="115"
-                            step="0.5"
+                            step="0.1"
                             value={rectTemplateWidth}
                             onChange={(e) => setRectTemplateWidth(Number(e.target.value))}
                             className="template-range-input"
@@ -5390,14 +5489,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 type="number"
                                 min="3"
                                 max="115"
-                                step="0.5"
+                                step="0.1"
                                 placeholder="幅を入力"
                                 value={rectTemplateWidth}
                                 onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    if (val >= 3 && val <= 115) {
-                                        setRectTemplateWidth(val);
+                                    const val = e.target.value;
+                                    setRectTemplateWidth(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateWidth(3);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateWidth(Math.max(3, Math.min(115, numVal)));
+                                        }
                                     }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
                                 }}
                                 className="direct-number-input"
                             />
@@ -5415,7 +5529,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="3"
                             max="70"
-                            step="0.5"
+                            step="0.1"
                             value={rectTemplateHeight}
                             onChange={(e) => setRectTemplateHeight(Number(e.target.value))}
                             className="template-range-input"
@@ -5426,14 +5540,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 type="number"
                                 min="3"
                                 max="70"
-                                step="0.5"
+                                step="0.1"
                                 placeholder="高さを入力"
                                 value={rectTemplateHeight}
                                 onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    if (val >= 3 && val <= 70) {
-                                        setRectTemplateHeight(val);
+                                    const val = e.target.value;
+                                    setRectTemplateHeight(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateHeight(3);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateHeight(Math.max(3, Math.min(70, numVal)));
+                                        }
                                     }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
                                 }}
                                 className="direct-number-input"
                             />
@@ -5451,7 +5580,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             type="range"
                             min="0"
                             max="30"
-                            step="0.5"
+                            step="0.1"
                             value={rectTemplateRadius}
                             onChange={(e) => setRectTemplateRadius(Number(e.target.value))}
                             className="template-range-input"
@@ -5462,14 +5591,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 type="number"
                                 min="0"
                                 max="30"
-                                step="0.5"
+                                step="0.1"
                                 placeholder="角半径を入力"
                                 value={rectTemplateRadius}
                                 onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    if (val >= 0 && val <= 30) {
-                                        setRectTemplateRadius(val);
+                                    const val = e.target.value;
+                                    setRectTemplateRadius(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateRadius(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateRadius(Math.max(0, Math.min(30, numVal)));
+                                        }
                                     }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
                                 }}
                                 className="direct-number-input"
                             />
@@ -5485,14 +5629,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         {/* X位置 */}
                         <div className="template-setting-item">
                         <label htmlFor="rectTemplateX" className="template-label">
-                            X位置: {(rectTemplateX / 25).toFixed(1)}cm
+                            X位置: {rectTemplateX}cm
                         </label>
                         <input
                             id="rectTemplateX"
                             type="range"
-                            min="-1250"
-                            max="1250"
-                            step="25"
+                            min="-50"
+                            max="50"
+                            step="0.1"
                             value={rectTemplateX}
                             onChange={(e) => setRectTemplateX(Number(e.target.value))}
                             className="template-range-input"
@@ -5503,14 +5647,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 type="number"
                                 min="-50"
                                 max="50"
-                                step="1"
+                                step="0.1"
                                 placeholder="X位置を入力"
-                                value={(rectTemplateX / 25).toFixed(1)}
+                                value={rectTemplateX}
                                 onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    if (val >= -50 && val <= 50) {
-                                        setRectTemplateX(val * 25);
+                                    const val = e.target.value;
+                                    setRectTemplateX(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateX(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateX(Math.max(-50, Math.min(50, numVal)));
+                                        }
                                     }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
                                 }}
                                 className="direct-number-input"
                             />
@@ -5521,14 +5680,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* Y位置 */}
                     <div className="template-setting-item">
                         <label htmlFor="rectTemplateY" className="template-label">
-                            Y位置: {(rectTemplateY / 25).toFixed(1)}cm
+                            Y位置: {rectTemplateY}cm
                         </label>
                         <input
                             id="rectTemplateY"
                             type="range"
-                            min="-1750"
-                            max="1750"
-                            step="25"
+                            min="-70"
+                            max="70"
+                            step="0.1"
                             value={rectTemplateY}
                             onChange={(e) => setRectTemplateY(Number(e.target.value))}
                             className="template-range-input"
@@ -5539,14 +5698,29 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 type="number"
                                 min="-70"
                                 max="70"
-                                step="1"
+                                step="0.1"
                                 placeholder="Y位置を入力"
-                                value={(rectTemplateY / 25).toFixed(1)}
+                                value={rectTemplateY}
                                 onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    if (val >= -70 && val <= 70) {
-                                        setRectTemplateY(val * 25);
+                                    const val = e.target.value;
+                                    setRectTemplateY(val);
+                                }}
+                                onBlur={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || val === '-') {
+                                        setRectTemplateY(0);
+                                    } else {
+                                        const numVal = Number(val);
+                                        if (!isNaN(numVal)) {
+                                            setRectTemplateY(Math.max(-70, Math.min(70, numVal)));
+                                        }
                                     }
+                                }}
+                                onFocus={(e) => {
+                                    e.target.select();
+                                }}
+                                onWheel={(e) => {
+                                    e.target.blur();
                                 }}
                                 className="direct-number-input"
                             />
@@ -5558,7 +5732,61 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // 長方形テンプレート生成処理（後で実装）
+                                // 長方形テンプレート生成処理
+                                // cmをピクセルに変換 (100px = 4cm基準)
+                                const widthPx = (rectTemplateWidth * 100) / 4;
+                                const heightPx = (rectTemplateHeight * 100) / 4;
+
+                                // 長方形の中心位置（rectTemplateX/Yはcm単位なので、ピクセルに変換）
+                                const centerX = (rectTemplateX * 100) / 4;
+                                const centerY = (rectTemplateY * 100) / 4;
+
+                                // 長方形の左上座標
+                                const x = centerX - widthPx / 2;
+                                const y = centerY - heightPx / 2;
+
+                                const rectangleBase = {
+                                    x: x,
+                                    y: y,
+                                    width: widthPx,
+                                    height: heightPx
+                                };
+
+                                // 長方形の辺上に点を配置（適度な間隔、角丸半径付き）
+                                const rectanglePoints = subdivideRectangleEdges(rectangleBase, 50, rectTemplateRadius);
+
+                                // 新しいネオンチューブパスを作成
+                                const newPath = {
+                                    points: rectanglePoints,
+                                    mode: 'stroke',
+                                    type: 'spline'
+                                };
+
+                                setPaths(prevPaths => {
+                                    // 最後のパスが空の場合は、それを置き換える
+                                    const lastPath = prevPaths[prevPaths.length - 1];
+                                    let newPaths;
+
+                                    if (lastPath && lastPath.points.length === 0) {
+                                        // 空のパスを置き換え
+                                        newPaths = [...prevPaths.slice(0, -1), newPath];
+                                    } else {
+                                        // 空のパスがない場合は追加
+                                        newPaths = [...prevPaths, newPath];
+                                    }
+
+                                    // currentPathIndexを新しいパスに更新
+                                    const newPathIndex = newPaths.length - 1;
+                                    setCurrentPathIndex(newPathIndex);
+
+                                    // 履歴に保存
+                                    setTimeout(() => {
+                                        saveToHistory(newPaths, newPathIndex, 'stroke', 'spline');
+                                    }, 0);
+
+                                    return newPaths;
+                                });
+
                                 setShowRectTemplateModal(false);
                                 setSidebarVisible(true);
                             }}
