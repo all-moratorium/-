@@ -641,11 +641,11 @@
 
 .draw-mode-buttons .new-path-button {
     margin: 0;
-    width: 100%;
+    width: 190px;
 }
 
 .draw-mode-button {
-    padding: 11px 12px;
+    padding: 11px 1px;
     border-radius: 4px;
     height: 43.6px;
     font-weight: bold;
@@ -984,8 +984,8 @@
 
 /* 設定ボタン - ネオン下絵用 */
 .settings-button-drawing {
-    width: 94%;
-    padding: 10px 0;
+    width: 85%;
+    padding: 8px 0;
     font-size: 14px;
     letter-spacing: 2px;
     background-color:rgba(22, 22, 22, 0);
@@ -1674,7 +1674,7 @@
 .baseplate-drawing-description {
     color: #9ca3af;
     font-size: 12px;
-    margin: -8px auto 10px;
+    margin: -10px auto 15px;
     width: 85%;
     text-align: center;
 }
@@ -1688,15 +1688,17 @@
 .baseplate-drawing-type-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    width: 85%;
+    gap: 12px;
+    row-gap: 18px;
+    width: 70%;
     margin: 0 auto;
 }
 
 .auto-shape-button {
-    width: 85%;
+    width: 70%;
     height: 44px;
-    margin: 6px auto 0;
+    margin: 9px auto 0;
+    flex-shrink: 0;
 }
 
 /* ベースプレートモーダル専用：元の間隔に戻す */
@@ -2606,20 +2608,21 @@
     }
     
     .draw-mode-buttons {
-        width: 95% !important;
+        width: 80% !important;
         gap: 0px !important;
         margin-bottom: 6px !important;
+        
     }
     
     .draw-mode-button {
-        padding: 10px 12px !important;
+        padding: auto !important;
         width: 92% !important;
         margin: 0px auto !important;
         font-size: 13px !important;
+        height: 40px !important;
         border-radius: 4px !important;
         text-align: center !important;
-        line-height: 1.2 !important;
-
+        line-height: 1 !important;
     }
     
     /* 編集ツール関連 */
@@ -2692,9 +2695,7 @@
     .new-path-button {
         width: 90% !important;
         margin: 0px auto !important;
-        margin-bottom: 10px !important;
         font-size: 14px !important;
-        padding:8px 12px !important;
         height: auto !important;
         border-radius: 4px !important;
     }
@@ -2724,13 +2725,14 @@
     
     /* 設定ボタン */
     .settings-button-drawing {
-        width: 80px !important;
+        width: 240px !important;
         font-size: 12px !important;
         padding:0 !important;
-        border-radius: 8px !important;
-        min-height: 36px !important;
+        border-radius: 4px !important;
+        min-height: 30px !important;
         margin-bottom: 6px !important;
         margin:4px auto !important;
+        margin-top: 8px !important;
     }
     
     /* リセットボタン関連 */

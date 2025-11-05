@@ -2462,16 +2462,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     // 描画モード (チューブ/ベースプレート) を設定
     const handleSetDrawMode = useCallback((mode) => {
-        // ベースプレートモードで既にベースプレート面が存在する場合はブロック
-        if (mode === 'fill') {
-            const existingFillPaths = paths.filter(pathObj =>
-                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
-            );
-            if (existingFillPaths.length >= 1) {
-                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
-                return;
-            }
-        } else {
+        if (mode !== 'fill') {
             // チューブモードの場合は描画タイプをデフォルトのスプラインに戻す
             setDrawingType('spline'); // チューブは常にスプライン描画として扱う
         }
@@ -4567,7 +4558,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                                 : 'button-secondary'
                                         }`}
                                     >
-                                        長方形(自動生成)
+                                        長方形
                                     </button>
                                     <button
                                         onClick={() => handleSetDrawingType('circle')}
@@ -4577,7 +4568,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                                 : 'button-secondary'
                                         }`}
                                     >
-                                        円(自動生成)
+                                        円
                                     </button>
                                 </div>
                                 <button
@@ -4588,7 +4579,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                             : 'button-secondary'
                                     }`}
                                 >
-                                    ネオンパスに合わせた形状(自動)
+                                    ネオンパスに合わせた形状
                                 </button>
                                 </>
                             )}
