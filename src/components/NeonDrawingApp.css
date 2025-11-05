@@ -2932,7 +2932,7 @@
 
     .modal-setting-item {
         gap: 8px !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 8px !important;
     }
     .toggle-button {
         padding: 6px 12px !important;
@@ -3049,7 +3049,8 @@
         gap: 10px !important;
     }
     
-    .rectangle-generation-modal .modal-content-right {
+    .rectangle-generation-modal .modal-content-right,
+    .circle-generation-modal .modal-content-right {
         height: auto !important;
         width: 250px !important;
         max-height: 100dvh !important;
@@ -3060,7 +3061,6 @@
         transform: translateY(-50%) !important;
         position: absolute !important;
         right: 0 !important;
-
     }
     .rectangle-cancel-button {
         margin-bottom: 20px !important;
@@ -3069,15 +3069,27 @@
         margin-top: 15px !important;
         gap: 8px !important;
     }
-    
-    .rectangle-generation-modal .scale-range-input {
+
+    .rectangle-generation-modal .scale-range-input,
+    .circle-generation-modal .scale-range-input {
         width: 200px !important;
     }
-    
-    .rectangle-generation-modal .modal-label {
+
+    .rectangle-generation-modal .modal-label,
+    .circle-generation-modal .modal-label {
         margin-top: 12px !important;
     }
-    
+
+    .circle-generation-modal .template-position-section {
+        margin-top: 8px !important;
+        padding: 8px 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .circle-generation-modal .template-range-input {
+        width: 95% !important;
+        margin: 0 auto !important;
+    }
 
     .model-size-info {
         padding: 9px !important;
