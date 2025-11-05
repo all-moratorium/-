@@ -110,7 +110,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             
             {/* 横長画像枠 */}
             <div className="guide-hero-image">
-              <div className="image-placeholder">画像準備中</div>
+              <img src="/pwa-icon-512.png" alt="ヒーロー画像" className="image-placeholder" />
             </div>
 
             <h4 className="guide-section-title">このサイトでできること</h4>
@@ -222,7 +222,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                 <h3 className="guide-info-title">全画面表示について</h3>
                 <div className="mobile-only-text">※モバイル版のみ</div>
                 <div className="mobile-screenshot">
-                  <div className="image-placeholder">スマホスクリーンショット</div>
+                  <img src="/pwa-icon-512.png" alt="スマホスクリーンショット" className="image-placeholder" />
                 </div>
                 <div className="guide-info-text">
                 検索バーを非表示にして全画面表示したい<br />場合は、ブラウザの「ホーム画面に追加」<br />機能をご利用ください。
@@ -235,7 +235,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   <div className="sample-data-image-group">
                     <div className="sample-category-label">ネオン下絵</div>
                     <div className="sample-data-image-small">
-                      <div className="image-placeholder">サンプル画像1</div>
+                      <img src="/pwa-icon-512.png" alt="サンプル画像1" className="image-placeholder" />
                     </div>
                     <div className="sample-instruction-item">
                  下絵のみのデータが読み込まれます。
@@ -244,7 +244,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   <div className="sample-data-image-group">
                     <div className="sample-category-label">色 / 仕様のカスタマイズ</div>
                     <div className="sample-data-image-small">
-                      <div className="image-placeholder">サンプル画像2</div>
+                      <img src="/pwa-icon-512.png" alt="サンプル画像2" className="image-placeholder" />
                     </div>
                     <div className="sample-instruction-item">
                      色 / 仕様のデータ、加えてネオン下絵に<br />下絵のデータが読み込まれます。
@@ -252,7 +252,7 @@ const GuideModal = ({ isOpen, onClose }) => {
                   </div>
                 </div>
                 <div className="sample-data-image-bottom">
-                  <div className="image-placeholder">サンプル画像3</div>
+                  <img src="/pwa-icon-512.png" alt="サンプル画像3" className="image-placeholder" />
                 </div>
                 <div className="sample-instruction-item">
                  サンプルデータは色仕様のカスタマイズデータ<br />ですので、どちらでも読み込み可能です。
@@ -277,7 +277,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               <div className="guide-info-section creation-start-section page3-fade-in">
                 <h3 className="guide-info-title">作成開始</h3>
                 <div className="creation-start-image">
-                  <div className="image-placeholder">アプリスクリーンショット</div>
+                  <img src="/pwa-icon-512.png" alt="アプリスクリーンショット" className="image-placeholder" />
                 </div>
                 <div className="creation-start-text">
                   画面真ん中下の「早速作成する」<br />
