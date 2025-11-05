@@ -216,8 +216,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [showColorModal, setShowColorModal] = useState(false);
     const [sidebarVisible, setSidebarVisible] = useState(initialDrawingState.sidebarVisible !== undefined ? initialDrawingState.sidebarVisible : true);
-    // ベースプレートモード時に描画タイプ選択モーダルを表示するためのステート
-    const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false);
     // 自動長方形生成モーダル状態
     const [showRectangleModal, setShowRectangleModal] = useState(false);
     const [rectangleSize, setRectangleSize] = useState(5); // デフォルト5cm
@@ -2466,17 +2464,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const handleSetDrawMode = useCallback((mode) => {
         // ベースプレートモードで既にベースプレート面が存在する場合はブロック
         if (mode === 'fill') {
-            const existingFillPaths = paths.filter(pathObj => 
+            const existingFillPaths = paths.filter(pathObj =>
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
                 alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
-            setShowFillDrawingTypeModal(true);
         } else {
-            // チューブモードの場合はモーダルを閉じ、描画タイプをデフォルトのスプラインに戻す
-            setShowFillDrawingTypeModal(false);
+            // チューブモードの場合は描画タイプをデフォルトのスプラインに戻す
             setDrawingType('spline'); // チューブは常にスプライン描画として扱う
         }
         setDrawMode(mode);
@@ -2510,7 +2506,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             // 自動長方形の場合はモーダルを開く
             setShowRectangleModal(true);
             setSidebarVisible(false);
-            setShowFillDrawingTypeModal(false);
             return;
         }
 
@@ -2527,7 +2522,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             // 自動円の場合はモーダルを開く
             setShowCircleModal(true);
             setSidebarVisible(false);
-            setShowFillDrawingTypeModal(false);
             return;
         }
 
@@ -2575,19 +2569,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     
                     return filteredPaths;
                 });
-                
-                // ベースプレート生成後はチューブモードに切り替え
-                setDrawMode('stroke');
-                setDrawingType('spline');
             }
-            
-            setShowFillDrawingTypeModal(false);
+
             return;
         }
-        
+
         setDrawingType(type);
-        // 描画タイプを選択したらモーダルを閉じる
-        setShowFillDrawingTypeModal(false);
 
         setPaths(prevPaths => {
             const newPaths = [...prevPaths];
@@ -3947,8 +3934,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             return;
         }
 
-        if (e.button !== 0 || isPanning || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode ||
-            (drawMode === 'fill' && showFillDrawingTypeModal) || isModeSelecting) {
+        if (e.button !== 0 || isPanning || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode || isModeSelecting) {
             return;
         }
 
@@ -4038,7 +4024,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             saveToHistory(newPaths, actualPathIndex, drawMode, drawingType); 
             return newPaths;
         });
-    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, saveToHistory, showFillDrawingTypeModal, showPoints]); 
+    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, saveToHistory, showPoints]); 
 
     const handlePointerUp = useCallback((e) => {
         e.preventDefault();
@@ -4510,33 +4496,102 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </div>
 
                     {/* ネオンチューブ描画モード */}
-                    <div className="draw-tools-title">ネオンチューブ描画モード</div>
-
-                    {sidebarVisible && (
+                    {drawMode === 'stroke' && (
                         <>
-                            {/* 新しいパス・テンプレートボタン */}
-                            <div className="draw-mode-buttons" style={{ gridTemplateColumns: '1.5fr 1fr' }}>
+                            <div className="draw-tools-title">ネオンチューブ描画モード</div>
+
+                            {sidebarVisible && (
+                                <>
+                                    {/* 新しいパス・テンプレートボタン */}
+                                    <div className="draw-mode-buttons" style={{ gridTemplateColumns: '1.5fr 1fr' }}>
+                                        <button
+                                            onClick={startNewPath}
+                                            disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
+                                            className={`draw-mode-button new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                                        >
+                                            新しいパス
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setShowTemplateModal(true);
+                                                setSidebarVisible(false);
+                                            }}
+                                            disabled={areDrawModeButtonsDisabled}
+                                            className={`draw-mode-button ${
+                                                areDrawModeButtonsDisabled ? 'button-disabled' : 'button-red'
+                                            }`}
+                                            style={{ cursor: areDrawModeButtonsDisabled ? 'not-allowed' : 'pointer' }}
+                                        >
+                                            テンプレ
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    )}
+
+                    {/* ベースプレート描画モード */}
+                    {drawMode === 'fill' && (
+                        <>
+                            <div className="draw-tools-title">ベースプレート描画モード</div>
+
+                            {sidebarVisible && (
+                                <>
+                                    <p className="baseplate-drawing-description">描画方法を選択</p>
+                                    <div className="baseplate-drawing-type-buttons">
+                                    <button
+                                        onClick={() => handleSetDrawingType('spline')}
+                                        className={`drawing-type-button ${
+                                            drawingType === 'spline'
+                                                ? 'button-active button-purple'
+                                                : 'button-secondary'
+                                        }`}
+                                    >
+                                        スプライン
+                                    </button>
+                                    <button
+                                        onClick={() => handleSetDrawingType('straight')}
+                                        className={`drawing-type-button ${
+                                            drawingType === 'straight'
+                                                ? 'button-active button-purple'
+                                                : 'button-secondary'
+                                        }`}
+                                    >
+                                        直線
+                                    </button>
+                                    <button
+                                        onClick={() => handleSetDrawingType('rectangle')}
+                                        className={`drawing-type-button ${
+                                            drawingType === 'rectangle'
+                                                ? 'button-active button-purple'
+                                                : 'button-secondary'
+                                        }`}
+                                    >
+                                        長方形(自動生成)
+                                    </button>
+                                    <button
+                                        onClick={() => handleSetDrawingType('circle')}
+                                        className={`drawing-type-button ${
+                                            drawingType === 'circle'
+                                                ? 'button-active button-purple'
+                                                : 'button-secondary'
+                                        }`}
+                                    >
+                                        円(自動生成)
+                                    </button>
+                                </div>
                                 <button
-                                    onClick={startNewPath}
-                                    disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode || drawMode === 'fill'}
-                                    className={`draw-mode-button new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode || drawMode === 'fill') ? 'button-disabled' : ''}`}
-                                >
-                                    新しいパス
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowTemplateModal(true);
-                                        setSidebarVisible(false);
-                                    }}
-                                    disabled={drawMode === 'fill' || areDrawModeButtonsDisabled}
-                                    className={`draw-mode-button ${
-                                        (drawMode === 'fill' || areDrawModeButtonsDisabled) ? 'button-disabled' : 'button-red'
+                                    onClick={() => handleSetDrawingType('auto-shape')}
+                                    className={`drawing-type-button auto-shape-button ${
+                                        drawingType === 'auto-shape'
+                                            ? 'button-active button-purple'
+                                            : 'button-secondary'
                                     }`}
-                                    style={{ cursor: (drawMode === 'fill' || areDrawModeButtonsDisabled) ? 'not-allowed' : 'pointer' }}
                                 >
-                                    テンプレ
+                                    ネオンパスに合わせた形状(自動)
                                 </button>
-                            </div>
+                                </>
+                            )}
                         </>
                     )}
 
@@ -5332,63 +5387,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 </div>
             </Modal>
 
-            {/* ベースプレートモード時の描画タイプ選択モーダル */}
-            <Modal isOpen={showFillDrawingTypeModal} onClose={() => setShowFillDrawingTypeModal(false)} title="ベースプレートの描画タイプを選択" position="center" showCloseButton={true}>
-                <p className="drawing-type-description">ベースプレートの描画方法を選択してください。</p>
-                <div className="drawing-type-buttons">
-                    <button
-                        onClick={() => handleSetDrawingType('spline')}
-                        className={`drawing-type-button ${
-                            drawingType === 'spline' 
-                                ? 'button-active button-purple' 
-                                : 'button-secondary'
-                        }`}
-                    >
-                        スプライン
-                    </button>
-                    <button
-                        onClick={() => handleSetDrawingType('straight')}
-                        className={`drawing-type-button ${
-                            drawingType === 'straight' 
-                                ? 'button-active button-purple' 
-                                : 'button-secondary'
-                        }`}
-                    >
-                        直線
-                    </button>
-                    <button
-                        onClick={() => handleSetDrawingType('rectangle')}
-                        className={`drawing-type-button ${
-                            drawingType === 'rectangle'
-                                ? 'button-active button-purple'
-                                : 'button-secondary'
-                        }`}
-                    >
-                        自動(長方形)
-                    </button>
-                    <button
-                        onClick={() => handleSetDrawingType('circle')}
-                        className={`drawing-type-button ${
-                            drawingType === 'circle'
-                                ? 'button-active button-purple'
-                                : 'button-secondary'
-                        }`}
-                    >
-                        自動(円)
-                    </button>
-                    <button
-                        onClick={() => handleSetDrawingType('auto-shape')}
-                        className={`drawing-type-button ${
-                            drawingType === 'auto-shape'
-                                ? 'button-active button-purple'
-                                : 'button-secondary'
-                        }`}
-                    >
-                        自動(形状)
-                    </button>
-                </div>
-            </Modal>
-
             {/* 自動長方形生成モーダル */}
             <Modal isOpen={showRectangleModal} title="ベースプレート自動生成(長方形)" position="right" className="rectangle-generation-modal">
                 <div className="modal-content-inner">
@@ -5525,12 +5523,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         
                                         return filteredPaths;
                                     });
-                                    
-                                    // ベースプレート生成後はチューブモードに切り替え
-                                    setDrawMode('stroke');
-                                    setDrawingType('spline'); // チューブはスプライン描画
                                 }
-                                
+
                                 setShowRectangleModal(false);
                                 setSidebarVisible(true);
                             }}
@@ -5749,10 +5743,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
                                         return filteredPaths;
                                     });
-
-                                    // ベースプレート生成後はチューブモードに切り替え
-                                    setDrawMode('stroke');
-                                    setDrawingType('spline'); // チューブはスプライン描画
                                 }
 
                                 setShowCircleModal(false);

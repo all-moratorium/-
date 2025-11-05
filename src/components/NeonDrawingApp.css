@@ -1671,10 +1671,32 @@
     text-align: center;
 }
 
+.baseplate-drawing-description {
+    color: #9ca3af;
+    font-size: 12px;
+    margin: -8px auto 10px;
+    width: 85%;
+    text-align: center;
+}
+
 .drawing-type-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+}
+
+.baseplate-drawing-type-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.auto-shape-button {
+    width: 85%;
+    height: 44px;
+    margin: 6px auto 0;
 }
 
 /* ベースプレートモーダル専用：元の間隔に戻す */
@@ -1685,8 +1707,8 @@
 }
 
 .drawing-type-button {
-    padding: 16px 20px;
-    border-radius: 6px;
+    height: 44px;
+    border-radius: 4px;
     font-weight: bold;
     border: 1px solid;
     transition: all 0.2s;
