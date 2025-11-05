@@ -406,10 +406,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">描画モード</h4>
-                    <p className="neon-drawing-container-description">現在の描画モードは「描画ツール」テキストの上のステータスバーで確認できます</p>
+                    <p className="neon-drawing-container-description">現在の描画モードは「ネオンチューブ」テキストの上のステータスバーで確認できます</p>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-tips-item">チューブパス描画モード</li>
-                      <li className="neon-drawing-tips-item">土台描画モード</li>
+                      <li className="neon-drawing-tips-item">ベースプレート描画モード</li>
                       <li className="neon-drawing-tips-item">点修正モード</li>
                       <li className="neon-drawing-tips-item">点削除モード</li>
                       <li className="neon-drawing-tips-item">パス削除モード</li>
@@ -628,7 +628,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     <div className="neon-drawing-step-number">3</div>
                     <div className="neon-drawing-step-text">PAGE 3</div>
                   </div>
-                  <h3 className="neon-drawing-guide-title">土台を描画～下絵完成</h3>
+                  <h3 className="neon-drawing-guide-title">ベースプレートを描画～下絵完成</h3>
                   
                   <div 
                     className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
@@ -636,11 +636,11 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">土台描画モードに切り替え</h4>
+                    <h4 className="neon-drawing-container-title">ベースプレート描画モードに切り替え</h4>
                     <ol className="neon-drawing-steps-list">
                       <li className="neon-drawing-step-item">「背景画像」ボタンで背景画像を追加</li>
                       <li className="neon-drawing-step-item">「適用」ボタンで背景画像設定を完了</li>
-                      <li className="neon-drawing-step-item">「土台」ボタンで土台描画モードに切り替え</li>
+                      <li className="neon-drawing-step-item">「ベースプレート」ボタンでベースプレート描画モードに切り替え</li>
                     </ol>
                   </div>
                   <div 
@@ -649,13 +649,13 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">土台描画モードの種類</h4>
-                    <p className="neon-drawing-container-description">「土台」ボタンで土台の描画タイプを選択できます、描画タイプは以下の4通りです。</p>
+                    <h4 className="neon-drawing-container-title">ベースプレート描画モードの種類</h4>
+                    <p className="neon-drawing-container-description">「ベースプレート」ボタンでベースプレートの描画タイプを選択できます、描画タイプは以下の4通りです。</p>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-tips-item">スプライン : 配置した点をを曲線で結ぶ面の土台を作成</li>
-                      <li className="neon-drawing-tips-item">直線 : 配置した点をを直線で結ぶ面の土台を作成</li>
-                      <li className="neon-drawing-tips-item">自動(長方形) : 全てのネオンパスを囲む長方形の土台を自動で作成</li>
-                      <li className="neon-drawing-tips-item">自動(形状) : 全てのネオンパスを囲む形状の土台を自動で作成</li>
+                      <li className="neon-drawing-tips-item">スプライン : 配置した点をを曲線で結ぶ面のベースプレートを作成</li>
+                      <li className="neon-drawing-tips-item">直線 : 配置した点をを直線で結ぶ面のベースプレートを作成</li>
+                      <li className="neon-drawing-tips-item">自動(長方形) : 全てのネオンパスを囲む長方形のベースプレートを自動で作成</li>
+                      <li className="neon-drawing-tips-item">自動(形状) : 全てのネオンパスを囲む形状のベースプレートを自動で作成</li>
                     </ol>
                   </div>
                   <div 
@@ -778,10 +778,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">土台を描画、スケールを調整</h4>
+                    <h4 className="neon-drawing-container-title">ベースプレートを描画、スケールを調整</h4>
                     <p className="neon-drawing-container-description">ここでは自動(長方形)で作成していますが、他のお好みのもので構いません。詳しくはPAGE 3をご確認ください。</p>
                     <ul className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">土台を描画</li>
+                      <li className="neon-drawing-step-item">ベースプレートを描画</li>
                       <li className="neon-drawing-step-item">スケールを調整</li>
                     </ul>
                   </div>

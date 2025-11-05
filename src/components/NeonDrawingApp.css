@@ -632,9 +632,16 @@
 .draw-mode-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 9px;
-    width: 85%;
+    gap: 15px;
+    width: 80%;
     margin: 0 auto;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.draw-mode-buttons .new-path-button {
+    margin: 0;
+    width: 100%;
 }
 
 .draw-mode-button {
@@ -977,18 +984,20 @@
 
 /* 設定ボタン - ネオン下絵用 */
 .settings-button-drawing {
-    width: 26%;
+    width: 94%;
     padding: 10px 0;
+    font-size: 14px;
+    letter-spacing: 2px;
     background-color:rgba(22, 22, 22, 0);
     color: white;
     border: 1px solid #6b7280;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
     margin: 0 auto;
-    margin-top: 10px;
-    margin-bottom: 0px;
+    margin-top: 5px;
+    margin-bottom: 25px;
     background: rgba(156, 163, 175, 0.55);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(156, 163, 175, 0.8);
@@ -1103,7 +1112,7 @@
     padding: 15px 24px 24px 24px;
 }
 
-/* 土台自動生成モーダル専用スタイル */
+/* ベースプレート自動生成モーダル専用スタイル */
 .rectangle-generation-modal .modal-content-right {
     height: 545px;
 }
@@ -1668,7 +1677,7 @@
     gap: 16px;
 }
 
-/* 土台モーダル専用：元の間隔に戻す */
+/* ベースプレートモーダル専用：元の間隔に戻す */
 .modal-content-center .modal-setting-item {
     gap: 8px;
     margin-bottom: 8px;
@@ -2345,7 +2354,7 @@
     margin-top: 24px;
 }
 
-/* 土台生成ボタン専用スタイル */
+/* ベースプレート生成ボタン専用スタイル */
 .rectangle-generate-button {
     width: 100%;
     padding: 8px;
@@ -2374,7 +2383,7 @@
     color: white;
 }
 
-/* 土台モーダル専用キャンセルボタン */
+/* ベースプレートモーダル専用キャンセルボタン */
 .rectangle-cancel-button {
     width: 100%;
     padding: 8px;

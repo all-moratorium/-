@@ -233,7 +233,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             });
           }
         } else if (dataType === 'base') {
-          // 土台の処理
+          // ベースプレートの処理
           const points = this.elementToPathPoints(element, scale);
           if (points.length > 0) {
             elements.push({
@@ -244,7 +244,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           }
         } else {
           // 従来のロジック（データ型が指定されていない場合）
-          // Fill要素（土台）の処理
+          // Fill要素（ベースプレート）の処理
           if (isFilled && isPathLikeElement && stroke === 'none') {
             const points = this.elementToPathPoints(element, scale);
             if (points.length > 0) {
@@ -439,7 +439,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
 
 
-  // 土台作成関数
+  // ベースプレート作成関数
   const createBase = useCallback((points, fillColor) => {
     const shape = new THREE.Shape();
     
@@ -459,7 +459,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       simplifiedPoints.push(points[points.length - 1]);
     }
     
-    console.log(`土台ポイント削減: ${points.length} → ${simplifiedPoints.length}ポイント`);
+    console.log(`ベースプレートポイント削減: ${points.length} → ${simplifiedPoints.length}ポイント`);
     
     shape.moveTo(simplifiedPoints[0].x, simplifiedPoints[0].y);
     for (let i = 1; i < simplifiedPoints.length; i++) {
@@ -508,11 +508,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     }
     
     const baseMesh = new THREE.Mesh(geometry, material);
-    baseMesh.position.z = 7; // 土台を7mm前に移動
+    baseMesh.position.z = 7; // ベースプレートを7mm前に移動
     baseMesh.receiveShadow = false;
     baseMesh.layers.set(ENTIRE_SCENE_LAYER);
     
-    // 土台にはクリッピングプレーンを適用しない（既にMeshPhongMaterialなので問題なし）
+    // ベースプレートにはクリッピングプレーンを適用しない（既にMeshPhongMaterialなので問題なし）
     
     return baseMesh;
   }, []);
@@ -609,7 +609,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     group.add(startCap);
     group.add(endCap);
     
-    // チューブ全体をZ=16mmに移動（土台上面14mm + 余白2mm）
+    // チューブ全体をZ=16mmに移動（ベースプレート上面14mm + 余白2mm）
     group.position.z = 16;
     
     neonMaterialsRef.current[materialIndex] = {
@@ -1675,7 +1675,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             
             // 元の位置とローテーションを適用
             mesh.position.copy(child.position);
-            mesh.position.z = 16; // チューブを土台より前面に配置
+            mesh.position.z = 16; // チューブをベースプレートより前面に配置
             mesh.rotation.copy(child.rotation);
             mesh.scale.copy(child.scale);
             
@@ -1700,7 +1700,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const mesh = new THREE.Mesh(newGeometry, material);
           
           mesh.position.copy(child.position);
-          mesh.position.z = 16; // キャップも土台より前面に配置
+          mesh.position.z = 16; // キャップもベースプレートより前面に配置
           mesh.rotation.copy(child.rotation);
           mesh.scale.copy(child.scale);
           
@@ -1709,7 +1709,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           console.log(`球体簡略化: ${originalGeometry.attributes.position.count}頂点 → ${newGeometry.attributes.position.count}頂点`);
         }
         else if (child.geometry.type === 'ExtrudeGeometry') {
-          // 土台の元の色を保持
+          // ベースプレートの元の色を保持
           let baseMaterial;
           if (child.material.type === 'MeshPhongMaterial') {
             // 元のMeshPhongMaterialの設定を保持
@@ -1731,7 +1731,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           const mesh = new THREE.Mesh(child.geometry.clone(), baseMaterial);
           
           mesh.position.copy(child.position);
-          mesh.position.z = 7; // 土台を正しい位置に配置
+          mesh.position.z = 7; // ベースプレートを正しい位置に配置
           mesh.rotation.copy(child.rotation);
           mesh.scale.copy(child.scale);
           

@@ -216,7 +216,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [showColorModal, setShowColorModal] = useState(false);
     const [sidebarVisible, setSidebarVisible] = useState(initialDrawingState.sidebarVisible !== undefined ? initialDrawingState.sidebarVisible : true);
-    // 土台モード時に描画タイプ選択モーダルを表示するためのステート
+    // ベースプレートモード時に描画タイプ選択モーダルを表示するためのステート
     const [showFillDrawingTypeModal, setShowFillDrawingTypeModal] = useState(false);
     // 自動長方形生成モーダル状態
     const [showRectangleModal, setShowRectangleModal] = useState(false);
@@ -766,7 +766,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         ctx.lineTo(0, crossSize);
         ctx.stroke();
 
-        // 1. まず全ての土台（fill）パスの面と境界線を描画
+        // 1. まず全てのベースプレート（fill）パスの面と境界線を描画
         paths.forEach((pathObj) => {
             if (!pathObj || !Array.isArray(pathObj.points) || pathObj.mode !== 'fill') {
                 return;
@@ -874,7 +874,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
         const POINT_DISPLAY_THRESHOLD = 500;
 
-        // 3. 最後に全ての制御点を描画（土台、チューブの順で色分け）
+        // 3. 最後に全ての制御点を描画（ベースプレート、チューブの順で色分け）
         if (showPoints) {
             paths.forEach((pathObj, pathIdx) => {
                 if (!pathObj || !Array.isArray(pathObj.points)) {
@@ -912,7 +912,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     } else {
                         // パスのモードに応じて点の色を変更
                         if (pathMode === 'fill') {
-                            pointFillStyle = colors.fillPoint; // 土台（fill）の点の色
+                            pointFillStyle = colors.fillPoint; // ベースプレート（fill）の点の色
                         } else {
                             pointFillStyle = colors.strokePoint; // チューブ（stroke）の点の色
                         }
@@ -950,7 +950,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             });
         }
 
-        // 長方形土台プレビューの描画
+        // 長方形ベースプレートプレビューの描画
         if (showRectangleModal) {
             // 境界計算をインライン実行
             if (paths && paths.length > 0) {
@@ -984,7 +984,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     };
 
                     ctx.save();
-                    // 境界線を緑色のグローで描画（土台と同じエフェクト）
+                    // 境界線を緑色のグローで描画（ベースプレートと同じエフェクト）
                     ctx.globalAlpha = 0.85;
                     ctx.shadowColor = '#10b981';
                     ctx.shadowBlur = 8;
@@ -1160,7 +1160,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.restore();
         }
 
-        // 円形土台プレビューの描画
+        // 円形ベースプレートプレビューの描画
         if (showCircleModal) {
             // 境界計算をインライン実行
             if (paths && paths.length > 0) {
@@ -1201,7 +1201,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     const radius = Math.sqrt(width * width + height * height) / 2 + marginPx;
 
                     ctx.save();
-                    // 境界線を緑色のグローで描画（土台と同じエフェクト）
+                    // 境界線を緑色のグローで描画（ベースプレートと同じエフェクト）
                     ctx.globalAlpha = 0.85;
                     ctx.shadowColor = '#10b981';
                     ctx.shadowBlur = 8;
@@ -1652,13 +1652,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         setPaths(prevPaths => {
             const currentPath = prevPaths[currentPathIndex];
             if (currentPath && currentPath.points.length > 0) {
-                // 土台の重複チェック
+                // ベースプレートの重複チェック
                 if (drawMode === 'fill') {
                     const existingFillPaths = prevPaths.filter(pathObj => 
                         pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
                     );
                     if (existingFillPaths.length >= 1) {
-                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                         setIsNewPathDisabled(false);
                         return prevPaths;
                     }
@@ -2462,15 +2462,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         drawSpline();
     }, [canvasWidth, canvasHeight, drawSpline]);
 
-    // 描画モード (チューブ/土台) を設定
+    // 描画モード (チューブ/ベースプレート) を設定
     const handleSetDrawMode = useCallback((mode) => {
-        // 土台モードで既に土台面が存在する場合はブロック
+        // ベースプレートモードで既にベースプレート面が存在する場合はブロック
         if (mode === 'fill') {
             const existingFillPaths = paths.filter(pathObj => 
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
-                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
             setShowFillDrawingTypeModal(true);
@@ -2498,12 +2498,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     // 描画タイプ (スプライン/直線/自動長方形) を設定
     const handleSetDrawingType = useCallback((type) => {
         if (type === 'rectangle') {
-            // 自動長方形の場合は先に土台の重複チェック
+            // 自動長方形の場合は先にベースプレートの重複チェック
             const existingFillPaths = paths.filter(pathObj =>
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
-                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
 
@@ -2515,12 +2515,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         if (type === 'circle') {
-            // 自動円の場合は先に土台の重複チェック
+            // 自動円の場合は先にベースプレートの重複チェック
             const existingFillPaths = paths.filter(pathObj =>
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
-                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
 
@@ -2532,12 +2532,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         if (type === 'auto-shape') {
-            // 自動形状の場合は先に土台の重複チェック
+            // 自動形状の場合は先にベースプレートの重複チェック
             const existingFillPaths = paths.filter(pathObj => 
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             if (existingFillPaths.length >= 1) {
-                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
             
@@ -2550,10 +2550,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 return;
             }
             
-            // 自動形状土台を生成
+            // 自動形状ベースプレートを生成
             const autoShapeBase = generateAutoShapeBase(strokePaths, 3); // デフォルト3cm余白
             if (autoShapeBase) {
-                // 新しい土台パスを作成
+                // 新しいベースプレートパスを作成
                 const newPath = {
                     points: autoShapeBase,
                     mode: 'fill',
@@ -2563,9 +2563,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 // パスを追加
                 setPaths(prevPaths => {
                     const newPaths = [...prevPaths];
-                    // 既存の土台パスを削除（1つの土台のみ許可）
+                    // 既存のベースプレートパスを削除（1つのベースプレートのみ許可）
                     const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
-                    // 新しい土台パスを追加
+                    // 新しいベースプレートパスを追加
                     filteredPaths.push(newPath);
                     
                     // 履歴に保存（新しいパス状態で）
@@ -2576,7 +2576,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     return filteredPaths;
                 });
                 
-                // 土台生成後はチューブモードに切り替え
+                // ベースプレート生成後はチューブモードに切り替え
                 setDrawMode('stroke');
                 setDrawingType('spline');
             }
@@ -2626,7 +2626,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         return { minX, minY, maxX, maxY };
     }, [paths]);
 
-    // 長方形土台の座標を計算する関数
+    // 長方形ベースプレートの座標を計算する関数
     const calculateRectangleBase = useCallback((marginCm) => {
         const bounds = calculatePathsBounds();
         if (!bounds) return null;
@@ -2642,7 +2642,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         };
     }, [calculatePathsBounds]);
 
-    // 円形土台の座標を計算する関数
+    // 円形ベースプレートの座標を計算する関数
     const calculateCircleBase = useCallback((marginCm) => {
         const bounds = calculatePathsBounds();
         if (!bounds) return null;
@@ -2952,7 +2952,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         return hull;
     }, [crossProduct]);
 
-    // 自動形状土台生成アルゴリズム（完全一定距離オフセット方式）
+    // 自動形状ベースプレート生成アルゴリズム（完全一定距離オフセット方式）
     const generateAutoShapeBase = useCallback((strokePaths, marginCm) => {
         try {
             // cmをピクセルに変換 (100px = 4cm基準)
@@ -2991,8 +2991,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             return boundary;
             
         } catch (error) {
-            console.error('自動形状土台生成エラー:', error);
-            alert('形状が複雑すぎて土台を生成できませんでした。長方形土台をお試しください。');
+            console.error('自動形状ベースプレート生成エラー:', error);
+            alert('形状が複雑すぎてベースプレートを生成できませんでした。長方形ベースプレートをお試しください。');
             return null;
         }
     }, [calculateConvexHull]);
@@ -3938,7 +3938,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         // モーダル表示中はキャンバス操作を無効化
         if (showRectangleModal) return;
 
-        // 右クリック、パン中、ドラッグ中、修正モード、点結合モード、パス削除モード、点削除モード、土台モードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
+        // 右クリック、パン中、ドラッグ中、修正モード、点結合モード、パス削除モード、点削除モード、ベースプレートモードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
         const isModeSelecting = !isModifyingPoints && !isMergeMode && !isPathDeleteMode && !isPointDeleteMode &&
                                (drawMode !== 'stroke' && drawMode !== 'fill');
 
@@ -3952,15 +3952,15 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             return;
         }
 
-        // 土台モードで既に土台面が存在し、かつ新しい土台パスを作ろうとしている場合はキャンバスクリックをブロック
+        // ベースプレートモードで既にベースプレート面が存在し、かつ新しいベースプレートパスを作ろうとしている場合はキャンバスクリックをブロック
         if (drawMode === 'fill') {
             const existingFillPaths = paths.filter(pathObj => 
                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
             );
             const currentPath = paths[currentPathIndex];
-            // 既に土台面が存在し、かつ現在のパスが空（新しい土台を作ろうとしている）場合のみブロック
+            // 既にベースプレート面が存在し、かつ現在のパスが空（新しいベースプレートを作ろうとしている）場合のみブロック
             if (existingFillPaths.length >= 1 && currentPath && currentPath.points.length === 0) {
-                alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                 return;
             }
         }
@@ -3983,13 +3983,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
             // 現在のパスが存在しない、または空である場合は初期化
             if (!targetPath || targetPath.points.length === 0) {
-                // 土台の重複チェック（新しい土台パスを初期化する場合）
+                // ベースプレートの重複チェック（新しいベースプレートパスを初期化する場合）
                 if (drawMode === 'fill') {
                     const existingFillPaths = newPaths.filter(pathObj => 
                         pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
                     );
                     if (existingFillPaths.length >= 1) {
-                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                         return prevPaths; // 変更せずに元の配列を返す
                     }
                 }
@@ -3999,13 +3999,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
             // 既存のパスがあるが、モード/タイプが異なる場合は新しいパスを作成
             else if (targetPath.mode !== drawMode || targetPath.type !== drawingType) {
-                // 土台の重複チェック（新しい土台パスを作成する場合）
+                // ベースプレートの重複チェック（新しいベースプレートパスを作成する場合）
                 if (drawMode === 'fill') {
                     const existingFillPaths = newPaths.filter(pathObj => 
                         pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
                     );
                     if (existingFillPaths.length >= 1) {
-                        alert('土台は1つまでしか作成できません。既存の土台を削除してから新しい土台を作成してください。');
+                        alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
                         return prevPaths; // 変更せずに元の配列を返す
                     }
                 }
@@ -4463,16 +4463,27 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                              isPathDeleteMode ? 'パス削除モードアクティブ中' :
                              isPointDeleteMode ? '点削除モードアクティブ中' :
                              drawMode === 'stroke' ? `チューブパス${paths.filter(p => p.mode === 'stroke').length}描画中` :
-                             drawMode === 'fill' ? '土台描画中' :
+                             drawMode === 'fill' ? 'ベースプレート描画中' :
                              '描画モードを選択してください'}
                         </div>
                     </div>
 
 
-                    {/* 描画ツール */}
-                    <div className="draw-tools-title">描画ツール</div>
-                    
-                    {/* チューブ・土台ボタン */}
+                    {/* 背景画像を設定 */}
+                    <button
+                        onClick={() => {
+                            setShowBgModal(true);
+                            setSidebarVisible(false);
+                        }}
+                        className="settings-button-drawing"
+                    >
+                        背景画像を設定
+                    </button>
+
+                    {/* 描画モード */}
+                    <div className="draw-tools-title">描画モード</div>
+
+                    {/* ネオンチューブ・ベースプレートボタン */}
                     <div className="draw-mode-buttons">
                         <button
                             onClick={() => handleSetDrawMode('stroke')}
@@ -4483,7 +4494,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         : (drawMode === 'stroke' ? 'button-blue' : 'button-secondary')
                             }`}
                         >
-                            チューブ
+                            ネオンチューブ
                         </button>
                         <button
                             onClick={() => handleSetDrawMode('fill')}
@@ -4494,45 +4505,40 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         : (drawMode === 'fill' ? 'button-red' : 'button-secondary')
                             }`}
                         >
-                            土台
+                            ベースプレート
                         </button>
                     </div>
 
+                    {/* ネオンチューブ描画モード */}
+                    <div className="draw-tools-title">ネオンチューブ描画モード</div>
+
                     {sidebarVisible && (
                         <>
-                            {/* 新しいパス */}
-                            <button
-                                onClick={startNewPath}
-                                disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
-                                className={`new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
-                            >
-                                新しいパス
-                            </button>
-
-                            {/* チューブ素材テンプレート */}
-                            <button
-                                onClick={() => {
-                                    setShowTemplateModal(true);
-                                    setSidebarVisible(false);
-                                }}
-                                disabled={drawMode === 'fill'}
-                                className={`template-button ${drawMode === 'fill' ? 'button-disabled' : ''}`}
-                            >
-                                チューブ素材テンプレート
-                            </button>
+                            {/* 新しいパス・テンプレートボタン */}
+                            <div className="draw-mode-buttons" style={{ gridTemplateColumns: '1.5fr 1fr' }}>
+                                <button
+                                    onClick={startNewPath}
+                                    disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode || drawMode === 'fill'}
+                                    className={`draw-mode-button new-path-button ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode || drawMode === 'fill') ? 'button-disabled' : ''}`}
+                                >
+                                    新しいパス
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowTemplateModal(true);
+                                        setSidebarVisible(false);
+                                    }}
+                                    disabled={drawMode === 'fill' || areDrawModeButtonsDisabled}
+                                    className={`draw-mode-button ${
+                                        (drawMode === 'fill' || areDrawModeButtonsDisabled) ? 'button-disabled' : 'button-red'
+                                    }`}
+                                    style={{ cursor: (drawMode === 'fill' || areDrawModeButtonsDisabled) ? 'not-allowed' : 'pointer' }}
+                                >
+                                    テンプレ
+                                </button>
+                            </div>
                         </>
                     )}
-
-                    {/* 背景画像を追加 */}
-                    <button
-                        onClick={() => {
-                            setShowBgModal(true);
-                            setSidebarVisible(false);
-                        }}
-                        className="settings-button-drawing"
-                    >
-                        背景画像
-                    </button>
 
                     {/* 修正ツール */}
                     <div className="edit-tools-title">修正ツール</div>
@@ -4824,7 +4830,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     {/* カスタマイズへ進む */}
                     <button
                         onClick={() => {
-                            // 土台（fillモード）が存在するかチェック
+                            // ベースプレート（fillモード）が存在するかチェック
                             const hasFillPath = paths.some(pathObj => 
                                 pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
                             );
@@ -4835,7 +4841,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             );
                             
                             if (!hasFillPath) {
-                                alert('土台を描画してください。');
+                                alert('ベースプレートを描画してください。');
                                 return;
                             }
                             
@@ -5258,7 +5264,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         />
                     </div>
                     <div className="modal-setting-item">
-                        <label htmlFor="fillPointColor" className="modal-label">土台の点の色</label>
+                        <label htmlFor="fillPointColor" className="modal-label">ベースプレートの点の色</label>
                         <input
                             id="fillPointColor"
                             type="color"
@@ -5268,7 +5274,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         />
                     </div>
                     <div className="modal-setting-item">
-                        <label htmlFor="fillAreaColor" className="modal-label">土台の中身の色</label>
+                        <label htmlFor="fillAreaColor" className="modal-label">ベースプレートの中身の色</label>
                         <input
                             id="fillAreaColor"
                             type="color"
@@ -5279,7 +5285,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         <p className="setting-description">自動的に50%透明度が適用されます</p>
                     </div>
                     <div className="modal-setting-item">
-                        <label htmlFor="fillBorderColor" className="modal-label">土台の境界線の色</label>
+                        <label htmlFor="fillBorderColor" className="modal-label">ベースプレートの境界線の色</label>
                         <input
                             id="fillBorderColor"
                             type="color"
@@ -5290,7 +5296,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </div>
                     <div className="modal-setting-item">
                         <label htmlFor="fillBorderWidth" className="modal-label">
-                            土台の境界線の太さ: {lineWidths.fillBorder}px
+                            ベースプレートの境界線の太さ: {lineWidths.fillBorder}px
                         </label>
                         <input
                             id="fillBorderWidth"
@@ -5326,9 +5332,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 </div>
             </Modal>
 
-            {/* 土台モード時の描画タイプ選択モーダル */}
-            <Modal isOpen={showFillDrawingTypeModal} onClose={() => setShowFillDrawingTypeModal(false)} title="土台の描画タイプを選択" position="center" showCloseButton={true}>
-                <p className="drawing-type-description">土台の描画方法を選択してください。</p>
+            {/* ベースプレートモード時の描画タイプ選択モーダル */}
+            <Modal isOpen={showFillDrawingTypeModal} onClose={() => setShowFillDrawingTypeModal(false)} title="ベースプレートの描画タイプを選択" position="center" showCloseButton={true}>
+                <p className="drawing-type-description">ベースプレートの描画方法を選択してください。</p>
                 <div className="drawing-type-buttons">
                     <button
                         onClick={() => handleSetDrawingType('spline')}
@@ -5384,7 +5390,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 自動長方形生成モーダル */}
-            <Modal isOpen={showRectangleModal} title="土台自動生成(長方形)" position="right" className="rectangle-generation-modal">
+            <Modal isOpen={showRectangleModal} title="ベースプレート自動生成(長方形)" position="right" className="rectangle-generation-modal">
                 <div className="modal-content-inner">
                 <label htmlFor="rectangleSize" className="modal-label">
                             余白: {rectangleSize}cm
@@ -5491,13 +5497,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // 長方形土台を生成
+                                // 長方形ベースプレートを生成
                                 const rectangleBase = calculateRectangleBase(rectangleSize);
                                 if (rectangleBase) {
                                     // 長方形の辺上に点を配置（4cm = 100px間隔、角丸半径付き）
                                     const rectanglePoints = subdivideRectangleEdges(rectangleBase, 100, rectangleRadius);
 
-                                    // 新しい土台パスを作成
+                                    // 新しいベースプレートパスを作成
                                     const newPath = {
                                         points: rectanglePoints,
                                         mode: 'fill',
@@ -5507,9 +5513,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     // パスを追加
                                     setPaths(prevPaths => {
                                         const newPaths = [...prevPaths];
-                                        // 既存の土台パスを削除（1つの土台のみ許可）
+                                        // 既存のベースプレートパスを削除（1つのベースプレートのみ許可）
                                         const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
-                                        // 新しい土台パスを追加
+                                        // 新しいベースプレートパスを追加
                                         filteredPaths.push(newPath);
                                         
                                         // 履歴に保存（新しいパス状態で）
@@ -5520,7 +5526,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         return filteredPaths;
                                     });
                                     
-                                    // 土台生成後はチューブモードに切り替え
+                                    // ベースプレート生成後はチューブモードに切り替え
                                     setDrawMode('stroke');
                                     setDrawingType('spline'); // チューブはスプライン描画
                                 }
@@ -5530,7 +5536,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             }}
                             className="rectangle-generate-button"
                         >
-                            土台を生成
+                            ベースプレートを生成
                         </button>
                         <button
                             onClick={() => {
@@ -5546,7 +5552,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 自動円生成モーダル */}
-            <Modal isOpen={showCircleModal} title="土台自動生成(円)" position="right" className="circle-generation-modal">
+            <Modal isOpen={showCircleModal} title="ベースプレート自動生成(円)" position="right" className="circle-generation-modal">
                 <div className="modal-content-inner">
                     <label htmlFor="circleMargin" className="modal-label">
                         余白: {circleMargin}cm
@@ -5709,7 +5715,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // 円形土台を生成
+                                // 円形ベースプレートを生成
                                 const circleBase = calculateCircleBase(circleMargin);
                                 if (circleBase) {
                                     // 位置調整を反映（cmをピクセルに変換）
@@ -5721,7 +5727,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     // 円周上に点を配置（5px間隔）
                                     const circlePoints = subdivideCircleEdge(circleBase, 5);
 
-                                    // 新しい土台パスを作成
+                                    // 新しいベースプレートパスを作成
                                     const newPath = {
                                         points: circlePoints,
                                         mode: 'fill',
@@ -5731,9 +5737,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     // パスを追加
                                     setPaths(prevPaths => {
                                         const newPaths = [...prevPaths];
-                                        // 既存の土台パスを削除（1つの土台のみ許可）
+                                        // 既存のベースプレートパスを削除（1つのベースプレートのみ許可）
                                         const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
-                                        // 新しい土台パスを追加
+                                        // 新しいベースプレートパスを追加
                                         filteredPaths.push(newPath);
 
                                         // 履歴に保存（新しいパス状態で）
@@ -5744,7 +5750,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         return filteredPaths;
                                     });
 
-                                    // 土台生成後はチューブモードに切り替え
+                                    // ベースプレート生成後はチューブモードに切り替え
                                     setDrawMode('stroke');
                                     setDrawingType('spline'); // チューブはスプライン描画
                                 }
@@ -5754,7 +5760,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             }}
                             className="rectangle-generate-button"
                         >
-                            土台を生成
+                            ベースプレートを生成
                         </button>
                         <button
                             onClick={() => {
@@ -7133,7 +7139,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     描画モードの選択
                                 </div>
                                 <p>
-                                    「チューブ」モードではネオンチューブの線を描画し、「土台」モードではベースプレートの形状を描画できます。描画タイプは「スプライン」で滑らかな曲線、「直線」で角ばった線が描けます。
+                                    「チューブ」モードではネオンチューブの線を描画し、「ベースプレート」モードではベースプレートの形状を描画できます。描画タイプは「スプライン」で滑らかな曲線、「直線」で角ばった線が描けます。
                                 </p>
                             </div>
                             <div className="guide-notice-section">

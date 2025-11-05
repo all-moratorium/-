@@ -298,7 +298,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                         cleanCtx.scale(scale, scale);
                         cleanCtx.translate(centerX / scale - modelCenterX, centerY / scale - modelCenterY);
                         
-                        // 1. 土台（fill）パスを先に描画
+                        // 1. ベースプレート（fill）パスを先に描画
                         neonPaths.forEach((pathObj, pathIndex) => {
                             if (!pathObj || !pathObj.points || pathObj.points.length < 2 || pathObj.mode !== 'fill') return;
                             
@@ -1504,19 +1504,19 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     }
                 }
                 currentFillSegment += ` Z`;
-                const effectiveFillThickness = 3; // 土台の境界線は常に3px
+                const effectiveFillThickness = 3; // ベースプレートの境界線は常に3px
                 const fillColor = pathColors[`${pathIndex}_fill`] || neonColors.fillArea; // ベースプレート設定の色を使用
                 const strokeColor = customColor || neonColors.fillBorder;
                 fillPathData += `<path class="base-stroke" d="${currentFillSegment}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${effectiveFillThickness}"/>\n    `;
             }
         });
 
-        // 土台（fillパス）の境界のみを計算
+        // ベースプレート（fillパス）の境界のみを計算
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         
         neonPaths.forEach(pathObj => {
             if (!pathObj || !Array.isArray(pathObj.points)) return;
-            // fillパス（土台）のみを境界計算に使用
+            // fillパス（ベースプレート）のみを境界計算に使用
             if (pathObj.mode === 'fill') {
                 pathObj.points.forEach(point => {
                     minX = Math.min(minX, point.x);
@@ -1527,7 +1527,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             }
         });
 
-        // 土台がない場合は全パスを使用
+        // ベースプレートがない場合は全パスを使用
         if (minX === Infinity) {
             neonPaths.forEach(pathObj => {
                 if (!pathObj || !Array.isArray(pathObj.points)) return;
@@ -1540,7 +1540,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             });
         }
 
-        // 余白なし（土台の輪郭ぴったり）
+        // 余白なし（ベースプレートの輪郭ぴったり）
         const margin = 0;
 
         const svgWidth = maxX - minX;
@@ -1741,7 +1741,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         }, 100);
     }, []);
 
-    // 土台設定コンテナまでスクロールする関数
+    // ベースプレート設定コンテナまでスクロールする関数
     const scrollToBaseContainer = useCallback((pathIndex) => {
         // 少し遅延を入れてDOM更新を待つ
         setTimeout(() => {
@@ -1869,13 +1869,13 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             setHighlightedTube(null);
                         } else {
                             setHighlightedTube(hitPathIndex);
-                            setHighlightedBase(null); // 土台のハイライトをクリア
+                            setHighlightedBase(null); // ベースプレートのハイライトをクリア
                             // 対応する設定コンテナにスクロール
                             scrollToTubeContainer(hitPathIndex);
                         }
                     }
                 } else if (hitMode === 'fill') {
-                    // 土台（fill）の処理
+                    // ベースプレート（fill）の処理
                     if (!isCanvasSelectionMode) {
                         // 通常モードの場合：ハイライト切り替え
                         if (highlightedBase === hitPathIndex) {
@@ -2128,7 +2128,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
         ctx.translate(canvasSettings.offsetX, canvasSettings.offsetY);
         ctx.scale(canvasSettings.scale, canvasSettings.scale);
 
-        // 1. 土台（fill）パスの描画（最初の1つのみ）
+        // 1. ベースプレート（fill）パスの描画（最初の1つのみ）
         neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').slice(0, 1).forEach((pathObj, pathIndex) => {
             if (!pathObj || !Array.isArray(pathObj.points) || pathObj.mode !== 'fill') {
                 return;
@@ -2788,7 +2788,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                         </div>
                     )}
 
-                    {/* 土台設定 */}
+                    {/* ベースプレート設定 */}
                     {neonPaths.filter(pathObj => pathObj && pathObj.mode === 'fill').length > 0 && (
                         <div className="base-settings">
                             <h3 className="customize-setting-title">ベースプレート設定</h3>
@@ -3537,7 +3537,7 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                     ベースプレートの設定
                                 </div>
                                 <p>
-                                    土台となるベースプレートは透明、白、黒の3色から選択できます。キャンバス上の土台エリアをクリックするか、ベースプレート設定のコンテナをクリックして選択できます。
+                                    ベースプレートとなるベースプレートは透明、白、黒の3色から選択できます。キャンバス上のベースプレートエリアをクリックするか、ベースプレート設定のコンテナをクリックして選択できます。
                                 </p>
                             </div>
                             <div className="guide-notice-section">

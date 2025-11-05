@@ -12,7 +12,7 @@ const newPath = { points: [], mode: drawMode, type: drawingType };
 const newPath = { points: [], mode: drawMode, type: drawingType };
 ```
 
-### 3. 長方形土台生成（行3740）
+### 3. 長方形ベースプレート生成（行3740）
 ```javascript
 const newPath = {
     points: rectanglePoints,
@@ -21,7 +21,7 @@ const newPath = {
 };
 ```
 
-### 4. 自動形状土台生成（行1822）
+### 4. 自動形状ベースプレート生成（行1822）
 ```javascript
 const newPath = {
     points: autoShapeBase,
