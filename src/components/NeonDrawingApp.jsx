@@ -246,6 +246,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [circleTemplateHeight, setCircleTemplateHeight] = useState(10); // 高さ（cm）
     const [circleTemplateX, setCircleTemplateX] = useState(0); // X位置（中心のX座標、cm）
     const [circleTemplateY, setCircleTemplateY] = useState(0); // Y位置（中心のY座標、cm）
+    // 直線テンプレート設定
+    const [lineTemplateLength, setLineTemplateLength] = useState(10); // 長さ（cm）
+    const [lineTemplateCurve, setLineTemplateCurve] = useState(0); // 曲げ具合（cm）
+    const [lineTemplateX, setLineTemplateX] = useState(0); // X位置（始点のX座標、cm）
+    const [lineTemplateY, setLineTemplateY] = useState(0); // Y位置（始点のY座標、cm）
+    const [lineTemplateAngle, setLineTemplateAngle] = useState(0); // 回転角度（度）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
     const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
@@ -5736,15 +5742,6 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
-                            setShowTemplateModal(false);
-                            setShowTriangleTemplateModal(true);
-                        }}
-                        className="drawing-type-button button-secondary"
-                    >
-                        三角形
-                    </button>
-                    <button
-                        onClick={() => {
                             // 初期値にリセット
                             setCircleTemplateDiameter(6);
                             setCircleTemplateWidth(6);
@@ -5760,6 +5757,12 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     </button>
                     <button
                         onClick={() => {
+                            // 初期値にリセット
+                            setLineTemplateLength(10);
+                            setLineTemplateCurve(0);
+                            setLineTemplateX(0);
+                            setLineTemplateY(0);
+                            setLineTemplateAngle(0);
                             setShowTemplateModal(false);
                             setShowLineTemplateModal(true);
                         }}
@@ -6601,9 +6604,234 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             </Modal>
 
             {/* 直線テンプレートモーダル */}
-            <Modal isOpen={showLineTemplateModal} title="直線テンプレート" position="right" className="line-template-modal">
+            <Modal
+                isOpen={showLineTemplateModal}
+                onClose={() => {
+                    setShowLineTemplateModal(false);
+                    setSidebarVisible(true);
+                }}
+                title="直線テンプレート"
+                position="right"
+                className="line-template-modal"
+                showCloseButton={true}
+            >
                 <div className="modal-content-inner">
-                    <p>直線テンプレートの設定項目（後で追加）</p>
+                    {/* サイズ調整セクション */}
+                    <div className="template-size-section">
+                        <div className="template-size-title">サイズ調整</div>
+
+                        {/* 長さ */}
+                        <div className="template-setting-item">
+                            <label htmlFor="lineLength" className="template-label">
+                                長さ: {lineTemplateLength.toFixed(1)}cm
+                            </label>
+                            <input
+                                id="lineLength"
+                                type="range"
+                                min="5"
+                                max="30"
+                                step="0.1"
+                                value={lineTemplateLength}
+                                onChange={(e) => setLineTemplateLength(Number(e.target.value))}
+                                className="template-range-input"
+                            />
+                            <div className="line-length-input-container">
+                                <label className="direct-input-label">長さ :</label>
+                                <input
+                                    type="number"
+                                    min="5"
+                                    max="30"
+                                    step="0.1"
+                                    value={lineTemplateLength}
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        setLineTemplateLength(val);
+                                    }}
+                                    onBlur={(e) => {
+                                        let val = Number(e.target.value);
+                                        if (val < 5) val = 5;
+                                        if (val > 30) val = 30;
+                                        setLineTemplateLength(val);
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onWheel={(e) => e.target.blur()}
+                                    className="direct-number-input"
+                                />
+                                <span className="unit-label">cm</span>
+                            </div>
+                        </div>
+
+                        {/* 曲げ具合 */}
+                        <div className="template-setting-item">
+                            <label htmlFor="lineCurve" className="template-label">
+                                曲げ具合: {lineTemplateCurve.toFixed(1)}cm
+                            </label>
+                            <input
+                                id="lineCurve"
+                                type="range"
+                                min="-5"
+                                max="5"
+                                step="0.1"
+                                value={lineTemplateCurve}
+                                onChange={(e) => setLineTemplateCurve(Number(e.target.value))}
+                                className="template-range-input"
+                            />
+                            <div className="line-curve-input-container">
+                                <label className="direct-input-label">曲げ具合 :</label>
+                                <input
+                                    type="number"
+                                    min="-5"
+                                    max="5"
+                                    step="0.1"
+                                    value={lineTemplateCurve}
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        setLineTemplateCurve(val);
+                                    }}
+                                    onBlur={(e) => {
+                                        let val = Number(e.target.value);
+                                        if (val < -5) val = -5;
+                                        if (val > 5) val = 5;
+                                        setLineTemplateCurve(val);
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onWheel={(e) => e.target.blur()}
+                                    className="direct-number-input"
+                                />
+                                <span className="unit-label">cm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 位置調整セクション */}
+                    <div className="template-position-section">
+                        <div className="template-position-title">位置調整</div>
+
+                        {/* X位置 */}
+                        <div className="template-setting-item">
+                            <label htmlFor="lineX" className="template-label">
+                                X位置: {lineTemplateX.toFixed(1)}cm
+                            </label>
+                            <input
+                                id="lineX"
+                                type="range"
+                                min="-30"
+                                max="30"
+                                step="0.1"
+                                value={lineTemplateX}
+                                onChange={(e) => setLineTemplateX(Number(e.target.value))}
+                                className="template-range-input"
+                            />
+                            <div className="line-x-input-container">
+                                <label className="direct-input-label">X位置 :</label>
+                                <input
+                                    type="number"
+                                    min="-30"
+                                    max="30"
+                                    step="0.1"
+                                    value={lineTemplateX}
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        setLineTemplateX(val);
+                                    }}
+                                    onBlur={(e) => {
+                                        let val = Number(e.target.value);
+                                        if (val < -30) val = -30;
+                                        if (val > 30) val = 30;
+                                        setLineTemplateX(val);
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onWheel={(e) => e.target.blur()}
+                                    className="direct-number-input"
+                                />
+                                <span className="unit-label">cm</span>
+                            </div>
+                        </div>
+
+                        {/* Y位置 */}
+                        <div className="template-setting-item">
+                            <label htmlFor="lineY" className="template-label">
+                                Y位置: {lineTemplateY.toFixed(1)}cm
+                            </label>
+                            <input
+                                id="lineY"
+                                type="range"
+                                min="-30"
+                                max="30"
+                                step="0.1"
+                                value={lineTemplateY}
+                                onChange={(e) => setLineTemplateY(Number(e.target.value))}
+                                className="template-range-input"
+                            />
+                            <div className="line-y-input-container">
+                                <label className="direct-input-label">Y位置 :</label>
+                                <input
+                                    type="number"
+                                    min="-30"
+                                    max="30"
+                                    step="0.1"
+                                    value={lineTemplateY}
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        setLineTemplateY(val);
+                                    }}
+                                    onBlur={(e) => {
+                                        let val = Number(e.target.value);
+                                        if (val < -30) val = -30;
+                                        if (val > 30) val = 30;
+                                        setLineTemplateY(val);
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onWheel={(e) => e.target.blur()}
+                                    className="direct-number-input"
+                                />
+                                <span className="unit-label">cm</span>
+                            </div>
+                        </div>
+
+                        {/* 角度 */}
+                        <div className="template-setting-item">
+                            <label htmlFor="lineAngle" className="template-label">
+                                角度: {lineTemplateAngle.toFixed(0)}°
+                            </label>
+                            <input
+                                id="lineAngle"
+                                type="range"
+                                min="-180"
+                                max="180"
+                                step="1"
+                                value={lineTemplateAngle}
+                                onChange={(e) => setLineTemplateAngle(Number(e.target.value))}
+                                className="template-range-input"
+                            />
+                            <div className="line-angle-input-container">
+                                <label className="direct-input-label">角度 :</label>
+                                <input
+                                    type="number"
+                                    min="-180"
+                                    max="180"
+                                    step="1"
+                                    value={lineTemplateAngle}
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        setLineTemplateAngle(val);
+                                    }}
+                                    onBlur={(e) => {
+                                        let val = Number(e.target.value);
+                                        if (val < -180) val = -180;
+                                        if (val > 180) val = 180;
+                                        setLineTemplateAngle(val);
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onWheel={(e) => e.target.blur()}
+                                    className="direct-number-input"
+                                />
+                                <span className="unit-label">°</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ボタン群 */}
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {

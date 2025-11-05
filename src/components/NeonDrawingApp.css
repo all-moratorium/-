@@ -1289,7 +1289,12 @@
 .rectangle-radius-input-container,
 .circle-margin-input-container,
 .circle-x-input-container,
-.circle-y-input-container {
+.circle-y-input-container,
+.line-length-input-container,
+.line-curve-input-container,
+.line-x-input-container,
+.line-y-input-container,
+.line-angle-input-container {
     display: flex;
     align-items: center;
     gap: 10px;
