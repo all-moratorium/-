@@ -2034,15 +2034,31 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }
                         
                         // グリッド設定は現在の設定を維持（読み込まない）
-                        
+
+                        // pathColorsがない場合は全てのパスに白色を設定
+                        if (!projectData.neonPaths.pathColors || Object.keys(projectData.neonPaths.pathColors).length === 0) {
+                            const newPathColors = {};
+                            loadedPaths.forEach((_, index) => {
+                                newPathColors[index] = '#ffffff';
+                            });
+                            // pathColorsを設定して親コンポーネントに通知
+                            setTimeout(() => {
+                                if (onStateChange) {
+                                    onStateChange({
+                                        pathColors: newPathColors
+                                    });
+                                }
+                            }, 100);
+                        }
+
                         // 適切なcurrentPathIndexを設定（新しいパスを追加）
                         const newPath = { points: [], mode: drawMode, type: drawingType };
                         const pathsWithNewPath = [...loadedPaths, newPath];
                         const newCurrentPathIndex = pathsWithNewPath.length - 1;
-                        
+
                         setPaths(pathsWithNewPath);
                         setCurrentPathIndex(newCurrentPathIndex);
-                        
+
                         // 履歴を初期化（新しいパスを含めた状態で）
                         const initialHistory = [{
                             paths: JSON.parse(JSON.stringify(pathsWithNewPath)),
@@ -2052,10 +2068,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         }];
                         setHistory(initialHistory);
                         setHistoryIndex(0);
-                        
+
                         // ファイル読み込み時は点を非表示にする
                         setShowPoints(false);
-                        
+
                         saveToLocalStorage();
                         alert('色 / 仕様のカスタマイズファイルを読み込みました');
                         console.log('パスデータ復元完了:', loadedPaths.length, '個のパス');
@@ -2079,9 +2095,24 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         fillPoint: '#10b981'
                                     });
                                 }
-                                
+
                                 // 最適な初期視点を計算してモデルを画面中央に配置
                                 const loadedPaths = svgDataParsed.paths;
+
+                                // pathColorsがない場合は全てのパスに白色を設定
+                                if (!svgDataParsed.pathColors || Object.keys(svgDataParsed.pathColors).length === 0) {
+                                    const newPathColors = {};
+                                    loadedPaths.forEach((_, index) => {
+                                        newPathColors[index] = '#ffffff';
+                                    });
+                                    setTimeout(() => {
+                                        onStateChange({
+                                            ...svgDataParsed,
+                                            paths: loadedPaths,
+                                            pathColors: newPathColors
+                                        });
+                                    }, 0);
+                                }
                                 let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
                                 loadedPaths.forEach(pathObj => {
                                     if (pathObj && pathObj.points && pathObj.points.length > 0) {

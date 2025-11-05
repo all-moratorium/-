@@ -502,28 +502,7 @@
 }
 
 /* 視点リセットボタン */
-.view-reset-button {
-    padding: 6px 4px;
-    background-color: #dc2626;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 4px;
-    border: 1px solid #ef4444;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.2s;
-}
 
-.view-reset-button:hover {
-    background: rgba(220, 38, 38, 0.75);
-  border: 1px solid rgba(220, 38, 38, 1.0);
-  box-shadow: 
-    0 0 20px rgba(220, 38, 38, 0.2),
-    0 0 40px rgba(220, 38, 38, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-}
 
 /* グリッド切り替えコンテナ */
 .grid-toggle-container-drawing {
