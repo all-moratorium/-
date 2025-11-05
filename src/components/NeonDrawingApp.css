@@ -2619,6 +2619,7 @@
         width: 92% !important;
         margin: 0px auto !important;
         font-size: 13px !important;
+        gap: 6px !important;
         height: 40px !important;
         border-radius: 4px !important;
         text-align: center !important;
@@ -2693,13 +2694,18 @@
     
     /* 新しいパスボタン */
     .new-path-button {
-        width: 90% !important;
+        width: 135px !important;
+        margin-right: 5px !important;
         margin: 0px auto !important;
         font-size: 14px !important;
-        height: auto !important;
+        height: 40px !important;
+        margin-left: 3px !important;
         border-radius: 4px !important;
     }
-    
+
+    /* テンプレボタン */
+
+
     /* チューブ太さセクション */
     .tube-thickness-section {
         margin:0 !important;
