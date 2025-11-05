@@ -3326,7 +3326,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     const handleMouseDown = useCallback((e) => {
         // モーダル表示中はクリック操作のみ無効化、パン操作は許可
-        if (showRectangleModal && e.button !== 2) return;
+        if ((showRectangleModal || showCircleModal || showRectTemplateModal || showCircleTemplateModal || showLineTemplateModal) && e.button !== 2) return;
         
         e.preventDefault();
         didDragRef.current = false; // ドラッグ開始時にリセット
@@ -3598,11 +3598,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 }
             }
         }
-    }, [offsetX, offsetY, scale, paths, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory, originalShowPointsState]);
+    }, [offsetX, offsetY, scale, paths, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, currentPathIndex, drawMode, drawingType, saveToHistory, originalShowPointsState, showRectangleModal, showCircleModal, showRectTemplateModal, showCircleTemplateModal, showLineTemplateModal]);
 
     const handleMouseMove = useCallback((e) => {
         // モーダル表示中はパン操作のみ許可
-        if (showRectangleModal && !isPanning) return;
+        if ((showRectangleModal || showCircleModal || showRectTemplateModal || showCircleTemplateModal || showLineTemplateModal) && !isPanning) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -3674,11 +3674,11 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             });
             didDragRef.current = true;
         }
-    }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale, isMergeMode, hoveredPointForMerge, paths]);
+    }, [isPanning, lastPanX, lastPanY, activePoint, offsetX, offsetY, scale, isMergeMode, hoveredPointForMerge, paths, showRectangleModal, showCircleModal, showRectTemplateModal, showCircleTemplateModal, showLineTemplateModal]);
 
     const handleMouseUp = useCallback(() => {
         // モーダル表示中でもパン操作終了は許可
-        if (showRectangleModal && !isPanning) return;
+        if ((showRectangleModal || showCircleModal || showRectTemplateModal || showCircleTemplateModal || showLineTemplateModal) && !isPanning) return;
         
         // 点をドラッグした場合は履歴に保存
         if (activePoint !== null && didDragRef.current) {
@@ -3914,7 +3914,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
     const handleMouseClick = useCallback((e) => {
         // モーダル表示中はキャンバス操作を無効化
-        if (showRectangleModal) return;
+        if (showRectangleModal || showCircleModal || showRectTemplateModal || showCircleTemplateModal || showLineTemplateModal) return;
 
         // 右クリック、パン中、ドラッグ中、修正モード、点結合モード、パス削除モード、点削除モード、ベースプレートモードで描画タイプ選択モーダルが表示されている場合、または描画モード選択中は処理しない
         const isModeSelecting = !isModifyingPoints && !isMergeMode && !isPathDeleteMode && !isPointDeleteMode &&
@@ -4015,7 +4015,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             saveToHistory(newPaths, actualPathIndex, drawMode, drawingType); 
             return newPaths;
         });
-    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, saveToHistory, showPoints]); 
+    }, [currentPathIndex, drawMode, drawingType, offsetX, offsetY, scale, isPanning, isModifyingPoints, isMergeMode, isPathDeleteMode, isPointDeleteMode, saveToHistory, showPoints, showRectangleModal, showCircleModal, showRectTemplateModal, showCircleTemplateModal, showLineTemplateModal, paths]); 
 
     const handlePointerUp = useCallback((e) => {
         e.preventDefault();
@@ -4288,15 +4288,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     
                     {/* スクロール可能なボタンコンテンツ部分 */}
                     <div className="mobile-function-bar-content">
-                        <button
-                            className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
-                            onClick={startNewPath}
-                            disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
-                        >
-                            <svg width="23" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M12 5v14M5 12h14"/>
-                            </svg>
-                        </button>
+                        {drawMode !== 'fill' && (
+                            <button
+                                className={`mobile-function-btn new-path ${(isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode) ? 'button-disabled' : ''}`}
+                                onClick={startNewPath}
+                                disabled={isNewPathDisabled || isModifyingPoints || isMergeMode || isPathDeleteMode || isPointDeleteMode}
+                            >
+                                <svg width="23" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                            </button>
+                        )}
                         <button
                             className={`mobile-function-btn modify-points ${isModifyingPoints ? 'button-active' : ''}`}
                             onClick={toggleModifyMode}
@@ -6207,7 +6209,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         newPaths = [...prevPaths, newPath];
                                     }
 
-                                    // currentPathIndexを新しいパスに更新
+                                    // 新しい空のパスを追加（次の描画用）
+                                    newPaths.push({ points: [], mode: 'stroke', type: 'spline' });
+
+                                    // currentPathIndexを新しい空のパスに更新
                                     const newPathIndex = newPaths.length - 1;
                                     setCurrentPathIndex(newPathIndex);
 
@@ -6607,7 +6612,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         newPaths = [...prevPaths, newPath];
                                     }
 
-                                    // currentPathIndexを新しいパスに更新
+                                    // 新しい空のパスを追加（次の描画用）
+                                    newPaths.push({ points: [], mode: 'stroke', type: 'spline' });
+
+                                    // currentPathIndexを新しい空のパスに更新
                                     const newPathIndex = newPaths.length - 1;
                                     setCurrentPathIndex(newPathIndex);
 
@@ -6961,7 +6969,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                         newPaths = [...prevPaths, newPath];
                                     }
 
-                                    // currentPathIndexを新しいパスに更新
+                                    // 新しい空のパスを追加（次の描画用）
+                                    newPaths.push({ points: [], mode: 'stroke', type: 'spline' });
+
+                                    // currentPathIndexを新しい空のパスに更新
                                     const newPathIndex = newPaths.length - 1;
                                     setCurrentPathIndex(newPathIndex);
 

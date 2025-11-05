@@ -1188,14 +1188,14 @@
     margin-bottom: 30px;
     box-sizing: border-box;
     display: block;
-    box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 50px 0px;
+    box-shadow: rgba(16, 185, 129, 0.5) 0px 0px 20px 0px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
 }
 
 .text-generator-export-button:hover:not(:disabled) {
-    box-shadow: rgba(16, 185, 129, 0.85) 0px 0px 40px 0px;
+    box-shadow: rgba(16, 185, 129, 0.85) 0px 0px 20px 0px;
 }
 
 .text-generator-export-button:disabled {
