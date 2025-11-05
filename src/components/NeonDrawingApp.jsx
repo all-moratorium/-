@@ -1111,6 +1111,55 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             ctx.restore();
         }
 
+        // 直線テンプレートプレビューの描画
+        if (showLineTemplateModal) {
+            // cmをピクセルに変換 (100px = 4cm基準)
+            const lengthPx = (lineTemplateLength * 100) / 4;
+            const curvePx = (lineTemplateCurve * 100) / 4;
+
+            // 位置をピクセルに変換
+            const posX = (lineTemplateX * 100) / 4;
+            const posY = (lineTemplateY * 100) / 4;
+
+            ctx.save();
+
+            // 回転がある場合は、始点を中心に回転
+            if (lineTemplateAngle !== 0) {
+                ctx.translate(posX, posY);
+                ctx.rotate((lineTemplateAngle * Math.PI) / 180);
+                ctx.translate(-posX, -posY);
+            }
+
+            // 境界線を赤色のグローで描画
+            ctx.globalAlpha = 0.85;
+            ctx.shadowColor = '#ef4444';
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = lineWidths.fillBorder / scale;
+            ctx.setLineDash([]); // 実線
+
+            // 曲線を描画（2次ベジェ曲線）
+            ctx.beginPath();
+
+            // 始点
+            const startX = posX;
+            const startY = posY;
+
+            // 終点
+            const endX = posX + lengthPx;
+            const endY = posY;
+
+            // 制御点（中点を垂直方向にオフセット）
+            const controlX = posX + lengthPx / 2;
+            const controlY = posY - curvePx; // マイナスは上方向（キャンバス座標系）
+
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
         // 円形土台プレビューの描画
         if (showCircleModal) {
             // 境界計算をインライン実行
@@ -1171,7 +1220,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         ctx.restore(); // パスと制御点の変換を元に戻す
-    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, circleX, circleY, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, showCircleTemplateModal, circleTemplateDiameter, circleTemplateWidth, circleTemplateHeight, circleTemplateX, circleTemplateY, canvasWidth, canvasHeight]);
+    }, [paths, segmentsPerCurve, scale, offsetX, offsetY, activePoint, loadedBackgroundImage, initialBgImageWidth, initialBgImageHeight, bgImageScale, bgImageX, bgImageY, bgImageOpacity, showGrid, gridSize, gridOpacity, colors, lineWidths, isPathDeleteMode, isPointDeleteMode, isModifyingPoints, isMergeMode, selectedPointsForMerge, hoveredPointForMerge, showRectangleModal, rectangleSize, rectangleRadius, showCircleModal, circleMargin, circleX, circleY, showPoints, showRectTemplateModal, rectTemplateWidth, rectTemplateHeight, rectTemplateRadius, rectTemplateX, rectTemplateY, rectTemplateAngle, showCircleTemplateModal, circleTemplateDiameter, circleTemplateWidth, circleTemplateHeight, circleTemplateX, circleTemplateY, showLineTemplateModal, lineTemplateLength, lineTemplateCurve, lineTemplateX, lineTemplateY, lineTemplateAngle, canvasWidth, canvasHeight]);
 
     // 色変換のヘルパー関数
     const hexToRgba = (hex, alpha = 0.5) => {
@@ -6623,14 +6672,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         {/* 長さ */}
                         <div className="template-setting-item">
                             <label htmlFor="lineLength" className="template-label">
-                                長さ: {lineTemplateLength.toFixed(1)}cm
+                                長さ: {lineTemplateLength}cm
                             </label>
                             <input
                                 id="lineLength"
                                 type="range"
-                                min="5"
-                                max="30"
-                                step="0.1"
+                                min="3"
+                                max="115"
+                                step="0.05"
                                 value={lineTemplateLength}
                                 onChange={(e) => setLineTemplateLength(Number(e.target.value))}
                                 className="template-range-input"
@@ -6639,19 +6688,24 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 <label className="direct-input-label">長さ :</label>
                                 <input
                                     type="number"
-                                    min="5"
-                                    max="30"
+                                    min="3"
+                                    max="115"
                                     step="0.1"
                                     value={lineTemplateLength}
                                     onChange={(e) => {
-                                        const val = Number(e.target.value);
+                                        const val = e.target.value;
                                         setLineTemplateLength(val);
                                     }}
                                     onBlur={(e) => {
-                                        let val = Number(e.target.value);
-                                        if (val < 5) val = 5;
-                                        if (val > 30) val = 30;
-                                        setLineTemplateLength(val);
+                                        const val = e.target.value;
+                                        if (val === '' || val === '-') {
+                                            setLineTemplateLength(3);
+                                        } else {
+                                            const numVal = Number(val);
+                                            if (!isNaN(numVal)) {
+                                                setLineTemplateLength(Math.max(3, Math.min(115, numVal)));
+                                            }
+                                        }
                                     }}
                                     onFocus={(e) => e.target.select()}
                                     onWheel={(e) => e.target.blur()}
@@ -6664,13 +6718,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         {/* 曲げ具合 */}
                         <div className="template-setting-item">
                             <label htmlFor="lineCurve" className="template-label">
-                                曲げ具合: {lineTemplateCurve.toFixed(1)}cm
+                                曲げ具合: {lineTemplateCurve}cm
                             </label>
                             <input
                                 id="lineCurve"
                                 type="range"
-                                min="-5"
-                                max="5"
+                                min="-60"
+                                max="60"
                                 step="0.1"
                                 value={lineTemplateCurve}
                                 onChange={(e) => setLineTemplateCurve(Number(e.target.value))}
@@ -6680,19 +6734,24 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 <label className="direct-input-label">曲げ具合 :</label>
                                 <input
                                     type="number"
-                                    min="-5"
-                                    max="5"
+                                    min="-60"
+                                    max="60"
                                     step="0.1"
                                     value={lineTemplateCurve}
                                     onChange={(e) => {
-                                        const val = Number(e.target.value);
+                                        const val = e.target.value;
                                         setLineTemplateCurve(val);
                                     }}
                                     onBlur={(e) => {
-                                        let val = Number(e.target.value);
-                                        if (val < -5) val = -5;
-                                        if (val > 5) val = 5;
-                                        setLineTemplateCurve(val);
+                                        const val = e.target.value;
+                                        if (val === '' || val === '-') {
+                                            setLineTemplateCurve(0);
+                                        } else {
+                                            const numVal = Number(val);
+                                            if (!isNaN(numVal)) {
+                                                setLineTemplateCurve(Math.max(-60, Math.min(60, numVal)));
+                                            }
+                                        }
                                     }}
                                     onFocus={(e) => e.target.select()}
                                     onWheel={(e) => e.target.blur()}
@@ -6835,7 +6894,98 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     <div className="rectangle-modal-buttons">
                         <button
                             onClick={() => {
-                                // 直線テンプレート生成処理（後で実装）
+                                // 直線テンプレート生成処理
+                                // cmをピクセルに変換 (100px = 4cm基準)
+                                const lengthPx = (lineTemplateLength * 100) / 4;
+                                const curvePx = (lineTemplateCurve * 100) / 4;
+
+                                // 位置をピクセルに変換
+                                const posX = (lineTemplateX * 100) / 4;
+                                const posY = (lineTemplateY * 100) / 4;
+
+                                // 2次ベジェ曲線の点を計算
+                                const startX = 0;
+                                const startY = 0;
+                                const endX = lengthPx;
+                                const endY = 0;
+                                const controlX = lengthPx / 2;
+                                const controlY = -curvePx;
+
+                                // 曲線上に点を配置（spacing: 5px間隔）
+                                const spacing = 5;
+                                const points = [];
+
+                                // ベジェ曲線の長さを近似計算
+                                let curveLength = 0;
+                                const steps = 100;
+                                let prevX = startX;
+                                let prevY = startY;
+
+                                for (let i = 1; i <= steps; i++) {
+                                    const t = i / steps;
+                                    const x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
+                                    const y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+                                    const dx = x - prevX;
+                                    const dy = y - prevY;
+                                    curveLength += Math.sqrt(dx * dx + dy * dy);
+                                    prevX = x;
+                                    prevY = y;
+                                }
+
+                                const numPoints = Math.max(2, Math.floor(curveLength / spacing));
+
+                                // 等間隔で点を配置
+                                for (let i = 0; i <= numPoints; i++) {
+                                    const t = i / numPoints;
+                                    const x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
+                                    const y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+
+                                    // 回転を適用
+                                    const angleRad = (lineTemplateAngle * Math.PI) / 180;
+                                    const cosA = Math.cos(angleRad);
+                                    const sinA = Math.sin(angleRad);
+                                    const rotatedX = x * cosA - y * sinA;
+                                    const rotatedY = x * sinA + y * cosA;
+
+                                    // 位置を適用
+                                    points.push({
+                                        x: posX + rotatedX,
+                                        y: posY + rotatedY
+                                    });
+                                }
+
+                                // 新しいネオンチューブパスを作成
+                                const newPath = {
+                                    points: points,
+                                    mode: 'stroke',
+                                    type: 'spline'
+                                };
+
+                                setPaths(prevPaths => {
+                                    // 最後のパスが空の場合は、それを置き換える
+                                    const lastPath = prevPaths[prevPaths.length - 1];
+                                    let newPaths;
+
+                                    if (lastPath && lastPath.points.length === 0) {
+                                        // 空のパスを置き換え
+                                        newPaths = [...prevPaths.slice(0, -1), newPath];
+                                    } else {
+                                        // 空のパスがない場合は追加
+                                        newPaths = [...prevPaths, newPath];
+                                    }
+
+                                    // currentPathIndexを新しいパスに更新
+                                    const newPathIndex = newPaths.length - 1;
+                                    setCurrentPathIndex(newPathIndex);
+
+                                    // 履歴に保存
+                                    setTimeout(() => {
+                                        saveToHistory(newPaths, newPathIndex, 'stroke', 'spline');
+                                    }, 0);
+
+                                    return newPaths;
+                                });
+
                                 setShowLineTemplateModal(false);
                                 setSidebarVisible(true);
                             }}
