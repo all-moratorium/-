@@ -2273,19 +2273,19 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="features-section">
                   <div className="product-info-feature-card">
                     <h4>品質保証</h4>
-                    <img src="/ホーム画像/今のガイドモーダル三ページ目.png" alt="品質保証" />
+                    <img src="/pwa-icon-512.png" alt="品質保証" />
                     <p>厳格な品質管理のもと、不良品は無償で再製作いたします。安心してご利用ください。</p>
                   </div>
                   
                   <div className="product-info-feature-card">
                     <h4>特注・大量注文のご相談</h4>
-                    <img src="/ホーム画像/今のガイドモーダル三ページ目.png" alt="相談" />
+                    <img src="/pwa-icon-512.png" alt="相談" />
                     <p>より大きなサイズや特殊な仕様、大量注文については個別にお見積もりいたします。</p>
                   </div>
 
                   <div className="product-info-feature-card">
                     <h4>スピード制作</h4>
-                    <img src="/ホーム画像/今のガイドモーダル三ページ目.png" alt="スピード" />
+                    <img src="/pwa-icon-512.png" alt="スピード" />
                     <p>デザイン確定後、最短5営業日でお届け。お急ぎの場合はご相談ください。</p>
                   </div>
                 </div>

@@ -2782,9 +2782,10 @@
 
 .product-info-feature-card img {
   width: 290px;
-  height: auto;
-  object-fit: contain;
+  height: 190px;
+  object-fit: cover;
   margin: 0 auto;
+  border-radius: 10px;
 }
 
 
@@ -4215,10 +4216,11 @@ canvas {
     padding: 10px !important;
   }
   .product-info-feature-card img {
-    width: 250px !important ;
-    height: auto !important;
-    object-fit: contain !important;
+    width: 250px !important;
+    height: 170px !important;
+    object-fit: cover !important;
     margin: 0 auto !important;
+    border-radius: 10px !important;
   }
   .product-info-feature-card h4 {
     font-size: 18px !important;

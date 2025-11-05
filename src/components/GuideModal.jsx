@@ -118,7 +118,7 @@ const GuideModal = ({ isOpen, onClose }) => {
             <div className="guide-features">
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <img src="/ホーム画像/なにこれ？.png" alt="オリジナルネオンサイン作成" className="icon-placeholder" />
+                  <img src="/pwa-icon-512.png" alt="オリジナルネオンサイン作成" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   完全オリジナルの<br />
@@ -129,7 +129,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <img src="/ホーム画像/なにこれ？.png" alt="データ保存・読み込み" className="icon-placeholder" />
+                  <img src="/pwa-icon-512.png" alt="データ保存・読み込み" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   作成したネオンサインの<br />
@@ -140,7 +140,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <img src="/ホーム画像/なにこれ？.png" alt="3Dプレビュー" className="icon-placeholder" />
+                  <img src="/pwa-icon-512.png" alt="3Dプレビュー" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   高精細な3Dプレビュー<br />
@@ -150,7 +150,7 @@ const GuideModal = ({ isOpen, onClose }) => {
               
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <img src="/ホーム画像/なにこれ？.png" alt="ネオンサイン注文" className="icon-placeholder" />
+                  <img src="/pwa-icon-512.png" alt="ネオンサイン注文" className="icon-placeholder" />
                 </div>
                 <div className="feature-text">
                   完成したネオンサイン<br />
@@ -170,21 +170,21 @@ const GuideModal = ({ isOpen, onClose }) => {
               <div className="use-case-card fade-in">
                 <div className="use-case-title">店舗のサインボード・看板</div>
                 <div className="use-case-image">
-                  <img src="/ホーム画像/なにこれ？.png" alt="店舗のサインボード・看板" />
+                  <img src="/pwa-icon-512.png" alt="店舗のサインボード・看板" />
                 </div>
               </div>
               
               <div className="use-case-card fade-in">
                 <div className="use-case-title">イベントの装飾・演出</div>
                 <div className="use-case-image">
-                  <img src="/ホーム画像/なにこれ？.png" alt="イベントの装飾・演出" />
+                  <img src="/pwa-icon-512.png" alt="イベントの装飾・演出" />
                 </div>
               </div>
               
               <div className="use-case-card fade-in">
                 <div className="use-case-title">オフィス・お部屋のインテリア</div>
                 <div className="use-case-image">
-                  <img src="/ホーム画像/なにこれ？.png" alt="オフィス・お部屋のインテリア" />
+                  <img src="/pwa-icon-512.png" alt="オフィス・お部屋のインテリア" />
                 </div>
               </div>
             </div>

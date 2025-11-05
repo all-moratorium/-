@@ -11,31 +11,31 @@ const HomeLeftBottom = () => {
     {
       rating: 5,
       date: "2024.12.15",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=75&fit=crop",
+      image: "/pwa-icon-512.png",
       text: "とても使いやすいサービスでした。スタッフの対応も丁寧で、また利用したいと思います。"
     },
     {
       rating: 5,
       date: "2024.12.10",
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100&h=75&fit=crop",
+      image: "/pwa-icon-512.png",
       text: "迅速な対応と高品質なサービスに感動しました。価格も手頃で、コストパフォーマンスが抜群です。"
     },
     {
       rating: 4,
       date: "2024.12.8",
-      image: "https://images.unsplash.com/photo-1567306301408-9b74779a11af?w=100&h=75&fit=crop",
+      image: "/pwa-icon-512.png",
       text: "全体的に満足していますが、もう少し選択肢があるとより良いと思います。"
     },
     {
       rating: 5,
       date: "2024.12.5",
-      image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=100&h=75&fit=crop",
+      image: "/pwa-icon-512.png",
       text: "初めて利用しましたが、想像以上の仕上がりでした。細部まで気を配られていて、プロの仕事だと感じました。"
     },
     {
       rating: 5,
       date: "2024.12.3",
-      image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=100&h=75&fit=crop",
+      image: "/pwa-icon-512.png",
       text: "長年お世話になっています。安定した品質とサービスで、いつも安心して任せられます。"
     }
   ];
