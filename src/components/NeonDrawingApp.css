@@ -3091,6 +3091,44 @@
         margin: 0 auto !important;
     }
 
+    .rect-template-modal .modal-content-right,
+    .circle-template-modal .modal-content-right,
+    .line-template-modal .modal-content-right {
+        height: auto !important;
+        width: 250px !important;
+        max-height: 100dvh !important;
+        padding: 5px !important;
+        padding-bottom: 0px !important;
+        padding-top: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        position: absolute !important;
+        right: 0 !important;
+    }
+
+    .rect-template-modal .template-size-section,
+    .circle-template-modal .template-size-section,
+    .line-template-modal .template-size-section {
+        margin-top: 8px !important;
+        padding: 8px 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .rect-template-modal .template-position-section,
+    .circle-template-modal .template-position-section,
+    .line-template-modal .template-position-section {
+        margin-top: 8px !important;
+        padding: 8px 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .rect-template-modal .template-range-input,
+    .circle-template-modal .template-range-input,
+    .line-template-modal .template-range-input {
+        width: 95% !important;
+        margin: 0 auto !important;
+    }
+
     .model-size-info {
         padding: 9px !important;
         margin-top: 6px !important;
