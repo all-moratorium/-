@@ -1193,10 +1193,20 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     centerX += offsetXPx;
                     centerY += offsetYPx;
 
-                    // 半径を計算
-                    const width = maxX - minX;
-                    const height = maxY - minY;
-                    const radius = Math.sqrt(width * width + height * height) / 2 + marginPx;
+                    // 全ての点から中心までの最大距離を計算
+                    let maxDistance = 0;
+                    paths.forEach(pathObj => {
+                        if (pathObj && pathObj.points && pathObj.points.length > 0 && pathObj.mode === 'stroke') {
+                            pathObj.points.forEach(point => {
+                                const dx = point.x - centerX;
+                                const dy = point.y - centerY;
+                                const distance = Math.sqrt(dx * dx + dy * dy);
+                                maxDistance = Math.max(maxDistance, distance);
+                            });
+                        }
+                    });
+
+                    const radius = maxDistance + marginPx;
 
                     ctx.save();
                     // 境界線を緑色のグローで描画（ベースプレートと同じエフェクト）
@@ -2663,13 +2673,23 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         const centerX = (bounds.minX + bounds.maxX) / 2;
         const centerY = (bounds.minY + bounds.maxY) / 2;
 
-        // 全ての点から最も遠い点までの距離を計算
-        const width = bounds.maxX - bounds.minX;
-        const height = bounds.maxY - bounds.minY;
-        const radius = Math.sqrt(width * width + height * height) / 2 + marginPx;
+        // 全ての点から中心までの最大距離を計算
+        let maxDistance = 0;
+        paths.forEach(pathObj => {
+            if (pathObj && pathObj.points && pathObj.points.length > 0 && pathObj.mode === 'stroke') {
+                pathObj.points.forEach(point => {
+                    const dx = point.x - centerX;
+                    const dy = point.y - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    maxDistance = Math.max(maxDistance, distance);
+                });
+            }
+        });
+
+        const radius = maxDistance + marginPx;
 
         return { centerX, centerY, radius };
-    }, [calculatePathsBounds]);
+    }, [calculatePathsBounds, paths]);
 
     // 楕円周上に密に点を配置する関数
     const subdivideEllipseEdge = useCallback((ellipseBase, spacing = 5) => {
@@ -5742,8 +5762,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     circleBase.centerX += offsetXPx;
                                     circleBase.centerY += offsetYPx;
 
-                                    // 円周上に点を配置（5px間隔）
-                                    const circlePoints = subdivideCircleEdge(circleBase, 5);
+                                    // 円周上に点を配置（円テンプレートの約2倍の点数）
+                                    // 円テンプレートは50px間隔なので、ここでは25px間隔にする
+                                    const circlePoints = subdivideCircleEdge(circleBase, 25);
 
                                     // 新しいベースプレートパスを作成
                                     const newPath = {
@@ -6615,8 +6636,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                     radiusY: heightPx / 2
                                 };
 
-                                // 楕円周上に点を配置
-                                const ellipsePoints = subdivideEllipseEdge(ellipseBase, 50);
+                                // 楕円周上に点を配置（ベースプレート円と同じ間隔）
+                                const ellipsePoints = subdivideEllipseEdge(ellipseBase, 25);
 
                                 // 始点と同じ座標の点を終点に追加してスプラインを閉じる
                                 if (ellipsePoints.length > 0) {
