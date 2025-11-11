@@ -4902,7 +4902,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                             : 'button-secondary'
                                     }`}
                                 >
-                                    ネオンパスに合わせた形状
+                                    <span className="auto-shape-button-text">
+                                        チューブに合わせた<span className="auto-shape-button-br"></span>土台を自動生成
+                                    </span>
                                 </button>
 
                                 {/* 自動形状のスライダーと生成ボタン */}
