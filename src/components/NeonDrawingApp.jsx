@@ -3003,12 +3003,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
 
                     // パスがスプラインの場合、コントロールポイント間に補間点を追加
                     if (pathObj.type === 'spline' && points.length >= 2) {
-                        // スプライン補間で密な点列を生成
-                        for (let i = 0; i < points.length; i++) {
-                            const p0 = points[(i - 1 + points.length) % points.length];
+                        // スプライン補間で密な点列を生成（開いているパスとして処理）
+                        for (let i = 0; i < points.length - 1; i++) {
+                            // 開いているパスなので、最初と最後のセグメントは特別に処理
+                            const p0 = i === 0 ? points[0] : points[i - 1];
                             const p1 = points[i];
-                            const p2 = points[(i + 1) % points.length];
-                            const p3 = points[(i + 2) % points.length];
+                            const p2 = points[i + 1];
+                            const p3 = i === points.length - 2 ? points[points.length - 1] : points[i + 2];
 
                             // セグメント間を10分割して補間
                             for (let t = 0; t < 10; t++) {
@@ -3029,11 +3030,13 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 allNeonPoints.push({ x, y });
                             }
                         }
+                        // 最後の点も追加
+                        allNeonPoints.push({ x: points[points.length - 1].x, y: points[points.length - 1].y });
                     } else {
-                        // 直線の場合、セグメント間を補間
-                        for (let i = 0; i < points.length; i++) {
+                        // 直線の場合、セグメント間を補間（開いているパスとして処理）
+                        for (let i = 0; i < points.length - 1; i++) {
                             const p1 = points[i];
-                            const p2 = points[(i + 1) % points.length];
+                            const p2 = points[i + 1];
 
                             // セグメント間を10分割
                             for (let t = 0; t < 10; t++) {
@@ -3044,6 +3047,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 });
                             }
                         }
+                        // 最後の点も追加
+                        allNeonPoints.push({ x: points[points.length - 1].x, y: points[points.length - 1].y });
                     }
                 }
             });
