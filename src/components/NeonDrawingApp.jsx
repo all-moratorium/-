@@ -2577,7 +2577,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
             
             // 自動形状ベースプレートを生成
-            const autoShapeBase = generateAutoShapeBase(strokePaths, 3); // デフォルト3cm余白
+            const autoShapeBase = generateAutoShapeBase(strokePaths, 2); // デフォルト2cm余白
             if (autoShapeBase) {
                 // 新しいベースプレートパスを作成
                 const newPath = {
@@ -3072,9 +3072,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     perimeter += Math.sqrt(dx * dx + dy * dy);
                 }
 
-                // 目標間隔を設定（さらに細かく）
-                const targetSpacing = 5;
-                const numPoints = Math.max(32, Math.round(perimeter / targetSpacing));
+                // 目標間隔を設定
+                const targetSpacing = 10;
+                const numPoints = Math.max(16, Math.round(perimeter / targetSpacing));
 
                 // 一定間隔で点を再配置
                 const resampledPoints = [];
@@ -3110,10 +3110,10 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     }
                 }
 
-                // 距離調整と再サンプリングを繰り返す（5回）
+                // 距離調整と再サンプリングを繰り返す（8回）
                 let currentPoints = resampledPoints;
 
-                for (let iteration = 0; iteration < 5; iteration++) {
+                for (let iteration = 0; iteration < 8; iteration++) {
                     // 各点からネオンパスまでの距離を測定して、marginPxになるように調整
                     const adjustedPoints = [];
 
@@ -3163,8 +3163,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             perimeterAdj += Math.sqrt(dx * dx + dy * dy);
                         }
 
-                        const targetSpacingAdj = 5;
-                        const numPointsAdj = Math.max(32, Math.round(perimeterAdj / targetSpacingAdj));
+                        const targetSpacingAdj = 10;
+                        const numPointsAdj = Math.max(16, Math.round(perimeterAdj / targetSpacingAdj));
 
                         const resampledAdj = [];
                         const spacingLengthAdj = perimeterAdj / numPointsAdj;
@@ -3203,143 +3203,55 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     }
                 }
 
-                const adjustedPoints = currentPoints;
-
-                // 距離調整後、再度点の間隔を均等にする
-                if (adjustedPoints.length > 2) {
-                    let perimeter2 = 0;
-                    for (let i = 0; i < adjustedPoints.length; i++) {
-                        const p1 = adjustedPoints[i];
-                        const p2 = adjustedPoints[(i + 1) % adjustedPoints.length];
+                // 8回の反復調整後、最終結果を返す前に点を間引く
+                if (currentPoints.length > 2) {
+                    let finalPerimeter = 0;
+                    for (let i = 0; i < currentPoints.length; i++) {
+                        const p1 = currentPoints[i];
+                        const p2 = currentPoints[(i + 1) % currentPoints.length];
                         const dx = p2.x - p1.x;
                         const dy = p2.y - p1.y;
-                        perimeter2 += Math.sqrt(dx * dx + dy * dy);
+                        finalPerimeter += Math.sqrt(dx * dx + dy * dy);
                     }
 
-                    const targetSpacing2 = 20;
-                    const numPoints2 = Math.max(8, Math.round(perimeter2 / targetSpacing2));
+                    const finalTargetSpacing = 15;
+                    const finalNumPoints = Math.max(16, Math.round(finalPerimeter / finalTargetSpacing));
 
-                    const resampledPoints2 = [];
-                    const spacingLength2 = perimeter2 / numPoints2;
-                    let accumulatedLength2 = 0;
-                    let currentSegmentIndex2 = 0;
+                    const finalResampledPoints = [];
+                    const finalSpacingLength = finalPerimeter / finalNumPoints;
+                    let finalAccumulatedLength = 0;
+                    let finalCurrentSegmentIndex = 0;
 
-                    for (let i = 0; i < numPoints2; i++) {
-                        const targetLength2 = i * spacingLength2;
+                    for (let i = 0; i < finalNumPoints; i++) {
+                        const targetLength = i * finalSpacingLength;
 
-                        while (currentSegmentIndex2 < adjustedPoints.length) {
-                            const p1 = adjustedPoints[currentSegmentIndex2];
-                            const p2 = adjustedPoints[(currentSegmentIndex2 + 1) % adjustedPoints.length];
+                        while (finalCurrentSegmentIndex < currentPoints.length) {
+                            const p1 = currentPoints[finalCurrentSegmentIndex];
+                            const p2 = currentPoints[(finalCurrentSegmentIndex + 1) % currentPoints.length];
                             const dx = p2.x - p1.x;
                             const dy = p2.y - p1.y;
-                            const segmentLength2 = Math.sqrt(dx * dx + dy * dy);
+                            const segmentLength = Math.sqrt(dx * dx + dy * dy);
 
-                            if (accumulatedLength2 + segmentLength2 >= targetLength2) {
-                                const remainingLength2 = targetLength2 - accumulatedLength2;
-                                const t = segmentLength2 > 0 ? remainingLength2 / segmentLength2 : 0;
+                            if (finalAccumulatedLength + segmentLength >= targetLength) {
+                                const remainingLength = targetLength - finalAccumulatedLength;
+                                const t = segmentLength > 0 ? remainingLength / segmentLength : 0;
 
-                                resampledPoints2.push({
+                                finalResampledPoints.push({
                                     x: p1.x + dx * t,
                                     y: p1.y + dy * t
                                 });
                                 break;
                             }
 
-                            accumulatedLength2 += segmentLength2;
-                            currentSegmentIndex2++;
+                            finalAccumulatedLength += segmentLength;
+                            finalCurrentSegmentIndex++;
                         }
                     }
 
-                    // 再サンプリング後、もう一度距離調整
-                    const finalAdjustedPoints = [];
-
-                    for (let i = 0; i < resampledPoints2.length; i++) {
-                        const point = resampledPoints2[i];
-
-                        // 全てのネオンパスの全ての点との最短距離を計算
-                        let minDistance = Infinity;
-                        let closestNeonPoint = null;
-
-                        allNeonPoints.forEach(neonPoint => {
-                            const dx = point.x - neonPoint.x;
-                            const dy = point.y - neonPoint.y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                closestNeonPoint = neonPoint;
-                            }
-                        });
-
-                        if (closestNeonPoint && minDistance > 0) {
-                            // 最も近いネオン点からmarginPx離れた位置に調整
-                            const dx = point.x - closestNeonPoint.x;
-                            const dy = point.y - closestNeonPoint.y;
-
-                            // 正規化して、marginPxの距離になるように調整
-                            const scale = marginPx / minDistance;
-
-                            finalAdjustedPoints.push({
-                                x: closestNeonPoint.x + dx * scale,
-                                y: closestNeonPoint.y + dy * scale
-                            });
-                        } else {
-                            finalAdjustedPoints.push(point);
-                        }
-                    }
-
-                    // 最終距離調整後、もう一度点の間隔を均等にする
-                    if (finalAdjustedPoints.length > 2) {
-                        let perimeter3 = 0;
-                        for (let i = 0; i < finalAdjustedPoints.length; i++) {
-                            const p1 = finalAdjustedPoints[i];
-                            const p2 = finalAdjustedPoints[(i + 1) % finalAdjustedPoints.length];
-                            const dx = p2.x - p1.x;
-                            const dy = p2.y - p1.y;
-                            perimeter3 += Math.sqrt(dx * dx + dy * dy);
-                        }
-
-                        const targetSpacing3 = 20;
-                        const numPoints3 = Math.max(8, Math.round(perimeter3 / targetSpacing3));
-
-                        const finalResampledPoints = [];
-                        const spacingLength3 = perimeter3 / numPoints3;
-                        let accumulatedLength3 = 0;
-                        let currentSegmentIndex3 = 0;
-
-                        for (let i = 0; i < numPoints3; i++) {
-                            const targetLength3 = i * spacingLength3;
-
-                            while (currentSegmentIndex3 < finalAdjustedPoints.length) {
-                                const p1 = finalAdjustedPoints[currentSegmentIndex3];
-                                const p2 = finalAdjustedPoints[(currentSegmentIndex3 + 1) % finalAdjustedPoints.length];
-                                const dx = p2.x - p1.x;
-                                const dy = p2.y - p1.y;
-                                const segmentLength3 = Math.sqrt(dx * dx + dy * dy);
-
-                                if (accumulatedLength3 + segmentLength3 >= targetLength3) {
-                                    const remainingLength3 = targetLength3 - accumulatedLength3;
-                                    const t = segmentLength3 > 0 ? remainingLength3 / segmentLength3 : 0;
-
-                                    finalResampledPoints.push({
-                                        x: p1.x + dx * t,
-                                        y: p1.y + dy * t
-                                    });
-                                    break;
-                                }
-
-                                accumulatedLength3 += segmentLength3;
-                                currentSegmentIndex3++;
-                            }
-                        }
-
-                        return finalResampledPoints.length > 2 ? finalResampledPoints : finalAdjustedPoints;
-                    }
-
-                    return finalAdjustedPoints.length > 2 ? finalAdjustedPoints : resampledPoints2;
+                    return finalResampledPoints.length > 2 ? finalResampledPoints : currentPoints;
                 }
 
-                return adjustedPoints.length > 2 ? adjustedPoints : resampledPoints;
+                return currentPoints.length > 2 ? currentPoints : resampledPoints;
             }
 
             return boundary;
