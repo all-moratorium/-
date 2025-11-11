@@ -92,6 +92,14 @@ code {
   * {
     -webkit-overflow-scrolling: touch; /* iOSでのスムーズスクロール */
   }
+
+  /* 画像の長押し保存を無効化 */
+  img {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    pointer-events: none;
+  }
+
 }
 
 /* タブレット向けのスタイル */
