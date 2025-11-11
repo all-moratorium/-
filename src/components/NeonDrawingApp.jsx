@@ -3004,6 +3004,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     // パスがスプラインの場合、コントロールポイント間に補間点を追加
                     if (pathObj.type === 'spline' && points.length >= 2) {
                         // スプライン補間で密な点列を生成（開いているパスとして処理）
+                        const targetInterpolationSpacing = 5; // 補間後の点の目標間隔（ピクセル）
+
                         for (let i = 0; i < points.length - 1; i++) {
                             // 開いているパスなので、最初と最後のセグメントは特別に処理
                             const p0 = i === 0 ? points[0] : points[i - 1];
@@ -3011,9 +3013,17 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                             const p2 = points[i + 1];
                             const p3 = i === points.length - 2 ? points[points.length - 1] : points[i + 2];
 
-                            // セグメント間を10分割して補間
-                            for (let t = 0; t < 10; t++) {
-                                const step = t / 10;
+                            // セグメントの概算距離（直線距離）を計算
+                            const dx = p2.x - p1.x;
+                            const dy = p2.y - p1.y;
+                            const straightDist = Math.sqrt(dx * dx + dy * dy);
+
+                            // 必要な分割数を計算（最低でも10分割）
+                            const numSegments = Math.max(10, Math.ceil(straightDist / targetInterpolationSpacing));
+
+                            // セグメント間を動的に分割して補間
+                            for (let t = 0; t < numSegments; t++) {
+                                const step = t / numSegments;
                                 // Catmull-Rom スプライン補間
                                 const x = 0.5 * (
                                     2 * p1.x +
@@ -3034,16 +3044,26 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         allNeonPoints.push({ x: points[points.length - 1].x, y: points[points.length - 1].y });
                     } else {
                         // 直線の場合、セグメント間を補間（開いているパスとして処理）
+                        const targetInterpolationSpacing = 5; // 補間後の点の目標間隔（ピクセル）
+
                         for (let i = 0; i < points.length - 1; i++) {
                             const p1 = points[i];
                             const p2 = points[i + 1];
 
-                            // セグメント間を10分割
-                            for (let t = 0; t < 10; t++) {
-                                const step = t / 10;
+                            // セグメントの距離を計算
+                            const dx = p2.x - p1.x;
+                            const dy = p2.y - p1.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+
+                            // 必要な分割数を計算（最低でも10分割）
+                            const numSegments = Math.max(10, Math.ceil(dist / targetInterpolationSpacing));
+
+                            // セグメント間を動的に分割
+                            for (let t = 0; t < numSegments; t++) {
+                                const step = t / numSegments;
                                 allNeonPoints.push({
-                                    x: p1.x + (p2.x - p1.x) * step,
-                                    y: p1.y + (p2.y - p1.y) * step
+                                    x: p1.x + dx * step,
+                                    y: p1.y + dy * step
                                 });
                             }
                         }
