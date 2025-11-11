@@ -189,6 +189,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [isPathDeleteMode, setIsPathDeleteMode] = useState(false); // パス削除モード
     const [isPointDeleteMode, setIsPointDeleteMode] = useState(false); // 点削除モード
     const [isNewPathDisabled, setIsNewPathDisabled] = useState(false); // 新しいパスボタンの無効化状態
+    const [isGeneratingAutoShape, setIsGeneratingAutoShape] = useState(false); // 自動形状生成中フラグ
 
     // 点結合モード
     const [isMergeMode, setIsMergeMode] = useState(false);
@@ -2577,8 +2578,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
             
             // 自動形状ベースプレートを生成
-            const autoShapeBase = generateAutoShapeBase(strokePaths, 2); // デフォルト2cm余白
-            if (autoShapeBase) {
+            setIsGeneratingAutoShape(true); // 生成開始
+
+            // 非同期処理でUIを更新してから生成処理を実行
+            setTimeout(() => {
+                const autoShapeBase = generateAutoShapeBase(strokePaths, 2); // デフォルト2cm余白
+                setIsGeneratingAutoShape(false); // 生成完了
+
+                if (autoShapeBase) {
                 // 新しいベースプレートパスを作成
                 const newPath = {
                     points: autoShapeBase,
@@ -2601,7 +2608,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     
                     return filteredPaths;
                 });
-            }
+                }
+            }, 10); // UIが更新されるまで少し待つ
 
             return;
         }
@@ -4868,8 +4876,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                             ? 'button-active button-purple'
                                             : 'button-secondary'
                                     }`}
+                                    disabled={isGeneratingAutoShape}
                                 >
-                                    ネオンパスに合わせた形状
+                                    {isGeneratingAutoShape ? '生成中...' : 'ネオンパスに合わせた形状'}
                                 </button>
                                 </>
                             )}
