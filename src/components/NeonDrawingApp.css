@@ -3525,6 +3525,8 @@
             inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     }
 
+}
+
 .bg-image-compress-notice {
     font-size: 10px !important;
     color: white;
@@ -3532,4 +3534,52 @@
     line-height: 1.4;
 }
 
+/* 自動形状設定 */
+.auto-shape-settings {
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    width: 90%;
+    border-radius: 6px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.auto-shape-settings-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 15px;
+    margin-top: 15px;
+    color: #d1d5db;
+    font-weight: bold;
+}
+
+.auto-shape-settings .range-input {
+    width: 80%;
+}
+
+.auto-shape-generate-button {
+    width: 50%;
+    height: 44px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    margin-top: 20px;
+    display: block;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* スマホ用 */
+@media (max-width: 768px) {
+    .auto-shape-settings {
+        width: 100%;
+    }
+
+    .auto-shape-settings-label {
+        font-size: 13px;
+    }
+
+    .auto-shape-generate-button {
+        width: 60%;
+        height: 40px;
+    }
 }

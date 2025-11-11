@@ -253,7 +253,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
     const [lineTemplateAngle, setLineTemplateAngle] = useState(0); // 回転角度（度）
     // 自動形状生成モーダル状態
     const [showAutoShapeModal, setShowAutoShapeModal] = useState(false);
-    const [autoShapeMargin, setAutoShapeMargin] = useState(3); // デフォルト3cm
+    const [autoShapeMargin, setAutoShapeMargin] = useState(2); // デフォルト2cm
     // ガイドモーダル関連のstate
     const [showGuideModal, setShowGuideModal] = useState(false);
  
@@ -2559,58 +2559,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         }
 
         if (type === 'auto-shape') {
-            // 自動形状の場合は先にベースプレートの重複チェック
-            const existingFillPaths = paths.filter(pathObj => 
-                pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
-            );
-            if (existingFillPaths.length >= 1) {
-                alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
-                return;
-            }
-            
-            // ネオンパス（strokeモード）が存在するかチェック
-            const strokePaths = paths.filter(pathObj => 
-                pathObj && pathObj.mode === 'stroke' && pathObj.points && pathObj.points.length >= 2
-            );
-            if (strokePaths.length === 0) {
-                alert('ネオンパス（チューブ）を先に描画してください。');
-                return;
-            }
-            
-            // 自動形状ベースプレートを生成
-            setIsGeneratingAutoShape(true); // 生成開始
-
-            // 非同期処理でUIを更新してから生成処理を実行
-            setTimeout(() => {
-                const autoShapeBase = generateAutoShapeBase(strokePaths, 2); // デフォルト2cm余白
-                setIsGeneratingAutoShape(false); // 生成完了
-
-                if (autoShapeBase) {
-                // 新しいベースプレートパスを作成
-                const newPath = {
-                    points: autoShapeBase,
-                    mode: 'fill',
-                    type: 'spline'
-                };
-                
-                // パスを追加
-                setPaths(prevPaths => {
-                    const newPaths = [...prevPaths];
-                    // 既存のベースプレートパスを削除（1つのベースプレートのみ許可）
-                    const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
-                    // 新しいベースプレートパスを追加
-                    filteredPaths.push(newPath);
-                    
-                    // 履歴に保存（新しいパス状態で）
-                    setTimeout(() => {
-                        saveToHistory(filteredPaths, currentPathIndex, drawMode, drawingType);
-                    }, 0);
-                    
-                    return filteredPaths;
-                });
-                }
-            }, 10); // UIが更新されるまで少し待つ
-
+            // 自動形状の場合はボタンの状態を変更するのみ
+            setDrawingType(type);
             return;
         }
 
@@ -2626,6 +2576,56 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             return newPaths;
         });
     }, [currentPathIndex, drawMode, paths]);
+
+    // 自動形状ベースプレートを生成する関数
+    const handleGenerateAutoShape = useCallback(() => {
+        // ベースプレートの重複チェック
+        const existingFillPaths = paths.filter(pathObj =>
+            pathObj && pathObj.mode === 'fill' && pathObj.points && pathObj.points.length >= 3
+        );
+        if (existingFillPaths.length >= 1) {
+            alert('ベースプレートは1つまでしか作成できません。既存のベースプレートを削除してから新しいものを作成してください。');
+            return;
+        }
+
+        // ネオンパス（strokeモード）が存在するかチェック
+        const strokePaths = paths.filter(pathObj =>
+            pathObj && pathObj.mode === 'stroke' && pathObj.points && pathObj.points.length >= 2
+        );
+        if (strokePaths.length === 0) {
+            alert('ネオンパス（チューブ）を先に描画してください。');
+            return;
+        }
+
+        // 自動形状ベースプレートを生成
+        setIsGeneratingAutoShape(true);
+
+        // 非同期処理でUIを更新してから生成処理を実行
+        setTimeout(() => {
+            const autoShapeBase = generateAutoShapeBase(strokePaths, autoShapeMargin);
+            setIsGeneratingAutoShape(false);
+
+            if (autoShapeBase) {
+                const newPath = {
+                    points: autoShapeBase,
+                    mode: 'fill',
+                    type: 'spline'
+                };
+
+                setPaths(prevPaths => {
+                    const newPaths = [...prevPaths];
+                    const filteredPaths = newPaths.filter(path => path.mode !== 'fill');
+                    filteredPaths.push(newPath);
+
+                    setTimeout(() => {
+                        saveToHistory(filteredPaths, currentPathIndex, drawMode, drawingType);
+                    }, 0);
+
+                    return filteredPaths;
+                });
+            }
+        }, 10);
+    }, [paths, autoShapeMargin, currentPathIndex, drawMode, drawingType]);
 
     // すべてのネオンパスの境界を計算する関数
     const calculatePathsBounds = useCallback(() => {
@@ -4901,10 +4901,34 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                             ? 'button-active button-purple'
                                             : 'button-secondary'
                                     }`}
-                                    disabled={isGeneratingAutoShape}
                                 >
-                                    {isGeneratingAutoShape ? '生成中...' : 'ネオンパスに合わせた形状'}
+                                    ネオンパスに合わせた形状
                                 </button>
+
+                                {/* 自動形状のスライダーと生成ボタン */}
+                                {drawingType === 'auto-shape' && (
+                                    <div className="auto-shape-settings">
+                                        <label className="auto-shape-settings-label">
+                                            余白: {autoShapeMargin.toFixed(1)}cm{autoShapeMargin === 2 ? ' (初期値)' : ''}
+                                        </label>
+                                        <input
+                                            type="range"
+                                            min="2"
+                                            max="5"
+                                            step="0.1"
+                                            value={autoShapeMargin}
+                                            onChange={(e) => setAutoShapeMargin(parseFloat(e.target.value))}
+                                            className="range-input"
+                                        />
+                                        <button
+                                            onClick={handleGenerateAutoShape}
+                                            disabled={isGeneratingAutoShape}
+                                            className="button-blue auto-shape-generate-button"
+                                        >
+                                            {isGeneratingAutoShape ? '生成中...' : 'ベースプレートを生成'}
+                                        </button>
+                                    </div>
+                                )}
                                 </>
                             )}
                         </>
