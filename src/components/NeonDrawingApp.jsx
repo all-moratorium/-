@@ -2987,21 +2987,64 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             // cmをピクセルに変換 (100px = 4cm基準)
             const marginPx = (marginCm * 100) / 4;
             
-            // 全てのネオンパスの点を収集
+            // 全てのネオンパスの点を収集（疑似的に補間して密にする）
             const allNeonPoints = [];
             strokePaths.forEach(pathObj => {
                 if (pathObj && pathObj.points && pathObj.points.length >= 1) {
-                    pathObj.points.forEach(point => {
-                        allNeonPoints.push({ x: point.x, y: point.y });
-                    });
+                    const points = pathObj.points;
+
+                    // パスがスプラインの場合、コントロールポイント間に補間点を追加
+                    if (pathObj.type === 'spline' && points.length >= 2) {
+                        // スプライン補間で密な点列を生成
+                        for (let i = 0; i < points.length; i++) {
+                            const p0 = points[(i - 1 + points.length) % points.length];
+                            const p1 = points[i];
+                            const p2 = points[(i + 1) % points.length];
+                            const p3 = points[(i + 2) % points.length];
+
+                            // セグメント間を10分割して補間
+                            for (let t = 0; t < 10; t++) {
+                                const step = t / 10;
+                                // Catmull-Rom スプライン補間
+                                const x = 0.5 * (
+                                    2 * p1.x +
+                                    (-p0.x + p2.x) * step +
+                                    (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * step * step +
+                                    (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * step * step * step
+                                );
+                                const y = 0.5 * (
+                                    2 * p1.y +
+                                    (-p0.y + p2.y) * step +
+                                    (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * step * step +
+                                    (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * step * step * step
+                                );
+                                allNeonPoints.push({ x, y });
+                            }
+                        }
+                    } else {
+                        // 直線の場合、セグメント間を補間
+                        for (let i = 0; i < points.length; i++) {
+                            const p1 = points[i];
+                            const p2 = points[(i + 1) % points.length];
+
+                            // セグメント間を10分割
+                            for (let t = 0; t < 10; t++) {
+                                const step = t / 10;
+                                allNeonPoints.push({
+                                    x: p1.x + (p2.x - p1.x) * step,
+                                    y: p1.y + (p2.y - p1.y) * step
+                                });
+                            }
+                        }
+                    }
                 }
             });
-            
+
             if (allNeonPoints.length === 0) return null;
-            
+
             // 各ネオン点から指定距離の円を描き、すべての円の外包を計算
             const offsetPoints = [];
-            
+
             // 各ネオン点について、360度方向にオフセット点を生成
             allNeonPoints.forEach(neonPoint => {
                 for (let angle = 0; angle < 360; angle += 5) { // 5度刻み
@@ -3029,9 +3072,9 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     perimeter += Math.sqrt(dx * dx + dy * dy);
                 }
 
-                // 目標間隔を設定
-                const targetSpacing = 20;
-                const numPoints = Math.max(8, Math.round(perimeter / targetSpacing));
+                // 目標間隔を設定（さらに細かく）
+                const targetSpacing = 5;
+                const numPoints = Math.max(32, Math.round(perimeter / targetSpacing));
 
                 // 一定間隔で点を再配置
                 const resampledPoints = [];
@@ -3067,7 +3110,236 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                     }
                 }
 
-                return resampledPoints.length > 2 ? resampledPoints : boundary;
+                // 距離調整と再サンプリングを繰り返す（5回）
+                let currentPoints = resampledPoints;
+
+                for (let iteration = 0; iteration < 5; iteration++) {
+                    // 各点からネオンパスまでの距離を測定して、marginPxになるように調整
+                    const adjustedPoints = [];
+
+                    for (let i = 0; i < currentPoints.length; i++) {
+                        const point = currentPoints[i];
+
+                        // 全てのネオンパスの全ての点との最短距離を計算
+                        let minDistance = Infinity;
+                        let closestNeonPoint = null;
+
+                        allNeonPoints.forEach(neonPoint => {
+                            const dx = point.x - neonPoint.x;
+                            const dy = point.y - neonPoint.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestNeonPoint = neonPoint;
+                            }
+                        });
+
+                        if (closestNeonPoint && minDistance > 0) {
+                            // 最も近いネオン点からmarginPx離れた位置に調整
+                            const dx = point.x - closestNeonPoint.x;
+                            const dy = point.y - closestNeonPoint.y;
+
+                            // 正規化して、marginPxの距離になるように調整
+                            const scale = marginPx / minDistance;
+
+                            adjustedPoints.push({
+                                x: closestNeonPoint.x + dx * scale,
+                                y: closestNeonPoint.y + dy * scale
+                            });
+                        } else {
+                            adjustedPoints.push(point);
+                        }
+                    }
+
+                    // 調整後に再サンプリング
+                    if (adjustedPoints.length > 2) {
+                        let perimeterAdj = 0;
+                        for (let i = 0; i < adjustedPoints.length; i++) {
+                            const p1 = adjustedPoints[i];
+                            const p2 = adjustedPoints[(i + 1) % adjustedPoints.length];
+                            const dx = p2.x - p1.x;
+                            const dy = p2.y - p1.y;
+                            perimeterAdj += Math.sqrt(dx * dx + dy * dy);
+                        }
+
+                        const targetSpacingAdj = 5;
+                        const numPointsAdj = Math.max(32, Math.round(perimeterAdj / targetSpacingAdj));
+
+                        const resampledAdj = [];
+                        const spacingLengthAdj = perimeterAdj / numPointsAdj;
+                        let accumulatedLengthAdj = 0;
+                        let currentSegmentIndexAdj = 0;
+
+                        for (let i = 0; i < numPointsAdj; i++) {
+                            const targetLengthAdj = i * spacingLengthAdj;
+
+                            while (currentSegmentIndexAdj < adjustedPoints.length) {
+                                const p1 = adjustedPoints[currentSegmentIndexAdj];
+                                const p2 = adjustedPoints[(currentSegmentIndexAdj + 1) % adjustedPoints.length];
+                                const dx = p2.x - p1.x;
+                                const dy = p2.y - p1.y;
+                                const segmentLengthAdj = Math.sqrt(dx * dx + dy * dy);
+
+                                if (accumulatedLengthAdj + segmentLengthAdj >= targetLengthAdj) {
+                                    const remainingLengthAdj = targetLengthAdj - accumulatedLengthAdj;
+                                    const t = segmentLengthAdj > 0 ? remainingLengthAdj / segmentLengthAdj : 0;
+
+                                    resampledAdj.push({
+                                        x: p1.x + dx * t,
+                                        y: p1.y + dy * t
+                                    });
+                                    break;
+                                }
+
+                                accumulatedLengthAdj += segmentLengthAdj;
+                                currentSegmentIndexAdj++;
+                            }
+                        }
+
+                        currentPoints = resampledAdj.length > 2 ? resampledAdj : adjustedPoints;
+                    } else {
+                        currentPoints = adjustedPoints;
+                    }
+                }
+
+                const adjustedPoints = currentPoints;
+
+                // 距離調整後、再度点の間隔を均等にする
+                if (adjustedPoints.length > 2) {
+                    let perimeter2 = 0;
+                    for (let i = 0; i < adjustedPoints.length; i++) {
+                        const p1 = adjustedPoints[i];
+                        const p2 = adjustedPoints[(i + 1) % adjustedPoints.length];
+                        const dx = p2.x - p1.x;
+                        const dy = p2.y - p1.y;
+                        perimeter2 += Math.sqrt(dx * dx + dy * dy);
+                    }
+
+                    const targetSpacing2 = 20;
+                    const numPoints2 = Math.max(8, Math.round(perimeter2 / targetSpacing2));
+
+                    const resampledPoints2 = [];
+                    const spacingLength2 = perimeter2 / numPoints2;
+                    let accumulatedLength2 = 0;
+                    let currentSegmentIndex2 = 0;
+
+                    for (let i = 0; i < numPoints2; i++) {
+                        const targetLength2 = i * spacingLength2;
+
+                        while (currentSegmentIndex2 < adjustedPoints.length) {
+                            const p1 = adjustedPoints[currentSegmentIndex2];
+                            const p2 = adjustedPoints[(currentSegmentIndex2 + 1) % adjustedPoints.length];
+                            const dx = p2.x - p1.x;
+                            const dy = p2.y - p1.y;
+                            const segmentLength2 = Math.sqrt(dx * dx + dy * dy);
+
+                            if (accumulatedLength2 + segmentLength2 >= targetLength2) {
+                                const remainingLength2 = targetLength2 - accumulatedLength2;
+                                const t = segmentLength2 > 0 ? remainingLength2 / segmentLength2 : 0;
+
+                                resampledPoints2.push({
+                                    x: p1.x + dx * t,
+                                    y: p1.y + dy * t
+                                });
+                                break;
+                            }
+
+                            accumulatedLength2 += segmentLength2;
+                            currentSegmentIndex2++;
+                        }
+                    }
+
+                    // 再サンプリング後、もう一度距離調整
+                    const finalAdjustedPoints = [];
+
+                    for (let i = 0; i < resampledPoints2.length; i++) {
+                        const point = resampledPoints2[i];
+
+                        // 全てのネオンパスの全ての点との最短距離を計算
+                        let minDistance = Infinity;
+                        let closestNeonPoint = null;
+
+                        allNeonPoints.forEach(neonPoint => {
+                            const dx = point.x - neonPoint.x;
+                            const dy = point.y - neonPoint.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestNeonPoint = neonPoint;
+                            }
+                        });
+
+                        if (closestNeonPoint && minDistance > 0) {
+                            // 最も近いネオン点からmarginPx離れた位置に調整
+                            const dx = point.x - closestNeonPoint.x;
+                            const dy = point.y - closestNeonPoint.y;
+
+                            // 正規化して、marginPxの距離になるように調整
+                            const scale = marginPx / minDistance;
+
+                            finalAdjustedPoints.push({
+                                x: closestNeonPoint.x + dx * scale,
+                                y: closestNeonPoint.y + dy * scale
+                            });
+                        } else {
+                            finalAdjustedPoints.push(point);
+                        }
+                    }
+
+                    // 最終距離調整後、もう一度点の間隔を均等にする
+                    if (finalAdjustedPoints.length > 2) {
+                        let perimeter3 = 0;
+                        for (let i = 0; i < finalAdjustedPoints.length; i++) {
+                            const p1 = finalAdjustedPoints[i];
+                            const p2 = finalAdjustedPoints[(i + 1) % finalAdjustedPoints.length];
+                            const dx = p2.x - p1.x;
+                            const dy = p2.y - p1.y;
+                            perimeter3 += Math.sqrt(dx * dx + dy * dy);
+                        }
+
+                        const targetSpacing3 = 20;
+                        const numPoints3 = Math.max(8, Math.round(perimeter3 / targetSpacing3));
+
+                        const finalResampledPoints = [];
+                        const spacingLength3 = perimeter3 / numPoints3;
+                        let accumulatedLength3 = 0;
+                        let currentSegmentIndex3 = 0;
+
+                        for (let i = 0; i < numPoints3; i++) {
+                            const targetLength3 = i * spacingLength3;
+
+                            while (currentSegmentIndex3 < finalAdjustedPoints.length) {
+                                const p1 = finalAdjustedPoints[currentSegmentIndex3];
+                                const p2 = finalAdjustedPoints[(currentSegmentIndex3 + 1) % finalAdjustedPoints.length];
+                                const dx = p2.x - p1.x;
+                                const dy = p2.y - p1.y;
+                                const segmentLength3 = Math.sqrt(dx * dx + dy * dy);
+
+                                if (accumulatedLength3 + segmentLength3 >= targetLength3) {
+                                    const remainingLength3 = targetLength3 - accumulatedLength3;
+                                    const t = segmentLength3 > 0 ? remainingLength3 / segmentLength3 : 0;
+
+                                    finalResampledPoints.push({
+                                        x: p1.x + dx * t,
+                                        y: p1.y + dy * t
+                                    });
+                                    break;
+                                }
+
+                                accumulatedLength3 += segmentLength3;
+                                currentSegmentIndex3++;
+                            }
+                        }
+
+                        return finalResampledPoints.length > 2 ? finalResampledPoints : finalAdjustedPoints;
+                    }
+
+                    return finalAdjustedPoints.length > 2 ? finalAdjustedPoints : resampledPoints2;
+                }
+
+                return adjustedPoints.length > 2 ? adjustedPoints : resampledPoints;
             }
 
             return boundary;
