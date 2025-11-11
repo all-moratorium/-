@@ -2583,7 +2583,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                 const newPath = {
                     points: autoShapeBase,
                     mode: 'fill',
-                    type: 'straight'
+                    type: 'spline'
                 };
                 
                 // パスを追加
@@ -3016,7 +3016,60 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             
             // 凸包を計算して最終的な境界を取得
             const boundary = calculateConvexHull(offsetPoints);
-            
+
+            // 点の間隔を一定にするために再サンプリング
+            if (boundary.length > 2) {
+                // 境界の周囲の長さを計算
+                let perimeter = 0;
+                for (let i = 0; i < boundary.length; i++) {
+                    const p1 = boundary[i];
+                    const p2 = boundary[(i + 1) % boundary.length];
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    perimeter += Math.sqrt(dx * dx + dy * dy);
+                }
+
+                // 目標間隔を設定
+                const targetSpacing = 20;
+                const numPoints = Math.max(8, Math.round(perimeter / targetSpacing));
+
+                // 一定間隔で点を再配置
+                const resampledPoints = [];
+                const spacingLength = perimeter / numPoints;
+                let accumulatedLength = 0;
+                let currentSegmentIndex = 0;
+
+                for (let i = 0; i < numPoints; i++) {
+                    const targetLength = i * spacingLength;
+
+                    // 目標長さに到達するまでセグメントを進める
+                    while (currentSegmentIndex < boundary.length) {
+                        const p1 = boundary[currentSegmentIndex];
+                        const p2 = boundary[(currentSegmentIndex + 1) % boundary.length];
+                        const dx = p2.x - p1.x;
+                        const dy = p2.y - p1.y;
+                        const segmentLength = Math.sqrt(dx * dx + dy * dy);
+
+                        if (accumulatedLength + segmentLength >= targetLength) {
+                            // このセグメント上に目標点がある
+                            const remainingLength = targetLength - accumulatedLength;
+                            const t = segmentLength > 0 ? remainingLength / segmentLength : 0;
+
+                            resampledPoints.push({
+                                x: p1.x + dx * t,
+                                y: p1.y + dy * t
+                            });
+                            break;
+                        }
+
+                        accumulatedLength += segmentLength;
+                        currentSegmentIndex++;
+                    }
+                }
+
+                return resampledPoints.length > 2 ? resampledPoints : boundary;
+            }
+
             return boundary;
             
         } catch (error) {
