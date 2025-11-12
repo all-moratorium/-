@@ -22,3 +22,10 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// 画像の右クリックを無効化
+document.addEventListener('contextmenu', (e) => {
+  if (e.target.tagName === 'IMG') {
+    e.preventDefault();
+  }
+});

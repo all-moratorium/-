@@ -99,7 +99,17 @@ code {
     -webkit-touch-callout: none;
     pointer-events: none;
   }
+}
 
+/* 画像の右クリックメニューを無効化（全デバイス） */
+img {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+img:active {
+  pointer-events: none;
 }
 
 /* タブレット向けのスタイル */
