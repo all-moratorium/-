@@ -2846,8 +2846,8 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
             }
 
             // 右上の角丸（90度の円弧、上から右へ）
-            // 角丸部分は非常に密に点を配置（2.5px間隔で滑らかに）
-            const cornerPoints = Math.max(60, Math.ceil((Math.PI * r / 2) / 2.5));
+            // 角丸部分の点を配置（10px間隔）
+            const cornerPoints = Math.max(20, Math.ceil((Math.PI * r / 2) / 10));
             for (let i = 1; i <= cornerPoints; i++) {
                 const angle = (Math.PI / 2) * (i / cornerPoints); // 0度から90度
                 const cx = x + width - r;
