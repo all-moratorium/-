@@ -345,7 +345,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </div>
                     <video
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/ネオン下絵ガイド1(2).webm"
+                      src="/ネオン下絵　ガイドモーダル/ネオン下絵ガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
