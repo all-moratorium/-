@@ -1024,6 +1024,7 @@
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
+    
 }
 
 .download-button:hover {
@@ -3589,4 +3590,9 @@
     display: block;
     font-weight: bold;
     border-radius: 4px;
+}
+
+/* SVG出力ボタンを一時的に非表示 */
+.svg-output-button {
+    display: none !important;
 }

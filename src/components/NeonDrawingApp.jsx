@@ -5309,7 +5309,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                         onClick={() => {
                             try {
                                 const { strokePathData, fillPathData } = generateSvgPaths();
-                                
+
                                 const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
     ${fillPathData ? `<path d="${fillPathData}" stroke="${colors.fillBorder}" stroke-width="${lineWidths.fillBorder}" fill="${colors.fillArea}" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
@@ -5319,7 +5319,7 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 // SVGファイルとしてダウンロード
                                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
                                 const fileName = `neon-sketch-${timestamp}`;
-                                
+
                                 const blob = new Blob([svgContent], { type: 'image/svg+xml' });
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
@@ -5329,14 +5329,14 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
                                 a.click();
                                 document.body.removeChild(a);
                                 URL.revokeObjectURL(url);
-                                
+
                                 console.log('SVG出力完了:', fileName);
                             } catch (error) {
                                 console.error('SVG出力エラー:', error);
                                 alert('SVG出力に失敗しました');
                             }
                         }}
-                        className="download-button"
+                        className="download-button svg-output-button"
                         disabled={!paths || paths.length === 0 || !paths.some(path => path && Array.isArray(path.points) && path.points.length > 0)}
                         title="現在のネオン下絵をSVGファイルとして出力"
                     >
