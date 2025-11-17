@@ -1036,3 +1036,8 @@
 .neon3d-lighting-text {
   display: block;
 }
+
+/* GLBエクスポートボタンを一時的に非表示 */
+.glb-export-button {
+  display: none !important;
+}

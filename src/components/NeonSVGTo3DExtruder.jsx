@@ -1868,8 +1868,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       
       {/* エクスポートボタン - サイドバー外 */}
       <div className="neon3d-export-button-container">
-        <button 
-          className="neon3d-export-button"
+        <button
+          className="neon3d-export-button glb-export-button"
           onClick={exportToGLB}
         >
           GLBファイルとして保存

@@ -281,7 +281,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     </div>
                     <video
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/カスタマイズガイド1.mp4"
+                      src="/ネオン下絵　ガイドモーダル/色仕様のカスタマイズガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
