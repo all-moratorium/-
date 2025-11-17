@@ -49,6 +49,24 @@
     overflow-y: auto;
 }
 
+/* グリッド最大化時に他の要素を隠す */
+.text-generator-sidebar.grid-maximized > *:not(.font-selector-container) {
+    display: none !important;
+}
+
+.text-generator-sidebar.grid-maximized {
+    padding: 0;
+}
+
+.text-generator-sidebar.grid-maximized .font-selector-container {
+    margin-bottom: 0;
+}
+
+.text-generator-sidebar.grid-maximized .font-selector-button,
+.text-generator-sidebar.grid-maximized .font-preview-tools-title {
+    display: none;
+}
+
 .text-generator-header {
     display: flex;
     align-items: center;
@@ -356,6 +374,29 @@
 .font-preview-container {
     width: 100%;
     margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.font-preview-container.maximized {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    background: rgb(10, 10, 10);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.font-preview-container.maximized .font-preview-grid {
+    max-height: calc(100vh - 80px);
+    height: auto;
 }
 
 /* Font Filter Bar */
@@ -369,6 +410,27 @@
     margin-bottom: 10px;
     gap: 10px;
     flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.font-grid-maximize-button {
+    padding: 4px;
+    height: 30.4px;
+    background: rgba(20, 20, 20, 0.6);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+}
+
+.font-grid-maximize-button:hover {
+    background: rgba(40, 40, 40, 0.8);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .filter-chips {
@@ -435,12 +497,14 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 9px;
-    max-height: 600px;
+    max-height: min(45vh, 800px);
     overflow-y: auto;
+    overscroll-behavior-y: contain;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     background:rgba(10, 10, 10, 0);
     padding: 9px;
+    box-sizing: border-box;
 }
 
 .font-item-wrapper {
@@ -785,6 +849,11 @@
         box-sizing: border-box !important;
     }
 
+    .font-preview-container.maximized {
+        padding: 10px 5px !important;
+        box-sizing: border-box !important;
+    }
+
     .text-generator-header {
         display: flex;
         align-items: center;
@@ -977,6 +1046,11 @@
         border-radius: 6px;
     }
 
+    .font-grid-maximize-button {
+        padding: 1px !important;
+        
+    }
+
     .sort-dropdown {
         padding: 4px 6px;
         font-size: 10px;
@@ -987,8 +1061,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
         gap: 4px;
-        max-height: 400px;
-        height: 50vh;
+        max-height: min(45vh, 450px);
         overflow-y: auto;
         border: 1px solid #444;
         border-radius: 4px;

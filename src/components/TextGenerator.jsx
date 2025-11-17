@@ -40,11 +40,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const [generatedPaths, setGeneratedPaths] = useState([]);
     const textAreaRef = useRef(null);
     const isInitialized = useRef(false);
+    const sidebarRef = useRef(null);
+    const savedScrollPosition = useRef(0);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [isMobileSidebarVisible, setIsMobileSidebarVisible] = useState(true);
     const [isFontSelectorOpen, setIsFontSelectorOpen] = useState(false);
     const [isLetterSpacingSelectorOpen, setIsLetterSpacingSelectorOpen] = useState(false);
     const [fontFilter, setFontFilter] = useState('all');
+    const [isFontGridMaximized, setIsFontGridMaximized] = useState(false);
     
     // キャンバスサイズの状態
     const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
@@ -937,7 +940,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
 
 
             {/* 右サイドバー */}
-            <div className={`text-generator-sidebar ${isMobileSidebarVisible ? '' : 'collapsed'}`}>
+            <div ref={sidebarRef} className={`text-generator-sidebar ${isMobileSidebarVisible ? '' : 'collapsed'} ${isFontGridMaximized ? 'grid-maximized' : ''}`}>
                 <div className="text-generator-header">
                     <h2 className="text-generator-title">テキストから生成</h2>
                     <div 
@@ -1003,7 +1006,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     </div>
                     
                     {isFontSelectorOpen && (
-                        <div className="font-preview-container">
+                        <div className={`font-preview-container ${isFontGridMaximized ? 'maximized' : ''}`}>
                             <div className="font-filter-bar">
                                 <div className="filter-chips">
                                     <button
@@ -1025,6 +1028,38 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                                         日本語
                                     </button>
                                 </div>
+                                <button
+                                    className="font-grid-maximize-button"
+                                    onClick={() => {
+                                        if (!isFontGridMaximized) {
+                                            // 最大化する前にスクロール位置を保存
+                                            if (sidebarRef.current) {
+                                                savedScrollPosition.current = sidebarRef.current.scrollTop;
+                                            }
+                                        }
+                                        setIsFontGridMaximized(!isFontGridMaximized);
+
+                                        // 最大化を解除する場合は、次のフレームでスクロール位置を復元
+                                        if (isFontGridMaximized) {
+                                            requestAnimationFrame(() => {
+                                                if (sidebarRef.current) {
+                                                    sidebarRef.current.scrollTop = savedScrollPosition.current;
+                                                }
+                                            });
+                                        }
+                                    }}
+                                    title={isFontGridMaximized ? '閉じる' : '最大化'}
+                                >
+                                    {isFontGridMaximized ? (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                                        </svg>
+                                    ) : (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+                                        </svg>
+                                    )}
+                                </button>
                             </div>
                             <div className="font-preview-grid">
                                 {getFilteredAndSortedFonts().map((fontItem) => (
