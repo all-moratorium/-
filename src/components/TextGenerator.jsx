@@ -44,6 +44,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
     const [isMobileSidebarVisible, setIsMobileSidebarVisible] = useState(true);
     const [isFontSelectorOpen, setIsFontSelectorOpen] = useState(false);
     const [isLetterSpacingSelectorOpen, setIsLetterSpacingSelectorOpen] = useState(false);
+    const [fontFilter, setFontFilter] = useState('all');
     
     // キャンバスサイズの状態
     const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
@@ -69,7 +70,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
 
     const allFonts = [
         // 手書き
-        { name: 'Sketch', font: 'Indie Flower, cursive', tags: ['手書き', 'カジュアル'] },
+        { name: 'Sketch', font: 'Indie Flower, cursive', tags: ['人気', '手書き', 'カジュアル'] },
         { name: 'Quick Note', font: 'Caveat, cursive', tags: ['手書き', 'カジュアル'] },
         { name: 'Simple Hand', font: 'Amatic SC, cursive', tags: ['シンプル', '手書き'] },
         { name: 'Shadow', font: 'Shadows Into Light, cursive', tags: ['手書き'] },
@@ -80,7 +81,7 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         { name: 'Rough', font: 'Bad Script, cursive', tags: ['手書き', 'カジュアル'] },
         { name: 'Dreamy', font: 'Over the Rainbow, cursive', tags: ['手書き', 'カジュアル'] },
         // 装飾/レトロ
-        { name: 'Sweet', font: 'Cookie, cursive', tags: ['筆記体'] },
+        { name: 'Sweet', font: 'Cookie, cursive', tags: ['人気', '筆記体'] },
         { name: 'Citrus', font: 'Tangerine, cursive', tags: ['筆記体', '装飾'] },
         { name: 'Tasty', font: 'Leckerli One, cursive', tags: ['筆記体'] },
         { name: 'Garden', font: 'Courgette, cursive', tags: ['筆記体'] },
@@ -93,14 +94,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         { name: 'Pop Art', font: 'Londrina Outline, cursive', tags: ['アウトライン', 'ポップ'] },
         // 未来/テック
         { name: 'Neon Line', font: 'Monoton, cursive', tags: ['人気', 'ネオン'] },
-        { name: 'Futuristic', font: 'Audiowide, cursive', tags: ['未来', 'テック'] },
+        { name: 'Futuristic', font: 'Audiowide, cursive', tags: ['人気', '未来', 'テック'] },
         { name: 'Orbit', font: 'Orbitron, cursive', tags: ['未来', 'テック'] },
         { name: 'Digital', font: 'Syncopate, cursive', tags: ['未来', 'テック'] },
         { name: 'Chrome', font: 'Michroma, sans-serif', tags: ['未来', 'テック'] },
         { name: 'Tech', font: 'Petch, sans-serif', tags: ['モダン', 'テック'] },
         { name: 'Slim Future', font: 'Megrim, cursive', tags: ['未来', 'ユニーク'] },
         // モダン/幾何学
-        { name: 'Comfort', font: 'Comfortaa, cursive', tags: ['モダン'] },
+        { name: 'Comfort', font: 'Comfortaa, cursive', tags: ['人気', 'モダン'] },
         { name: 'Modern Slab', font: 'Josefin Slab, serif', tags: ['セリフ', 'エレガント'] },
         { name: 'Moonlight', font: 'Tsukimi Rounded, sans-serif', tags: ['モダン', '丸ゴシック'] },
         { name: 'Geometric', font: 'Geo, sans-serif', tags: ['幾何学', 'モダン'] },
@@ -108,14 +109,14 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         { name: 'Ultra Thin', font: 'Bungee Hairline, cursive', tags: ['細線', 'モダン'] },
         // その他
         { name: 'Pacific', font: 'Pacifico, cursive', tags: ['人気', 'ポップ'] },
-        { name: 'Gothic', font: 'Griffy, cursive', tags: ['ユニーク'] },
+        { name: 'Gothic', font: 'Griffy, cursive', tags: ['人気', 'ユニーク'] },
         { name: 'Typewriter', font: 'Courier Prime, cursive', tags: ['レトロ'] },
         { name: 'Neon Drip', font: 'Neonderthaw, cursive', tags: ['ネオン', 'ユニーク'] },
         { name: 'Sport', font: 'Offside, cursive', tags: ['スポーツ', 'カジュアル'] },
         { name: 'Champion', font: 'Tourney, cursive', tags: ['スポーツ', 'ダイナミック'] },
         // 筆記体
         { name: 'Dance', font: 'Dancing Script, cursive', tags: ['人気', '筆記体'] },
-        { name: 'Elegant Flow', font: 'Sacramento, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'Elegant Flow', font: 'Sacramento, cursive', tags: ['人気', '筆記体', '装飾'] },
         { name: 'Sunset', font: 'Yellowtail, cursive', tags: ['筆記体'] },
         { name: 'Arizona', font: 'Arizonia, cursive', tags: ['筆記体'] },
         { name: 'Rouge', font: 'Rouge Script, cursive', tags: ['筆記体'] },
@@ -123,9 +124,9 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
         { name: 'Click', font: 'Clicker Script, cursive', tags: ['筆記体'] },
         { name: 'Delafield', font: 'Mrs Saint Delafield, cursive', tags: ['筆記体'] },
         { name: 'New Dawn', font: 'Dawning of a New Day, cursive', tags: ['筆記体'] },
-        { name: 'Vibes', font: 'Great Vibes, cursive', tags: ['筆記体', '装飾'] },
+        { name: 'Vibes', font: 'Great Vibes, cursive', tags: ['人気', '筆記体', '装飾'] },
         { name: 'Allure', font: 'Allura, cursive', tags: ['筆記体', '装飾'] },
-        { name: 'Brush', font: 'Alex Brush, cursive', tags: ['筆記体'] },
+        { name: 'Brush', font: 'Alex Brush, cursive', tags: ['人気', '筆記体'] },
         { name: 'French', font: 'Monsieur La Doulaise, cursive', tags: ['筆記体', '装飾'] },
         { name: 'Imperial', font: 'Imperial Script, cursive', tags: ['筆記体', '装飾'] },
         { name: 'Guilty', font: 'Mea Culpa, cursive', tags: ['筆記体'] },
@@ -239,6 +240,25 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
             'Lubrifont': 'WDXL Lubrifont JP N, sans-serif'
         };
         return fontMap[fontName] || 'Arial, sans-serif';
+    };
+
+    // フォントのフィルター・ソート処理
+    const getFilteredAndSortedFonts = () => {
+        let filtered = [...allFonts];
+
+        // フィルター適用
+        if (fontFilter === 'all') {
+            // 全て：カテゴリ順（元の順序）
+            return filtered;
+        } else if (fontFilter === '人気') {
+            // 人気：人気タグがあるものだけを表示（すでに人気順）
+            return filtered.filter(font => font.tags.includes('人気'));
+        } else if (fontFilter === '日本語対応') {
+            // 日本語：日本語対応フォントを上に
+            return filtered.filter(font => font.tags.includes('日本語対応'));
+        }
+
+        return filtered;
     };
 
     // 利用可能なフォント一覧を更新
@@ -984,8 +1004,30 @@ const TextGenerator = ({ onNavigateToCustomize, isGuideEffectStopped, onGuideEff
                     
                     {isFontSelectorOpen && (
                         <div className="font-preview-container">
+                            <div className="font-filter-bar">
+                                <div className="filter-chips">
+                                    <button
+                                        className={`filter-chip ${fontFilter === 'all' ? 'active' : ''}`}
+                                        onClick={() => setFontFilter('all')}
+                                    >
+                                        全て
+                                    </button>
+                                    <button
+                                        className={`filter-chip ${fontFilter === '人気' ? 'active' : ''}`}
+                                        onClick={() => setFontFilter('人気')}
+                                    >
+                                        人気
+                                    </button>
+                                    <button
+                                        className={`filter-chip ${fontFilter === '日本語対応' ? 'active' : ''}`}
+                                        onClick={() => setFontFilter('日本語対応')}
+                                    >
+                                        日本語
+                                    </button>
+                                </div>
+                            </div>
                             <div className="font-preview-grid">
-                                {allFonts.map((fontItem) => (
+                                {getFilteredAndSortedFonts().map((fontItem) => (
                                     <div className="font-item-wrapper" key={fontItem.name}>
                                         <div 
                                             className={`font-preview-item ${selectedFont === fontItem.name ? 'selected' : ''}`}
