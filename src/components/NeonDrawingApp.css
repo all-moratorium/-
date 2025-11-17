@@ -2770,6 +2770,7 @@
         border-radius: 4px !important;
         margin:0 !important;
         height: 28px !important;
+        white-space: nowrap !important;
     }
     
     /* グリッド・背景コントロール */
