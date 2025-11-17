@@ -8,6 +8,11 @@
     position: relative;
 }
 
+/* デスクトップでモバイル専用バーを非表示 */
+.mobile-function-bar {
+    display: none !important;
+}
+
 /* キャンバスエリア */
 .canvas-area {
     width: 100%;
