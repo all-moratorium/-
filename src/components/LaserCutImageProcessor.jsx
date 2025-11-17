@@ -116,7 +116,7 @@ function CreationModal({ isOpen, onSelect, onClose }) {
     const step0_features = [
         'テキストテンプレートから素早く下絵を作成',
         '即座にプロ仕様のテキストLEDネオンサインが完成',
-        '60種類以上のフォント選択と直感的な操作'
+        '70種類以上のフォント選択と直感的な操作'
     ];
     
     const step1_features = [
