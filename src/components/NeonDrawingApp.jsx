@@ -2977,15 +2977,16 @@ const NeonDrawingApp = ({ initialState, onStateChange, sharedFileData, onSharedF
         
         // Graham scan
         const hull = [start];
-        
+        const EPSILON = 1e-6; // 浮動小数点誤差の許容範囲
+
         for (const point of sortedPoints) {
-            // 左折するまで最後の点を除去
-            while (hull.length > 1 && crossProduct(hull[hull.length - 2], hull[hull.length - 1], point) <= 0) {
+            // 左折するまで最後の点を除去（許容誤差を考慮して直線上の点も除去）
+            while (hull.length > 1 && crossProduct(hull[hull.length - 2], hull[hull.length - 1], point) <= EPSILON) {
                 hull.pop();
             }
             hull.push(point);
         }
-        
+
         return hull;
     }, [crossProduct]);
 
