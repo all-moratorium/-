@@ -269,7 +269,7 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                     </div>
                     <video
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/サンプル動画テキスト.mp4"
+                      src="/ネオン下絵　ガイドモーダル/テキストから生成ガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop

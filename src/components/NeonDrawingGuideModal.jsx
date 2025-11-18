@@ -513,7 +513,7 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   <div className="neon-drawing-video-container" ref={containerRef2}>
                     <video
                       ref={videoRef2}
-                      src="/ネオン下絵　ガイドモーダル/ネオン下絵ガイド2.mp4"
+                      src="/ネオン下絵　ガイドモーダル/ネオン下絵ガイド4.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
