@@ -25,8 +25,11 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const unrealBloomPassRef = useRef(null);
   const wallLightsRef = useRef([]);
   const rectAreaLightRef = useRef(null); // 面光源参照
+  const topToBottomLightRef = useRef(null); // 上から下への照明参照
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
+  const dracoLoaderRef = useRef(null); // DRACOLoader再利用用
+  const gltfLoaderRef = useRef(null); // GLTFLoader再利用用
   const wallPlaneRef = useRef(null);
   const backgroundColorRef = useRef(backgroundColor);
   const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
@@ -69,6 +72,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [rectAreaLightEnabled, setRectAreaLightEnabled] = useState(false); // 面光源オン/オフ状態
   const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
   const [offTubeColor, setOffTubeColor] = useState('matching'); // OFF時のチューブカラー設定
+  const [roomModel, setRoomModel] = useState(''); // 部屋モデルの選択（初期は未選択）
 
   // Define layers for selective rendering
   const ENTIRE_SCENE_LAYER = 0;
@@ -1191,7 +1195,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     const gridCellSize = 50;
     const gridCount = 60;
     const wallWidth = gridCellSize * gridCount;
-    const wallHeight = gridCellSize * gridCount;
+    const wallHeight = 2000; // 高さを2000mmに設定
     const wallDepth = 10;
 
     const wallPlaneGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
@@ -1207,17 +1211,17 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // グリッド非表示
 
     // 壁全体を均等に照らす環境光のみ（反射なし）
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-    
+    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+
     // 半球ライトで自然な照明（反射なし）
     const hemisphereLight = new THREE.HemisphereLight(
       0xffffff, // 空の色 (白)
       0xbbbbbb, // 地面の色 (明るいグレー)
-      1.2       // 光の強さ
+      1       // 光の強さ
     );
     scene.add(hemisphereLight);
     // 正面からの大きな面光源（10m×4m）
-    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 1.2, 1750, 1750);
+    const rectAreaLight = new THREE.RectAreaLight(0xffffff, 0.3, 1450, 1450);
     rectAreaLight.position.set(0, 0, 500); // 正面から
     rectAreaLight.lookAt(0, 0, 0); // 壁を向く
     rectAreaLight.visible = rectAreaLightEnabled; // 初期状態を設定
@@ -1227,6 +1231,14 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // 部屋の中心に反射しない環境光を追加
     const centerAmbientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(centerAmbientLight);
+
+    // 上から下の床に向かって照らすライトを追加
+    const topToBottomLight = new THREE.DirectionalLight(0xffffff, 5.0);
+    topToBottomLight.position.set(0, 1000, 0); // 上から
+    topToBottomLight.target.position.set(0, -1000, 0); // 下の床に向かって
+    scene.add(topToBottomLight);
+    scene.add(topToBottomLight.target);
+    topToBottomLightRef.current = topToBottomLight; // refに保存
 
     // Wall lights - match SVGTo3DExtruder settings
     const wallLightColor = 0xffffff;
@@ -1437,18 +1449,81 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
   // Room model loading effect
   useEffect(() => {
-    if (!sceneRef.current) return;
+    console.log('[Room Model Effect] Running with roomModel:', roomModel);
+
+    if (!sceneRef.current) {
+      console.log('[Room Model Effect] sceneRef not ready, skipping');
+      return;
+    }
 
     const scene = sceneRef.current;
-    
-    // DRACOLoaderを設定
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/'); // DRACOデコーダーのパス（CDN）
-    
-    const gltfLoader = new GLTFLoader();
-    gltfLoader.setDRACOLoader(dracoLoader);
-    
-    const modelPath = '/models/room.black.neon.glb';
+
+    // roomModelが空の場合は、モデルを削除してデフォルトの壁を表示
+    if (!roomModel) {
+      console.log('[Room Model Effect] roomModel is empty, skipping model load');
+      if (loadedRoomModelRef.current) {
+        console.log('Removing room model (no model selected)...');
+        scene.remove(loadedRoomModelRef.current);
+        loadedRoomModelRef.current = null;
+      }
+      // デフォルトの壁を表示
+      if (wallPlaneRef.current) {
+        wallPlaneRef.current.visible = true;
+      }
+      return;
+    }
+
+    // モデルごとの個別設定
+    const modelSettings = {
+      'neonblackwall-v1': {
+        scale: 0.44,      // スケール倍率
+        xOffset: 0,       // X位置オフセット
+        yOffset: -100,    // Y位置オフセット
+        zOffset: -70      // Z位置オフセット
+      },
+      'neon.brick': {
+        scale: 0.44,
+        xOffset: 0,
+        yOffset: -100,
+        zOffset: -70
+      },
+      'neoncafe4-v1': {
+        scale: 0.44,
+        xOffset: 0,
+        yOffset: -100,
+        zOffset: -70
+      },
+      'neonbeerbar-v1': {
+        scale: 0.44,
+        xOffset: 0,
+        yOffset: -230,
+        zOffset: -580
+      }
+    };
+
+    // 現在のモデルの設定を取得（デフォルト値付き）
+    const currentSettings = modelSettings[roomModel] || {
+      scale: 0.44,
+      xOffset: 0,
+      yOffset: -230,
+      zOffset: -580
+    };
+
+    // DRACOLoaderとGLTFLoaderを初回のみ作成して再利用
+    if (!dracoLoaderRef.current) {
+      dracoLoaderRef.current = new DRACOLoader();
+      dracoLoaderRef.current.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    }
+
+    if (!gltfLoaderRef.current) {
+      gltfLoaderRef.current = new GLTFLoader();
+      gltfLoaderRef.current.setDRACOLoader(dracoLoaderRef.current);
+    }
+
+    const gltfLoader = gltfLoaderRef.current;
+
+    const modelPath = `/models/neonroom%20glb/${roomModel}.glb`;
+    console.log('Loading room model:', modelPath);
 
     // Skip room model loading on mobile devices
     if (window.innerWidth <= 1280 || navigator.maxTouchPoints > 0) {
@@ -1456,14 +1531,34 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       return;
     }
 
+    // 前のモデルを削除（読み込み開始前に実行）
+    if (loadedRoomModelRef.current) {
+      console.log('Removing previous room model...');
+      scene.remove(loadedRoomModelRef.current);
+      loadedRoomModelRef.current = null;
+      console.log('Previous room model removed');
+    }
+
     gltfLoader.load(
       modelPath,
       (gltf) => {
-        if (loadedRoomModelRef.current) {
-          scene.remove(loadedRoomModelRef.current);
-        }
+        console.log('Room model loaded successfully:', modelPath);
 
         const loadedScene = gltf.scene;
+
+        // ライトの強度を調整
+        loadedScene.traverse((object) => {
+          if (object.isLight) {
+            console.log('Light found:', object.name, 'Type:', object.type);
+            console.log('  Position (x, y, z):', object.position.x, object.position.y, object.position.z);
+            console.log('  Intensity:', object.intensity);
+            console.log('  Color:', object.color);
+            // モデル内のライトの強度を1倍（元のまま）
+            // object.intensity = object.intensity * 1;
+            console.log('  Intensity (unchanged):', object.intensity);
+          }
+        });
+
 
         // Remove any cameras from the loaded GLB scene
         const camerasToRemove = [];
@@ -1517,7 +1612,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         // User Defined Scale Adjustment
         const currentVisualRepresentsCm = 270.0;
         const modelPartTrueSizeCm = 910.0;
-        const finalScaleFactor = scaleFactor * (modelPartTrueSizeCm / currentVisualRepresentsCm);
+        const finalScaleFactor = scaleFactor * (modelPartTrueSizeCm / currentVisualRepresentsCm) * currentSettings.scale;
 
         model.scale.set(finalScaleFactor, finalScaleFactor, finalScaleFactor);
         model.updateMatrixWorld(true);
@@ -1538,18 +1633,27 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         const gridSurfaceZ = wallPlaneRef.current.position.z;
 
         // Position model
-        model.position.x = -overallModelCenter.x;
-        model.position.y = -overallModelCenter.y - 480; 
+        model.position.x = -overallModelCenter.x + currentSettings.xOffset;
+        model.position.y = -overallModelCenter.y + currentSettings.yOffset;
 
+        
         if (roomBackWallObject) {
           const wallWorldBox = new THREE.Box3().setFromObject(roomBackWallObject);
-          const fineTuneZOffset = 86.5;
+          let fineTuneZOffset = 86.5;
+
+      
+
           model.position.z = gridSurfaceZ - wallWorldBox.min.z - fineTuneZOffset;
         } else {
           console.warn('RoomBackWall object not found. Using overall model for Z positioning. Check name in Blender.');
-          const overallModelMinZ = overallScaledRotatedModelBox.min.z; 
+          const overallModelMinZ = overallScaledRotatedModelBox.min.z;
           model.position.z = gridSurfaceZ - overallModelMinZ;
+
+          
         }
+
+        // モデルごとの個別Z位置調整
+        model.position.z += currentSettings.zOffset;
 
         // Hide the original preview wall if the room model is loaded
         if (wallPlaneRef.current) {
@@ -1565,14 +1669,25 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
       },
       undefined, // onProgress
       (error) => {
-        console.error('Error loading room.black.neon.glb:', error);
+        console.error('Error loading room model:', modelPath, error);
       }
     );
 
-    return () => {
-      // Room model specific cleanup is handled in disposeResources
-    };
-  }, [sceneRef, wallPlaneRef]);
+    // クリーンアップは不要（モデル読み込み時に削除処理を行う）
+  }, [sceneRef, wallPlaneRef, roomModel]);
+
+  // 上から下へのライト強度をroomModelに応じて調整
+  useEffect(() => {
+    if (!topToBottomLightRef.current) return;
+
+    if (roomModel === 'neoncafe4-v1') {
+      topToBottomLightRef.current.intensity = 1.0; // neoncafe4-v1の時は1.0に減光
+      console.log('topToBottomLight intensity set to 1.0 for neoncafe4-v1');
+    } else {
+      topToBottomLightRef.current.intensity = 5.0; // その他のモデルは5.0
+      console.log('topToBottomLight intensity set to 5.0');
+    }
+  }, [roomModel]);
 
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
@@ -1932,6 +2047,24 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           <div className="neon3d-dimension-item">
             <span className="neon3d-dimension-label">タイプ</span>
             <span className="neon3d-dimension-value neon3d-small-text">{calculatedModelData?.isGenerated === true ? calculatedModelData.modelType : 'N/A'}</span>
+          </div>
+        </div>
+
+        {/* 部屋モデル選択 */}
+        <div className="neon3d-room-model-selector">
+          <div className="neon3d-dimension-item">
+            <span className="neon3d-dimension-label">部屋モデル</span>
+            <select
+              value={roomModel}
+              onChange={(e) => setRoomModel(e.target.value)}
+              className="neon3d-room-model-select"
+            >
+              <option value="">背景モデルを選択</option>
+              <option value="neonblackwall-v1">ネオン黒い壁 v1</option>
+              <option value="neon.brick">ネオンレンガ</option>
+              <option value="neoncafe4-v1">ネオンカフェ v1</option>
+              <option value="neonbeerbar-v1">ネオンビアバー</option>
+            </select>
           </div>
         </div>
 
