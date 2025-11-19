@@ -1478,7 +1478,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         yOffset: -100,    // Y位置オフセット
         zOffset: -70      // Z位置オフセット
       },
-      'neonbrick7glb-v1': {
+      'neonbrick8glb-v1': {
         scale: 0.44,
         xOffset: 0,
         yOffset: -100,
@@ -2083,7 +2083,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
             >
               <option value="">なし</option>
               <option value="neonblackwall-v1">ネオン黒い壁 v1</option>
-              <option value="neonbrick7glb-v1">ネオンレンガ</option>
+              <option value="neonbrick8glb-v1">ネオンレンガ</option>
               <option value="neoncafe4-v1">ネオンカフェ v1</option>
               <option value="neonbeerbar-v1">ネオンビアバー</option>
             </select>
