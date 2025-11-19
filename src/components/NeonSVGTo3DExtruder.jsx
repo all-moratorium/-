@@ -26,6 +26,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const wallLightsRef = useRef([]);
   const rectAreaLightRef = useRef(null); // 面光源参照
   const topToBottomLightRef = useRef(null); // 上から下への照明参照
+  const wallAmbientLightRef = useRef(null); // 壁全体を照らす環境光参照
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
   const dracoLoaderRef = useRef(null); // DRACOLoader再利用用
@@ -1211,7 +1212,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     // グリッド非表示
 
     // 壁全体を均等に照らす環境光のみ（反射なし）
-    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+    const wallAmbientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(wallAmbientLight);
+    wallAmbientLightRef.current = wallAmbientLight; // refに保存
 
     // 半球ライトで自然な照明（反射なし）
     const hemisphereLight = new THREE.HemisphereLight(
@@ -1475,7 +1478,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         yOffset: -100,    // Y位置オフセット
         zOffset: -70      // Z位置オフセット
       },
-      'neon.brick': {
+      'neonbrick-v1': {
         scale: 0.44,
         xOffset: 0,
         yOffset: -100,
@@ -1648,10 +1651,15 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
           wallPlaneRef.current.visible = false;
         }
         
-        // Set room model to not bloom
+        // Set room model to not bloom and adjust lights
         loadedScene.traverse((child) => {
           if (child.isMesh) {
             child.layers.set(ENTIRE_SCENE_LAYER);
+          }
+          // モデルファイル内のライトの強度はそのまま
+          if (child.isLight) {
+            child.intensity *= 1.0;
+            console.log(`Model light intensity (unchanged): ${child.type}, intensity: ${child.intensity}`);
           }
         });
       },
@@ -1674,6 +1682,32 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     } else {
       topToBottomLightRef.current.intensity = 5.0; // その他のモデルは5.0
       console.log('topToBottomLight intensity set to 5.0');
+    }
+  }, [roomModel]);
+
+  // 壁全体を照らす環境光の強度をroomModelに応じて調整
+  useEffect(() => {
+    if (!wallAmbientLightRef.current) return;
+
+    if (roomModel === 'neonblackwall-v1') {
+      wallAmbientLightRef.current.intensity = 2.0; // neonblackwall-v1の時は2.0に増光
+      console.log('wallAmbientLight intensity set to 2.0 for neonblackwall-v1');
+    } else {
+      wallAmbientLightRef.current.intensity = 0.2; // その他のモデルは0.2
+      console.log('wallAmbientLight intensity set to 0.2');
+    }
+  }, [roomModel]);
+
+  // オンオフ可能な壁面照明（RectAreaLight）の強度をroomModelに応じて調整
+  useEffect(() => {
+    if (!rectAreaLightRef.current) return;
+
+    if (roomModel === 'neonblackwall-v1') {
+      rectAreaLightRef.current.intensity = 1.5; // neonblackwall-v1の時は1.5に増光
+      console.log('rectAreaLight intensity set to 1.5 for neonblackwall-v1');
+    } else {
+      rectAreaLightRef.current.intensity = 0.3; // その他のモデルは0.3
+      console.log('rectAreaLight intensity set to 0.3');
     }
   }, [roomModel]);
 
@@ -2047,9 +2081,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
               onChange={(e) => setRoomModel(e.target.value)}
               className="neon3d-room-model-select"
             >
-              <option value="">背景モデルを選択</option>
+              <option value="">なし</option>
               <option value="neonblackwall-v1">ネオン黒い壁 v1</option>
-              <option value="neon.brick">ネオンレンガ</option>
+              <option value="neonbrick-v1">ネオンレンガ</option>
               <option value="neoncafe4-v1">ネオンカフェ v1</option>
               <option value="neonbeerbar-v1">ネオンビアバー</option>
             </select>
