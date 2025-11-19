@@ -187,6 +187,7 @@
 .controls-panel.collapsed .info-text,
 .controls-panel.collapsed .neon3d-detail-info-header,
 .controls-panel.collapsed .neon3d-details-info-container,
+.controls-panel.collapsed .neon3d-room-model-selector,
 .controls-panel.collapsed .neon3d-proceed-button-container {
   display: none;
 }

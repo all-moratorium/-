@@ -1449,18 +1449,12 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
   // Room model loading effect
   useEffect(() => {
-    console.log('[Room Model Effect] Running with roomModel:', roomModel);
-
-    if (!sceneRef.current) {
-      console.log('[Room Model Effect] sceneRef not ready, skipping');
-      return;
-    }
+    if (!sceneRef.current) return;
 
     const scene = sceneRef.current;
 
     // roomModelが空の場合は、モデルを削除してデフォルトの壁を表示
     if (!roomModel) {
-      console.log('[Room Model Effect] roomModel is empty, skipping model load');
       if (loadedRoomModelRef.current) {
         console.log('Removing room model (no model selected)...');
         scene.remove(loadedRoomModelRef.current);
@@ -1524,12 +1518,6 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     const modelPath = `/models/neonroom%20glb/${roomModel}.glb`;
     console.log('Loading room model:', modelPath);
-
-    // Skip room model loading on mobile devices
-    if (window.innerWidth <= 1280 || navigator.maxTouchPoints > 0) {
-      console.log('Skipping room model loading on mobile device');
-      return;
-    }
 
     // 前のモデルを削除（読み込み開始前に実行）
     if (loadedRoomModelRef.current) {
