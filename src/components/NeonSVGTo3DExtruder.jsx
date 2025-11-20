@@ -13,7 +13,7 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
 import animationManager from '../utils/AnimationManager';
 import './NeonSVGTo3DExtruder.css';
 
-const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#242424', modelData, onNavigateToInfo, isGuideEffectStopped, onGuideEffectStop }, ref) => {
+const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#ffffff', modelData, onNavigateToInfo, isGuideEffectStopped, onGuideEffectStop }, ref) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -35,6 +35,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const wallPlaneRef = useRef(null);
   const modelLoadingTokenRef = useRef(0); // モデル読み込みトークン
   const backgroundColorRef = useRef(backgroundColor);
+  const backgroundTextureRef = useRef(null); // グラデーション背景テクスチャ
   const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
   
   // マウント状態とカメラ状態保持用
@@ -1039,9 +1040,27 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x242424);
+
+    // グラデーション背景を作成
+    const canvas = document.createElement('canvas');
+    canvas.width = 2;
+    canvas.height = 256;
+    const context = canvas.getContext('2d');
+    const gradient = context.createLinearGradient(0, 0, 0, 256);
+    gradient.addColorStop(0, '#0f0f1a'); // より暗い紫がかったブルー
+    gradient.addColorStop(0.5, '#0a1020'); // より暗いダークブルー
+    gradient.addColorStop(1, '#080810'); // より暗いネイビー
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 2, 256);
+
+    const gradientTexture = new THREE.CanvasTexture(canvas);
+    gradientTexture.minFilter = THREE.LinearFilter;
+    gradientTexture.magFilter = THREE.LinearFilter;
+
+    scene.background = gradientTexture;
+    backgroundTextureRef.current = gradientTexture; // 保存
     sceneRef.current = scene;
-    console.log('Scene background set to: 0x242424');
+    console.log('Scene background set to gradient');
     
     // リアルタイム進捗イベント: シーン作成完了
     window.dispatchEvent(new CustomEvent('3DProgressUpdate', {
@@ -1334,7 +1353,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
         // 2. Render final scene
         camera.layers.set(ENTIRE_SCENE_LAYER);
-        scene.background = new THREE.Color(backgroundColorRef.current); // Use the reactive background color
+        scene.background = backgroundTextureRef.current || new THREE.Color(backgroundColorRef.current); // Use gradient or color
         if (wallPlaneRef.current) wallPlaneRef.current.visible = true; // Show wall for final pass
         renderer.setClearColor(originalClearColor, originalClearAlpha); // Restore original clear color for final pass
         composerRef.current.final.render();
