@@ -2049,6 +2049,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
           <button
             onClick={toggleRectAreaLight}
             className={`neon3d-lighting-toggle ${rectAreaLightEnabled ? 'on' : 'off'}`}
+            disabled={!roomModel || roomModel === ''}
           >
             <span className="neon3d-lighting-text">
               {rectAreaLightEnabled ? 'ON' : 'OFF'}

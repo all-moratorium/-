@@ -1079,13 +1079,20 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.neon3d-lighting-toggle:hover:not(.on) {
+.neon3d-lighting-toggle:hover:not(.on):not(:disabled) {
   background: rgba(107, 114, 128, 0.25);
   border: 1px solid rgba(107, 114, 128, 0.5);
-  box-shadow: 
+  box-shadow:
     0 0 12px rgba(107, 114, 128, 0.2),
     0 4px 12px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.neon3d-lighting-toggle:disabled {
+  border: 1px solid #6b7280;
+  background-color: rgba(29, 29, 29, 0) !important;
+  color: #9ca3af !important;
+  cursor: not-allowed !important;
 }
 
 .neon3d-lighting-text {
