@@ -187,7 +187,8 @@
 .controls-panel.collapsed .info-text,
 .controls-panel.collapsed .neon3d-detail-info-header,
 .controls-panel.collapsed .neon3d-details-info-container,
-.controls-panel.collapsed .neon3d-room-model-selector,
+.controls-panel.collapsed .room-model-selector-title,
+.controls-panel.collapsed .room-model-selector-container,
 .controls-panel.collapsed .neon3d-proceed-button-container {
   display: none;
 }
@@ -832,7 +833,7 @@
 
 /* モデル詳細情報表示セクション */
 .neon3d-details-info-container {
-  margin-bottom: 130px;
+  margin-bottom: 30px;
   margin-top: 0px;
   padding-left: 12px;
   padding-right: 12px;
@@ -1043,48 +1044,224 @@
   display: none !important;
 }
 
-/* 部屋モデル選択セクション */
-.neon3d-room-model-selector {
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 16px;
-}
-
-.neon3d-room-model-select {
-  font-size: 19px;
-  color: #ffffff;
+/* 部屋モデルセレクタ */
+.room-model-selector-title {
+  font-size: 18px;
   font-weight: bold;
-  text-align: right;
-  min-width: 80px;
-  padding: 4px 8px;
-  background: rgba(74, 74, 74, 0.3);
-  border: 1px solid #4a4a4a;
-  border-radius: 4px;
+  color: #d1d5db;
+  margin-bottom: 12px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.room-model-selector-container {
+  margin-bottom: 50px;
+}
+
+.room-model-selector-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 25px;
+  background: transparent;
+  border: 2px solid #10b981;
+  border-radius: 6px;
+  width: 230px;
+  height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
   cursor: pointer;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.neon3d-room-model-select:hover {
-  background: rgba(74, 74, 74, 0.5);
-  border-color: #6b7280;
-}
-
-.neon3d-room-model-select:focus {
-  border-color: #9ca3af;
-  background: rgba(74, 74, 74, 0.6);
-}
-
-.neon3d-room-model-select option {
-  background: #2a2a2a;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
   color: #ffffff;
-  padding: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  box-sizing :border-box
+}
+
+.room-model-selector-button:hover {
+  box-shadow: 0 0 19px rgba(16, 185, 129, 0.55);
+}
+
+.selected-room-model-preview {
+  flex: 1;
+  text-align: left;
+}
+
+.selected-room-model-text {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.room-model-arrow {
+  color: #10b981;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+  margin-left: 10px;
+}
+
+.room-model-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* サムネイルコンテナ */
+.room-model-thumbnail-container {
+  padding: 6px 12px 12px 12px;
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  margin-top: 12px;
+}
+
+.room-model-thumbnail-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.room-model-thumbnail-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.room-model-thumbnail-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.room-model-thumbnail-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.room-model-thumbnail {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  background: #000;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 2px solid #27272a;
+  transition: all 0.3s;
+  opacity: 0.7;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-model-thumbnail:hover {
+  opacity: 1;
+  border-color: #3f3f46;
+}
+
+.room-model-thumbnail.room-model-thumbnail-active {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  transform: scale(1.02);
+  opacity: 1;
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.7);
+}
+
+.room-model-thumbnail-image {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.room-model-thumbnail-label {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
 }
 
 /* モバイル版の調整 */
 @media (max-width: 768px) {
-  .neon3d-room-model-select {
+  .room-model-selector-title {
+    font-size: 14px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  .room-model-selector-container {
+    margin-bottom: 15px;
+  }
+
+  .room-model-selector-button {
+    width: 180px;
+    height: 58px;
+    padding: 6px 12px;
+    margin-bottom:12px !important; 
+  }
+
+  .selected-room-model-text {
+    font-size: 14px;
+  }
+
+  .room-model-arrow {
     font-size: 12px;
-    padding: 4px 6px;
+  }
+
+  .room-model-thumbnail-container {
+    padding: 6px 10px 15px 10px !important;
+    gap: 0.5rem;
+  }
+
+  .room-model-thumbnail {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .room-model-thumbnail-image {
+    width: 55%;
+    height: 55%;
+  }
+
+  .room-model-thumbnail-label {
+    font-size: 9px;
+  }
+}
+
+/* タブレット・小型デスクトップ版の調整 */
+@media screen and (max-width: 1280px), (pointer: coarse) {
+  .room-model-selector-title {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .room-model-selector-container {
+    margin-bottom: 18px;
+  }
+
+  .room-model-selector-button {
+    width: 215px;
+    height: 55px;
+    padding: 8px 20px;
+  }
+
+  .selected-room-model-text {
+    font-size: 16px;
+  }
+
+  .room-model-arrow {
+    font-size: 13px;
+  }
+
+  .room-model-thumbnail-container {
+    padding: 6px 10px 8px 10px;
+  }
+
+  .room-model-thumbnail {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .room-model-thumbnail-label {
+    font-size: 10px;
   }
 }

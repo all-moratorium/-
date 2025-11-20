@@ -27,6 +27,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const rectAreaLightRef = useRef(null); // 面光源参照
   const topToBottomLightRef = useRef(null); // 上から下への照明参照
   const wallAmbientLightRef = useRef(null); // 壁全体を照らす環境光参照
+  const roomModelThumbnailContainerRef = useRef(null); // 部屋モデルサムネイルコンテナ参照
   const animationIdRef = useRef(null);
   const loadedRoomModelRef = useRef(null);
   const dracoLoaderRef = useRef(null); // DRACOLoader再利用用
@@ -74,6 +75,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const [neonPowerState, setNeonPowerState] = useState(true); // ネオンパワーオン/オフ状態
   const [offTubeColor, setOffTubeColor] = useState('matching'); // OFF時のチューブカラー設定
   const [roomModel, setRoomModel] = useState(''); // 部屋モデルの選択（初期は未選択）
+  const [isRoomModelSelectorOpen, setIsRoomModelSelectorOpen] = useState(false); // 部屋モデルセレクタの開閉状態
 
   // Define layers for selective rendering
   const ENTIRE_SCENE_LAYER = 0;
@@ -1711,6 +1713,25 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     }
   }, [roomModel]);
 
+  // 部屋モデルサムネイルコンテナのマウスホイールで横スクロール
+  useEffect(() => {
+    const container = roomModelThumbnailContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [isRoomModelSelectorOpen]);
+
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
       loadSVGFile(e.target.files[0]);
@@ -2073,21 +2094,65 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         </div>
 
         {/* 部屋モデル選択 */}
-        <div className="neon3d-room-model-selector">
-          <div className="neon3d-dimension-item">
-            <span className="neon3d-dimension-label">部屋モデル</span>
-            <select
-              value={roomModel}
-              onChange={(e) => setRoomModel(e.target.value)}
-              className="neon3d-room-model-select"
-            >
-              <option value="">なし</option>
-              <option value="neonblackwall-v1">ネオン黒い壁 v1</option>
-              <option value="neonbrick8glb-v1">ネオンレンガ</option>
-              <option value="neoncafe4-v1">ネオンカフェ v1</option>
-              <option value="neonbeerbar-v1">ネオンビアバー</option>
-            </select>
+        <div className="room-model-selector-title">部屋モデルを選択</div>
+        <div className="room-model-selector-container">
+          <div
+            className="room-model-selector-button"
+            onClick={() => setIsRoomModelSelectorOpen(!isRoomModelSelectorOpen)}
+          >
+            <div className="selected-room-model-preview">
+              <span className="selected-room-model-text">
+                {roomModel === '' ? 'なし' :
+                 roomModel === 'neonblackwall-v1' ? 'ネオン黒い壁 v1' :
+                 roomModel === 'neonbrick8glb-v1' ? 'ネオンレンガ' :
+                 roomModel === 'neoncafe4-v1' ? 'ネオンカフェ v1' :
+                 roomModel === 'neonbeerbar-v1' ? 'ネオンビアバー' : 'なし'}
+              </span>
+            </div>
+            <div className={`room-model-arrow ${isRoomModelSelectorOpen ? 'open' : ''}`}>
+              ▼
+            </div>
           </div>
+
+          {isRoomModelSelectorOpen && (
+            <div className="room-model-thumbnail-container" ref={roomModelThumbnailContainerRef}>
+              <button
+                onClick={() => setRoomModel('')}
+                className={`room-model-thumbnail ${roomModel === '' ? 'room-model-thumbnail-active' : ''}`}
+              >
+                <img src="/icons/logo-white.png" alt="なし" className="room-model-thumbnail-image" />
+                <span className="room-model-thumbnail-label">なし</span>
+              </button>
+              <button
+                onClick={() => setRoomModel('neonblackwall-v1')}
+                className={`room-model-thumbnail ${roomModel === 'neonblackwall-v1' ? 'room-model-thumbnail-active' : ''}`}
+              >
+                <img src="/icons/logo-white.png" alt="ネオン黒い壁 v1" className="room-model-thumbnail-image" />
+                <span className="room-model-thumbnail-label">黒い壁</span>
+              </button>
+              <button
+                onClick={() => setRoomModel('neonbrick8glb-v1')}
+                className={`room-model-thumbnail ${roomModel === 'neonbrick8glb-v1' ? 'room-model-thumbnail-active' : ''}`}
+              >
+                <img src="/icons/logo-white.png" alt="ネオンレンガ" className="room-model-thumbnail-image" />
+                <span className="room-model-thumbnail-label">レンガ</span>
+              </button>
+              <button
+                onClick={() => setRoomModel('neoncafe4-v1')}
+                className={`room-model-thumbnail ${roomModel === 'neoncafe4-v1' ? 'room-model-thumbnail-active' : ''}`}
+              >
+                <img src="/icons/logo-white.png" alt="ネオンカフェ v1" className="room-model-thumbnail-image" />
+                <span className="room-model-thumbnail-label">カフェ</span>
+              </button>
+              <button
+                onClick={() => setRoomModel('neonbeerbar-v1')}
+                className={`room-model-thumbnail ${roomModel === 'neonbeerbar-v1' ? 'room-model-thumbnail-active' : ''}`}
+              >
+                <img src="/icons/logo-white.png" alt="ネオンビアバー" className="room-model-thumbnail-image" />
+                <span className="room-model-thumbnail-label">ビアバー</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 商品情報へ進むボタン */}
