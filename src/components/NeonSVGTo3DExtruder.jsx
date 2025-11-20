@@ -33,6 +33,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
   const dracoLoaderRef = useRef(null); // DRACOLoader再利用用
   const gltfLoaderRef = useRef(null); // GLTFLoader再利用用
   const wallPlaneRef = useRef(null);
+  const modelLoadingTokenRef = useRef(0); // モデル読み込みトークン
   const backgroundColorRef = useRef(backgroundColor);
   const animationCleanupRef = useRef(null); // AnimationManager用クリーンアップ関数
   
@@ -1458,6 +1459,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
 
     const scene = sceneRef.current;
 
+    // トークンをインクリメントして、このリクエストを識別
+    modelLoadingTokenRef.current += 1;
+    const currentToken = modelLoadingTokenRef.current;
+
     // roomModelが空の場合は、モデルを削除してデフォルトの壁を表示
     if (!roomModel) {
       if (loadedRoomModelRef.current) {
@@ -1535,6 +1540,12 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
     gltfLoader.load(
       modelPath,
       (gltf) => {
+        // トークンチェック: 読み込み完了時に最新のリクエストか確認
+        if (currentToken !== modelLoadingTokenRef.current) {
+          console.log('Model load cancelled (newer request exists):', modelPath);
+          return; // 古いリクエストは無視
+        }
+
         console.log('Room model loaded successfully:', modelPath);
 
         const loadedScene = gltf.scene;
