@@ -1047,9 +1047,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
     canvas.height = 256;
     const context = canvas.getContext('2d');
     const gradient = context.createLinearGradient(0, 0, 0, 256);
-    gradient.addColorStop(0, '#0f0f1a'); // より暗い紫がかったブルー
-    gradient.addColorStop(0.5, '#0a1020'); // より暗いダークブルー
-    gradient.addColorStop(1, '#080810'); // より暗いネイビー
+    gradient.addColorStop(0, '#141424'); // 少し暗い紫がかったブルー
+    gradient.addColorStop(0.5, '#111b30'); // 少し暗いダークブルー
+    gradient.addColorStop(1, '#0d0d1a'); // 少し暗いネイビー
     context.fillStyle = gradient;
     context.fillRect(0, 0, 2, 256);
 
