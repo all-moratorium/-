@@ -1734,7 +1734,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
   useEffect(() => {
     if (!rectAreaLightRef.current) return;
 
-    if (roomModel === 'neonblackwall-v1') {
+    if (roomModel === '' || !roomModel) {
+      rectAreaLightRef.current.intensity = 1.5; // なしの時は1.5（5倍）に増光
+      console.log('rectAreaLight intensity set to 1.5 for no model');
+    } else if (roomModel === 'neonblackwall-v1') {
       rectAreaLightRef.current.intensity = 1.5; // neonblackwall-v1の時は1.5に増光
       console.log('rectAreaLight intensity set to 1.5 for neonblackwall-v1');
     } else {
@@ -2127,7 +2130,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
         <div className="wall-dimension-note">
           ※後ろにある黒い壁面の寸法は幅300cm 高さ200cmです。
         </div>
-        <div className="room-model-selector-title">部屋モデルを選択</div>
+        <div className="room-model-selector-title">背景モデルを選択</div>
         <div className="room-model-selector-container">
           <div
             className="room-model-selector-button"
@@ -2136,10 +2139,10 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
             <div className="selected-room-model-preview">
               <span className="selected-room-model-text">
                 {roomModel === '' ? 'なし' :
-                 roomModel === 'neonblackwall-v1' ? 'ネオン黒い壁 v1' :
-                 roomModel === 'neonbrick8glb-v1' ? 'ネオンレンガ' :
-                 roomModel === 'neoncafe4-v1' ? 'ネオンカフェ v1' :
-                 roomModel === 'neonbeerbar-v1' ? 'ネオンビアバー' : 'なし'}
+                 roomModel === 'neonblackwall-v1' ? 'ブラックウッド' :
+                 roomModel === 'neonbrick8glb-v1' ? 'レンガ壁' :
+                 roomModel === 'neoncafe4-v1' ? 'カフェ' :
+                 roomModel === 'neonbeerbar-v1' ? 'バー' : 'なし'}
               </span>
             </div>
             <div className={`room-model-arrow ${isRoomModelSelectorOpen ? 'open' : ''}`}>
@@ -2153,36 +2156,31 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
                 onClick={() => setRoomModel('')}
                 className={`room-model-thumbnail ${roomModel === '' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/icons/logo-white.png" alt="なし" className="room-model-thumbnail-image" />
-                <span className="room-model-thumbnail-label">なし</span>
+                <img src="/ホーム画像/default.png" alt="なし" className="room-model-thumbnail-image" />
               </button>
               <button
                 onClick={() => setRoomModel('neonblackwall-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonblackwall-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/icons/logo-white.png" alt="ネオン黒い壁 v1" className="room-model-thumbnail-image" />
-                <span className="room-model-thumbnail-label">黒い壁</span>
+                <img src="/ホーム画像/blackwall.png" alt="ネオン黒い壁 v1" className="room-model-thumbnail-image" />
               </button>
               <button
                 onClick={() => setRoomModel('neonbrick8glb-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonbrick8glb-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/icons/logo-white.png" alt="ネオンレンガ" className="room-model-thumbnail-image" />
-                <span className="room-model-thumbnail-label">レンガ</span>
+                <img src="/ホーム画像/brick.png" alt="ネオンレンガ" className="room-model-thumbnail-image" />
               </button>
               <button
                 onClick={() => setRoomModel('neoncafe4-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neoncafe4-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/icons/logo-white.png" alt="ネオンカフェ v1" className="room-model-thumbnail-image" />
-                <span className="room-model-thumbnail-label">カフェ</span>
+                <img src="/ホーム画像/cafe.png" alt="ネオンカフェ v1" className="room-model-thumbnail-image" />
               </button>
               <button
                 onClick={() => setRoomModel('neonbeerbar-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonbeerbar-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/icons/logo-white.png" alt="ネオンビアバー" className="room-model-thumbnail-image" />
-                <span className="room-model-thumbnail-label">ビアバー</span>
+                <img src="/ホーム画像/bar2.png" alt="ネオンビアバー" className="room-model-thumbnail-image" />
               </button>
             </div>
           )}
