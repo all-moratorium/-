@@ -2105,6 +2105,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#24242
         </div>
 
         {/* 部屋モデル選択 */}
+        <div className="wall-dimension-note">
+          ※後ろにある黒い壁面の寸法は幅300cm 高さ200cmです。
+        </div>
         <div className="room-model-selector-title">部屋モデルを選択</div>
         <div className="room-model-selector-container">
           <div
