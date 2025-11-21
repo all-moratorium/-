@@ -652,11 +652,10 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                     return;
                 }
 
-                // 色仕様ファイルの検証
-                const isCustomizeFile = projectData.metadata && projectData.metadata.type === 'neon-customize-project';
+                // 色仕様ファイルの検証（neonPathsがあるかだけチェック）
                 const hasNeonPaths = projectData.neonPaths && Array.isArray(projectData.neonPaths) && projectData.neonPaths.length > 0;
 
-                if (!isCustomizeFile || !hasNeonPaths) {
+                if (!hasNeonPaths) {
                     alert('色仕様ファイルではないか、データが含まれていません。');
                     setIsInitializing(false);
                     return;
@@ -2399,14 +2398,14 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                             <div className="customize-empty-title">
                                 色 / 仕様のカスタマイズ
                             </div>
-                            <video 
+                            <video
                                 className="customize-mobile-empty-video"
-                                autoPlay 
-                                loop 
-                                muted 
+                                autoPlay
+                                loop
+                                muted
                                 playsInline
                             >
-                                <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                                <source src="/ネオン下絵　ガイドモーダル/説明セクション 色仕様のカスタマイズ.mp4" type="video/mp4" />
                                 お使いのブラウザは動画の再生に対応していません。
                             </video>
                             <div className="customize-empty-description">
@@ -2433,14 +2432,14 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
                                 色 / 仕様のカスタマイズ
                             </div>
                             <div className="customize-empty-video-wrapper">
-                                <video 
+                                <video
                                     className="customize-empty-video"
-                                    autoPlay 
-                                    loop 
-                                    muted 
+                                    autoPlay
+                                    loop
+                                    muted
                                     playsInline
                                 >
-                                    <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                                    <source src="/ネオン下絵　ガイドモーダル/説明セクション 色仕様のカスタマイズ.mp4" type="video/mp4" />
                                     お使いのブラウザは動画の再生に対応していません。
                                 </video>
                             </div>

@@ -2157,31 +2157,71 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
                 onClick={() => setRoomModel('')}
                 className={`room-model-thumbnail ${roomModel === '' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/ホーム画像/default.png" alt="なし" className="room-model-thumbnail-image" />
+                <div className="room-model-thumbnail-image-wrapper">
+                  <div className="room-model-thumbnail-loader"></div>
+                  <img
+                    src="/ホーム画像/default.png"
+                    alt="なし"
+                    className="room-model-thumbnail-image"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                  />
+                </div>
               </button>
               <button
                 onClick={() => setRoomModel('neonblackwall-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonblackwall-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/ホーム画像/blackwall.png" alt="ネオン黒い壁 v1" className="room-model-thumbnail-image" />
+                <div className="room-model-thumbnail-image-wrapper">
+                  <div className="room-model-thumbnail-loader"></div>
+                  <img
+                    src="/ホーム画像/blackwall.png"
+                    alt="ネオン黒い壁 v1"
+                    className="room-model-thumbnail-image"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                  />
+                </div>
               </button>
               <button
                 onClick={() => setRoomModel('neonbrick8glb-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonbrick8glb-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/ホーム画像/brick.png" alt="ネオンレンガ" className="room-model-thumbnail-image" />
+                <div className="room-model-thumbnail-image-wrapper">
+                  <div className="room-model-thumbnail-loader"></div>
+                  <img
+                    src="/ホーム画像/brick.png"
+                    alt="ネオンレンガ"
+                    className="room-model-thumbnail-image"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                  />
+                </div>
               </button>
               <button
                 onClick={() => setRoomModel('neoncafe4-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neoncafe4-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/ホーム画像/cafe.png" alt="ネオンカフェ v1" className="room-model-thumbnail-image" />
+                <div className="room-model-thumbnail-image-wrapper">
+                  <div className="room-model-thumbnail-loader"></div>
+                  <img
+                    src="/ホーム画像/cafe.png"
+                    alt="ネオンカフェ v1"
+                    className="room-model-thumbnail-image"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                  />
+                </div>
               </button>
               <button
                 onClick={() => setRoomModel('neonbeerbar-v1')}
                 className={`room-model-thumbnail ${roomModel === 'neonbeerbar-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
-                <img src="/ホーム画像/bar2.png" alt="ネオンビアバー" className="room-model-thumbnail-image" />
+                <div className="room-model-thumbnail-image-wrapper">
+                  <div className="room-model-thumbnail-loader"></div>
+                  <img
+                    src="/ホーム画像/bar2.png"
+                    alt="ネオンビアバー"
+                    className="room-model-thumbnail-image"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                  />
+                </div>
               </button>
             </div>
           )}
