@@ -640,14 +640,25 @@ const Costomize = ({ svgData, initialState, onStateChange, isGuideEffectStopped,
             try {
                 // ファイル読み込み開始時に初期化フラグを設定（ちらつき防止）
                 setIsInitializing(true);
-                
+
                 const projectData = JSON.parse(e.target.result);
-                
+
                 // ファイル形式の判定
                 const isDrawingFile = projectData.metadata && projectData.metadata.type === 'neon-drawing-project';
-                
+
                 if (isDrawingFile) {
                     alert('こちらのファイルはネオン下絵で読み込んでください。');
+                    setIsInitializing(false);
+                    return;
+                }
+
+                // 色仕様ファイルの検証
+                const isCustomizeFile = projectData.metadata && projectData.metadata.type === 'neon-customize-project';
+                const hasNeonPaths = projectData.neonPaths && Array.isArray(projectData.neonPaths) && projectData.neonPaths.length > 0;
+
+                if (!isCustomizeFile || !hasNeonPaths) {
+                    alert('色仕様ファイルではないか、データが含まれていません。');
+                    setIsInitializing(false);
                     return;
                 }
                 
