@@ -267,7 +267,7 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                     </div>
                     <video
                       ref={videoRef}
-                      src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4"
+                      src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド1.mp4"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       autoPlay
                       loop
@@ -317,7 +317,6 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                       <li className="preview3d-tips-item">左クリック＋ドラッグで視点移動</li>
                       <li className="preview3d-tips-item">マウスホイールで拡大 / 縮小</li>
                       <li className="preview3d-tips-item">ON / OFFスイッチで点灯 / 消灯切り替え</li>
-                      <li className="preview3d-tips-item">壁面照明スイッチで裏面を照らす外部光源を追加</li>
                     </ul>
                   </div>
                   
