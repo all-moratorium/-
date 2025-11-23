@@ -197,18 +197,22 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
 
   const getActiveContainer = () => {
     if (currentPage === 1) {
-      if (currentTime >= 0 && currentTime < 11) return 1;
-      if (currentTime >= 11 && currentTime < 15) return 2;
-      if (currentTime >= 15 && currentTime < 37) return 3;
-      if (currentTime >= 37 && currentTime < 63) return 4;
-      if (currentTime >= 63 && currentTime < 86) return 5;
-      if (currentTime >= 86 && currentTime < 97) return 6;
-      if (currentTime >= 97 && currentTime < 109) return 7;
-      if (currentTime >= 109) return 8;
+      if (currentTime >= 0 && currentTime < 14) return 1;
+      if (currentTime >= 14 && currentTime < 19) return 2;
+      if (currentTime >= 19 && currentTime < 34.5) return 3;
+      if (currentTime >= 34.5 && currentTime < 59.5) return 4;
+      if (currentTime >= 59.5 && currentTime < 74) return 5;
+      if (currentTime >= 74 && currentTime < 95) return 6;
+      if (currentTime >= 95 && currentTime < 110) return 7;
+      if (currentTime >= 110) return 8;
       return 1;
     } else if (currentPage === 2) {
-      if (currentTime >= 0 && currentTime < 35) return 1;
-      if (currentTime >= 35 && currentTime < 111) return 2;
+      if (currentTime >= 0 && currentTime < 26) return 1;
+      if (currentTime >= 26 && currentTime < 48) return 2;
+      if (currentTime >= 48 && currentTime < 55) return 3;
+      if (currentTime >= 55 && currentTime < 99) return 4;
+      if (currentTime >= 99 && currentTime < 138) return 5;
+      if (currentTime >= 138) return 6;
       return 1;
     } else if (currentPage === 3) {
       if (currentTime >= 0 && currentTime < 26) return 1;
@@ -234,18 +238,22 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       if (currentPage === 1) {
         switch(containerNumber) {
           case 1: targetTime = 0; break;
-          case 2: targetTime = 11; break;
-          case 3: targetTime = 15; break;
-          case 4: targetTime = 37; break;
-          case 5: targetTime = 63; break;
-          case 6: targetTime = 86; break;
-          case 7: targetTime = 97; break;
-          case 8: targetTime = 109; break;
+          case 2: targetTime = 14; break;
+          case 3: targetTime = 19; break;
+          case 4: targetTime = 35; break;
+          case 5: targetTime = 60; break;
+          case 6: targetTime = 74; break;
+          case 7: targetTime = 95; break;
+          case 8: targetTime = 110; break;
         }
       } else if (currentPage === 2) {
         switch(containerNumber) {
           case 1: targetTime = 0; break;
-          case 2: targetTime = 35; break;
+          case 2: targetTime = 26; break;
+          case 3: targetTime = 48; break;
+          case 4: targetTime = 55; break;
+          case 5: targetTime = 99; break;
+          case 6: targetTime = 138; break;
         }
       } else if (currentPage === 3) {
         switch(containerNumber) {
@@ -384,9 +392,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="neon-drawing-guide-title">基本操作ガイド</h3>
                   
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-11"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-14"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -399,9 +407,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ul>
                   </div>
                   
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="11-15"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="14-19"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -416,9 +424,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
                   
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="15-37"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="19-34.5"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -429,9 +437,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">「進む→」ボタンで一つ前の状態に戻る</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="37-63"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="34.5-59.5"
                     onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -444,10 +452,24 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
-                    data-time="63-86"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`}
+                    data-time="59.5-74"
                     onClick={() => handleContainerClick(5)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">キャンバス上の点を結合</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「点結合」ボタンで選択した点を結合</li>
+                      <li className="neon-drawing-step-item">ステータスが「点結合モードアクティブ中」に</li>
+                      <li className="neon-drawing-step-item">一つ目に選択した点の位置に二つ目に選択した点を移動</li>
+                      <li className="neon-drawing-step-item">移動が完了すると点結合モードは自動で解除</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`}
+                    data-time="74-95"
+                    onClick={() => handleContainerClick(6)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">キャンバス上の点を削除</h4>
@@ -459,10 +481,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`} 
-                    data-time="86-97"
-                    onClick={() => handleContainerClick(6)}
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 7 ? 'active' : ''}`}
+                    data-time="95-110"
+                    onClick={() => handleContainerClick(7)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">キャンバス上のパスを削除</h4>
@@ -474,24 +496,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">ステータスが「チューブパス描画中」に戻る</li>
                     </ol>
                   </div>
-
-
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 7 ? 'active' : ''}`} 
-                    data-time="97-109"
-                    onClick={() => handleContainerClick(7)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <h4 className="neon-drawing-container-title">新たなパスを描画</h4>
-                    <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">「新しいパス」ボタンを押して新たなパスを描画</li>
-                      <li className="neon-drawing-step-item">ステータスが「チューブパス2描画中」に</li>
-                      <li className="neon-drawing-step-item">キャンバス上に左クリックで新たなパスの点を描画</li>
-                    </ol>
-                  </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 8 ? 'active' : ''}`} 
-                    data-time="109-114"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 8 ? 'active' : ''}`}
+                    data-time="110-"
                     onClick={() => handleContainerClick(8)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -550,9 +557,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                     <div className="neon-drawing-step-text">PAGE 2</div>
                   </div>
                   <h3 className="neon-drawing-guide-title">ネオンチューブパスを描画する</h3>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-35"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-26"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -565,9 +572,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">「適用」ボタンで背景画像設定を完了</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="35-111"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="26-48"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -577,8 +584,72 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">ネオンチューブパスを描画開始</li>
                     </ol>
                   </div>
-                  
-                  
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="48-55"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「テンプレ」から図形を追加</h4>
+                    <p className="neon-drawing-container-description">「テンプレ」ボタンでチューブパスの図形テンプレートを追加できます、追加できるテンプレートは以下の三種類です。</p>
+                    <ol className="neon-drawing-tips-list">
+                      <li className="neon-drawing-tips-item">長方形</li>
+                      <li className="neon-drawing-tips-item">円</li>
+                      <li className="neon-drawing-tips-item">直線</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="55-99"
+                    onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">円テンプレート</h4>
+                    <p className="neon-drawing-container-description">高さと幅の異なる円を含む好きな形の円のチューブパスを追加できます。</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「サイズ調整」で大まかなサイズを決定</li>
+                      <li className="neon-drawing-step-item">「位置調整」でテンプレートの正確な位置へ調整</li>
+                      <li className="neon-drawing-step-item">「サイズ調整」でテンプレートの正確なサイズを調整</li>
+                      <li className="neon-drawing-step-item">「生成」ボタンでテンプレートを反映完了</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`}
+                    data-time="99-138"
+                    onClick={() => handleContainerClick(5)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">長方形テンプレート</h4>
+                    <p className="neon-drawing-container-description">角の丸みを調整可能な好きな形の長方形のチューブパスを追加できます。</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「サイズ調整」で大まかなサイズを決定</li>
+                      <li className="neon-drawing-step-item">「位置調整」でテンプレートの正確な位置へ調整</li>
+                      <li className="neon-drawing-step-item">「サイズ調整」でテンプレートの正確なサイズを調整</li>
+                      <li className="neon-drawing-step-item">「角丸半径」で角の丸みを調整</li>
+                      <li className="neon-drawing-step-item">「生成」ボタンでテンプレートを反映完了</li>
+                    </ol>
+                  </div>
+
+                  <div className="neon-drawing-supplement-container">
+                    <h4 className="neon-drawing-supplement-title">📝 テンプレートのヒント</h4>
+                    <ul className="neon-drawing-supplement-list">
+                      <li className="neon-drawing-supplement-item">図形のサイズを調整する時の基準の場所は左下ですので、左下に合うように配置してください</li>
+                      <li className="neon-drawing-supplement-item">細かい調整は下の数値ボックスに直接入力して調整します</li>
+                    </ul>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`}
+                    data-time="138-"
+                    onClick={() => handleContainerClick(6)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「太さプレビュー」セレクタで完成品のチューブの太さを確認</h4>
+                    <ol className="neon-drawing-tips-list">
+                      <li className="neon-drawing-tips-item">下絵で描画したチューブを実際のスケールで確認</li>
+                    </ol>
+                  </div>
+
+
                 </div>
               </div>
             </div>

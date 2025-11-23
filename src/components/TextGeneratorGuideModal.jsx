@@ -364,25 +364,9 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                     <h4 className="text-generator-container-title">ネオン下絵での背景画像設定</h4>
                     <ol className="text-generator-steps-list">
                     <li className="text-generator-step-item">「画像サイズ」スライダーで画像の大きさを最大に</li>
+                    <li className="text-generator-step-item">「透明度」スライダーでフォントの透明度を調整</li>
                     <li className="text-generator-step-item">「適用」ボタンで背景画像設定を完了</li>
                     </ol>
-                  </div>
-
-                  <div className="text-generator-supplement-container">
-                    <h4 className="text-generator-supplement-title">📝 補足事項</h4>
-                    <ul className="text-generator-supplement-list">
-                      <li className="text-generator-supplement-item">生成された画像は商用利用可能です</li>
-                      <li className="text-generator-supplement-item">画像の解像度は1024x1024ピクセルです</li>
-                      <li className="text-generator-supplement-item">生成には数秒から数十秒かかる場合があります</li>
-                    </ul>
-                  </div>
-
-                  <div className="text-generator-warning-container">
-                    <h4 className="text-generator-warning-title">⚠️ 注意事項</h4>
-                    <ul className="text-generator-warning-list">
-                      <li className="text-generator-warning-item">著作権のあるキャラクターや商標の使用は避けてください</li>
-                      <li className="text-generator-warning-item">不適切なテキストは生成をブロックする場合があります</li>
-                    </ul>
                   </div>
                 </div>
               </div>
