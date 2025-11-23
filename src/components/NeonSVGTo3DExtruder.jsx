@@ -1498,7 +1498,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
 
     // モデルごとの個別設定
     const modelSettings = {
-      'neonblackwall-v1': {
+      'blackwoodwall-v2': {
         scale: 0.44,      // スケール倍率
         xOffset: 0,       // X位置オフセット
         yOffset: -100,    // Y位置オフセット
@@ -1721,9 +1721,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
   useEffect(() => {
     if (!wallAmbientLightRef.current) return;
 
-    if (roomModel === 'neonblackwall-v1') {
-      wallAmbientLightRef.current.intensity = 2.0; // neonblackwall-v1の時は2.0に増光
-      console.log('wallAmbientLight intensity set to 2.0 for neonblackwall-v1');
+    if (roomModel === 'blackwoodwall-v2') {
+      wallAmbientLightRef.current.intensity = 2.0; // blackwoodwall-v2の時は2.0に増光
+      console.log('wallAmbientLight intensity set to 2.0 for blackwoodwall-v2');
     } else {
       wallAmbientLightRef.current.intensity = 0.2; // その他のモデルは0.2
       console.log('wallAmbientLight intensity set to 0.2');
@@ -1737,9 +1737,9 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
     if (roomModel === '' || !roomModel) {
       rectAreaLightRef.current.intensity = 1.5; // なしの時は1.5（5倍）に増光
       console.log('rectAreaLight intensity set to 1.5 for no model');
-    } else if (roomModel === 'neonblackwall-v1') {
-      rectAreaLightRef.current.intensity = 1.5; // neonblackwall-v1の時は1.5に増光
-      console.log('rectAreaLight intensity set to 1.5 for neonblackwall-v1');
+    } else if (roomModel === 'blackwoodwall-v2') {
+      rectAreaLightRef.current.intensity = 1.5; // blackwoodwall-v2の時は1.5に増光
+      console.log('rectAreaLight intensity set to 1.5 for blackwoodwall-v2');
     } else {
       rectAreaLightRef.current.intensity = 0.3; // その他のモデルは0.3
       console.log('rectAreaLight intensity set to 0.3');
@@ -2140,7 +2140,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
             <div className="selected-room-model-preview">
               <span className="selected-room-model-text">
                 {roomModel === '' ? 'なし' :
-                 roomModel === 'neonblackwall-v1' ? 'ブラックウッド' :
+                 roomModel === 'blackwoodwall-v2' ? 'ブラックウッド' :
                  roomModel === 'neonbrick8glb-v1' ? 'レンガ壁' :
                  roomModel === 'neoncafe4-v1' ? 'カフェ' :
                  roomModel === 'neonbeerbar-v1' ? 'バー' : 'なし'}
@@ -2168,8 +2168,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
                 </div>
               </button>
               <button
-                onClick={() => setRoomModel('neonblackwall-v1')}
-                className={`room-model-thumbnail ${roomModel === 'neonblackwall-v1' ? 'room-model-thumbnail-active' : ''}`}
+                onClick={() => setRoomModel('blackwoodwall-v2')}
+                className={`room-model-thumbnail ${roomModel === 'blackwoodwall-v2' ? 'room-model-thumbnail-active' : ''}`}
               >
                 <div className="room-model-thumbnail-image-wrapper">
                   <div className="room-model-thumbnail-loader"></div>
