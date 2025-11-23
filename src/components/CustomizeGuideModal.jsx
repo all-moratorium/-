@@ -46,7 +46,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const video = currentPage === 1 ? videoRef.current : videoRef2.current;
-    if (video && isOpen && (currentPage === 1 || currentPage === 2)) {
+    if (video && isOpen && currentPage === 1) {
       video.currentTime = 0;
       video.play().then(() => {
         setIsPlaying(true);
@@ -182,10 +182,12 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if (currentTime >= 0 && currentTime < 12) return 1;
-    if (currentTime >= 12 && currentTime < 49) return 2;
-    if (currentTime >= 49 && currentTime < 77) return 3;
-    if (currentTime >= 77) return 4;
+    if (currentTime >= 0 && currentTime < 7) return 1;
+    if (currentTime >= 11 && currentTime < 36) return 2;
+    if (currentTime >= 36 && currentTime < 63) return 3;
+    if (currentTime >= 63 && currentTime < 69) return 4;
+    if (currentTime >= 69 && currentTime < 78) return 5;
+    if (currentTime >= 84) return 6;
     return 1;
   };
 
@@ -195,9 +197,11 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
       let targetTime = 0;
       switch(containerNumber) {
         case 1: targetTime = 0; break;
-        case 2: targetTime = 12; break;
-        case 3: targetTime = 49; break;
-        case 4: targetTime = 77; break;
+        case 2: targetTime = 11; break;
+        case 3: targetTime = 36; break;
+        case 4: targetTime = 63; break;
+        case 5: targetTime = 69; break;
+        case 6: targetTime = 84; break;
       }
       video.currentTime = targetTime;
       setCurrentTime(targetTime);
@@ -237,7 +241,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const nextPage = () => {
-    if (currentPage < 3) {
+    if (currentPage < 1) {
       setCurrentPage(currentPage + 1);
       setLastActiveContainer(1);
     }
@@ -319,25 +323,32 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     <div className="customize-step-text">PAGE 1</div>
                   </div>
                   <h3 className="customize-guide-title">基本操作ガイド</h3>
-                  
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-11"
+
+                  <div className="customize-supplement-container">
+                    <h4 className="customize-supplement-title">📝 基本的なキャンバスの操作方法</h4>
+                    <p className="customize-container-description">ネオン下絵のキャンバスの操作方法と全く同じです。</p>
+                    <ul className="customize-supplement-list">
+                      <li className="customize-supplement-item">右クリック＋ドラッグで視点移動</li>
+                      <li className="customize-supplement-item">マウスホイールで拡大 / 縮小</li>
+                      <li className="customize-supplement-item">「視点リセット」ボタンで視点をリセット</li>
+                    </ul>
+                  </div>
+
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-7"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">基本的なキャンバスの操作方法</h4>
-                    <p className="customize-container-description">キャンバスの基本的な操作方法は、ネオン下絵のキャンバスの操作方法と全く同じです。</p>
+                    <h4 className="customize-container-title">左のサイドバーを展開</h4>
                     <ul className="customize-tips-list">
-                      <li className="customize-tips-item">右クリック＋ドラッグで視点移動</li>
-                      <li className="customize-tips-item">マウスホイールで拡大 / 縮小</li>
-                      <li className="customize-tips-item">「視点リセット」ボタンで視点をリセット</li>
+                      <li className="customize-tips-item">右上のトグルボタンでサイドバーを展開</li>
                     </ul>
                   </div>
-                  
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="11-49"
+
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="11-36"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -350,9 +361,9 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
                   
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="49-77"
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="36-63"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -366,78 +377,22 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
                   
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="77-99"
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="63-69"
                     onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="customize-container-title">その他の機能</h4>
+                    <h4 className="customize-container-title">ネオンサインのON / OFF切り替え</h4>
                     <ul className="customize-tips-list">
-                      <li className="customize-tips-item">「一番上に戻る」ボタンで最上へ移動</li>
-                      <li className="customize-tips-item">トグルボタンでネオンチューブ設定を最小化</li>
                       <li className="customize-tips-item">ON / OFFスイッチで点灯 / 消灯切り替え</li>
                     </ul>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          {/* ページ2 */}
-          <div className={`customize-guide-page ${currentPage === 2 ? 'active' : ''}`}>
-            <div className="customize-guide-content">
-              <div className="customize-modal-content">
-                <div className="customize-video-section" onMouseMove={handleMouseMove}>
-                  <div className="customize-video-container" ref={containerRef2}>
-                    <div className="video-loader-wrapper">
-                      <div className="video-loader"></div>
-                    </div>
-                    <video
-                      ref={videoRef2}
-                      src="/ネオン下絵　ガイドモーダル/カスタマイズガイド2.mp4"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      autoPlay
-                      loop
-                      muted
-                      controls={false}
-                      controlsList="nodownload nofullscreen noremoteplayback"
-                      disablePictureInPicture
-                      onContextMenu={(e) => e.preventDefault()}
-                      onClick={handleVideoClick}
-                      onLoadedData={(e) => e.target.previousElementSibling.style.display = 'none'}
-                    />
-                  </div>
-                  <div className={`customize-video-controls ${isFullscreen && !showControls ? 'hidden' : ''}`}>
-                    <div 
-                      className="customize-video-progress" 
-                      onClick={handleProgressClick}
-                      onMouseMove={handleProgressMouseMove}
-                    >
-                      <div className="customize-progress-bar" style={{ width: `${(currentTime / getVideoDuration()) * 100}%` }}></div>
-                    </div>
-                    <div className="customize-video-time">
-                      {formatTime(currentTime)} / {formatTime(getVideoDuration())}
-                    </div>
-                    <button 
-                      onClick={handleFullscreen}
-                      className="customize-fullscreen-btn"
-                    >
-                      {isFullscreen ? '⛶ 全画面終了' : '⛶ 全画面表示'}
-                    </button>
-                  </div>
-                </div>
-                <div className="customize-content-section">
-                  <div className="customize-step-indicator">
-                    <div className="customize-step-number">2</div>
-                    <div className="customize-step-text">PAGE 2</div>
-                  </div>
-                  <h3 className="customize-guide-title">基本操作ガイド2</h3>
-                  
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-12"
-                    onClick={() => handleContainerClick(1)}
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 5 ? 'active' : ''}`}
+                    data-time="69-78"
+                    onClick={() => handleContainerClick(5)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">色 / 仕様の情報を保存</h4>
@@ -447,10 +402,11 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       <li className="customize-step-item">保存するファイルの名前を入力</li>
                     </ul>
                   </div>
-                  <div 
-                    className={`customize-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="12-24"
-                    onClick={() => handleContainerClick(2)}
+
+                  <div
+                    className={`customize-content-container ${getActiveContainer() === 6 ? 'active' : ''}`}
+                    data-time="84-99"
+                    onClick={() => handleContainerClick(6)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="customize-container-title">3Dモデルを生成</h4>
@@ -458,6 +414,7 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       <li className="customize-step-item">「3Dモデル生成」ボタンを押すと3Dモデルが生成され、レンダリング完了後3Dプレビューページに移動</li>
                     </ul>
                   </div>
+
                   <div className="customize-supplement-container">
                     <h4 className="customize-supplement-title">📝 保存ファイルについて</h4>
                     <ul className="customize-supplement-list">
@@ -466,44 +423,31 @@ const CustomizeGuideModal = ({ isOpen, onClose }) => {
                       <li className="customize-supplement-item">色 / 仕様の保存ファイルはどちらのページからでも読み込みできます</li>
                     </ul>
                   </div>
-                 
-                  
-                  
-                  
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* ページ3 */}
-          <div className={`customize-guide-page ${currentPage === 3 ? 'active' : ''}`}>
-            <div className="customize-guide-content">
-              {/* コンテンツは空白 */}
             </div>
           </div>
         </div>
 
         {/* ナビゲーション */}
         <div className="customize-guide-navigation">
-          <button 
-            className="customize-nav-button prev" 
+          <button
+            className="customize-nav-button prev"
             onClick={prevPage}
             disabled={currentPage === 1}
           >
             ← 前のページ
           </button>
-          
+
           <div className="customize-page-indicator">
             <span className={`customize-dot ${currentPage === 1 ? 'active' : ''}`}></span>
-            <span className={`customize-dot ${currentPage === 2 ? 'active' : ''}`}></span>
-            <span className={`customize-dot ${currentPage === 3 ? 'active' : ''}`}></span>
-            <span className="customize-page-text">{currentPage}/3</span>
+            <span className="customize-page-text">{currentPage}/1</span>
           </div>
-          
-          <button 
-            className="customize-nav-button next" 
+
+          <button
+            className="customize-nav-button next"
             onClick={nextPage}
-            disabled={currentPage === 3}
+            disabled={currentPage === 1}
           >
             次のページ →
           </button>
