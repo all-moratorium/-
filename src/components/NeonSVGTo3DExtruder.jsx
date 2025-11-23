@@ -1504,7 +1504,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
         yOffset: -100,    // Y位置オフセット
         zOffset: -70      // Z位置オフセット
       },
-      'neonbrick8glb-v1': {
+      'neonbrick9-v1': {
         scale: 0.44,
         xOffset: 0,
         yOffset: -100,
@@ -2141,7 +2141,7 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
               <span className="selected-room-model-text">
                 {roomModel === '' ? 'なし' :
                  roomModel === 'blackwoodwall-v2' ? 'ブラックウッド' :
-                 roomModel === 'neonbrick8glb-v1' ? 'レンガ壁' :
+                 roomModel === 'neonbrick9-v1' ? 'レンガ壁' :
                  roomModel === 'neoncafe4-v1' ? 'カフェ' :
                  roomModel === 'neonbeerbar-v1' ? 'バー' : 'なし'}
               </span>
@@ -2182,8 +2182,8 @@ const NeonSVGTo3DExtruder = forwardRef(({ neonSvgData, backgroundColor = '#fffff
                 </div>
               </button>
               <button
-                onClick={() => setRoomModel('neonbrick8glb-v1')}
-                className={`room-model-thumbnail ${roomModel === 'neonbrick8glb-v1' ? 'room-model-thumbnail-active' : ''}`}
+                onClick={() => setRoomModel('neonbrick9-v1')}
+                className={`room-model-thumbnail ${roomModel === 'neonbrick9-v1' ? 'room-model-thumbnail-active' : ''}`}
               >
                 <div className="room-model-thumbnail-image-wrapper">
                   <div className="room-model-thumbnail-loader"></div>
