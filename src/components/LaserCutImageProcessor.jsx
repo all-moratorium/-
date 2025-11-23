@@ -2522,14 +2522,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 <div className="preview3d-mobile-empty-title">
                   3Dプレビュー
                 </div>
-                <video 
+                <video
                   className="preview3d-mobile-empty-video"
-                  autoPlay 
-                  loop 
-                  muted 
+                  autoPlay
+                  loop
+                  muted
                   playsInline
                 >
-                  <source src="/ネオン下絵　ガイドモーダル/3Dプレビューガイド.mp4" type="video/mp4" />
+                  <source src="/ネオン下絵　ガイドモーダル/説明セクション 3Dプレビュー.mp4" type="video/mp4" />
                   お使いのブラウザは動画の再生に対応していません。
                 </video>
                 <div className="preview3d-mobile-empty-description">
