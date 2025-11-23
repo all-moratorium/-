@@ -215,17 +215,23 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       if (currentTime >= 138) return 6;
       return 1;
     } else if (currentPage === 3) {
-      if (currentTime >= 0 && currentTime < 26) return 1;
-      if (currentTime >= 26 && currentTime < 99) return 2;
-      if (currentTime >= 99 && currentTime < 118) return 3;
-      if (currentTime >= 118 && currentTime < 133) return 4;
-      if (currentTime >= 133 && currentTime < 148) return 5;
-      if (currentTime >= 148) return 6;
+      if (currentTime >= 0 && currentTime < 6) return 1;
+      if (currentTime >= 6 && currentTime < 46) return 2;
+      if (currentTime >= 46 && currentTime < 67) return 3;
+      if (currentTime >= 67 && currentTime < 88) return 4;
+      if (currentTime >= 88 && currentTime < 112) return 5;
+      if (currentTime >= 112 && currentTime < 127) return 6;
+      if (currentTime >= 135 && currentTime < 140) return 7;
+      if (currentTime >= 140 && currentTime < 149) return 8;
+      if (currentTime >= 149 && currentTime < 157) return 9;
+      if (currentTime >= 164) return 10;
       return 1;
     } else if (currentPage === 4) {
-      if (currentTime >= 0 && currentTime < 51) return 1;
-      if (currentTime >= 51 && currentTime < 70) return 2;
-      if (currentTime >= 70) return 3;
+      if (currentTime >= 0 && currentTime < 67) return 1;
+      if (currentTime >= 67 && currentTime < 75) return 2;
+      if (currentTime >= 75 && currentTime < 92) return 3;
+      if (currentTime >= 92 && currentTime < 104) return 4;
+      if (currentTime >= 104) return 5;
       return 1;
     }
     return 1;
@@ -258,17 +264,23 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
       } else if (currentPage === 3) {
         switch(containerNumber) {
           case 1: targetTime = 0; break;
-          case 2: targetTime = 26; break;
-          case 3: targetTime = 99; break;
-          case 4: targetTime = 118; break;
-          case 5: targetTime = 133; break;
-          case 6: targetTime = 148; break;
+          case 2: targetTime = 6; break;
+          case 3: targetTime = 46; break;
+          case 4: targetTime = 67; break;
+          case 5: targetTime = 88; break;
+          case 6: targetTime = 112; break;
+          case 7: targetTime = 135; break;
+          case 8: targetTime = 140; break;
+          case 9: targetTime = 149; break;
+          case 10: targetTime = 164; break;
         }
       } else if (currentPage === 4) {
         switch(containerNumber) {
           case 1: targetTime = 0; break;
-          case 2: targetTime = 51; break;
-          case 3: targetTime = 70; break;
+          case 2: targetTime = 67; break;
+          case 3: targetTime = 75; break;
+          case 4: targetTime = 92; break;
+          case 5: targetTime = 104; break;
         }
       }
       video.currentTime = targetTime;
@@ -701,51 +713,115 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="neon-drawing-guide-title">ベースプレートを描画～下絵完成</h3>
                   
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-26"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-6"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">ベースプレート描画モードに切り替え</h4>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">「背景画像」ボタンで背景画像を追加</li>
-                      <li className="neon-drawing-step-item">「適用」ボタンで背景画像設定を完了</li>
-                      <li className="neon-drawing-step-item">「ベースプレート」ボタンでベースプレート描画モードに切り替え</li>
+                      <li className="neon-drawing-step-item">「ベースプレート」ボタンでベースプレートモードに切り替え</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="26-99"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="6-46"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">ベースプレート描画モードの種類</h4>
-                    <p className="neon-drawing-container-description">「ベースプレート」ボタンでベースプレートの描画タイプを選択できます、描画タイプは以下の4通りです。</p>
-                    <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-tips-item">スプライン : 配置した点をを曲線で結ぶ面のベースプレートを作成</li>
-                      <li className="neon-drawing-tips-item">直線 : 配置した点をを直線で結ぶ面のベースプレートを作成</li>
-                      <li className="neon-drawing-tips-item">自動(長方形) : 全てのネオンパスを囲む長方形のベースプレートを自動で作成</li>
-                      <li className="neon-drawing-tips-item">自動(形状) : 全てのネオンパスを囲む形状のベースプレートを自動で作成</li>
+                    <p className="neon-drawing-container-description">「ベースプレート」ボタンでベースプレートの描画タイプを選択できます、描画タイプは以下の5通りです。</p>
+                    <ol className="neon-drawing-tips-list">
+                      <li className="neon-drawing-tips-item">スプライン : 配置した点を曲線で結ぶ面のベースプレートを作成</li>
+                      <li className="neon-drawing-tips-item">直線 : 配置した点を直線で結ぶ面のベースプレートを作成</li>
+                      <li className="neon-drawing-tips-item">長方形 : 下部分にて説明</li>
+                      <li className="neon-drawing-tips-item">円 : 下部分にて説明</li>
+                      <li className="neon-drawing-tips-item">チューブに合わせた土台を自動生成 : 下部分にて説明</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="99-118"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="46-67"
                     onClick={() => handleContainerClick(3)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">「拡大縮小」ボタンでネオンサイン全体のスケールを調整</h4>
-                    <p className="neon-drawing-container-description">最大サイズの画像で下絵を描いた後、こちらで最終的な商品寸法を調整します</p>
+                    <h4 className="neon-drawing-container-title">長方形ベースプレート</h4>
                     <ol className="neon-drawing-steps-list">
-                      <li className="neon-drawing-tips-item">「倍率」スライダーでスケール調整</li>
-                      <li className="neon-drawing-tips-item">数値ボックスに直接入力でスケール調整</li>
+                      <li className="neon-drawing-step-item">「余白」スライダーでネオンパスとベースプレートの余白を調整</li>
+                      <li className="neon-drawing-step-item">「角丸半径」スライダーでベースプレートの角の丸みを調整</li>
+                      <li className="neon-drawing-step-item">「ベースプレートを作成」ボタンを押してベースプレートを反映完了</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`} 
-                    data-time="118-133"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="67-88"
                     onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">円ベースプレート</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「余白」スライダーでネオンパスとベースプレートの余白を調整</li>
+                      <li className="neon-drawing-step-item">「位置調整」ベースプレートの位置を調整</li>
+                      <li className="neon-drawing-step-item">「ベースプレートを作成」ボタンを押してベースプレートを反映完了</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`}
+                    data-time="88-112"
+                    onClick={() => handleContainerClick(5)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">チューブに合わせた土台を自動生成</h4>
+                    <p className="neon-drawing-container-description">ネオンチューブパスに合わせた形を切り取った土台を自動生成します</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「余白」スライダーでネオンパスとベースプレートの余白を調整</li>
+                      <li className="neon-drawing-step-item">「ベースプレートを作成」ボタンを押してベースプレートを反映完了</li>
+                    </ol>
+                  </div>
+
+                  <div className="neon-drawing-warning-container">
+                    <h4 className="neon-drawing-warning-title">⚠️ ベースプレートを作成する上での注意点</h4>
+                    <ul className="neon-drawing-warning-list">
+                      <li className="neon-drawing-warning-item">ベースプレートはすべてのネオンパスが含まれている必要があります。ご確認ください。</li>
+                    </ul>
+                  </div>
+
+                  <div className="neon-drawing-supplement-container">
+                    <h4 className="neon-drawing-supplement-title">📝 ベースプレートの作成がうまくいかないときは</h4>
+                    <ul className="neon-drawing-supplement-list">
+                      <li className="neon-drawing-supplement-item">自動生成したベースプレートの余白が余分に作られてしまう場合は、キャンバスに不必要なネオンパスの点が含まれているかどうか確認して、不要なものを削除してください。</li>
+                    </ul>
+                  </div>
+
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`}
+                    data-time="112-127"
+                    onClick={() => handleContainerClick(6)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「拡大縮小」ボタンでネオンサイン全体のスケールを調整</h4>
+                    <p className="neon-drawing-container-description">お好みのサイズの画像で下絵を描いた後、こちらで最終的な商品寸法を調整します</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「倍率」スライダー、または数値ボックスに直接入力でスケール調整</li>
+                      <li className="neon-drawing-step-item">「適用」ボタンでキャンバスに反映完了</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 7 ? 'active' : ''}`}
+                    data-time="135-140"
+                    onClick={() => handleContainerClick(7)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">点の表示/非表示を切り替え</h4>
+                    <ol className="neon-drawing-tips-list">
+                      <li className="neon-drawing-tips-item">「点表示」「点非表示」ボタンを押して点の表示/ 非表示を切り替え</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 8 ? 'active' : ''}`}
+                    data-time="140-149"
+                    onClick={() => handleContainerClick(8)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">「太さプレビュー」セレクタで完成品のチューブの太さを確認</h4>
@@ -753,10 +829,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-tips-item">下絵で描画したチューブを実際のスケールで確認</li>
                     </ol>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`} 
-                    data-time="133-148"
-                    onClick={() => handleContainerClick(5)}
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 9 ? 'active' : ''}`}
+                    data-time="149-157"
+                    onClick={() => handleContainerClick(9)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">下絵を保存</h4>
@@ -766,10 +842,10 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">保存するファイルの名前を入力</li>
                     </ul>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 6 ? 'active' : ''}`} 
-                    data-time="148-151"
-                    onClick={() => handleContainerClick(6)}
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 10 ? 'active' : ''}`}
+                    data-time="164-"
+                    onClick={() => handleContainerClick(10)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">色 / 仕様のカスタマイズへ進む</h4>
@@ -830,9 +906,9 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="neon-drawing-guide-title">テキストから背景画像を生成した場合</h3>
                   
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-51"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-67"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -843,23 +919,48 @@ const NeonDrawingGuideModal = ({ isOpen, onClose }) => {
                       <li className="neon-drawing-step-item">チューブパスをテキスト背景画像に沿って描画開始</li>
                     </ul>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="51-70"
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="67-75"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h4 className="neon-drawing-container-title">ベースプレートを描画、スケールを調整</h4>
-                    <p className="neon-drawing-container-description">ここでは自動(長方形)で作成していますが、他のお好みのもので構いません。詳しくはPAGE 3をご確認ください。</p>
+                    <h4 className="neon-drawing-container-title">「太さプレビュー」セレクタで完成品のチューブの太さを確認</h4>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-tips-item">下絵で描画したチューブを実際のスケールで確認</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="75-92"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">ベースプレートを描画</h4>
+                    <p className="neon-drawing-container-description">ここでは長方形で作成していますが、他のお好みのもので構いません。詳しくはPAGE 3をご確認ください。</p>
                     <ul className="neon-drawing-steps-list">
-                      <li className="neon-drawing-step-item">ベースプレートを描画</li>
-                      <li className="neon-drawing-step-item">スケールを調整</li>
+                      <li className="neon-drawing-step-item">「余白」スライダーでネオンパスとベースプレートの余白を調整</li>
+                      <li className="neon-drawing-step-item">「角丸半径」スライダーでベースプレートの角の丸みを調整</li>
+                      <li className="neon-drawing-step-item">「ベースプレートを作成」ボタンを押してベースプレートを反映完了</li>
                     </ul>
                   </div>
-                  <div 
-                    className={`neon-drawing-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="70-72"
-                    onClick={() => handleContainerClick(3)}
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="92-104"
+                    onClick={() => handleContainerClick(4)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="neon-drawing-container-title">「拡大縮小」ボタンでネオンサイン全体のスケールを調整</h4>
+                    <p className="neon-drawing-container-description">最大サイズの画像で下絵を描いた後、こちらで最終的な商品寸法を調整します</p>
+                    <ol className="neon-drawing-steps-list">
+                      <li className="neon-drawing-step-item">「倍率」スライダー、または数値ボックスに直接入力でスケール調整</li>
+                      <li className="neon-drawing-step-item">「適用」ボタンでキャンバスに反映完了</li>
+                    </ol>
+                  </div>
+                  <div
+                    className={`neon-drawing-content-container ${getActiveContainer() === 5 ? 'active' : ''}`}
+                    data-time="104-"
+                    onClick={() => handleContainerClick(5)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="neon-drawing-container-title">色 / 仕様のカスタマイズへ進む</h4>
