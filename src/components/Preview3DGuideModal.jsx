@@ -180,8 +180,10 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if (currentTime >= 0 && currentTime < 31) return 1;
-    if (currentTime >= 31) return 2;
+    if (currentTime >= 0 && currentTime < 16) return 1;
+    if (currentTime >= 16 && currentTime < 34) return 2;
+    if (currentTime >= 34 && currentTime < 40) return 3;
+    if (currentTime >= 44) return 4;
     return 1;
   };
 
@@ -191,7 +193,9 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
       let targetTime = 0;
       switch(containerNumber) {
         case 1: targetTime = 0; break;
-        case 2: targetTime = 31; break;
+        case 2: targetTime = 16; break;
+        case 3: targetTime = 34; break;
+        case 4: targetTime = 44; break;
       }
       video.currentTime = targetTime;
       setCurrentTime(targetTime);
@@ -306,9 +310,9 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="preview3d-guide-title">3Dプレビューガイド</h3>
                   
-                  <div 
-                    className={`preview3d-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-31"
+                  <div
+                    className={`preview3d-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-16"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -319,11 +323,39 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                       <li className="preview3d-tips-item">ON / OFFスイッチで点灯 / 消灯切り替え</li>
                     </ul>
                   </div>
-                  
-                  <div 
-                    className={`preview3d-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="31-32"
+
+                  <div
+                    className={`preview3d-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="16-34"
                     onClick={() => handleContainerClick(2)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="preview3d-container-title">背景モデルを選択</h4>
+                    <p className="preview3d-container-description">ネオンサインの背景に表示する背景モデルを選択できます、3Dの背景モデルは以下の4種類です。</p>
+                    <ul className="preview3d-tips-list">
+                      <li className="preview3d-tips-item">ブラックウッド</li>
+                      <li className="preview3d-tips-item">レンガ壁</li>
+                      <li className="preview3d-tips-item">カフェ</li>
+                      <li className="preview3d-tips-item">バー</li>
+                    </ul>
+                  </div>
+
+                  <div
+                    className={`preview3d-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="34-40"
+                    onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="preview3d-container-title">壁面照明を追加</h4>
+                    <ul className="preview3d-tips-list">
+                      <li className="preview3d-step-item">「壁面照明」ボタンを押すと後ろの壁面にネオンサイン以外から発せられる外部光源を追加</li>
+                    </ul>
+                  </div>
+
+                  <div
+                    className={`preview3d-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="44-end"
+                    onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="preview3d-container-title">商品情報へ進む</h4>
@@ -332,23 +364,23 @@ const Preview3DGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
 
+                  <div className="preview3d-warning-container">
+                    <h4 className="preview3d-warning-title">⚠️ 3Dプレビュー注意事項</h4>
+                    <ul className="preview3d-warning-list">
+                      <li className="preview3d-warning-item">3Dプレビューは実際の製品と違い、配線や素材のきめ細かい質感などは再現されておりません。</li>
+                    </ul>
+                  </div>  
+
                   <div className="preview3d-supplement-container">
-                    <h4 className="preview3d-supplement-title">📝 補足事項</h4>
+                    <h4 className="preview3d-supplement-title">📝 3Dプレビュー補足事項</h4>
                     <ul className="preview3d-supplement-list">
-                      <li className="preview3d-supplement-item">3Dモデルは高精度でレンダリングされます</li>
-                      <li className="preview3d-supplement-item">カメラアングルは自由に変更できます</li>
-                      <li className="preview3d-supplement-item">照明効果でリアルな仕上がりを確認できます</li>
+                      <li className="preview3d-supplement-item">3Dモデルは高精度でレンダリングされますが、ズームアウトするとネオンサインの光がちらついてしまいます。</li>
+                      <li className="preview3d-supplement-item">このちらつきは実際の商品にはございませんのでご安心ください。</li>
+                      <li className="preview3d-supplement-item">特に背景3Dモデルでは「レンガ」のモデルの処理に時間がかかる場合がございます。</li>
                     </ul>
                   </div>
 
-                  <div className="preview3d-warning-container">
-                    <h4 className="preview3d-warning-title">⚠️ 注意事項</h4>
-                    <ul className="preview3d-warning-list">
-                      <li className="preview3d-warning-item">3Dプレビューは実際の製品と若干異なる場合があります</li>
-                      <li className="preview3d-warning-item">複雑な形状の場合、表示に時間がかかることがあります</li>
-                      <li className="preview3d-warning-item">照明設定は参考用です</li>
-                    </ul>
-                  </div>
+                  
 
                 </div>
               </div>
