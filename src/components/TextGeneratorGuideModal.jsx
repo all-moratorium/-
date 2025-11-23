@@ -180,9 +180,10 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
   };
 
   const getActiveContainer = () => {
-    if ((currentTime >= 0 && currentTime < 19) || (currentTime >= 63 && currentTime < 68)) return 1;
-    if (currentTime >= 19 && currentTime < 63) return 2;
-    if (currentTime >= 68) return 3;
+    if ((currentTime >= 0 && currentTime < 26) || (currentTime >= 53 && currentTime < 68)) return 1;
+    if (currentTime >= 26 && currentTime < 53) return 2;
+    if (currentTime >= 68 && currentTime < 71) return 3;
+    if (currentTime >= 71) return 4;
     return 1;
   };
 
@@ -192,8 +193,9 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
       let targetTime = 0;
       switch(containerNumber) {
         case 1: targetTime = 0; break;
-        case 2: targetTime = 19; break;
+        case 2: targetTime = 26; break;
         case 3: targetTime = 68; break;
+        case 4: targetTime = 71; break;
       }
       video.currentTime = targetTime;
       setCurrentTime(targetTime);
@@ -308,9 +310,9 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="text-generator-guide-title">テキストから生成ガイド</h3>
                   
-                  <div 
-                    className={`text-generator-content-container ${getActiveContainer() === 1 ? 'active' : ''}`} 
-                    data-time="0-19, 63-68"
+                  <div
+                    className={`text-generator-content-container ${getActiveContainer() === 1 ? 'active' : ''}`}
+                    data-time="0-26, 53-68"
                     onClick={() => handleContainerClick(1)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -326,9 +328,9 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                     </ul>
                   </div>
                   
-                  <div 
-                    className={`text-generator-content-container ${getActiveContainer() === 2 ? 'active' : ''}`} 
-                    data-time="19-63"
+                  <div
+                    className={`text-generator-content-container ${getActiveContainer() === 2 ? 'active' : ''}`}
+                    data-time="26-53"
                     onClick={() => handleContainerClick(2)}
                     style={{ cursor: 'pointer' }}
                   >
@@ -341,10 +343,22 @@ const TextGeneratorGuideModal = ({ isOpen, onClose }) => {
                     </ol>
                   </div>
 
-                  <div 
-                    className={`text-generator-content-container ${getActiveContainer() === 3 ? 'active' : ''}`} 
-                    data-time="68-82"
+                  <div
+                    className={`text-generator-content-container ${getActiveContainer() === 3 ? 'active' : ''}`}
+                    data-time="68-71"
                     onClick={() => handleContainerClick(3)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="text-generator-container-title">テキスト画像を保存</h4>
+                    <ul className="text-generator-steps-list">
+                      <li className="text-generator-step-item">「保存」ボタンでテキスト画像を保存</li>
+                    </ul>
+                  </div>
+
+                  <div
+                    className={`text-generator-content-container ${getActiveContainer() === 4 ? 'active' : ''}`}
+                    data-time="71-83"
+                    onClick={() => handleContainerClick(4)}
                     style={{ cursor: 'pointer' }}
                   >
                     <h4 className="text-generator-container-title">ネオン下絵での背景画像設定</h4>

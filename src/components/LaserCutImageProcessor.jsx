@@ -472,6 +472,7 @@ const LaserCutImageProcessor = () => {
   const [generationProgress, setGenerationProgress] = useState(0);
   const [isPreloadingModels, setIsPreloadingModels] = useState(false); // 3Dモデルプリロード中フラグ
   const [titleAnimationStart, setTitleAnimationStart] = useState(false); // タイトルアニメーション開始フラグ
+  const [gallery3DKey, setGallery3DKey] = useState(0); // Gallery3Dを強制的にremountするためのkey
   const [svgGenerationProgress, setSvgGenerationProgress] = useState(0);
 const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
   
@@ -1057,19 +1058,14 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
       // sampleGallery以外のページに移動した時はプリロード状態をリセット
       setIsPreloadingModels(false);
     }
+
+    // ホームページに入る時はGallery3Dを強制的にremount
+    if (currentPage === 'home') {
+      setGallery3DKey(prev => prev + 1);
+    }
   }, [currentPage]);
 
-  // プリロードが完了して0.5秒後にタイトルアニメーションを開始
-  useEffect(() => {
-    if (!isPreloadingModels && currentPage === 'home') {
-      const timer = setTimeout(() => {
-        setTitleAnimationStart(true);
-      }, 50);
-      return () => clearTimeout(timer);
-    } else if (currentPage !== 'home') {
-      setTitleAnimationStart(false);
-    }
-  }, [isPreloadingModels, currentPage]);
+  // アニメーションはトグルボタンと同じ条件で制御（useEffectは不要）
 
   // ホームページに戻ってもデータはクリアしない（作業継続のため）
   // データクリアは明示的な操作（新しいファイル読み込み等）でのみ行う
@@ -1880,7 +1876,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
 )}
             
             {/* Desktop Layout */}
-            <div className={`page-title-wrapper ${titleAnimationStart ? 'animate' : ''}`}>
+            <div className={`page-title-wrapper ${!isPreloadingModels ? 'animate' : ''}`}>
               <svg className="page-title-svg-line1" viewBox="0 0 240 60" preserveAspectRatio="xMaxYMid meet">
                 <text x="100%" y="50%" dominantBaseline="middle" textAnchor="end" className="page-title-line1">
                   IMAGE TO
@@ -1894,7 +1890,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
             </div>
             
             <div className="preview-container">
-            {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D onPreloadingChange={setIsPreloadingModels} />}
+            {window.innerWidth > 1280 && navigator.maxTouchPoints === 0 && <Gallery3D key={gallery3DKey} onPreloadingChange={setIsPreloadingModels} />}
             </div>
             
             {/* Mobile Layout */}
@@ -1992,10 +1988,10 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
               
               {/* 真ん中下の大きなコンテナ */}
               <div className="bottom-center-container">
-                <div className="main-messages">
+                <div className={`main-messages ${!isPreloadingModels ? 'animate' : ''}`}>
                 <h2 className="step-message">理想のLEDネオンサインを作成</h2>
                 <div className="order-message">
-                  <ul className="feature-list">
+                  <ul className={`feature-list ${!isPreloadingModels ? 'animate' : ''}`}>
                     <li><span className="triangle-icon">▶</span><span ref={listRef1}></span></li>
                     <li><span className="triangle-icon">▶</span><span ref={listRef2}></span></li>
                   </ul>
@@ -2004,7 +2000,7 @@ const [svgProcessingMessage, setSvgProcessingMessage] = useState('');
                 
                 <button
                   onClick={handleOpenModal}
-                  className={`info-button modal-trigger-button ${isEffectStopped ? 'stopped' : ''}`}
+                  className={`info-button modal-trigger-button ${isEffectStopped ? 'stopped' : ''} ${!isPreloadingModels ? 'animate' : ''}`}
                 >
                 </button>
                 <div className="button-row">
